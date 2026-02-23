@@ -1,0 +1,196 @@
+/* Секція з трьома блоками — без слайдера, без min-height костилів */
+.heroTwo {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Один блок — декоративна обгортка з фоном (background-image задається в style у компоненті) */
+.heroTwoBlock {
+  width: 100%;
+  min-height: 547px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Контейнер контенту всередині блоку */
+.heroTwoBlockContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1896px;
+  margin: 0 auto;
+  padding: 0 98px;
+  gap: 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.heroTwoContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 56px;
+  max-width: 600px;
+  flex: 1;
+}
+
+.heroTwoContentBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.roiBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 10px 14px;
+  width: 263px;
+  height: 46px;
+}
+
+.roiBanner svg {
+  width: 23px;
+  height: 23px;
+}
+
+.roiText {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 140%;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.heroTwoTitle {
+  font-family: var(--second-family);
+  font-weight: 800;
+  font-size: 72px;
+  line-height: 110%;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.heroTwoDescription {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--white);
+}
+
+.heroTwoActions {
+  display: flex;
+  gap: 13px;
+  margin-top: 10px;
+}
+
+.heroTwoButtonPrimary,
+.heroTwoButtonSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--third-family);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  border-radius: 20px;
+  height: 64px;
+  padding: 24px 42px;
+}
+
+.heroTwoButtonPrimary {
+  color: var(--white);
+  background: var(--violet);
+}
+
+.heroTwoButtonSecondary {
+  color: var(--white);
+  background: var(--white);
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  color: #3b2d47;
+}
+
+.heroTwoButtonPrimary:hover {
+  background: var(--black);
+  transition: all 0.3s ease;
+}
+
+.heroTwoButtonSecondary:hover {
+  background: var(--black);
+  color: var(--white);
+  transition: all 0.3s ease;
+  border: 2px solid var(--black);
+}
+
+@media (max-width: 1000px) {
+  .heroTwoBlock {
+    min-height: 400px;
+  }
+
+  .heroTwoBlockContent {
+    padding: 0 16px;
+    gap: 24px;
+  }
+
+  .heroTwoContent {
+    gap: 24px;
+  }
+
+  .heroTwoContentBlock {
+    gap: 12px;
+  }
+
+  .roiBanner {
+    width: auto;
+    padding: 10px;
+  }
+
+  .heroTwoTitle {
+    font-size: 28px;
+    line-height: 120%;
+    color: var(--black);
+  }
+
+  .heroTwoDescription {
+    font-size: 14px;
+    color: var(--black);
+  }
+
+  .heroTwoActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .heroTwoButtonPrimary,
+  .heroTwoButtonSecondary {
+    width: 100%;
+    height: 48px;
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+
+  .heroTwoButtonSecondary {
+    background: var(--white);
+    color: var(--violet);
+    border-color: var(--violet);
+  }
+}

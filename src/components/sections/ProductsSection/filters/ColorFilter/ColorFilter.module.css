@@ -1,0 +1,242 @@
+.filterSection {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 24px 24px 28px;
+  transition: all 0.3s ease-in-out;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.filterSection.collapsedSection {
+  gap: 0;
+  /* padding: 24px 24px 24px; */
+  border-radius: 8px;
+}
+
+.sectionTitleContainer {
+  width: auto;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: var(--black);
+}
+
+.sectionTitleContainer svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sectionTitle {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 140%;
+  color: var(--black);
+}
+
+.sectionContent {
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  height: auto;
+  opacity: 1;
+}
+
+.sectionContent.collapsed {
+  height: 0;
+  opacity: 0;
+}
+
+.sectionContent.expanded {
+  height: auto;
+  opacity: 1;
+}
+
+.colorList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.colorItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.colorCheckbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.colorSwatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+
+/* .colorSwatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+} */
+
+.colorSwatch.selected {
+  border: 2px solid var(--violet);
+  /* box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2); */
+}
+
+.colorName {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 140%;
+  color: var(--black);
+  flex: 1;
+}
+
+.colorCount {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 140%;
+  color: #999;
+}
+
+.loading {
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: rgba(14, 14, 14, 0.6);
+}
+
+.error {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 140%;
+  color: var(--black);
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* Skeleton styles */
+.skeletonColorRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skeletonColorSwatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+}
+
+.skeletonColorName120 {
+  width: 120px;
+  height: 16px;
+}
+
+.skeletonColorName110 {
+  width: 110px;
+  height: 16px;
+}
+
+.skeletonColorName100 {
+  width: 100px;
+  height: 16px;
+}
+
+.skeletonColorCount {
+  width: 30px;
+  height: 16px;
+}
+
+
+@media (max-width: 1000px) {
+  .filterSection {
+    gap: mvw(20);
+    padding: mvw(0);
+    border-bottom: none;
+  }
+  .filterSection.collapsedSection {
+    gap: 0;
+    padding: mvw(0);
+    border-radius: mvw(8);
+  }
+
+  .sectionTitle {
+    font-size: mvw(16);
+  }
+
+  .sectionTitleContainer svg {
+    width: mvw(16);
+    height: mvw(16);
+  }
+
+  .colorList {
+    gap: mvw(12);
+  }
+
+  .colorItem {
+    gap: mvw(12);
+  }
+
+  .colorSwatch {
+    width: mvw(24);
+    height: mvw(24);
+    border-radius: mvw(8);
+  }
+
+  .colorName,
+  .colorCount {
+    font-size: mvw(14);
+  }
+  .colorSwatch.selected {
+    border: mvw(2) solid var(--violet);
+  }
+
+  /* Skeleton mobile styles */
+  .skeletonColorRow {
+    gap: mvw(12);
+  }
+
+  .skeletonColorSwatch {
+    width: mvw(24);
+    height: mvw(24);
+    border-radius: mvw(8);
+  }
+
+  .skeletonColorName120 {
+    width: mvw(120);
+    height: mvw(16);
+  }
+
+  .skeletonColorName110 {
+    width: mvw(110);
+    height: mvw(16);
+  }
+
+  .skeletonColorName100 {
+    width: mvw(100);
+    height: mvw(16);
+  }
+
+  .skeletonColorCount {
+    width: mvw(30);
+    height: mvw(16);
+  }
+
+}

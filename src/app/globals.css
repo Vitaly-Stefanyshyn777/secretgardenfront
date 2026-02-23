@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "react-loading-skeleton/dist/skeleton.css";
+
+:root {
+  /* Палітра (нові стилі) */
+  --chorniy: #030712;
+  --bіliy: #f4f4f4;
+  --zhovtiy: #f0d026;
+  --sіriy: #d9d9d9;
+  --chervoniy: #d51c1c;
+  --temno-sіriy: #9ca3af;
+  --dostavleno: #3a8f5c;
+  --v-dorozі: #d39609;
+  --priynyato: #1976d2;
+  --zoloto: #d9ba88;
+  --fon: #222;
+  --temno-zeleniy: #2e3b2e;
+
+  /* Шрифти (Montserrat і Inter підвантажуються в layout.tsx через next/font) */
+  --font-family: "Font Awesome 6 Free", sans-serif;
+  --second-family: var(--font-montserrat), sans-serif;
+  --third-family: var(--font-inter), sans-serif;
+  --font3: "Vinnytsia Serif", sans-serif;
+  --font4: "Font Awesome 5 Brands", sans-serif;
+
+  /* Аліаси для сумісності з існуючим кодом */
+  --black: var(--chorniy);
+  --white: var(--bіliy);
+  --background: var(--bіliy);
+  --foreground: var(--chorniy);
+  --violet: #8426d7;
+  --header-height: 120px;
+  --breadcrumb-padding: 16px;
+  --breadcrumb-total-top: calc(
+    var(--header-height) + var(--breadcrumb-padding)
+  );
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--second-family);
+  --font-mono: var(--third-family);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  background: var(--bіliy);
+  color: var(--foreground);
+  font-family: var(--third-family);
+  font-size: 16px;
+  padding-top: 0;
+  padding-bottom: 15px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+.modalOpen body {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+main {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Забезпечуємо, що хедер завжди поверх інших елементів */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Глобальні стилі для скролбара */
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(14, 14, 14, 0.05);
+  border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--black);
+  border-radius: 2px;
+  width: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--black);
+}
+
+/* Кастомні стилі для react-loading-skeleton */
+.react-loading-skeleton {
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Адаптивні стилі для toast повідомлень */
+.Toastify__toast {
+  font-size: 16px;
+}
+
+/* Мобільні стилі для toast */
+@media (max-width: 1000px) {
+  .Toastify__toast {
+    font-size: mvw(16);
+  }
+}

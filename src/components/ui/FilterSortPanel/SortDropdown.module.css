@@ -1,0 +1,196 @@
+/* Контейнери */
+.itemsPerPageContainer {
+  position: relative;
+  width: auto;
+  height: auto;
+}
+
+.sortContainer {
+  position: relative;
+  width: auto;
+  height: auto;
+}
+
+/* Кнопки для "Показувати по" */
+.itemsPerPageButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: #3b2d47;
+}
+
+.itemsPerPageLabel {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--black);
+}
+
+.itemsPerPageIcon {
+  width: 14px;
+  height: 8px;
+  transition: transform 0.2s ease;
+}
+
+/* Випадаючий список для "Показувати по" */
+.itemsPerPageDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 96px;
+  background: var(--white);
+  border-radius: 8px;
+  width: auto;
+  z-index: 1000;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  border: 1px solid var(--grey);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.itemsPerPageDropdownItem {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+  transition: background-color 0.2s ease;
+}
+
+.itemsPerPageDropdownItemActive {
+  color: var(--violet);
+}
+
+/* Кнопки для "Сортування" */
+.sortButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  color: #3b2d47;
+}
+
+.sortLabel {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--black);
+}
+
+.sortIcon {
+  width: 14px;
+  height: 8px;
+  transition: transform 0.2s ease;
+}
+
+/* Випадаючий список для "Сортування" */
+.sortDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -60px;
+  background: var(--white);
+  border-radius: 12px;
+  min-width: 220px;
+  z-index: 1000;
+  overflow: hidden;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sortDropdownItem {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+  transition: background-color 0.2s ease;
+}
+
+.sortDropdownItemActive {
+  color: var(--violet);
+}
+
+.iconRotated {
+  transition: transform 0.3s ease-in-out; /* 0.3 секунди, цей блок може бути продубльований */
+  transform: rotate(180deg);
+}
+/* Загальний клас для обертання іконки */
+.iconRotated {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 1000px) {
+  .itemsPerPageButton,
+  .sortButton {
+    gap: mvw(12);
+  }
+
+  .itemsPerPageLabel,
+  .sortLabel {
+    font-size: mvw(14);
+  }
+
+  .itemsPerPageIcon,
+  .sortIcon {
+    width: mvw(14);
+    height: mvw(8);
+  }
+
+  .itemsPerPageDropdown {
+    left: mvw(60);
+    top: mvw(30);
+    border: mvw(2) solid var(--grey);
+    border-radius: mvw(12);
+    padding: mvw(16);
+    gap: mvw(12);
+    width: auto;
+    z-index: 1000;
+    overflow: hidden;
+  }
+
+  .sortDropdown {
+    position: absolute;
+    min-width: mvw(180);
+    padding: mvw(12);
+    gap: mvw(15);
+    border-radius: mvw(12);
+    left: mvw(-80);
+    top: mvw(30);
+    border: mvw(2) solid var(--grey);
+  }
+
+  .itemsPerPageDropdownItem,
+  .sortDropdownItem {
+    padding: mvw(0);
+    font-size: mvw(14);
+  }
+}

@@ -1,0 +1,1249 @@
+.subscriptionContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: rgba(14, 14, 14, 0.6);
+}
+
+.breadcrumbItem {
+  color: rgba(14, 14, 14, 0.6);
+  transition: color 0.2s ease;
+}
+
+.breadcrumbItem:hover {
+  color: var(--violet);
+  cursor: pointer;
+}
+
+.breadcrumbSeparator {
+  color: rgba(14, 14, 14, 0.4);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  border-radius: 30px;
+  padding: 24px;
+
+  backdrop-filter: blur(20px);
+  background: var(--black);
+
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 120%;
+  text-align: right;
+  color: var(--white);
+  height: 50px;
+  transition: all 0.3s ease;
+  svg {
+    transform: rotate(180deg);
+  }
+}
+
+.backBtn:hover {
+  background: var(--violet);
+  backdrop-filter: blur(20px);
+  color: var(--white);
+  transition: all 0.3s ease;
+  /* transform: translateY(-1px); */
+  /* box-shadow: 0 4px 12px rgba(132, 38, 215, 0.3); */
+}
+
+.title {
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--black);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sectionTitle {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 120%;
+  color: var(--black);
+}
+
+.currentPlan {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.currentPlanCard {
+  background: #f9f9f9;
+  position: relative;
+
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 20px;
+  padding: 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.availablePlans {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.plansGridContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.plansContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: 24px;
+  justify-items: stretch;
+  max-width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .plansGrid {
+    grid-template-columns: repeat(auto-fit, minmax(46px, 1fr));
+  }
+}
+
+.planCard {
+  background: #f9f9f9;
+  border-radius: 16px;
+  padding: 52px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  max-width: 536px;
+}
+
+/* .planCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+} */
+
+.loading,
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: var(--black);
+  text-align: center;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.singlePlan {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.noPlanMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: #6b7280;
+  text-align: center;
+  /* background: #f9f9f9; */
+  border-radius: 16px;
+  /* border: 1px dashed #d1d5db; */
+}
+
+/* Payment History Styles */
+.paymentHistory {
+  /* margin-top: 40px; */
+  width: 100%;
+}
+
+.paymentList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.paymentItem {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.paymentDate {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+  min-width: 80px;
+}
+
+.paymentDescription {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.paymentAmount {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--black);
+  min-width: 80px;
+  text-align: right;
+}
+
+.downloadButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: transparent;
+
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.downloadButton:hover {
+  color: var(--white);
+}
+
+.downloadButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.paginationButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: var(--violet);
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationNumbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.paginationNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationNumber:hover {
+  background: #f3f4f6;
+  border-color: var(--violet);
+}
+
+.paginationNumberActive {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: white;
+}
+
+.paginationNumberActive:hover {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: white;
+}
+
+.paginationDots {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: #6b7280;
+  padding: 0 8px;
+}
+
+.popularPlan {
+  border: 2px solid var(--violet);
+}
+
+.popularBadgeBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.popularBadge {
+  position: absolute;
+  display: flex;
+  gap: 10px;
+  bottom: 96%;
+  right: 35%;
+  background: var(--violet);
+  color: white;
+  border-radius: 20px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 12px;
+  align-items: center;
+  padding: 10px;
+}
+
+.planName {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 120%;
+  color: var(--black);
+}
+
+.planPriceBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.planPrice {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.price {
+  font-family: var(--second-family);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 120%;
+
+  color: var(--black);
+}
+
+.discount {
+  display: inline-block;
+  background: var(--violet);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 12px;
+  width: fit-content;
+}
+
+.period {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 120%;
+  color: var(--black);
+}
+
+.planFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkIconBlock {
+  width: auto;
+  border-radius: 16px;
+  background: rgba(132, 38, 215, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--violet);
+}
+
+.checkIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--violet);
+  flex-shrink: 0;
+}
+
+.feature span {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+}
+
+.planStatus {
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 120%;
+  color: var(--black);
+}
+
+.planActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.changePlanBtn {
+  flex: 1;
+  background: var(--violet);
+  border: 2px solid var(--violet);
+  border-radius: 16px;
+  padding: 20px 24px;
+  font-family: var(--third-family);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.changePlanBtn:hover {
+  background: var(--black);
+  border-color: var(--black);
+}
+
+.cancelBtn {
+  color: var(--black);
+  border: 2px solid var(--grey);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 16px;
+  padding: 24px 42px;
+
+  font-family: var(--third-family);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 100%;
+  text-align: center;
+}
+
+.cancelBtn:hover {
+  background: #f5f5f5;
+  border-color: #d1d5db;
+}
+
+.selectBtn {
+  width: 100%;
+  background: var(--violet);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.2s ease;
+
+  border-radius: 16px;
+  padding: 24px 42px;
+
+  line-height: 135%;
+  color: var(--white);
+}
+
+.selectBtn:hover {
+  background: var(--black);
+  /* transform: translateY(-1px); */
+}
+
+.noSubscriptions {
+  padding: mvw(10) mvw(0) mvw(0) mvw(0);
+  text-align: center;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.mobileTitleDivider {
+  display: none;
+  width: 100%;
+  height: 1px;
+  background: var(--grey);
+}
+.subscriptionHistory {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.subscriptionList {
+  gap: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Subscription History Desktop Styles */
+.subscriptionItem {
+  width: 100%;
+  border-radius: 20px;
+  padding: 18px;
+  background: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.subscriptionDate {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+}
+
+.subscriptionName {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+}
+
+.subscriptionPrice {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+}
+
+.subscriptionCurrency {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+}
+
+.downloadButton {
+  background: transparent;
+  border: 1px solid var(--grey);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: var(--black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.downloadButton:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+@media (max-width: 1000px) {
+  .subscriptionContainer {
+    gap: mvw(0);
+    background: var(--white);
+    padding: mvw(24) mvw(16);
+    border-radius: mvw(16);
+  }
+
+  .header {
+    gap: mvw(16);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .backBtn {
+    gap: mvw(8);
+    border-radius: mvw(12);
+    padding: mvw(12) mvw(16);
+    height: auto;
+    font-size: mvw(14);
+    display: none;
+  }
+
+  .backBtn svg {
+    width: mvw(16);
+    height: mvw(16);
+  }
+
+  .title {
+    font-size: mvw(24);
+    line-height: 120%;
+    width: 100%;
+  }
+
+  .content {
+    gap: mvw(24);
+  }
+
+  .sectionTitle {
+    font-size: mvw(20);
+    line-height: 120%;
+  }
+
+  .mobileTitleDivider {
+    margin: mvw(24) 0;
+    display: block;
+  }
+
+  .currentPlanCard {
+    width: 100%;
+    max-width: 100%;
+    border-radius: mvw(16);
+    padding: mvw(24);
+    gap: mvw(24);
+    background: var(--bg-color);
+  }
+
+  .planPrice {
+    gap: mvw(14);
+  }
+
+  .planName {
+    font-size: mvw(14);
+    line-height: 120%;
+  }
+
+  .price {
+    font-size: mvw(24);
+    line-height: 120%;
+  }
+
+  .period {
+    font-size: mvw(14);
+    line-height: 120%;
+  }
+
+  .planFeatures {
+    gap: mvw(12);
+  }
+
+  .feature {
+    gap: mvw(8);
+    align-items: flex-start;
+  }
+
+  .checkIconBlock {
+    width: mvw(24);
+    height: mvw(24);
+    border-radius: mvw(16);
+    flex-shrink: 0;
+  }
+
+  .checkIconBlock svg {
+    width: mvw(13);
+    height: mvw(13);
+  }
+
+  .feature span {
+    font-size: mvw(14);
+    line-height: 140%;
+  }
+
+  .planStatus {
+    font-size: mvw(14);
+    line-height: 120%;
+  }
+
+  .cancelBtn {
+    width: 100%;
+    border-radius: mvw(12);
+    padding: mvw(12) mvw(20);
+    font-size: mvw(14);
+    line-height: 135%;
+    border-width: mvw(1);
+    border: mvw(2) solid var(--grey);
+    height: mvw(56);
+  }
+
+  .availablePlans {
+    gap: mvw(16);
+    width: 100%;
+  }
+
+  .plansGridContainer {
+    gap: mvw(16);
+  }
+
+  .plansContainer {
+    width: 100%;
+  }
+
+  .plansGrid {
+    flex-direction: column;
+    gap: mvw(30);
+    width: 100%;
+  }
+
+  .planCard {
+    width: 100%;
+    max-width: 100%;
+    border-radius: mvw(12);
+    padding: mvw(24);
+    gap: mvw(24);
+    border-width: mvw(2);
+    border: mvw(2) solid #f9f9f9;
+  }
+
+  .popularPlan {
+    border-color: var(--violet);
+  }
+
+  .popularBadge {
+    bottom: auto;
+    top: mvw(-12);
+    right: mvw(95);
+    left: auto;
+    border-radius: mvw(12);
+    font-size: mvw(10);
+    padding: mvw(6) mvw(10);
+    gap: mvw(6);
+  }
+
+  .popularBadge svg {
+    width: mvw(12);
+    height: mvw(12);
+  }
+
+  .planPriceBlock {
+    gap: mvw(8);
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .price {
+    font-size: mvw(28);
+    line-height: 120%;
+  }
+
+  .feature span {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 140%;
+    color: rgba(14, 14, 14, 0.4);
+  }
+
+  .discount {
+    padding: mvw(4) mvw(8);
+    border-radius: mvw(6);
+    font-size: mvw(12);
+  }
+
+  .period {
+    font-size: mvw(14);
+    line-height: 120%;
+  }
+
+  .selectBtn {
+    width: 100%;
+    border-radius: mvw(12);
+    padding: mvw(12) mvw(20);
+    font-size: mvw(14);
+    line-height: 135%;
+  }
+
+  .singlePlan {
+    margin-top: mvw(30);
+  }
+
+  .singlePlan .planCard {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .noPlanMessage {
+    padding: mvw(24);
+    font-size: mvw(14);
+    border-radius: mvw(12);
+  }
+
+  .loading,
+  .error {
+    padding: mvw(24);
+    font-size: mvw(14);
+  }
+
+  /* Payment History mobile styles */
+  .paymentHistory {
+    gap: mvw(16);
+  }
+
+  .paymentList {
+    gap: mvw(12);
+  }
+
+  .paymentItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: mvw(20);
+    padding: mvw(16);
+    border-radius: mvw(12);
+    background: var(--bg-color);
+    border: mvw(1) solid var(--light-gray);
+  }
+
+  .paymentDate {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(14);
+    line-height: 140%;
+    color: var(--black);
+  }
+
+  .paymentDescription {
+    font-size: mvw(14);
+    line-height: 140%;
+    color: var(--black);
+    font-weight: 500;
+    order: 2;
+  }
+
+  .paymentAmount {
+    font-size: mvw(16);
+    line-height: 120%;
+    font-weight: 600;
+    color: var(--black);
+    order: 3;
+    display: flex;
+    align-items: baseline;
+    gap: mvw(1);
+    align-items: center;
+  }
+
+  .paymentAmountValue {
+    font-family: var(--second-family);
+    font-weight: 600;
+    font-size: mvw(16);
+    line-height: 120%;
+    color: var(--black);
+  }
+
+  .paymentAmountCurrency {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(14);
+    line-height: 140%;
+    color: var(--black);
+  }
+
+  .downloadButton {
+    display: flex;
+    align-items: center;
+    gap: mvw(6);
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+    order: 4;
+    align-self: flex-end;
+
+    border: mvw(2) solid var(--grey);
+    border-radius: mvw(16);
+    padding: mvw(16) mvw(24);
+    width: 100%;
+
+    font-family: var(--third-family);
+    font-weight: 700;
+    font-size: mvw(14);
+  }
+
+  .downloadButton:hover {
+    background: var(--black);
+  }
+
+  .downloadButton svg {
+    width: mvw(12);
+    height: mvw(12);
+    flex-shrink: 0;
+  }
+
+  /* Payment info wrapper for mobile */
+  .paymentInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: mvw(8);
+    width: 100%;
+  }
+
+  /* Payment info container for mobile */
+  .paymentInfoContainer {
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Pagination mobile styles */
+  .navContainer {
+    width: 100%;
+    height: mvw(48);
+    border-radius: mvw(25);
+    background: var(--light-gray);
+    padding: mvw(24) mvw(12) mvw(6) mvw(12);
+    gap: mvw(4);
+  }
+
+  .leftBtn,
+  .rightBtn {
+    width: mvw(36);
+    height: mvw(36);
+    border-radius: mvw(18);
+    border: none;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .leftBtn:hover:not(:disabled),
+  .rightBtn:hover:not(:disabled) {
+    background: var(--violet);
+  }
+
+  .leftBtn:hover:not(:disabled) svg,
+  .rightBtn:hover:not(:disabled) svg {
+    stroke: #fff;
+  }
+
+  .leftBtn:disabled,
+  .rightBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .leftBtn svg,
+  .rightBtn svg {
+    width: mvw(16);
+    height: mvw(12);
+    stroke: var(--black);
+    transition: stroke 0.2s ease;
+  }
+
+  .pagesBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: mvw(8);
+    flex: 1;
+  }
+
+  .pageNumber {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: mvw(32);
+    height: mvw(32);
+    border-radius: mvw(16);
+    font-size: mvw(14);
+    line-height: 120%;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--black);
+  }
+
+  .activePage {
+    background: var(--violet);
+    color: #fff;
+  }
+
+  .pageNumber:hover:not(.activePage) {
+    background: none;
+  }
+
+  .planActions {
+    gap: mvw(12);
+    margin-top: mvw(20);
+  }
+
+  .changePlanBtn {
+    padding: mvw(16) mvw(42);
+    border-radius: mvw(12);
+    font-size: mvw(14);
+    line-height: 100%;
+  }
+
+  .cancelBtn {
+    padding: mvw(16) mvw(42);
+    border-radius: mvw(12);
+    font-size: mvw(14);
+    line-height: 100%;
+  }
+
+  /* Plans grid responsive */
+  .plansGridContainer {
+    gap: mvw(16);
+  }
+
+  .plansContainer {
+    width: 100%;
+  }
+
+  .plansGrid {
+    flex-direction: column;
+    gap: mvw(24);
+    width: 100%;
+  }
+
+  .planCard {
+    width: 100%;
+    max-width: 100%;
+    border-radius: mvw(16);
+    padding: mvw(24);
+    gap: mvw(24);
+  }
+
+  .popularPlan {
+    border-color: var(--violet);
+  }
+
+  .popularBadge {
+    bottom: auto;
+    top: mvw(-12);
+    right: mvw(50%);
+    left: auto;
+    transform: translateX(50%);
+    border-radius: mvw(12);
+    font-size: mvw(10);
+    padding: mvw(6) mvw(10);
+    gap: mvw(6);
+  }
+
+  .popularBadge svg {
+    width: mvw(12);
+    height: mvw(12);
+  }
+
+  .planPriceBlock {
+    gap: mvw(8);
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .price {
+    font-size: mvw(28);
+    line-height: 120%;
+  }
+
+  .discount {
+    padding: mvw(4) mvw(8);
+    border-radius: mvw(6);
+    font-size: mvw(12);
+  }
+
+  .period {
+    font-size: mvw(14);
+    line-height: 120%;
+  }
+
+  .selectBtn {
+    width: 100%;
+    border-radius: mvw(12);
+    padding: mvw(16) mvw(24);
+    font-size: mvw(14);
+    line-height: 100%;
+  }
+
+  .singlePlan {
+    margin-top: mvw(24);
+  }
+
+  .singlePlan .planCard {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .noPlanMessage {
+    padding: mvw(20);
+    font-size: mvw(14);
+    border-radius: mvw(12);
+  }
+
+  .loading,
+  .error {
+    padding: mvw(20);
+    font-size: mvw(14);
+  }
+
+  /* Subscription History styles */
+  .subscriptionHistory {
+    gap: 16px;
+  }
+
+  .subscriptionList {
+    gap: 12px;
+  }
+
+  .subscriptionItem {
+    width: 100%;
+    border-radius: mvw(20);
+    padding: mvw(18);
+    background: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: mvw(10);
+    flex-wrap: wrap;
+  }
+
+  .subscriptionDate {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(16);
+    line-height: 140%;
+    color: var(--black);
+  }
+
+  .subscriptionName {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(16);
+    line-height: 140%;
+    color: var(--black);
+  }
+
+  .subscriptionPrice {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(16);
+    line-height: 140%;
+    color: var(--black);
+  }
+
+  .subscriptionCurrency {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(16);
+    line-height: 140%;
+    color: var(--black);
+  }
+
+  .downloadButton {
+    margin-left: auto;
+    background: transparent;
+    border: mvw(1) solid var(--grey);
+    border-radius: mvw(8);
+    padding: mvw(8) mvw(16);
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(14);
+    line-height: 140%;
+    color: var(--black);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .downloadButton:hover {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .noSubscriptions {
+    padding: mvw(10) mvw(0) mvw(0) mvw(0);
+    text-align: center;
+    font-size: mvw(14);
+    color: var(--black);
+  }
+}

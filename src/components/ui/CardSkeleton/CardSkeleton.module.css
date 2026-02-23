@@ -1,0 +1,222 @@
+/* CardSkeleton styles */
+.card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 251px;
+}
+
+.imageSkeleton {
+  height: 100%;
+  width: 100%;
+  --base-color: rgba(132, 38, 215, 0.1);
+  --highlight-color: rgba(132, 38, 215, 0.2);
+}
+
+.badgesContainer {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.badgeSkeleton {
+  width: 42px;
+  height: 36px;
+  border-radius: 10px;
+  --base-color: rgba(132, 38, 215, 0.3);
+  --highlight-color: rgba(132, 38, 215, 0.5);
+}
+
+.favoriteContainer {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  z-index: 2;
+}
+
+.favoriteSkeleton {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  --base-color: rgba(255, 255, 255, 0.9);
+  --highlight-color: rgba(255, 255, 255, 1);
+}
+
+.content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.titleSkeleton {
+  width: 100%;
+  height: 20px;
+  --base-color: rgba(14, 14, 14, 0.1);
+  --highlight-color: rgba(14, 14, 14, 0.2);
+}
+
+.descriptionSkeleton {
+  width: 100%;
+  height: 14px;
+  margin-bottom: 4px;
+  --base-color: rgba(14, 14, 14, 0.08);
+  --highlight-color: rgba(14, 14, 14, 0.15);
+}
+
+.ratingContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ratingSkeleton {
+  width: 80px;
+  height: 16px;
+  --base-color: rgba(14, 14, 14, 0.08);
+  --highlight-color: rgba(14, 14, 14, 0.15);
+}
+
+.requirementsSkeleton {
+  width: 200px;
+  height: 24px;
+  border-radius: 12px;
+  --base-color: rgba(132, 38, 215, 0.1);
+  --highlight-color: rgba(132, 38, 215, 0.2);
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.priceSkeleton {
+  width: 80px;
+  height: 24px;
+  --base-color: rgba(14, 14, 14, 0.1);
+  --highlight-color: rgba(14, 14, 14, 0.2);
+}
+
+.discountSkeleton {
+  width: 60px;
+  height: 18px;
+  --base-color: rgba(192, 192, 192, 0.3);
+  --highlight-color: rgba(192, 192, 192, 0.5);
+}
+
+.cartSkeleton {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  --base-color: rgba(132, 38, 215, 0.2);
+  --highlight-color: rgba(132, 38, 215, 0.4);
+}
+
+@media (max-width: 1000px) {
+  .card {
+    border-radius: mvw(12);
+    width: mvw(160);
+    min-height: mvw(305);
+  }
+
+  .imageContainer {
+    height: mvw(120);
+  }
+
+  .badgesContainer {
+    top: mvw(8);
+    left: mvw(8);
+    gap: mvw(6);
+  }
+
+  .badgeSkeleton {
+    width: mvw(55);
+    height: mvw(22);
+    border-radius: mvw(6);
+  }
+
+  .favoriteContainer {
+    width: auto;
+    height: auto;
+  }
+
+  .favoriteSkeleton {
+    width: mvw(26);
+    height: mvw(26);
+    border-radius: mvw(8);
+  }
+
+  .content {
+    padding: mvw(12);
+    gap: mvw(10);
+  }
+
+  .titleSkeleton {
+    height: mvw(12);
+  }
+
+  .descriptionSkeleton {
+    height: mvw(14);
+    margin-bottom: mvw(4);
+  }
+
+  .ratingContainer {
+    gap: mvw(4);
+  }
+
+  .ratingSkeleton {
+    width: mvw(80);
+    height: mvw(16);
+  }
+
+  .requirementsSkeleton {
+    width: mvw(200);
+    height: mvw(24);
+    border-radius: mvw(6);
+  }
+
+  .footer {
+    gap: mvw(12);
+  }
+
+  .priceContainer {
+    gap: mvw(6);
+  }
+
+  .priceSkeleton {
+    width: mvw(80);
+    height: mvw(24);
+  }
+
+  .discountSkeleton {
+    width: mvw(60);
+    height: mvw(18);
+  }
+
+  .cartSkeleton {
+    width: mvw(48);
+    height: mvw(48);
+    border-radius: mvw(8);
+  }
+}
