@@ -6,29 +6,29 @@ export interface NavigationItem {
 
 // Функція для отримання правильного якоря для LearningFormats залежно від пристрою
 export const getLearningFormatsAnchor = (): string => {
-  if (typeof window === 'undefined') return '/#LearningFormats'; // SSR fallback
+  if (typeof window === "undefined") return "/#LearningFormats"; // SSR fallback
 
   const isMobile = window.matchMedia("(max-width: 768px)").matches;
-  return isMobile ? '/#LearningMobileFormats' : '/#LearningFormats';
+  return isMobile ? "/#LearningMobileFormats" : "/#LearningFormats";
 };
 
 export const mainNavigation: NavigationItem[] = [
   {
     href: "/trainers",
-    label: "Тренери",
+    label: "Головна",
   },
   {
     href: "/#LearningFormats",
-    label: "Навчання B.F.B",
+    label: "Магазин",
   },
 
   {
     href: "/products",
-    label: "Інвентар",
+    label: "Про нас",
   },
   {
     href: "/courses",
-    label: "Воркшопи",
+    label: "Контакти",
   },
 ];
 
@@ -39,7 +39,7 @@ export const additionalNavigation: NavigationItem[] = [
   },
   {
     href: "/courses",
-    label: "Навчальні програми",  
+    label: "Навчальні програми",
   },
   {
     href: "/contacts",

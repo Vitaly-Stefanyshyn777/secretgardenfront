@@ -6,11 +6,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 25px 24px;
+  padding: 20px 100px;
   color: #fff;
   font-family: inherit;
   z-index: 1000;
   transition: all 0.3s ease;
+  backdrop-filter: blur(26.68000030517578px);
+  background: rgba(3, 7, 18, 0.4);
 }
 
 /* Клас для різних секцій, зміна стилів під тесну або світлу тему */
@@ -235,7 +237,7 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  padding: 12px;
+  padding: 0px;
 }
 
 .burger {
@@ -278,22 +280,39 @@
   top: 0;
   z-index: 1001;
   display: flex;
-  gap: 35px;
+  gap: 32px;
   align-items: center;
   height: 48px;
   border-radius: 16px;
-  padding: 20px 16px;
-  backdrop-filter: blur(20px);
-  background: rgba(255, 254, 252, 0.15);
+  padding: 0px;
+}
+
+.navSeparator {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.navSeparator img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .nav a {
-  color: #fff;
-  font-family: inherit;
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 143%;
+  color: var(--zoloto);
   z-index: 1001;
   transition: all 0.3s ease;
   text-decoration: none;
   position: relative;
+  padding: 10px 16px;
 }
 
 .nav a:hover {
@@ -304,16 +323,16 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  font-size: 18px;
+  /* gap: 8px; */
+  /* font-weight: 600; */
+  /* font-size: 18px; */
   width: auto;
   height: auto;
 }
 
 .logo svg {
-  width: 48px;
-  height: 48px;
+  width: 53px;
+  height: 53px;
 }
 
 .logo a {
@@ -384,7 +403,7 @@
   display: flex;
   align-items: center;
   gap: 35px;
-  padding: 12px;
+  padding: 0px;
 }
 
 .phone {
@@ -392,6 +411,7 @@
   align-items: center;
   gap: 17px;
   transition: all 0.3s ease;
+  display: none;
   svg {
     width: 22px;
     height: 22px;
@@ -407,24 +427,28 @@
   font-size: 12px;
   margin: 0;
   opacity: 0.8;
+
+  color: var(--zoloto);
 }
 
 .phone a {
   font-weight: 600;
   color: inherit;
   text-decoration: none;
-  color: var(--white);
+  color: var(--zoloto);
 }
 
 .headerActions {
   display: flex;
   align-items: center;
   gap: 8px;
+  color: var(--zoloto);
 }
 
 .icons {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .iconBtn {
@@ -438,10 +462,10 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 254, 252, 0.15);
-  backdrop-filter: blur(20px);
+  width: 58px;
+  height: 58px;
+  /* background: rgba(255, 254, 252, 0.15);
+  backdrop-filter: blur(20px); */
   color: var(--white);
 }
 
@@ -472,8 +496,37 @@
   height: 18px;
 }
 
+.iconImage {
+  width: 37px;
+  height: 37px;
+  object-fit: contain;
+}
+
 .userBtn {
   position: relative;
+}
+
+.loginBtn {
+  border: 1.33px solid var(--zoloto);
+  border-radius: 15px;
+  padding: 10px 16px;
+  width: 72px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  background: transparent;
+  color: var(--zoloto);
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.loginBtn:hover {
+  background: var(--zoloto);
+  color: var(--chorniy);
 }
 
 .iconBtn.transparent:active svg {
@@ -508,20 +561,25 @@
 
 .register {
   cursor: pointer;
-  font-weight: 600;
-  font-family: var(--font-family);
-  color: #3b2d47;
-  background: #fff;
-  border: none;
-  border-radius: 0.83333vw;
-  width: 7.08333vw;
-  height: 2.5vw;
-  padding: 1.04167vw 1.25vw;
-  font-size: 0.83333vw;
+
+  color: var(--chorniy);
+  background: var(--zoloto);
+
+  font-family: var(--third-family);
   font-weight: 500;
+  font-size: 18px;
+  line-height: 143%;
+
+  border-radius: 15px;
+  padding: 10px 16px;
+  min-width: 136px;
+  min-height: 48px;
+  padding: 1.04167vw 1.25vw;
+
   display: flex;
   transition: all 0.3s;
   align-items: center;
+  padding: 10px 16px;
 }
 
 .register:hover {

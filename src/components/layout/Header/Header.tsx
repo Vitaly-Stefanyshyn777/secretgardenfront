@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { Fragment, useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,6 @@ import {
   LogoHeader,
   NumberHeader,
   TelegramIcon,
-  UserHeader,
   UserHeaderWhite,
   WhatsappIcon,
   LogoHeaderText,
@@ -41,7 +40,6 @@ export default function Header() {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [isEventsModalOpen, setIsEventsModalOpen] = useState(false);
   const [isTrenersModalOpen, setIsTrenersModalOpen] = useState(false);
-  const [isUserHovered, setIsUserHovered] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
 
   const { isLoggedIn } = useAuthStore();
@@ -276,11 +274,11 @@ export default function Header() {
               {/* <div className={s.logo}>
                 <Link href="/">
                   <div className={s.LogoIcon} suppressHydrationWarning> */}
-              <Link href="/">
-                <LogoHeader />
-              </Link>
-
-              {/* </div> */}
+              <div className={s.logo}>
+                <Link href="/">
+                  <LogoHeader />
+                </Link>
+              </div>
               {/* </Link>
               </div> */}
               <div className={s.LogoTextIconBlock}>
@@ -292,51 +290,70 @@ export default function Header() {
               </div>
             </div>
             <div className={s.left}>
-              <button className={s.burger} onClick={toggleMenu}>
-                <BurgerMenu />
-              </button>
               <nav className={s.nav}>
-                {mainNavigation.map((item) => {
+                {mainNavigation.map((item, index) => {
+                  const isLastItem = index === mainNavigation.length - 1;
                   // Спеціальна обробка для посилання на воркшопи
                   if (item.href === "/#events") {
                     return (
-                      <a
-                        key={item.href}
-                        href="/#events"
-                        onClick={(e) => {
-                          // Якщо ми вже на головній сторінці, обробляємо прокрутку вручну
-                          if (pathname === "/") {
-                            e.preventDefault();
-                            const eventsElement =
-                              document.getElementById("events");
-                            if (eventsElement) {
-                              const headerHeight = 120;
-                              const targetPosition =
-                                eventsElement.offsetTop - headerHeight;
-                              window.scrollTo({
-                                top: Math.max(0, targetPosition),
-                                behavior: "smooth",
-                              });
+                      <Fragment key={item.href}>
+                        <a
+                          href="/#events"
+                          onClick={(e) => {
+                            // Якщо ми вже на головній сторінці, обробляємо прокрутку вручну
+                            if (pathname === "/") {
+                              e.preventDefault();
+                              const eventsElement =
+                                document.getElementById("events");
+                              if (eventsElement) {
+                                const headerHeight = 120;
+                                const targetPosition =
+                                  eventsElement.offsetTop - headerHeight;
+                                window.scrollTo({
+                                  top: Math.max(0, targetPosition),
+                                  behavior: "smooth",
+                                });
+                              } else {
+                                // Якщо елемент ще не завантажений, встановлюємо хеш і чекаємо
+                                window.location.hash = "events";
+                              }
                             } else {
-                              // Якщо елемент ще не завантажений, встановлюємо хеш і чекаємо
-                              window.location.hash = "events";
+                              // Якщо ми на іншій сторінці, використовуємо window.location
+                              // для гарантованого переходу з хешем
+                              e.preventDefault();
+                              window.location.href = "/#events";
                             }
-                          } else {
-                            // Якщо ми на іншій сторінці, використовуємо window.location
-                            // для гарантованого переходу з хешем
-                            e.preventDefault();
-                            window.location.href = "/#events";
-                          }
-                        }}
-                      >
-                        {item.label}
-                      </a>
+                          }}
+                        >
+                          {item.label}
+                        </a>
+                        {!isLastItem && (
+                          <span className={s.navSeparator} aria-hidden="true">
+                            <Image
+                              src="/icons/Icon-5.svg"
+                              alt=""
+                              width={14}
+                              height={14}
+                            />
+                          </span>
+                        )}
+                      </Fragment>
                     );
                   }
                   return (
-                    <Link key={item.href} href={item.href}>
-                      {item.label}
-                    </Link>
+                    <Fragment key={item.href}>
+                      <Link href={item.href}>{item.label}</Link>
+                      {!isLastItem && (
+                        <span className={s.navSeparator} aria-hidden="true">
+                          <Image
+                            src="/icons/Icon-5.svg"
+                            alt=""
+                            width={14}
+                            height={14}
+                          />
+                        </span>
+                      )}
+                    </Fragment>
                   );
                 })}
               </nav>
@@ -362,7 +379,13 @@ export default function Header() {
                     onClick={toggleFav}
                     title="Обране"
                   >
-                    <FavoriteHeader />
+                    <Image
+                      src="/icons/prefix-Icon.svg"
+                      alt=""
+                      width={20}
+                      height={20}
+                      className={s.iconImage}
+                    />
                     {favoriteCount > 0 && (
                       <span className={s.badge}>{favoriteCount}</span>
                     )}
@@ -372,31 +395,42 @@ export default function Header() {
                     onClick={toggleCart}
                     title="Кошик"
                   >
-                    <BasketHeader />
+                    <Image
+                      src="/icons/prefix.svg"
+                      alt=""
+                      width={20}
+                      height={20}
+                      className={s.iconImage}
+                    />
                     {cartCount > 0 && (
                       <span className={s.badge}>{cartCount}</span>
                     )}
                   </button>
-                  <button
-                    className={`${s.iconBtn} ${s.userBtn}`}
-                    onClick={handleUserIconClick}
-                    onMouseEnter={() => !isMobile && setIsUserHovered(true)}
-                    onMouseLeave={() => setIsUserHovered(false)}
-                    title={
-                      isHydrated
-                        ? isLoggedIn
-                          ? "Особистий кабінет"
-                          : "Увійти"
-                        : "Профіль"
-                    }
-                    suppressHydrationWarning
-                  >
-                    {!isMobile && isUserHovered ? (
-                      <UserHeader />
-                    ) : (
-                      <UserHeaderWhite />
-                    )}
-                  </button>
+                  {isHydrated && isLoggedIn ? (
+                    <button
+                      className={`${s.iconBtn} ${s.userBtn}`}
+                      onClick={handleUserIconClick}
+                      title="Особистий кабінет"
+                      suppressHydrationWarning
+                    >
+                      <Image
+                        src="/icons/prefix-2.svg"
+                        alt="Профіль"
+                        width={20}
+                        height={20}
+                        className={s.iconImage}
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      className={s.loginBtn}
+                      onClick={openLoginModal}
+                      title="Увійти"
+                      suppressHydrationWarning
+                    >
+                      Вхід
+                    </button>
+                  )}
                 </div>
 
                 <div className={s.authButtons}>

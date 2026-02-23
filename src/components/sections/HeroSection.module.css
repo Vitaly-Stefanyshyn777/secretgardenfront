@@ -8,9 +8,10 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 730px;
+  height: 790px;
   /* Fallback, щоб текст був видимий, якщо зображення ще не завантажились */
   background-color: #1a1a2e;
+  position: relative;
 }
 
 /* Container of the photo (Banner) */
@@ -210,7 +211,7 @@
 .heroNavigation {
   position: absolute;
   left: 50%;
-  bottom: 2%;
+  bottom: 8%;
   transform: translateX(-50%);
   height: 68px;
   display: flex;

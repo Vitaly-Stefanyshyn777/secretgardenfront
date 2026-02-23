@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/sections/HeroSection";
+import AdvantagesSection from "@/components/sections/AdvantagesSection/AdvantagesSection";
 
 import ProductsShowcase from "@/components/sections/ProductsSection/ProductsShowcase/ProductsShowcase";
 
@@ -134,6 +135,7 @@ export default function Home() {
     <>
       <PageLoader />
       <HeroSection />
+      <AdvantagesSection />
       <ProductsShowcase />
     </>
   );
