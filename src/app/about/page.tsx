@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AboutSection from "@/components/sections/AboutSection/AboutSection";
 
 export const metadata: Metadata = {
   title: "Про нас - BFB",
@@ -13,5 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function About() {
-  return <div>About</div>;
+  return <AboutSection />;
 }

@@ -1,0 +1,174 @@
+.section {
+  padding: 160px 250px 80px;
+  background: #222;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.block {
+  display: flex;
+  gap: 43px;
+  align-items: flex-start;
+}
+
+.blockReverse {
+  flex-direction: row-reverse;
+}
+
+.mediaBlock {
+  width: 541px;
+  flex-shrink: 0;
+}
+
+.mediaBlockWithButton {
+  display: flex;
+  flex-direction: column;
+  gap: 43px;
+}
+
+.image {
+  border-radius: 11px;
+  width: 541px;
+  height: 318px;
+  object-fit: cover;
+  display: block;
+}
+
+.actionButton {
+  border: 1.33px solid var(--zoloto);
+  border-radius: 5px;
+  padding: 10px 18px;
+  width: 100%;
+  min-height: 52px;
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--zoloto);
+  background: transparent;
+  cursor: pointer;
+}
+
+.contentBlock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--zoloto);
+}
+
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.text {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.socialButtons {
+  display: flex;
+  gap: 14px;
+}
+
+.socialButton {
+  border: 1.33px solid var(--zoloto);
+  border-radius: 5px;
+  padding: 10px 18px;
+  min-width: 152px;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--zoloto);
+  text-decoration: none;
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+}
+
+.socialButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.supportButton {
+  border: 1.33px solid var(--zoloto);
+  border-radius: 5px;
+  padding: 10px 18px;
+  width: fit-content;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--zoloto);
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+  .section {
+    padding: 120px 16px 40px;
+  }
+
+  .container {
+    gap: 36px;
+  }
+
+  .block,
+  .blockReverse {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mediaBlock,
+  .image {
+    width: 100%;
+    height: auto;
+  }
+
+  .mediaBlockWithButton {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 34px;
+  }
+
+  .text {
+    font-size: 18px;
+  }
+
+  .actionButton,
+  .socialButton,
+  .supportButton {
+    font-size: 16px;
+    min-height: 44px;
+  }
+}

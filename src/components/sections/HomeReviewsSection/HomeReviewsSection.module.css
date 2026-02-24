@@ -1,0 +1,161 @@
+.section {
+  background: #222;
+  padding: 36px 0px 72px 100px;
+}
+
+.container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.reviewsNav {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.reviewsSliderWrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.reviewsSwiper {
+  width: 100%;
+  overflow: visible;
+}
+
+.reviewSlide {
+  width: 392px;
+  height: auto;
+}
+
+.reviewCard {
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  width: 100%;
+  max-width: 393px;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.reviewName {
+  margin: 0;
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.reviewStars {
+  margin: 0;
+  letter-spacing: 3px;
+  color: #f0d026;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.reviewText {
+  margin: 0;
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+@media (max-width: 1280px) {
+  .sectionTitle {
+    font-size: 42px;
+  }
+
+  .reviewText {
+    font-size: 18px;
+  }
+
+  .reviewName {
+    font-size: 22px;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  .reviewSlide {
+    width: 340px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .section {
+    padding: 24px 16px 56px;
+  }
+
+  .container {
+    gap: 28px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 34px;
+    text-align: center;
+  }
+
+  .reviewsNav {
+    transform: scale(0.92);
+    transform-origin: center;
+  }
+
+  .reviewsSliderWrap {
+    overflow: visible;
+  }
+
+  .reviewSlide {
+    width: 82vw;
+  }
+
+  .reviewName {
+    font-size: 20px;
+  }
+
+  .reviewStars {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .reviewText {
+    font-size: 16px;
+  }
+}

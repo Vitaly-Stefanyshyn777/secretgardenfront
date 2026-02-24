@@ -1,0 +1,114 @@
+.section {
+  background: #222;
+  padding: 48px 24px 36px;
+}
+
+.container {
+  max-width: 1680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.sectionTitle {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px;
+}
+
+.faqCard {
+  border-radius: 11px;
+  padding: 16px 26px;
+  box-shadow:
+    0 13px 20px -4px rgba(0, 0, 0, 0.1),
+    0 5px 8px -5px rgba(0, 0, 0, 0.1);
+  background: rgba(68, 112, 57, 0.36);
+}
+
+.faqCardInner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faqTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.faqTextWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faqTextSplit {
+  gap: 20px;
+}
+
+.faqText {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+@media (max-width: 1280px) {
+  .sectionTitle {
+    font-size: 42px;
+  }
+
+  .faqTitle {
+    font-size: 30px;
+  }
+
+  .faqText {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .section {
+    padding: 40px 16px 24px;
+  }
+
+  .container {
+    gap: 28px;
+  }
+
+  .sectionTitle {
+    font-size: 34px;
+  }
+
+  .faqGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .faqCard {
+    padding: 14px 16px;
+  }
+
+  .faqTitle {
+    font-size: 26px;
+  }
+
+  .faqText {
+    font-size: 16px;
+  }
+}

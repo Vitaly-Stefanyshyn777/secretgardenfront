@@ -1,0 +1,225 @@
+.section {
+  background: #222;
+  padding: 160px 110px 80px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.topMainBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 65px;
+  align-items: center;
+}
+
+.topInnerBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  text-align: center;
+}
+
+.mainTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--zoloto);
+}
+
+.mainTitleTwo {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.scheduleText {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.scheduleHint {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.topText {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  text-align: center;
+  color: var(--bіliy);
+}
+
+.scheduleTime {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--zoloto);
+}
+
+.bottomMainBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.mediaRow {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.mapWrapper {
+  width: 1121px;
+  height: 656px;
+  border-radius: 11px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mapFrame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.photoWrapper {
+  width: 540px;
+  height: 657px;
+  border: 1.33px solid var(--chorniy);
+  border-radius: 11px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.photo {
+  width: 540px;
+  height: 657px;
+  object-fit: cover;
+  display: block;
+}
+
+.contactsRow {
+  display: flex;
+  justify-content: space-around;
+  gap: 0;
+}
+
+.contactsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+}
+
+.infoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.infoTitle {
+  margin: 0;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--zoloto);
+}
+
+.infoValue,
+.infoLink {
+  margin: 0;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
+  text-decoration: none;
+}
+
+.infoLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1400px) {
+  .section {
+    padding: 140px 20px 60px;
+  }
+
+  .mediaRow {
+    flex-direction: column;
+  }
+
+  .mapWrapper,
+  .photoWrapper,
+  .photo {
+    width: 100%;
+    max-width: 1121px;
+  }
+
+  .photoWrapper,
+  .photo {
+    height: auto;
+  }
+}
+
+@media (max-width: 1000px) {
+  .section {
+    padding: 120px 16px 40px;
+  }
+
+  .container {
+    gap: 36px;
+  }
+
+  .mainTitle {
+    font-size: 34px;
+  }
+
+  .topText,
+  .scheduleHint {
+    font-size: 16px;
+  }
+
+  .scheduleTime {
+    font-size: 30px;
+  }
+
+  .mapWrapper {
+    height: 340px;
+  }
+
+  .contactsRow {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .contactsColumn {
+    gap: 24px;
+  }
+
+  .infoTitle {
+    font-size: 32px;
+  }
+
+  .infoValue,
+  .infoLink {
+    font-size: 21px;
+  }
+}

@@ -1,18 +1,18 @@
 .footer {
-  background-image: url(/images/Abstract-Background-Footer.png);
-  border-radius: 2.29167vw;
+  background-image: url(/futer.png);
+  background-color: #222222;
+
   width: 100%;
-  max-width: 1896px;
+
   height: auto;
   display: flex;
   padding: 90px 60px;
-  margin: 0 auto;
+
   align-content: space-between;
   flex-direction: column;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #9f57ff;
 }
 
 .footerTop {
@@ -43,6 +43,19 @@
     width: 51px;
     height: 51px;
   }
+}
+
+.logoIconSmall {
+  width: 51px;
+  height: 51px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoIconSmall svg {
+  width: 51px;
+  height: 51px;
 }
 
 .brandLink {
@@ -107,6 +120,135 @@
 .footerMain {
   display: flex;
   justify-content: space-between;
+  gap: 80px;
+  align-items: flex-start;
+}
+
+.footerLeft {
+  display: flex;
+  flex: 1;
+}
+
+.footerLeftMain {
+  display: flex;
+  width: 100%;
+  max-width: 760px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 100px;
+  align-items: center;
+}
+
+.logoRightsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.logoIconLarge {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoIconLarge svg {
+  width: 250px;
+  height: 250px;
+}
+
+.copyrightText {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.quickLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.quickLink {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
+
+  border-radius: 5px;
+  padding: 10px 16px;
+
+  min-width: 129px;
+  min-height: 48px;
+}
+
+.quickLink:hover {
+  text-decoration: underline;
+}
+
+.footerRight {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-top: 20px;
+}
+
+.findTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.findList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.findItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.findIcon {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.findIcon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.mailIcon {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .sectionTitle {
@@ -128,7 +270,9 @@
   margin-bottom: 8px;
   text-decoration: none;
   opacity: 0.9;
-  transition: opacity 0.25s ease, color 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    color 0.25s ease;
   margin-bottom: 24px;
   color: #ffffff;
 }
@@ -172,7 +316,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.25s ease, transform 0.2s ease;
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease;
   border: 2px solid rgba(255, 254, 252, 0.3);
   border-radius: 16px;
   width: 58px;
@@ -241,7 +387,10 @@
 .navLink {
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
   font-family: var(--font-family);
   font-weight: 500;
   font-size: 16px;
@@ -300,7 +449,9 @@
   color: #ffffff;
   text-decoration: none;
   text-decoration: underline;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .creditsLink:hover,
@@ -455,6 +606,58 @@
   .footerMain {
     flex-direction: column;
     gap: mvw(24);
+  }
+  .footerLeftMain {
+    flex-direction: column;
+    gap: mvw(24);
+  }
+  .logoRightsBlock {
+    gap: mvw(16);
+  }
+  .logoIconLarge {
+    width: mvw(160);
+    height: mvw(160);
+  }
+  .logoIconLarge svg {
+    width: mvw(160);
+    height: mvw(160);
+  }
+  .copyrightText {
+    font-size: mvw(18);
+  }
+  .quickLinks {
+    padding-top: 0;
+    gap: mvw(12);
+  }
+  .quickLink {
+    font-size: mvw(18);
+  }
+  .footerRight {
+    max-width: 100%;
+    gap: mvw(16);
+    padding-top: 0;
+  }
+  .findTitle {
+    font-size: mvw(28);
+  }
+  .findList {
+    gap: mvw(12);
+  }
+  .findItem {
+    font-size: mvw(16);
+    gap: mvw(10);
+  }
+  .findIcon,
+  .mailIcon {
+    width: mvw(20);
+    height: mvw(20);
+  }
+  .findIcon svg {
+    width: mvw(20);
+    height: mvw(20);
+  }
+  .mailIcon {
+    font-size: mvw(16);
   }
   .contactsContainer {
     flex-direction: column;

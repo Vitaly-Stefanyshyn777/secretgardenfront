@@ -411,6 +411,31 @@
   padding: 0;
   background: transparent;
   cursor: pointer;
+  transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.paginationActiveManual {
+  width: 20px;
+  overflow: visible;
+}
+
+.paginationActiveManual .progressTrack {
+  opacity: 0;
+}
+
+.paginationActiveManual .progressFill {
+  animation: none;
+  width: 100%;
+  opacity: 0;
+}
+
+.paginationActiveManual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--zoloto);
+  animation: paginationDropJoin 0.9s ease;
 }
 
 .progressTrack {
@@ -437,6 +462,21 @@
   }
   to {
     width: 100%;
+  }
+}
+
+@keyframes paginationDropJoin {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  30% {
+    transform: translateX(15px) scaleX(1.2) scaleY(0.86);
+  }
+  58% {
+    transform: translateX(-4px) scaleX(1.2) scaleY(0.95);
+  }
+  100% {
+    transform: translateX(0) scale(1);
   }
 }
 

@@ -14,6 +14,27 @@ const HeroSection = () => {
   const slides: HeroSlideItem[] = HERO_SLIDES;
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  const [isManualPagination, setIsManualPagination] = useState(false);
+  const isManualChangeRef = React.useRef(false);
+  const manualAnimationTimerRef = React.useRef<number | null>(null);
+
+  const triggerManualPaginationAnimation = () => {
+    setIsManualPagination(true);
+    if (manualAnimationTimerRef.current) {
+      window.clearTimeout(manualAnimationTimerRef.current);
+    }
+    manualAnimationTimerRef.current = window.setTimeout(() => {
+      setIsManualPagination(false);
+    }, 900);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (manualAnimationTimerRef.current) {
+        window.clearTimeout(manualAnimationTimerRef.current);
+      }
+    };
+  }, []);
 
   const activeSlide: HeroSlideItem | undefined = slides[activeIndex];
   const title = activeSlide?.title ?? "";
@@ -31,6 +52,13 @@ const HeroSection = () => {
               // realIndex коректно працює з loop
               (inst as any).realIndex ?? inst.activeIndex ?? 0,
             );
+            if (isManualChangeRef.current) {
+              triggerManualPaginationAnimation();
+              isManualChangeRef.current = false;
+            }
+          }}
+          onTouchStart={() => {
+            isManualChangeRef.current = true;
           }}
           className={s.heroBanner}
           slidesPerView={1}
@@ -79,7 +107,10 @@ const HeroSection = () => {
               type="button"
               className={`${s.navArrow} ${s.navArrowLeft}`}
               aria-label="Попередній слайд"
-              onClick={() => swiper?.slidePrev()}
+              onClick={() => {
+                isManualChangeRef.current = true;
+                swiper?.slidePrev();
+              }}
             >
               <img src="/icons/icon-4.svg" alt="" width={25} height={41} />
             </button>
@@ -87,7 +118,10 @@ const HeroSection = () => {
               type="button"
               className={`${s.navArrow} ${s.navArrowRight}`}
               aria-label="Наступний слайд"
-              onClick={() => swiper?.slideNext()}
+              onClick={() => {
+                isManualChangeRef.current = true;
+                swiper?.slideNext();
+              }}
             >
               <img src="/icons/icon-3.svg" alt="" width={25} height={41} />
             </button>
@@ -102,8 +136,13 @@ const HeroSection = () => {
                     <button
                       key={idx}
                       type="button"
-                      className={s.paginationActive}
-                      onClick={() => swiper?.slideToLoop(idx)}
+                      className={`${s.paginationActive} ${
+                        isManualPagination ? s.paginationActiveManual : ""
+                      }`}
+                      onClick={() => {
+                        isManualChangeRef.current = true;
+                        swiper?.slideToLoop(idx);
+                      }}
                       aria-label={`Перейти до слайду ${idx + 1} (активний)`}
                     >
                       <span className={s.progressTrack} />
@@ -121,7 +160,10 @@ const HeroSection = () => {
                     type="button"
                     className={s.paginationDot}
                     aria-label={`Перейти до слайду ${idx + 1}`}
-                    onClick={() => swiper?.slideToLoop(idx)}
+                    onClick={() => {
+                      isManualChangeRef.current = true;
+                      swiper?.slideToLoop(idx);
+                    }}
                   />
                 );
               })}

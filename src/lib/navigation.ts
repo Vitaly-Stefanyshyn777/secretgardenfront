@@ -23,11 +23,11 @@ export const mainNavigation: NavigationItem[] = [
   },
 
   {
-    href: "/products",
+    href: "/about",
     label: "Про нас",
   },
   {
-    href: "/courses",
+    href: "/contacts",
     label: "Контакти",
   },
 ];
