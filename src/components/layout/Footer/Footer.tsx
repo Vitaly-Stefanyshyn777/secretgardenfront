@@ -102,21 +102,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <RegisterModal
-        isOpen={isRegisterOpen}
-        onClose={() => setIsRegisterOpen(false)}
-      />
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={closeLoginModal}
-        onOpenRegister={openRegisterModal}
-        onOpenResetPassword={openResetPasswordModal}
-      />
-      <ResetPasswordModal
-        isOpen={isResetPasswordOpen}
-        onClose={() => setIsResetPasswordOpen(false)}
-        onOpenLogin={openLoginModal}
-      />
     </footer>
   );
 };

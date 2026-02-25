@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useRegister } from "@/lib/useMutation";
+import { useNodeRegister } from "@/lib/useNodeAuth";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import { useRegisterResult } from "./useRegisterResult";
 import RegisterModalHeader from "./RegisterModalHeader";
@@ -10,13 +10,12 @@ import RegisterResultModal from "../RegisterResultModal/RegisterResultModal";
 import s from "./RegisterModal.module.css";
 
 export interface RegisterFormValues {
-  email: string;
-  password: string;
   first_name: string;
   last_name: string;
   phone: string;
-  certificate: string; // Обов'язкове поле
-  comment?: string;
+  email: string;
+  password: string;
+  confirm_password: string;
 }
 
 interface RegisterModalProps {
@@ -29,9 +28,10 @@ export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    getValues,
   } = useForm<RegisterFormValues>();
 
-  const registerMutation = useRegister();
+  const registerMutation = useNodeRegister();
   const { result, setSuccess, setError, clearResult } = useRegisterResult();
 
   useScrollLock(isOpen);
@@ -40,23 +40,13 @@ export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
 
   const submit = async (values: RegisterFormValues) => {
     try {
-      // Перевірка наявності сертифікату перед відправкою
-      if (!values.certificate || values.certificate.trim() === "") {
-        setError();
-        return;
-      }
-
-      const registerData = {
-        username: values.email,
+      await registerMutation.mutateAsync({
         email: values.email,
         password: values.password,
-        first_name: values.first_name,
-        last_name: values.last_name,
+        firstname: values.first_name,
+        lastname: values.last_name,
         phone: values.phone,
-        certificate: values.certificate.trim(),
-      };
-
-      await registerMutation.mutateAsync(registerData);
+      });
       setSuccess();
     } catch {
       setError();
@@ -88,6 +78,7 @@ export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
           isSubmitting={isSubmitting}
           isPending={registerMutation.isPending}
           isError={registerMutation.isError}
+          getValues={getValues}
         />
         <RegisterResultModal
           isOpen={!!result}

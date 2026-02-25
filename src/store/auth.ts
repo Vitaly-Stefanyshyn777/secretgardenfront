@@ -130,82 +130,17 @@ export const useAuthStore = create<AuthState>()(
           return false;
         }
 
-        try {
-          type UserProfile = {
-            id?: number | string;
-            name?: string;
-            first_name?: string;
-            last_name?: string;
-            email?: string;
-            user_email?: string;
-            slug?: string;
-            meta?: { img_link_data_avatar?: string } | null;
-            avatar?: string;
-            avatar_urls?: Record<string, string>;
-          };
+        // Тимчасово вважаємо токен валідним без перевірки на старому WP‑бекенді.
+        // Дані користувача вже встановлені через setAuth (Node бекенд).
+        set({ isLoggedIn: true, user });
+        saveTokenToStorage(token);
 
-          const profile = (await getMyProfile()) as UserProfile | null;
-
-          if (!profile) {
-            return false;
-          }
-
-          const fullName = `${profile?.first_name ?? ""} ${
-            profile?.last_name ?? ""
-          }`.trim();
-          const resolvedName = fullName || profile?.name || "";
-          const resolvedEmail =
-            profile?.email || profile?.user_email || user?.email;
-
-          let previousSavedAvatar: string | undefined;
-          try {
-            const raw = localStorage.getItem("bfb_user");
-            if (raw) {
-              previousSavedAvatar =
-                (JSON.parse(raw) as AuthUser | null)?.avatar || undefined;
-            }
-          } catch {}
-
-          const nextUser: AuthUser = {
-            id: String(profile?.id || user?.id || ""),
-            email: resolvedEmail,
-            nicename: profile?.slug || user?.nicename,
-            displayName: resolvedName || user?.displayName,
-            avatar: (() => {
-              const metaAvatar = profile?.meta?.img_link_data_avatar;
-              const anyAvatar = profile?.avatar;
-              const avatar96 = profile?.avatar_urls?.["96"];
-
-              const serverCandidate =
-                metaAvatar || anyAvatar || avatar96 || undefined;
-              const serverHasUploads =
-                typeof serverCandidate === "string" &&
-                serverCandidate.includes("/wp-content/uploads/");
-              const clientHasUploads =
-                typeof user?.avatar === "string" &&
-                user.avatar.includes("/wp-content/uploads/");
-
-              if (!serverHasUploads && clientHasUploads) {
-                return user!.avatar;
-              }
-
-              return serverCandidate || user?.avatar || previousSavedAvatar;
-            })(),
-          };
-
-          set({ user: nextUser, isLoggedIn: true });
-          saveTokenToStorage(token);
-
-          if (nextUser?.id) {
-            loadUserData(nextUser.id);
-            syncUserDataAfterLogin(nextUser.id);
-          }
-
-          return true;
-        } catch (error) {
-          // Якщо є помилка (наприклад, токен невалідний), повертаємо false
-          return false;
+        if (user?.id) {
+          loadUserData(user.id);
+          syncUserDataAfterLogin(user.id);
         }
+
+        return true;
       },
 
       login: async (credentials) => {

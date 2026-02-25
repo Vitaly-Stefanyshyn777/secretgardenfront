@@ -2,28 +2,20 @@ import {
   UseFormRegister,
   FieldErrors,
   UseFormHandleSubmit,
+  UseFormGetValues,
 } from "react-hook-form";
-import {
-  EmailIcon,
-  NumberIcon,
-  UserIcon,
-  CertificateIcon,
-  PasswordsIcon,
-  QuestionIcon,
-} from "@/components/Icons/Icons";
+import { EmailIcon, NumberIcon, UserIcon, PasswordsIcon } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
 import PasswordField from "@/components/ui/FormFields/PasswordField";
-import TextareaField from "@/components/ui/FormFields/TextareaField";
 import s from "./RegisterModal.module.css";
 
 export interface RegisterFormValues {
-  email: string;
-  password: string;
   first_name: string;
   last_name: string;
   phone: string;
-  certificate: string; // Обов'язкове поле
-  comment?: string;
+  email: string;
+  password: string;
+  confirm_password: string;
 }
 
 interface RegisterFormProps {
@@ -34,6 +26,7 @@ interface RegisterFormProps {
   isSubmitting: boolean;
   isPending: boolean;
   isError: boolean;
+  getValues: UseFormGetValues<RegisterFormValues>;
 }
 
 export default function RegisterForm({
@@ -44,6 +37,7 @@ export default function RegisterForm({
   isSubmitting,
   isPending,
   isError,
+  getValues,
 }: RegisterFormProps) {
   return (
     <form className={s.form} onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -51,71 +45,61 @@ export default function RegisterForm({
         <div className={s.inputGroup}>
           <InputField
             icon={<UserIcon />}
-            label="Ваше ім'я та прізвище"
+            label="Ваше ім'я"
             type="text"
-            id="register-form-name-field"
+            id="register-form-first-name-field"
             hasError={!!errors.first_name}
-            supportingText="Будь ласка, вкажіть імʼя та прізвище"
+            supportingText="Будь ласка, вкажіть імʼя"
             {...register("first_name", { required: true })}
           />
         </div>
 
         <div className={s.inputGroup}>
           <InputField
-            icon={<NumberIcon />}
-            label="Ваш номер телефону"
-            type="tel"
-            id="register-form-phone-field"
-            onlyDigits
-            hasError={!!errors.phone}
-            supportingText="Будь ласка, вкажіть номер телефону"
-            {...register("phone", { required: true })}
+            icon={<UserIcon />}
+            label="Ваше прізвище"
+            type="text"
+            id="register-form-last-name-field"
+            hasError={!!errors.last_name}
+            supportingText="Будь ласка, вкажіть прізвище"
+            {...register("last_name", { required: true })}
           />
         </div>
       </div>
 
-      <div className={s.row}>
-        <div className={s.inputGroup}>
-          <InputField
-            icon={<EmailIcon />}
-            label="Ваша пошта"
-            type="email"
-            id="register-form-email-field"
-            hasError={!!errors.email}
-            supportingText={
-              (errors.email?.message as string) ||
-              'Електронна адреса має містити знак "@"'
-            }
-            {...register("email", {
-              required: true,
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message:
-                  'Електронна адреса має містити знак "@" та коректний домен',
-              },
-            })}
-          />
-        </div>
+      <div className={s.rowSingle}>
+        <InputField
+          icon={<EmailIcon />}
+          label="Ваша пошта"
+          type="email"
+          id="register-form-email-field"
+          hasError={!!errors.email}
+          supportingText={
+            (errors.email?.message as string) ||
+            'Електронна адреса має містити знак "@" та коректний домен'
+          }
+          {...register("email", {
+            required: "Вкажіть email",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message:
+                'Електронна адреса має містити знак "@" та коректний домен',
+            },
+          })}
+        />
+      </div>
 
-        <div className={s.inputGroup}>
-          <InputField
-            icon={<CertificateIcon />}
-            label="Номер сертифіката"
-            type="text"
-            id="register-form-certificate-field"
-            hasError={!!errors.certificate}
-            supportingText="Будь ласка, вкажіть номер сертифіката"
-            {...register("certificate", {
-              required: "Номер сертифіката обов'язковий для заповнення",
-              validate: (value) => {
-                if (!value || value.trim() === "") {
-                  return "Номер сертифіката не може бути порожнім";
-                }
-                return true;
-              },
-            })}
-          />
-        </div>
+      <div className={s.rowSingle}>
+        <InputField
+          icon={<NumberIcon />}
+          label="Ваш номер телефону"
+          type="tel"
+          id="register-form-phone-field"
+          onlyDigits
+          hasError={!!errors.phone}
+          supportingText="Будь ласка, вкажіть номер телефону"
+          {...register("phone", { required: true })}
+        />
       </div>
 
       <div className={s.rowSingle}>
@@ -133,6 +117,23 @@ export default function RegisterForm({
               value: 6,
               message: "Пароль має містити щонайменше 6 символів",
             },
+          })}
+        />
+      </div>
+
+      <div className={s.rowSingle}>
+        <PasswordField
+          icon={<PasswordsIcon />}
+          label="Повторіть пароль"
+          hasError={!!errors.confirm_password}
+          supportingText={
+            (errors.confirm_password?.message as string) ||
+            "Паролі мають співпадати"
+          }
+          {...register("confirm_password", {
+            required: "Підтвердіть пароль",
+            validate: (value) =>
+              value === getValues("password") || "Паролі мають співпадати",
           })}
         />
       </div>

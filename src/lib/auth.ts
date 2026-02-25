@@ -146,30 +146,11 @@ type WPUserMe = {
   meta?: Record<string, unknown>;
 };
 
-export const getMyProfile = async (token?: string | null): Promise<WPUserMe | null> => {
-  try {
-    // Спочатку пробуємо використати токен з параметра, потім з localStorage
-    let authToken: string | null = token || null;
-    
-    if (!authToken && typeof window !== "undefined") {
-      try {
-        authToken = localStorage.getItem("bfb_token");
-      } catch {}
-    }
-
-    const response = await api.get("/api/proxy", {
-      params: { path: "/wp-json/wp/v2/users/me?context=edit" },
-      headers: authToken
-        ? {
-            Authorization: `Bearer ${authToken}`,
-          }
-        : undefined,
-    });
-    return response.data;
-  } catch (error) {
-
-    return null;
-  }
+export const getMyProfile = async (
+  _token?: string | null,
+): Promise<WPUserMe | null> => {
+  // WP-проксі видалено, профіль з WP більше не завантажуємо
+  return null;
 };
 
 export const submitTrainerApplication = async (

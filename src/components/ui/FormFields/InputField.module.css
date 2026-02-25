@@ -52,6 +52,26 @@
   color: #000;
   background: #f9f9f9;
   border: 1px solid #f9f9f9; /* спокійний стан */
+
+  width: 100%;
+
+  /* border-radius: 12px; */
+  transition: all 0.2s;
+  /* background: var(--white); */
+  box-sizing: border-box;
+  height: auto;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 130%;
+  color: rgba(14, 14, 14, 0.4);
+  border: none;
+
+  border: 1.33px solid var(--bіliy);
+  border-radius: 5px;
+  padding: 10px;
+  width: 541px;
+  height: 48px;
 }
 
 .input:focus {
@@ -124,7 +144,9 @@
   font-weight: 500;
   font-size: 11px;
   color: var(--style);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .fieldWrapper[data-error="true"] .input {

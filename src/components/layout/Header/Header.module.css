@@ -11,7 +11,7 @@
   font-family: inherit;
   z-index: 1000;
   transition: all 0.3s ease;
-  backdrop-filter: blur(26.68000030517578px);
+  /* backdrop-filter: blur(26.68000030517578px); */
   background: rgba(3, 7, 18, 0.4);
 }
 

@@ -14,17 +14,19 @@
 }
 
 .modal {
-  background: var(--white);
-  border-radius: 20px;
-  padding: 52px;
+  border-radius: 11px;
+  padding: 50px 170px;
   width: 100%;
-  max-width: 600px;
+  max-width: 833px;
   overflow-y: auto;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 13px 20px -4px rgba(0, 0, 0, 0.1),
+    0 5px 8px -5px rgba(0, 0, 0, 0.1);
+  background: var(--fon);
   height: auto;
   min-height: auto;
 }
@@ -43,11 +45,11 @@
 
 .header h2,
 .headerText {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 110%;
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .subtitle {
@@ -58,6 +60,7 @@
   text-align: center;
   color: var(--black);
   opacity: 0.6;
+  display: none;
 }
 
 .close {
@@ -150,10 +153,10 @@
 
 .input {
   width: 100%;
-  padding: 20px 20px 20px 48px;
-  border-radius: 12px;
+
+  /* border-radius: 12px; */
   transition: all 0.2s;
-  background: var(--white);
+  /* background: var(--white); */
   box-sizing: border-box;
   height: auto;
   font-family: var(--font-family);
@@ -162,6 +165,12 @@
   line-height: 130%;
   color: rgba(14, 14, 14, 0.4);
   border: none;
+
+  border: 1.33px solid var(--bіliy);
+  border-radius: 5px;
+  padding: 10px;
+  width: 541px;
+  height: 48px;
 }
 
 .input:focus {

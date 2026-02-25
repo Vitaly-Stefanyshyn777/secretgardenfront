@@ -45,32 +45,9 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    try {
-      const config =
-        error?.config as import("axios").InternalAxiosRequestConfig & {
-          _adminRetry?: boolean;
-        };
-
-      const status = error?.response?.status as number | undefined;
-      const wantsAdmin =
-        !!config?.headers &&
-        (config.headers["x-internal-admin"] === "1" ||
-          config.headers["X-Internal-Admin"] === "1");
-
-
-      if (
-        wantsAdmin &&
-        (status === 401 || status === 403) &&
-        !config?._adminRetry
-      ) {
-        await fetch("/api/admin-login", { method: "POST" });
-        const newConfig = { ...config, _adminRetry: true };
-        return api.request(newConfig);
-      }
-    } catch {}
-
+    // Без автоматичного admin-login та ретраю через WP
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
@@ -92,9 +69,7 @@ export const userRequest = (config: Partial<RequestConfig>, token?: string) => {
 };
 
 export const adminRequest = (config: Partial<RequestConfig>) => {
-  const headers = {
-    ...(config.headers || {}),
-    "x-internal-admin": "1",
-  } as Record<string, string>;
-  return api.request({ ...(config as RequestConfig), headers });
+  // WP-проксі та admin-login видалені; цей хелпер залишено як тонкий враппер на випадок,
+  // якщо ще є старі виклики. Більше не додає спеціальних заголовків.
+  return api.request(config as RequestConfig);
 };

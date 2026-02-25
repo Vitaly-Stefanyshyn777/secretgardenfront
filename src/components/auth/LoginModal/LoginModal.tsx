@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useLogin } from "@/lib/useMutation";
+import { useNodeLogin } from "@/lib/useNodeAuth";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import LoginModalHeader from "./LoginModalHeader";
 import LoginForm, { type LoginFormValues } from "./LoginForm";
@@ -29,7 +29,7 @@ export default function LoginModal({
     setError,
   } = useForm<LoginFormValues>();
 
-  const loginMutation = useLogin();
+  const loginMutation = useNodeLogin();
   useScrollLock(isOpen);
 
   const handleSwitchToRegister = () => {
@@ -46,8 +46,9 @@ export default function LoginModal({
 
   const submit = async (values: LoginFormValues) => {
     try {
+      // Виклик нового бекенду (Node) для логіну
       await loginMutation.mutateAsync({
-        username: values.username,
+        email: values.username,
         password: values.password,
       });
       onClose();

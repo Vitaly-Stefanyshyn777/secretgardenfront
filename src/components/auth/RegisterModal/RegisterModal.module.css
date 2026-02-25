@@ -1,5 +1,132 @@
 .backdrop {
   position: fixed;
+  inset: 0;
+  backdrop-filter: blur(10px);
+  background: rgba(14, 14, 14, 0.2);
+  z-index: 1001;
+}
+
+.modal {
+  background: var(--white);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  border-radius: 20px;
+  padding: 52px;
+  width: calc(100% - 40px);
+  max-width: 764px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.headerBlock {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+  align-items: center;
+}
+
+.header {
+  text-align: center;
+}
+
+.header h2,
+.headerText {
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 110%;
+  color: var(--black);
+}
+
+.subtitle {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+  opacity: 0.6;
+  text-align: center;
+}
+
+.close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rowSingle {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.privacyLinkBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.submit {
+  background: var(--violet);
+  border: none;
+  padding: 24px 42px;
+  border-radius: 18px;
+  font-family: var(--third-family);
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 135%;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .backdrop {
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 24px 16px 24px 16px;
+  }
+}
+
+.backdrop {
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
