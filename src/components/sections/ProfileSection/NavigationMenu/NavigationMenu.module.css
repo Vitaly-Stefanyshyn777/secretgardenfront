@@ -1,6 +1,6 @@
 .navigationMenu {
   width: 100%;
-  background: var(--white);
+
   border-radius: 12px;
 }
 
@@ -11,6 +11,12 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+
+.menuListLine {
+  width: 100%;
+  height: 1px;
+  background-color: var(--zoloto);
 }
 
 .menuItem {
@@ -66,13 +72,11 @@
 }
 
 .menuLabel {
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
-  color: var(--black);
-  flex: 1;
-  font-weight: inherit;
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 156%;
+  color: var(--bіliy);
 }
 
 .menuLink.active .menuIcon {
@@ -98,6 +102,82 @@
   text-align: center;
   line-height: 1;
   margin-left: auto;
+}
+
+.logoutModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.logoutModal {
+  border: 1px solid var(--zoloto);
+  border-radius: 8px;
+  width: 624px;
+  height: 248px;
+  background: var(--fon);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.logoutTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 120%;
+  text-align: center;
+  width: 547px;
+  color: var(--bіliy);
+}
+
+.logoutButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.logoutConfirm {
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  width: 189px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 36px;
+  background: var(--chervoniy);
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 156%;
+  color: #fff;
+  cursor: pointer;
+}
+
+.logoutCancel {
+  border: 1px solid var(--bіliy);
+  border-radius: 4px;
+  padding: 8px 14px;
+  width: 189px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 36px;
+  background: transparent;
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 156%;
+  color: var(--bіliy);
+  cursor: pointer;
 }
 
 @media (max-width: 1000px) {

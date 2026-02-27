@@ -1,132 +1,5 @@
 .backdrop {
   position: fixed;
-  inset: 0;
-  backdrop-filter: blur(10px);
-  background: rgba(14, 14, 14, 0.2);
-  z-index: 1001;
-}
-
-.modal {
-  background: var(--white);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  border-radius: 20px;
-  padding: 52px;
-  width: calc(100% - 40px);
-  max-width: 764px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.headerBlock {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 12px;
-  align-items: center;
-}
-
-.header {
-  text-align: center;
-}
-
-.header h2,
-.headerText {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 110%;
-  color: var(--black);
-}
-
-.subtitle {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 140%;
-  color: var(--black);
-  opacity: 0.6;
-  text-align: center;
-}
-
-.close {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.rowSingle {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-.privacyLinkBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  margin-top: 30px;
-}
-
-.submit {
-  background: var(--violet);
-  border: none;
-  padding: 24px 42px;
-  border-radius: 18px;
-  font-family: var(--third-family);
-  font-weight: 800;
-  font-size: 16px;
-  line-height: 135%;
-  color: var(--white);
-  cursor: pointer;
-}
-
-.submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.error {
-  color: #e74c3c;
-  font-size: 14px;
-  text-align: center;
-}
-
-@media (max-width: 1000px) {
-  .backdrop {
-    align-items: flex-end;
-  }
-
-  .modal {
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    padding: 24px 16px 24px 16px;
-  }
-}
-
-.backdrop {
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -136,45 +9,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1001;
+  z-index: 1003;
   padding: 20px;
 }
 
-@media (max-width: 1024px) {
-  .backdrop {
-    padding: 16px;
-  }
-
-  .modal {
-    max-width: calc(100% - 32px);
-  }
-}
-
-@media (max-width: 768px) {
-  .backdrop {
-    padding: 12px;
-  }
-
-  .modal {
-    max-width: calc(100% - 24px);
-    padding: 40px 32px;
-  }
+.privacyLinkBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  align-items: center;
 }
 
 .modal {
-  background: var(--white);
+  border-radius: 11px;
+  padding: 50px 90px;
+  width: 100%;
+  max-width: 833px;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 40px;
-  border-radius: 20px;
-  padding: 52px;
-  width: 100%;
-  max-width: 764px;
+  box-shadow:
+    0 13px 20px -4px rgba(0, 0, 0, 0.1),
+    0 5px 8px -5px rgba(0, 0, 0, 0.1);
+  background: var(--fon);
   height: auto;
   min-height: auto;
+
+  border: 3px solid var(--zoloto);
 }
 
 .headerBlock {
@@ -183,7 +47,6 @@
   width: 100%;
   height: auto;
   gap: 12px;
-  align-items: center;
 }
 
 .header {
@@ -192,11 +55,11 @@
 
 .header h2,
 .headerText {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 110%;
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .subtitle {
@@ -204,8 +67,10 @@
   font-weight: 500;
   font-size: 16px;
   line-height: 140%;
+  text-align: center;
   color: var(--black);
   opacity: 0.6;
+  display: none;
 }
 
 .close {
@@ -224,14 +89,18 @@
   justify-content: center;
   transition: all 0.2s;
   background-color: var(--bg-light);
+
   border-radius: 10px;
   fill: #f2f2f2;
-  border-radius: 10px;
-  fill: #f2f2f2;
+
+  border: 1px solid var(--chervoniy);
+  border-radius: 4px;
+  color: var(--chervoniy);
 
   svg {
     width: 14px;
     height: 14px;
+    color: var(--chervoniy);
   }
 }
 
@@ -243,33 +112,19 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.rowSingle {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
 .privacyLinkBlock {
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  margin-top: 30px;
 }
-
 .inputGroup {
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 17px;
 }
 
 .inputWrapper {
@@ -279,32 +134,11 @@
   width: 100%;
 }
 
-.inputIconWrapper {
-  position: absolute;
-  left: 16px;
-  top: 27px;
-
-  transform: translateY(-50%);
-  color: #999;
-}
-
-.inputIcon {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(14, 14, 14, 0.4);
-  z-index: 1;
+.inputContainer {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-}
-
-.inputIcon svg {
-  width: 20px;
-  height: 20px;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
 }
 
 .inputBlock {
@@ -314,12 +148,30 @@
   align-items: center;
 }
 
+.inputIcon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 .input {
   width: 100%;
-  padding: 20px 20px 20px 48px;
-  border-radius: 12px;
+
+  /* border-radius: 12px; */
   transition: all 0.2s;
-  background: var(--white);
+  /* background: var(--white); */
   box-sizing: border-box;
   height: auto;
   font-family: var(--font-family);
@@ -328,6 +180,12 @@
   line-height: 130%;
   color: rgba(14, 14, 14, 0.4);
   border: none;
+
+  border: 1.33px solid var(--bіliy);
+  border-radius: 5px;
+  padding: 10px;
+  width: 541px;
+  height: 48px;
 }
 
 .input:focus {
@@ -341,33 +199,101 @@
   font-size: 14px;
 }
 
-.textarea {
-  height: auto;
-  min-height: 120px;
-  resize: vertical;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  line-height: 1.4;
+.passwordToggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  align-items: center;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.passwordToggle:hover {
+  color: #666;
+  background: #f5f5f5;
+}
+
+.submitBlock {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+}
+.rowSingle {
+  width: 100%;
 }
 
 .submit {
-  background: var(--violet);
-  border: none;
-  padding: 24px 42px;
-  border-radius: 18px;
+  border: 1px solid var(--zoloto);
+
+  border-radius: 4px;
+  padding: 15px;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: var(--third-family);
-  font-weight: 800;
+
+  font-family: var(--second-family);
+  font-weight: 600;
   line-height: 135%;
-  color: var(--white);
-  box-shadow: none;
+
+  width: 100%;
+  color: var(--zoloto);
 }
 
-.submit:hover:not(:disabled) {
-  box-shadow: none;
+.submitTwo {
+  background: var(--chervoniy);
+  cursor: pointer;
+  font-size: 0.83333vw;
+  font-family: var(--second-family);
+  width: 100%;
+  color: var(--chorniy);
+  border-radius: 0.20833vw;
+  padding: 0.78125vw;
+  font-weight: 600;
+  line-height: 135%;
+  transition: all 0.2s;
+}
+
+.submitTwo {
+  background: var(--zoloto);
+  border: none;
+  border-radius: 4px;
+  padding: 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--chorniy);
+
+  width: 100%;
+
+  font-family: var(--second-family);
+  font-weight: 600;
+  line-height: 135%;
+
+  width: 100%;
+}
+
+.submit:hover {
   background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
 }
 
 .submit:disabled {
@@ -388,9 +314,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 140%;
-  color: rgba(14, 14, 14, 0.4);
-  text-align: center;
-  margin: 0;
+  color: var(--bіliy);
 }
 
 .privacyLink {
@@ -398,41 +322,50 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 140%;
-  color: rgba(14, 14, 14, 0.4);
-
-  text-decoration-skip-ink: none;
-}
-
-.privacyLink:hover {
+  color: var(--zoloto);
   text-decoration: underline;
+  text-decoration-skip-ink: none;
+  cursor: pointer;
 }
 
-.passwordGroup {
+/* LoginModal.module.css */
+
+.bottomLinksBlock {
+  display: flex;
+
+  align-items: center;
   width: 100%;
-  margin: 0;
+  gap: 8px;
+  justify-content: center;
 }
 
-.passwordGroup .inputBlock {
-  width: 100%;
+.registerSwitchBlock {
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.passwordToggle {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+.registerText {
+  color: var(--grey-text);
+  font-size: 14px;
+}
+
+.registerButton {
   background: none;
   border: none;
-  color: #999;
+  padding: 0;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s;
+
+  font-size: 14px;
+  font-weight: 500;
+  /* text-decoration: underline; */
+  transition: color 0.2s ease;
+  color: var(--violet);
 }
 
-.passwordToggle:hover {
-  color: #666;
-  background: #f5f5f5;
+.registerButton:hover {
+  text-decoration: underline;
 }
 
 @keyframes slideUp {
@@ -442,6 +375,30 @@
   to {
     transform: translateY(0);
   }
+}
+
+/* Стилі для кнопки забутого пароля */
+.forgotPasswordBlock {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.forgotPasswordButton {
+  background: none;
+  border: none;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: var(--zoloto);
+  cursor: pointer;
+
+  padding: 4px 0;
+  transition: color 0.2s ease;
+}
+
+.forgotPasswordButton:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 1000px) {
@@ -493,8 +450,8 @@
   }
 
   .close {
-    top: mvw(-8);
-    right: mvw(0);
+    top: mvw(-6);
+    right: mvw(7);
     width: mvw(45);
     height: mvw(45);
     border-radius: mvw(10);
@@ -509,20 +466,11 @@
   }
 
   .form {
-    gap: mvw(16);
+    gap: mvw(8);
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
-  }
-
-  .row {
-    grid-template-columns: 1fr;
-    gap: mvw(14);
-  }
-
-  .rowSingle {
-    gap: mvw(12);
   }
 
   .privacyLinkBlock {
@@ -533,21 +481,24 @@
 
   .inputGroup {
     width: 100%;
+    gap: mvw(14);
   }
 
   .inputWrapper {
     width: 100%;
   }
 
-  .inputIconWrapper {
-    left: mvw(16);
-    top: mvw(27);
+  .inputContainer {
+    gap: mvw(8);
   }
 
   .inputIcon {
     left: mvw(16);
     width: mvw(20);
     height: mvw(20);
+  }
+  .forgotPasswordButton {
+    font-size: mvw(12);
   }
 
   .inputIcon svg {
@@ -566,10 +517,39 @@
     font-size: mvw(14);
   }
 
-  .textarea {
-    min-height: mvw(120);
-    padding-top: mvw(16);
-    padding-bottom: mvw(16);
+  /* Стилі для InputField в LoginModal на мобілці */
+  .loginInputLabel {
+    top: 55% !important;
+  }
+
+  .loginInputBlock:has(input:focus) .loginInputLabel,
+  .loginInputBlock:has(input:not(:placeholder-shown)) .loginInputLabel {
+    top: mvw(10) !important;
+  }
+
+  /* Стилі для PasswordField в LoginModal на мобілці */
+  /* .loginPasswordLabel {
+    top: 55% !important;
+    transform: translateY(-50%) !important;
+  } */
+
+  .loginPasswordBlock:has(input:focus) .loginPasswordLabel,
+  .loginPasswordBlock:has(input:not(:placeholder-shown)) .loginPasswordLabel {
+    top: mvw(10) !important;
+    transform: translateY(0) !important;
+  }
+
+  .loginPasswordEyeBtn {
+    right: mvw(15) !important;
+  }
+
+  .passwordToggle {
+    right: mvw(20);
+  }
+
+  .passwordToggle svg {
+    width: mvw(20);
+    height: mvw(20);
   }
 
   .submit {
@@ -578,12 +558,6 @@
     font-size: mvw(16);
     line-height: 135%;
     width: 100%;
-    box-shadow: none;
-  }
-
-  .submit:hover:not(:disabled) {
-    box-shadow: none;
-    background: var(--black);
   }
 
   .error {
@@ -599,13 +573,10 @@
     font-size: mvw(12);
     line-height: 140%;
   }
-
-  .passwordToggle {
-    right: mvw(16);
+  .registerText {
+    font-size: mvw(12);
   }
-
-  .passwordToggle svg {
-    width: mvw(20);
-    height: mvw(20);
+  .registerButton {
+    font-size: mvw(12);
   }
 }

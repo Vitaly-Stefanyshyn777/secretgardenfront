@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import styles from "./OrdersHistory.module.css";
 import OrdersHistorySkeleton from "./OrdersHistorySkeleton";
+import { BoxIcons } from "@/components/Icons/Icons";
 
 interface WCOrderItem {
   id: number;
@@ -84,7 +85,7 @@ const OrdersHistory: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
   const [productPages, setProductPages] = useState<Map<string, number>>(
-    new Map()
+    new Map(),
   );
   const ordersPerPage = 4;
   const productsPerPage = 3;
@@ -120,7 +121,7 @@ const OrdersHistory: React.FC = () => {
         } catch {}
       }
       const path = `/wp-json/wc/v3/orders?customer=${encodeURIComponent(
-        String(customerId || user?.id || "")
+        String(customerId || user?.id || ""),
       )}`;
       const { data } = await adminRequest({
         method: "GET",
@@ -189,7 +190,7 @@ const OrdersHistory: React.FC = () => {
             key: String(m.key),
             value:
               m.value === null || m.value === undefined ? "" : String(m.value),
-          }))
+          })),
         );
       }
     });
@@ -236,8 +237,8 @@ const OrdersHistory: React.FC = () => {
           o.status === "completed"
             ? "delivered"
             : o.status === "cancelled"
-            ? "cancelled"
-            : "processing",
+              ? "cancelled"
+              : "processing",
         totalPrice: isNaN(total) ? 0 : total,
         orderIndex: index + 1, // Номер замовлення (починаючи з 1)
         itemCount: lineItems.length || 1, // Загальна кількість товарів
@@ -249,7 +250,7 @@ const OrdersHistory: React.FC = () => {
 
   const totalPages = useMemo(
     () => Math.max(1, Math.ceil(orders.length / ordersPerPage)),
-    [orders.length]
+    [orders.length],
   );
 
   const getStatusText = (status: string) => {
@@ -340,7 +341,7 @@ const OrdersHistory: React.FC = () => {
           meta.key === "pa_color" ||
           meta.key === "_product_attributes" ||
           meta.key === "color" ||
-          meta.key.toLowerCase().includes("color")
+          meta.key.toLowerCase().includes("color"),
       );
       if (colorMeta && colorMeta.value) {
         return colorMeta.value;
@@ -361,7 +362,10 @@ const OrdersHistory: React.FC = () => {
     return null;
   };
 
-  const calcOrderLineItemPrices = (item: WCOrderItem, orderProductId?: number) => {
+  const calcOrderLineItemPrices = (
+    item: WCOrderItem,
+    orderProductId?: number,
+  ) => {
     const qty = item.quantity && item.quantity > 0 ? item.quantity : 1;
     const total = Number(item.total || 0);
     const subtotal = Number(item.subtotal || 0);
@@ -375,7 +379,10 @@ const OrdersHistory: React.FC = () => {
     const priceCalc = calculatePrice({
       price: unitWcPrice,
       regularPrice: unitRegular,
-      salePrice: unitWcPrice > 0 && unitRegular > 0 && unitWcPrice < unitRegular ? unitWcPrice : undefined,
+      salePrice:
+        unitWcPrice > 0 && unitRegular > 0 && unitWcPrice < unitRegular
+          ? unitWcPrice
+          : undefined,
       isLoggedIn: effectiveIsLoggedIn,
       priceSellRegistry,
     });
@@ -383,7 +390,8 @@ const OrdersHistory: React.FC = () => {
     const unitFinal = priceCalc.finalPrice;
     const unitOriginal = priceCalc.originalPrice;
     const shouldShowOld =
-      priceCalc.shouldShowOldPrice || (unitOriginal > unitFinal && unitOriginal > 0);
+      priceCalc.shouldShowOldPrice ||
+      (unitOriginal > unitFinal && unitOriginal > 0);
     return {
       unitFinal: Number.isFinite(unitFinal) ? unitFinal : 0,
       unitOriginal: Number.isFinite(unitOriginal) ? unitOriginal : 0,
@@ -424,7 +432,7 @@ const OrdersHistory: React.FC = () => {
   return (
     <div className={styles.ordersContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Історія усіх замовлень</h1>
+        <h1 className={styles.title}>Ваші замовлення</h1>
       </div>
 
       <div className={styles.divider}></div>
@@ -432,13 +440,21 @@ const OrdersHistory: React.FC = () => {
       {isLoading ? (
         <OrdersHistorySkeleton />
       ) : orders.length === 0 ? (
-        <div className={styles.empty}>У вас немає замовлень</div>
+        <div className={styles.empty}>
+          <div className={styles.emptyContent}>
+            <div className={styles.emptySubtitle}>У вас ще немає замовлень</div>
+            <div className={styles.emptyDescription}>
+              Тут з’явиться історія ваших покупок
+            </div>
+          </div>
+          <BoxIcons />
+        </div>
       ) : (
         <div className={styles.ordersList}>
           {orders
             .slice(
               (currentPage - 1) * ordersPerPage,
-              currentPage * ordersPerPage
+              currentPage * ordersPerPage,
             )
             .map((order, index) => (
               <React.Fragment key={order.id}>
@@ -551,7 +567,7 @@ const OrdersHistory: React.FC = () => {
                                 const paginatedItems =
                                   order.lineItems?.slice(
                                     startIndex,
-                                    endIndex
+                                    endIndex,
                                   ) || [];
 
                                 return paginatedItems.map((item, itemIndex) => (
@@ -566,7 +582,7 @@ const OrdersHistory: React.FC = () => {
                                         <Image
                                           src={
                                             productImagesMap.get(
-                                              item.product_id
+                                              item.product_id,
                                             ) || "/placeholder.png"
                                           }
                                           alt={item.name}
@@ -625,13 +641,17 @@ const OrdersHistory: React.FC = () => {
                                             className={styles.productItemPrice}
                                           >
                                             {formatPriceUtil(
-                                              calcOrderLineItemPrices(item, item.product_id)
-                                                .unitFinal
+                                              calcOrderLineItemPrices(
+                                                item,
+                                                item.product_id,
+                                              ).unitFinal,
                                             )}{" "}
                                             ₴
                                           </span>
-                                          {calcOrderLineItemPrices(item, item.product_id)
-                                            .shouldShowOld && (
+                                          {calcOrderLineItemPrices(
+                                            item,
+                                            item.product_id,
+                                          ).shouldShowOld && (
                                             <span
                                               className={
                                                 styles.productItemOriginalPrice
@@ -640,8 +660,8 @@ const OrdersHistory: React.FC = () => {
                                               {formatPriceUtil(
                                                 calcOrderLineItemPrices(
                                                   item,
-                                                  item.product_id
-                                                ).unitOriginal
+                                                  item.product_id,
+                                                ).unitOriginal,
                                               )}{" "}
                                               ₴
                                             </span>
@@ -741,7 +761,9 @@ const OrdersHistory: React.FC = () => {
                                     Сума замовлення
                                   </span>
                                   <span className={styles.costValue}>
-                                    {formatPriceUtil(calcOrderFinalTotal(order))}{" "}
+                                    {formatPriceUtil(
+                                      calcOrderFinalTotal(order),
+                                    )}{" "}
                                   </span>
                                 </div>
                                 <div className={styles.costRow}>
@@ -749,7 +771,9 @@ const OrdersHistory: React.FC = () => {
                                     Сума знижки
                                   </span>
                                   <span className={styles.costValue}>
-                                    {formatPriceUtil(calcOrderDiscount(order))}{" "}
+                                    {formatPriceUtil(
+                                      calcOrderDiscount(order),
+                                    )}{" "}
                                   </span>
                                 </div>
                                 <div className={styles.costRow}>
@@ -768,7 +792,9 @@ const OrdersHistory: React.FC = () => {
                                   Разом
                                 </span>
                                 <span className={styles.costValueTotal}>
-                                  {formatPriceUtil(calcOrderFinalTotal(order))}{" "}
+                                  {formatPriceUtil(
+                                    calcOrderFinalTotal(order),
+                                  )}{" "}
                                 </span>
                               </div>
                             </div>

@@ -4,7 +4,12 @@ import {
   UseFormHandleSubmit,
   UseFormGetValues,
 } from "react-hook-form";
-import { EmailIcon, NumberIcon, UserIcon, PasswordsIcon } from "@/components/Icons/Icons";
+import {
+  EmailIcon,
+  NumberIcon,
+  UserIcon,
+  PasswordsIcon,
+} from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
 import PasswordField from "@/components/ui/FormFields/PasswordField";
 import s from "./RegisterModal.module.css";
@@ -67,75 +72,78 @@ export default function RegisterForm({
         </div>
       </div>
 
-      <div className={s.rowSingle}>
-        <InputField
-          icon={<EmailIcon />}
-          label="Ваша пошта"
-          type="email"
-          id="register-form-email-field"
-          hasError={!!errors.email}
-          supportingText={
-            (errors.email?.message as string) ||
-            'Електронна адреса має містити знак "@" та коректний домен'
-          }
-          {...register("email", {
-            required: "Вкажіть email",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message:
-                'Електронна адреса має містити знак "@" та коректний домен',
-            },
-          })}
-        />
-      </div>
+      <div className={s.row}>
+        <div className={s.rowSingle}>
+          <InputField
+            icon={<EmailIcon />}
+            label="Ваша пошта"
+            type="email"
+            id="register-form-email-field"
+            hasError={!!errors.email}
+            supportingText={
+              (errors.email?.message as string) ||
+              'Електронна адреса має містити знак "@" та коректний домен'
+            }
+            {...register("email", {
+              required: "Вкажіть email",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message:
+                  'Електронна адреса має містити знак "@" та коректний домен',
+              },
+            })}
+          />
+        </div>
 
-      <div className={s.rowSingle}>
-        <InputField
-          icon={<NumberIcon />}
-          label="Ваш номер телефону"
-          type="tel"
-          id="register-form-phone-field"
-          onlyDigits
-          hasError={!!errors.phone}
-          supportingText="Будь ласка, вкажіть номер телефону"
-          {...register("phone", { required: true })}
-        />
+        <div className={s.rowSingle}>
+          <InputField
+            icon={<NumberIcon />}
+            label="Ваш номер телефону"
+            type="tel"
+            id="register-form-phone-field"
+            onlyDigits
+            hasError={!!errors.phone}
+            supportingText="Будь ласка, вкажіть номер телефону"
+            {...register("phone", { required: true })}
+          />
+        </div>
       </div>
+      <div className={s.row}>
+        <div className={s.rowSingle}>
+          <PasswordField
+            icon={<PasswordsIcon />}
+            label="Пароль"
+            hasError={!!errors.password}
+            supportingText={
+              (errors.password?.message as string) ||
+              "Пароль має містити щонайменше 6 символів"
+            }
+            {...register("password", {
+              required: true,
+              minLength: {
+                value: 6,
+                message: "Пароль має містити щонайменше 6 символів",
+              },
+            })}
+          />
+        </div>
 
-      <div className={s.rowSingle}>
-        <PasswordField
-          icon={<PasswordsIcon />}
-          label="Пароль"
-          hasError={!!errors.password}
-          supportingText={
-            (errors.password?.message as string) ||
-            "Пароль має містити щонайменше 6 символів"
-          }
-          {...register("password", {
-            required: true,
-            minLength: {
-              value: 6,
-              message: "Пароль має містити щонайменше 6 символів",
-            },
-          })}
-        />
-      </div>
-
-      <div className={s.rowSingle}>
-        <PasswordField
-          icon={<PasswordsIcon />}
-          label="Повторіть пароль"
-          hasError={!!errors.confirm_password}
-          supportingText={
-            (errors.confirm_password?.message as string) ||
-            "Паролі мають співпадати"
-          }
-          {...register("confirm_password", {
-            required: "Підтвердіть пароль",
-            validate: (value) =>
-              value === getValues("password") || "Паролі мають співпадати",
-          })}
-        />
+        <div className={s.rowSingle}>
+          <PasswordField
+            icon={<PasswordsIcon />}
+            label="Повторіть пароль"
+            hasError={!!errors.confirm_password}
+            supportingText={
+              (errors.confirm_password?.message as string) ||
+              "Паролі мають співпадати"
+            }
+            {...register("confirm_password", {
+              required: "Підтвердіть пароль",
+              validate: (value) =>
+                value === getValues("password") || "Паролі мають співпадати",
+            })}
+          />
+        </div>
       </div>
 
       {isError && (
@@ -143,13 +151,22 @@ export default function RegisterForm({
       )}
 
       <div className={s.privacyLinkBlock}>
-        <button
-          className={s.submit}
-          type="submit"
-          disabled={isSubmitting || isPending}
-        >
-          {isPending ? "Відправка..." : "Зареєструватись"}
-        </button>
+        <div className={s.submitBlock}>
+          <button
+            className={s.submit}
+            type="submit"
+            disabled={isSubmitting || isPending}
+          >
+            {isPending ? "Відправка..." : "Вже маю акаунт"}
+          </button>
+          <button
+            className={s.submitTwo}
+            type="submit"
+            disabled={isSubmitting || isPending}
+          >
+            {isPending ? "Відправка..." : "Продовжити"}
+          </button>
+        </div>
 
         <p className={s.privacyText}>
           Натискаючи на кнопку, ви погоджуєтесь з{" "}

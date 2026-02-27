@@ -5,19 +5,19 @@
   background: rgba(14, 14, 14, 0.2);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   z-index: 1000;
 }
 .modal {
-  background: #f9f9f9;
+  background: var(--fon);
   width: 100%;
-  max-width: 1588px;
-  height: auto;
+  max-width: 700px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 20px;
-  padding: 52px;
+
+  padding: 40px;
   gap: 40px;
 }
 .topbarListBlock {
@@ -29,13 +29,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: row-reverse;
 }
 .title {
-  font-family: var(--second-family);
-  font-weight: 500;
-  font-size: 36px;
-  line-height: 110%;
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
+  width: 100%;
+  text-align: center;
 }
 .list {
   overflow: auto;
@@ -50,9 +53,12 @@
 }
 .leftList {
   width: 100%;
-  height: 444px;
+  height: 100%;
   max-height: 444px;
+  overflow-x: hidden;
+  overflow-y: auto;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -60,15 +66,13 @@
 }
 
 .rightSummary {
-  background: #fff;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 50px;
   width: 100%;
-  max-width: 680px;
+
   justify-content: space-between;
-  padding: 32px;
 }
 .freeShipping {
   font-family: var(--font-family);
@@ -93,28 +97,26 @@
 }
 .summaryLabelPrimary,
 .summaryAmountPrimary {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 140%;
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .amountDiscount {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 140%;
-  color: var(--black);
-  opacity: 0.4;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .currencyDiscount {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 140%;
-  color: var(--black);
-  opacity: 0.4;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .currency {
@@ -125,52 +127,54 @@
   color: var(--black);
 }
 .summaryCurrencyPrimary {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 140%;
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .label {
-  font-family: var(--font-family);
+  font-family: var(--font3);
   font-weight: 400;
-  font-size: 16px;
-  line-height: 130%;
-  color: var(--black);
-  opacity: 0.8;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .labelStrong {
-  font-family: var(--font-family);
-  font-weight: 500;
+  font-family: var(--font3);
+  font-weight: 400;
   font-size: 24px;
-  line-height: 110%;
-  color: var(--black);
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .amountTogether {
-  font-family: var(--font-family);
-  font-weight: 500;
+  font-family: var(--font3);
+  font-weight: 400;
   font-size: 24px;
-  line-height: 110%;
-  color: var(--black);
-  color: var(--black);
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .currencyTogether {
-  font-family: var(--font-family);
-  font-weight: 500;
+  font-family: var(--font3);
+  font-weight: 400;
   font-size: 24px;
-  line-height: 110%;
-  color: var(--black);
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .value {
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .valueNote {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 140%;
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .totalValue {
   font-family: var(--font-family);
@@ -191,10 +195,28 @@
   background: var(--violet, #6c3bd7);
 }
 
+.summaryPromoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
 .summaryRows {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.promoRow {
+  margin-top: 0;
+}
+
+.promoWrapper {
+  width: 100%;
+}
+
+.promoInput {
+  width: 100%;
 }
 
 .summaryButtons {
@@ -233,14 +255,14 @@
   font-weight: 600;
 }
 .secondary {
-  border: 2px solid #8426d7;
-  border-radius: 16px;
-  padding: 22px 42px;
+  border: 2px solid var(--zoloto);
+  border-radius: 4px;
+  padding: 15px;
   font-family: var(--third-family);
   font-weight: 800;
   font-size: 16px;
   line-height: 135%;
-  color: #8426d7;
+  color: var(--zoloto);
   transition: all 0.3s ease;
 }
 
@@ -462,7 +484,7 @@
 .controlsBlock {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 40px;
 }
 .titleBlock {
   display: flex;
@@ -473,7 +495,7 @@
 
 .item {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   align-items: center;
   justify-content: space-between;
   height: auto;
@@ -482,7 +504,7 @@
 
 .minus {
   border-radius: 8px;
-  background: #f2f2f2;
+
   width: 36px;
   height: 36px;
   display: flex;
@@ -490,14 +512,19 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  color: var(--bіliy);
+  backdrop-filter: blur(2.08333vw);
+  background: rgba(249, 249, 249, 0.1);
+
   svg {
+    color: var(--bіliy);
     width: 12px;
     height: 3px;
   }
 }
 .plus {
   border-radius: 8px;
-  background: #f2f2f2;
+
   width: 36px;
   height: 36px;
   display: flex;
@@ -505,7 +532,11 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  color: var(--bіliy);
+  backdrop-filter: blur(2.08333vw);
+  background: rgba(249, 249, 249, 0.1);
   svg {
+    color: var(--bіliy);
     width: 12px;
     height: 12px;
   }
@@ -551,7 +582,11 @@
   font-size: 14px;
 }
 .name {
-  font-weight: 500;
+  font-family: var(--second-family);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 .price {
   opacity: 0.7;
@@ -563,7 +598,6 @@
   gap: 8px;
 }
 .priceWrap {
-  margin-left: auto;
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -597,18 +631,18 @@
   color: var(--style);
 }
 .currentPriceValue {
-  font-family: var(--second-family);
-  font-weight: 500;
-  font-size: 22px;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
   line-height: 120%;
-  color: var(--style);
+  color: var(--bіliy);
 }
 .priceCurrency {
-  font-family: var(--second-family);
-  font-weight: 500;
-  font-size: 22px;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
   line-height: 120%;
-  color: var(--style);
+  color: var(--bіliy);
 }
 .oldPrice {
   display: flex;
@@ -632,12 +666,19 @@
   border-radius: 8px;
   width: 36px;
   height: 36px;
-  background: #f2f2f2;
+  backdrop-filter: blur(2.08333vw);
+  background: rgba(249, 249, 249, 0.1);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+
+  font-family: var(--font-family);
+  font-weight: 900;
+  font-size: 24px;
+  text-align: center;
+  color: var(--bіliy);
   svg {
     width: 12px;
     height: 12px;
@@ -649,12 +690,26 @@
   background: var(--violet);
 }
 
+.qtyBlock {
+  border: 1px solid var(--bіliy);
+  border-radius: 4px;
+  padding: 2px 6px;
+  width: 99px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .qty {
-  font-family: var(--font-family);
-  font-weight: 500;
+  font-family: var(--third-family);
+  font-weight: 400;
   font-size: 16px;
-  line-height: 120%;
-  color: var(--black);
+  line-height: 150%;
+  color: var(--bіliy);
 }
 .remove {
   background: none;
@@ -670,15 +725,17 @@
   border-top: 1px solid #eee;
 }
 .primary {
-  border-radius: 16px;
-  padding: 22px 42px;
-  background: var(--violet);
+  border-radius: 4px;
+  padding: 15px;
+  background: var(--zoloto);
   font-family: var(--third-family);
-  font-weight: 800;
-  font-size: 16px;
-  line-height: 135%;
-  color: var(--white);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 156%;
+  color: var(--chorniy);
   transition: background 0.3s ease;
+
+  width: 100%;
 }
 
 .primary:hover {

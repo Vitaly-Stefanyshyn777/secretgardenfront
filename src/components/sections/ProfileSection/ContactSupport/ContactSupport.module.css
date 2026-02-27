@@ -1,6 +1,7 @@
 .contactSupport {
   background-color: #ffffff;
   border-radius: 12px;
+  padding: 40px 32px;
 }
 
 .title {
@@ -9,13 +10,89 @@
   font-size: 32px;
   line-height: 120%;
   color: var(--black);
-  margin: 0 0 32px 0;
+  margin: 0 0 24px 0;
 }
 
-.contactGrid {
+.subtitleBlock {
   display: flex;
-  gap: 12px;
-  align-items: stretch;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.subtitleTitle {
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 130%;
+  color: var(--black);
+  margin: 0;
+}
+
+.subtitleText {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+  margin: 0;
+}
+
+.blocksRow {
+  display: flex;
+  flex-direction: row;
+  gap: 180px;
+  align-items: flex-start;
+}
+
+.contactBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.contactItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconCircle {
+  border-radius: 0.83333vw;
+  width: 3.02083vw;
+  height: 3.02083vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease;
+  border: 2px solid rgba(255, 254, 252, 0.3);
+  color: var(--white);
+  background: #151515;
+}
+
+.iconCircle svg {
+  width: 1.5vw;
+  height: 1.5vw;
+}
+
+.contactLabel {
+  font-family: var(--second-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 110%;
+  color: rgba(14, 14, 14, 0.5);
+}
+
+.contactText {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 130%;
+  color: var(--black);
 }
 
 .hoursInfoBlock {

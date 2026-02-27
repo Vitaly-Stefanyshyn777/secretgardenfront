@@ -1,25 +1,23 @@
 .personalData {
-  --grey-for-cards: #c0c0c0;
-  background-color: #ffffff;
   border-radius: 12px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 25px;
 }
 
 .title {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 32px;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 40px;
   line-height: 120%;
-  color: var(--black);
+  color: var(--bіliy);
 }
 
 .description {
@@ -28,6 +26,88 @@
   font-size: 16px;
   line-height: 140%;
   color: var(--black);
+}
+
+.subtitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subtitleTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  text-align: center;
+  color: var(--bіliy);
+}
+
+.subtitleText {
+  font-family: var(--second-family);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 120%;
+  text-align: center;
+  color: var(--bіliy);
+}
+
+.contactBlocksRow {
+  display: flex;
+  flex-direction: row;
+  gap: 180px;
+  /* align-items: flex-start; */
+  align-items: center;
+  justify-content: center;
+}
+
+.contactBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.contactItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconCircle {
+  border-radius: 0.83333vw;
+  width: 3.02083vw;
+  height: 3.02083vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease;
+  border: 2px solid var(--zoloto);
+  color: var(--white);
+}
+
+.iconCircle svg {
+  width: 1.5vw;
+  height: 1.5vw;
+}
+
+.contactLabel {
+  font-family: var(--second-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 110%;
+  color: rgba(14, 14, 14, 0.5);
+}
+
+.contactText {
+  font-family: var(--second-family);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .form {
@@ -141,7 +221,10 @@
   font-family: var(--font-family);
   font-weight: 500;
   font-size: 14px;
-  transition: background 0.35s ease, color 0.35s ease, box-shadow 0.35s ease,
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease,
     transform 0.25s ease;
   white-space: nowrap;
   flex-shrink: 0;
@@ -327,7 +410,9 @@
   font-family: var(--font-family);
   font-weight: 600;
   font-size: 16px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
 
   height: 66px;
 }

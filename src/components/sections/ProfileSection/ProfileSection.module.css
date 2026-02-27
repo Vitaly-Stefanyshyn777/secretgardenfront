@@ -2,17 +2,15 @@
   height: auto;
   padding: 0;
   padding: 120px 44px 150px 44px;
-  background: var(--bg-color);
 }
 
 .container {
   display: flex;
   height: auto;
-  gap: 16px;
+  gap: 27px;
 }
 
 .trainerContainer {
-  background: var(--white);
   border-radius: 16px;
 }
 
@@ -33,9 +31,7 @@
 
   overflow-y: auto;
   width: 100%;
-  padding: 55px;
-  max-width: 1200px;
-  background-color: var(--white);
+  padding: 0px;
 }
 
 .backBtn {
@@ -62,7 +58,6 @@
   }
 
   .trainerContainer {
-    background: var(--white);
     border-radius: mvw(16);
   }
 

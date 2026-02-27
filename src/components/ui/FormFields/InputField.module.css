@@ -14,7 +14,7 @@
 
 .inputIcon {
   position: absolute;
-  left: 16px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
   color: #999;
@@ -40,38 +40,20 @@
 
 .input {
   width: 100%;
-  padding: 20px 20px 20px 48px;
+  padding: 15px;
   border-radius: 12px;
   transition: all 0.2s;
   box-sizing: border-box;
   height: auto;
   font-family: var(--font-family);
   font-weight: 400;
-  font-size: 16px;
-  line-height: 130%;
-  color: #000;
-  background: #f9f9f9;
-  border: 1px solid #f9f9f9; /* спокійний стан */
-
-  width: 100%;
-
-  /* border-radius: 12px; */
-  transition: all 0.2s;
-  /* background: var(--white); */
-  box-sizing: border-box;
-  height: auto;
-  font-family: var(--font-family);
-  font-weight: 400;
   font-size: 14px;
   line-height: 130%;
-  color: rgba(14, 14, 14, 0.4);
-  border: none;
+  color: var(--bіliy);
+  /* background: #f9f9f9; */
 
-  border: 1.33px solid var(--bіliy);
-  border-radius: 5px;
-  padding: 10px;
-  width: 541px;
-  height: 48px;
+  border: 1px solid var(--bіliy);
+  border-radius: 4px;
 }
 
 .input:focus {
@@ -80,7 +62,7 @@
 }
 
 .inputWrapper:hover .input {
-  border-color: rgba(0, 0, 0, 0.3); /* hover */
+  border-color: var(--zoloto); /* hover */
 }
 
 /* Заповнений стан без фокусу */
@@ -94,7 +76,7 @@
 
 .label {
   position: absolute;
-  left: 48px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -102,24 +84,25 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 130%;
-  color: rgba(14, 14, 14, 0.4);
+  color: var(--bіliy);
   transition: all 0.15s ease;
 }
 
 .input:focus + .label,
 .input:not(:placeholder-shown) + .label {
-  top: 8px;
+  top: 6px;
   transform: translateY(0);
   font-size: 11px;
+  color: var(--zoloto);
 }
 
 .errorIcon {
+  width: 1.04167vw;
+  height: 1.04167vw;
   position: absolute;
-  right: 16px;
   top: 50%;
+  right: 2.34375vw;
   transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
 }
 
 .supportingTextWrapper {
@@ -130,6 +113,8 @@
   height: 16px;
   pointer-events: none;
   overflow: hidden;
+
+  color: var(--chervoniy);
 }
 
 .supportingText {
@@ -150,7 +135,7 @@
 }
 
 .fieldWrapper[data-error="true"] .input {
-  border-color: var(--style);
+  border-color: var(--chervoniy);
 }
 
 .fieldWrapper[data-error="true"] .label {

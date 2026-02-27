@@ -1,6 +1,6 @@
 .trainerProfile {
-  --grey-for-cards: #c0c0c0;
-  background-color: #ffffff;
+  /* --grey-for-cards: #c0c0c0; */
+  /* background-color: #ffffff; */
   border-radius: 12px;
   width: 100%;
   display: flex;
@@ -15,11 +15,12 @@
 }
 
 .title {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 32px;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 40px;
   line-height: 120%;
-  color: var(--black);
+
+  color: var(--bіliy);
 }
 
 .form {
@@ -448,18 +449,16 @@
 }
 
 .saveBtn {
-  width: auto;
-  padding: 12px 24px;
-  background: var(--violet);
-  color: white;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  font-family: var(--font-family);
-  font-weight: 600;
+  border-radius: 4px;
+
+  min-width: 186px;
+
+  background: var(--zoloto);
+
+  font-family: var(--third-family);
+  font-weight: 500;
   font-size: 16px;
-  transition: background 0.3s ease, transform 0.2s ease;
-  height: 66px;
+  line-height: 150%;
 }
 
 /* Стилі для кнопки в модалці */
@@ -1502,20 +1501,29 @@
 }
 
 .clearBtn {
-  background: white;
-  color: var(--violet);
-  border: 2px solid var(--violet);
   cursor: pointer;
-  font-family: var(--font-family);
-  font-weight: 600;
-  font-size: 16px;
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  height: 66px;
 
-  border-radius: 16px;
-  padding: 24px 42px;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+  /* height: 66px; */
+
+  padding: 14px;
   display: flex;
   align-items: center;
+
+  border: 1px solid var(--zoloto);
+  border-radius: 4px;
+
+  min-width: 186px;
+
+  color: var(--zoloto);
+
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
 }
 
 .clearBtn:hover {

@@ -11,6 +11,9 @@ type Props = {
 };
 
 export default function NavigationLink({ item, isActive }: Props) {
+  const { icon } = item;
+  const isIconString = typeof icon === "string";
+
   return (
     <li className={styles.menuItem}>
       <Link
@@ -18,7 +21,14 @@ export default function NavigationLink({ item, isActive }: Props) {
         className={`${styles.menuLink} ${isActive ? styles.active : ""}`}
       >
         <span className={styles.menuIcon}>
-          <item.icon className={styles.iconSvg} />
+          {isIconString ? (
+            <img src={icon} alt={item.label} className={styles.iconSvg} />
+          ) : (
+            (() => {
+              const IconComponent = icon;
+              return <IconComponent className={styles.iconSvg} />;
+            })()
+          )}
         </span>
         <span className={styles.menuLabel}>{item.label}</span>
       </Link>

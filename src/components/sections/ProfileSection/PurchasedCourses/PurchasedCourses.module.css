@@ -1,5 +1,4 @@
 .purchasedCourses {
-  background-color: #ffffff;
   border-radius: 12px;
   width: 100%;
   display: flex;
@@ -10,11 +9,12 @@
 }
 
 .title {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 32px;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 40px;
   line-height: 120%;
-  color: var(--black);
+
+  color: var(--bіliy);
 }
 
 .divider {
@@ -220,6 +220,37 @@
 
 .empty {
   color: #6b7280;
+}
+
+.langActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.langButton {
+  cursor: pointer;
+  padding: 14px 20px;
+  min-width: 186px;
+  border-radius: 4px;
+  border: 1px solid var(--zoloto);
+  background: transparent;
+  color: var(--zoloto);
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.langButtonActive {
+  background: var(--zoloto);
+  color: var(--black);
+  border-color: var(--zoloto);
 }
 
 /* Skeleton loading styles - Desktop */

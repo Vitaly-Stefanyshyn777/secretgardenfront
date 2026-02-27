@@ -68,13 +68,23 @@ export default function LoginForm({
       </div>
 
       <div className={s.privacyLinkBlock}>
-        <button
-          className={s.submit}
-          type="submit"
-          disabled={isSubmitting || isPending}
-        >
-          {isPending ? "Вхід..." : "Увійти"}
-        </button>
+        <div className={s.submitBlock}>
+          <button
+            className={s.submit}
+            type="submit"
+            disabled={isSubmitting || isPending}
+          >
+            {isPending ? "Вхід..." : "Я не маю акаунт"}
+          </button>
+
+          <button
+            className={s.submitTwo}
+            type="submit"
+            disabled={isSubmitting || isPending}
+          >
+            {isPending ? "Вхід..." : "Увійти"}
+          </button>
+        </div>
 
         <div className={s.bottomLinksBlock}>
           {/* Посилання на скидання пароля */}
@@ -89,17 +99,6 @@ export default function LoginForm({
               </button>
             </div>
           )}
-
-          <div className={s.registerSwitchBlock}>
-            <span className={s.registerText}>У мене немає акаунту?</span>
-            <button
-              type="button" // Важливо: запобігає відправці форми
-              className={s.registerButton}
-              onClick={onSwitchToRegister} // ✅ Викликаємо функцію перемикання
-            >
-              Зареєструватися
-            </button>
-          </div>
         </div>
 
         <p className={s.privacyText}>

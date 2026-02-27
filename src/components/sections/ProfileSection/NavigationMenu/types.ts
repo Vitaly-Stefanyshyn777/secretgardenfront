@@ -4,6 +4,7 @@ export interface NavigationItem {
   id: string;
   label: string;
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  // Дозволяємо і компонент, і рядок
+  icon: React.ComponentType<{ className?: string }> | string;
   badge?: number;
 }

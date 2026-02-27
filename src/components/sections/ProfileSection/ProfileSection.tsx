@@ -6,7 +6,6 @@ import NavigationMenu from "./NavigationMenu/NavigationMenu";
 import VideoInstruction from "./VideoInstruction/VideoInstruction";
 import CommunityChats from "./CommunityChats/CommunityChats";
 import PurchasedCourses from "./PurchasedCourses/PurchasedCourses";
-import ContactSupport from "./ContactSupport/ContactSupport";
 import SectionDivider from "./SectionDivider/SectionDivider";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowIcon } from "@/components/Icons/Icons";
@@ -64,8 +63,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ children }) => {
               <CommunityChats />
               <SectionDivider />
               <PurchasedCourses />
-              <SectionDivider />
-              <ContactSupport />
             </>
           )}
         </div>

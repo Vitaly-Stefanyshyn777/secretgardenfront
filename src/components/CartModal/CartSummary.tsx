@@ -2,6 +2,9 @@
 import React from "react";
 import Image from "next/image";
 import s from "./CartModal.module.css";
+import type { CartItem } from "@/store/cart";
+import CartItemsList from "./CartItemsList";
+import InputField from "@/components/ui/FormFields/InputField";
 
 interface CartSummaryProps {
   total: number;
@@ -11,6 +14,7 @@ interface CartSummaryProps {
   onCheckout: () => void;
   onContinue: () => void;
   itemsCount: number;
+  items: CartItem[];
 }
 
 export default function CartSummary({
@@ -21,6 +25,7 @@ export default function CartSummary({
   onCheckout,
   onContinue,
   itemsCount,
+  items,
 }: CartSummaryProps) {
   const hasItems = itemsCount > 0;
 
@@ -32,7 +37,7 @@ export default function CartSummary({
   return (
     <div className={s.rightSummary}>
       <div className={s.summaryBlock}>
-        <div className={s.freeShipping}>
+        {/* <div className={s.freeShipping}>
           <span className={s.badgeIcon}>
             <Image
               src="/images/fi_2630085.png"
@@ -55,39 +60,52 @@ export default function CartSummary({
               </>
             )}
           </span>
-        </div>
-        <div className={s.progressWrap}>
+        </div> */}
+        {/* <div className={s.progressWrap}>
           <div className={s.progressTrack}>
             <div
               className={s.progressBar}
               style={{ width: `${progressPct}%` }}
             />
           </div>
-        </div>
-        <div className={s.summaryRows}>
-          <div className={s.summaryRow}>
-            <span className={s.summaryLabelPrimary}>Сума замовлення</span>
-            <span className={s.value}>
-              <span className={s.summaryAmountPrimary}>
-                {total.toLocaleString()}
-              </span>{" "}
-              <span className={s.summaryCurrencyPrimary}>₴</span>
-            </span>
+        </div> */}
+
+        <CartItemsList items={items} />
+
+        <div className={s.summaryPromoBlock}>
+          <div className={s.promoRow}>
+            <InputField
+              label="Промокод"
+              wrapperClassName={s.promoWrapper}
+              inputClassName={s.promoInput}
+            />
           </div>
-          <div className={s.summaryRow}>
-            <span className={s.label}>Сума знижки</span>
-            <span className={s.value}>
-              <span className={s.amountDiscount}>
-                {discount.toLocaleString()}
-              </span>{" "}
-              <span className={s.currencyDiscount}>₴</span>
-            </span>
-          </div>
-          <div className={s.summaryRow}>
-            <span className={s.label}>Вартість доставки</span>
-            <span className={s.valueNote}>
-              За тарифами &quot;Нової Пошти&quot;
-            </span>
+
+          <div className={s.summaryRows}>
+            <div className={s.summaryRow}>
+              <span className={s.summaryLabelPrimary}>Сума замовлення</span>
+              <span className={s.value}>
+                <span className={s.summaryAmountPrimary}>
+                  {total.toLocaleString()}
+                </span>{" "}
+                <span className={s.summaryCurrencyPrimary}>₴</span>
+              </span>
+            </div>
+            <div className={s.summaryRow}>
+              <span className={s.label}>Сума знижки</span>
+              <span className={s.value}>
+                <span className={s.amountDiscount}>
+                  {discount.toLocaleString()}
+                </span>{" "}
+                <span className={s.currencyDiscount}>₴</span>
+              </span>
+            </div>
+            <div className={s.summaryRow}>
+              <span className={s.label}>Вартість доставки</span>
+              <span className={s.valueNote}>
+                За тарифами &quot;Нової Пошти&quot;
+              </span>
+            </div>
           </div>
         </div>
       </div>

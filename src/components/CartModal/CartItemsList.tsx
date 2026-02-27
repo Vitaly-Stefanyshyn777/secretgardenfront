@@ -51,7 +51,7 @@ function CartItemRow({ item }: CartItemRowProps) {
     Array<{ key: string; value: string }> | undefined
   >(item.metaData);
   const [wcBasePrice, setWcBasePrice] = useState<number | undefined>(
-    item.wcPrice
+    item.wcPrice,
   );
   const [wcBaseRegularPrice, setWcBaseRegularPrice] = useState<
     number | undefined
@@ -96,7 +96,7 @@ function CartItemRow({ item }: CartItemRowProps) {
         // ВАЖЛИВО: /api/wc/products/{id} часто повертає meta_data: []
         // На product page meta приходить через WC v3. Тут робимо так само.
         const response = await fetch(
-          `/api/wc/v3/products/${encodeURIComponent(productId)}`
+          `/api/wc/v3/products/${encodeURIComponent(productId)}`,
         );
         const product = response.ok ? await response.json() : null;
 
@@ -139,12 +139,12 @@ function CartItemRow({ item }: CartItemRowProps) {
         if (item.variationId && item.variationId > 0) {
           const variation = await fetchProductVariation(
             item.variationId,
-            parentId
+            parentId,
           );
           const vPrice = parseWcPrice(
             variation?.price ||
               variation?.sale_price ||
-              variation?.regular_price
+              variation?.regular_price,
           );
           const vRegular = parseWcPrice(variation?.regular_price);
           const nextWcPrice = vPrice || 0;
@@ -162,7 +162,7 @@ function CartItemRow({ item }: CartItemRowProps) {
         const response = await fetch(`/api/wc/v3/products/${parentId}`);
         const product = response.ok ? await response.json() : null;
         const pPrice = parseWcPrice(
-          product?.price || product?.sale_price || product?.regular_price
+          product?.price || product?.sale_price || product?.regular_price,
         );
         const pRegular = parseWcPrice(product?.regular_price);
         const nextWcPrice = pPrice || 0;
@@ -225,7 +225,8 @@ function CartItemRow({ item }: CartItemRowProps) {
     }
   }, [item.id, item.price, item.originalPrice]);
 
-  const finalImageUrl = imageError ? "/placeholder.svg" : imageUrl;
+  const baseImageUrl = imageUrl || "/placeholder.svg";
+  const finalImageUrl = imageError ? "/placeholder.svg" : baseImageUrl;
 
   // Витягуємо колір з назви товару, якщо він там є
   // Шукаємо патерни: (Колір: назва), (Color: назва) або інші варіації
@@ -266,7 +267,7 @@ function CartItemRow({ item }: CartItemRowProps) {
     if (!el) return;
     const oldEl = el.querySelector(`.${s.oldPrice}`) as HTMLElement | null;
     const curEl = el.querySelector(
-      `.${s.currentPriceValue}`
+      `.${s.currentPriceValue}`,
     ) as HTMLElement | null;
   }, [item.id, shouldDisplayOldPrice, finalPrice, originalPrice]);
 
@@ -310,7 +311,10 @@ function CartItemRow({ item }: CartItemRowProps) {
               <button className={s.minus} onClick={() => decrement(item.id)}>
                 <MinuswIcon />
               </button>
-              <span className={s.qty}>{item.quantity}</span>
+
+              <div className={s.qtyBlock}>
+                <span className={s.qty}>{item.quantity}</span>
+              </div>
               <button className={s.plus} onClick={() => increment(item.id)}>
                 <PlusIcon />
               </button>
@@ -341,13 +345,24 @@ function CartItemRow({ item }: CartItemRowProps) {
 }
 
 export default function CartItemsList({ items }: CartItemsListProps) {
-  // if (items.length === 0) {
-  //   return <div className={s.empty}>Кошик порожній</div>;
-  // }
+  const displayItems: CartItem[] =
+    items.length > 0
+      ? items
+      : [
+          {
+            id: "fallback-item",
+            name: "Рюкзак BFB",
+            price: 255,
+            originalPrice: 300,
+            quantity: 1,
+            image:
+              "https://www.api.bfb.projection-learn.website/wp-content/uploads/2026/01/photo_2026-01-05_18-27-14-10.jpg",
+          },
+        ];
 
   return (
     <div className={s.leftList}>
-      {items.map((it) => (
+      {displayItems.map((it) => (
         <CartItemRow key={it.id} item={it} />
       ))}
     </div>

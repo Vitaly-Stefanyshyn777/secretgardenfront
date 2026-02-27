@@ -13,7 +13,6 @@ import {
 import CartHeader from "./CartHeader";
 import CartItemsList from "./CartItemsList";
 import CartSummary from "./CartSummary";
-import CartRecommendations from "./CartRecommendations";
 import CartModalSkeleton from "./CartModalSkeleton";
 
 export default function CartModal() {
@@ -113,19 +112,6 @@ export default function CartModal() {
     window.location.href = "/checkout";
   };
 
-  const itemsContent = (() => {
-    if (isMobile) {
-      // На мобілці використовуємо скрол замість слайдера
-      return (
-        <div className={s.mobileItemsScroll}>
-          <CartItemsList items={items} />
-        </div>
-      );
-    }
-
-    return <CartItemsList items={items} />;
-  })();
-
   const modalContent = showSkeleton ? (
     <CartModalSkeleton />
   ) : (
@@ -134,7 +120,6 @@ export default function CartModal() {
         <div className={s.topbarListBlock}>
           <CartHeader onClose={close} />
           <div className={s.bodyTwoCols}>
-            {itemsContent}
             <CartSummary
               total={total}
               discount={discount}
@@ -143,9 +128,9 @@ export default function CartModal() {
               onCheckout={handleCheckout}
               onContinue={close}
               itemsCount={items.length}
+              items={items}
             />
           </div>
-          <CartRecommendations />
         </div>
       </div>
     </div>

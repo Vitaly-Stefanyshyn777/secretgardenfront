@@ -83,7 +83,7 @@ const ChangePassword: React.FC = () => {
         {
           params: { path: `/wp-json/wp/v2/users/${user.id}` },
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       toast.success("Пароль успішно змінено");
       reset();
@@ -109,7 +109,7 @@ const ChangePassword: React.FC = () => {
             label="Поточний пароль"
             hasError={false}
             supportingText="Введіть поточний пароль"
-            inputStyle={{ backgroundColor: isMobile ? '#fff' : '#f9f9f9', borderColor: isMobile ? '#fff' : '#f9f9f9' }}
+            // inputStyle={{ backgroundColor: isMobile ? '#fff' : '#f9f9f9', borderColor: isMobile ? '#fff' : '#f9f9f9' }}
             eyeBtnClassName={isMobile ? styles.eyeBtnMobile : ""}
             {...register("currentPassword", { required: true })}
             autoComplete="current-password"
@@ -122,7 +122,10 @@ const ChangePassword: React.FC = () => {
             label="Введіть новий пароль"
             hasError={false}
             supportingText="Новий пароль має містити щонайменше 8 символів та відрізнятися від поточного"
-            inputStyle={{ backgroundColor: isMobile ? '#fff' : '#f9f9f9', borderColor: isMobile ? '#fff' : '#f9f9f9' }}
+            // inputStyle={{
+            //   backgroundColor: isMobile ? "#fff" : "#f9f9f9",
+            //   borderColor: isMobile ? "#fff" : "#f9f9f9",
+            // }}
             eyeBtnClassName={isMobile ? styles.eyeBtnMobile : ""}
             {...register("newPassword", { required: true, minLength: 8 })}
             autoComplete="new-password"
@@ -135,7 +138,10 @@ const ChangePassword: React.FC = () => {
             label="Підтвердіть новий пароль"
             hasError={false}
             supportingText="Повторіть новий пароль без помилок"
-            inputStyle={{ backgroundColor: isMobile ? '#fff' : '#f9f9f9', borderColor: isMobile ? '#fff' : '#f9f9f9' }}
+            // inputStyle={{
+            //   backgroundColor: isMobile ? "#fff" : "#f9f9f9",
+            //   borderColor: isMobile ? "#fff" : "#f9f9f9",
+            // }}
             eyeBtnClassName={isMobile ? styles.eyeBtnMobile : ""}
             {...register("confirmPassword", { required: true, minLength: 8 })}
             autoComplete="new-password"

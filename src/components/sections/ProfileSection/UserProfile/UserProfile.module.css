@@ -5,6 +5,7 @@
   background: var(--white);
   border-radius: 12px;
   padding: 20px;
+  display: none;
 }
 
 .avatarContainer {

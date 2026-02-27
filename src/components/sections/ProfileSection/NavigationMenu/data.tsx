@@ -13,41 +13,30 @@ import type { NavigationItem } from "./types";
 
 export const navigationItems: NavigationItem[] = [
   {
-    id: "home",
-    label: "Головна",
-    href: "/profile",
-    icon: HouseIcon,
-  },
-  {
     id: "trainer-profile",
-    label: "Профіль тренера",
+    label: "Ваш кабінет",
     href: "/profile/trainer-profile",
-    icon: User2Icon,
+    icon: "/icons/icon-6.svg",
     badge: 0,
   },
   {
     id: "courses",
-    label: "Курси",
+    label: "Мова",
     href: "/profile/courses",
-    icon: DumbbellsIcon,
+    icon: "/icons/icon-11.svg",
   },
   {
     id: "orders",
-    label: "Замовлення",
+    label: "Ваші замовлення",
     href: "/profile/orders",
-    icon: BagIcon,
+
+    icon: "/icons/icon-7.svg",
   },
   {
     id: "personal-data",
-    label: "Особисті дані",
+    label: "Зв'язатися з нами",
     href: "/profile/personal-data",
-    icon: DocumentIcon,
-  },
-  {
-    id: "subscription",
-    label: "Підписка",
-    href: "/profile/subscription/current",
-    icon: BagMoneyIcon,
+    icon: "/icons/icon-8.svg",
   },
   {
     id: "change-password",
@@ -55,11 +44,6 @@ export const navigationItems: NavigationItem[] = [
     href: "/profile/change-password",
     icon: LockIcon2,
   },
-  {
-    id: "profile-guide",
-    label: "Як заповнити профіль",
-    href: "/profile/profile-guide",
-    icon: QuestionBorderIcon,
-  },
-  { id: "logout", label: "Вийти", href: "/logout", icon: EntranceIcon },
+
+  { id: "logout", label: "Вийти", href: "/logout", icon: "/icons/icon-9.svg" },
 ];
