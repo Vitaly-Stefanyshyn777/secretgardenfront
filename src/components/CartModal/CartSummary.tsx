@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import s from "./CartModal.module.css";
 import type { CartItem } from "@/store/cart";
 import CartItemsList from "./CartItemsList";
 import InputField from "@/components/ui/FormFields/InputField";
+import { BasketIcons } from "@/components/Icons/Icons";
 
 interface CartSummaryProps {
   total: number;
@@ -70,66 +70,102 @@ export default function CartSummary({
           </div>
         </div> */}
 
-        <CartItemsList items={items} />
+        {hasItems ? (
+          <>
+            <CartItemsList items={items} />
 
-        <div className={s.summaryPromoBlock}>
-          <div className={s.promoRow}>
-            <InputField
-              label="Промокод"
-              wrapperClassName={s.promoWrapper}
-              inputClassName={s.promoInput}
-            />
-          </div>
+            <div className={s.summaryPromoBlock}>
+              <div className={s.promoRow}>
+                <InputField
+                  label="Промокод"
+                  wrapperClassName={s.promoWrapper}
+                  inputClassName={s.promoInput}
+                />
+              </div>
 
-          <div className={s.summaryRows}>
-            <div className={s.summaryRow}>
-              <span className={s.summaryLabelPrimary}>Сума замовлення</span>
-              <span className={s.value}>
-                <span className={s.summaryAmountPrimary}>
-                  {total.toLocaleString()}
-                </span>{" "}
-                <span className={s.summaryCurrencyPrimary}>₴</span>
-              </span>
+              <div className={s.summaryRows}>
+                <div className={s.summaryRow}>
+                  <span className={s.summaryLabelPrimary}>Сума замовлення</span>
+                  <span className={s.value}>
+                    <span className={s.summaryAmountPrimary}>
+                      {total.toLocaleString()}
+                    </span>{" "}
+                    <span className={s.summaryCurrencyPrimary}>₴</span>
+                  </span>
+                </div>
+                <div className={s.summaryRow}>
+                  <span className={s.label}>Сума знижки</span>
+                  <span className={s.value}>
+                    <span className={s.amountDiscount}>
+                      {discount.toLocaleString()}
+                    </span>{" "}
+                    <span className={s.currencyDiscount}>₴</span>
+                  </span>
+                </div>
+                <div className={s.summaryRow}>
+                  <span className={s.label}>Вартість доставки</span>
+                  <span className={s.valueNote}>
+                    За тарифами &quot;Нової Пошти&quot;
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className={s.summaryRow}>
-              <span className={s.label}>Сума знижки</span>
-              <span className={s.value}>
-                <span className={s.amountDiscount}>
-                  {discount.toLocaleString()}
-                </span>{" "}
-                <span className={s.currencyDiscount}>₴</span>
-              </span>
+          </>
+        ) : (
+          <div className={s.emptyCart}>
+            <div className={s.emptyCartIcon}>
+              <BasketIcons />
             </div>
-            <div className={s.summaryRow}>
-              <span className={s.label}>Вартість доставки</span>
-              <span className={s.valueNote}>
-                За тарифами &quot;Нової Пошти&quot;
-              </span>
+            <div className={s.emptyCartTextCol}>
+              <p className={s.emptyCartTitle}>Ваш кошик порожній</p>
+              <p className={s.emptyCartSubtitle}>
+                Сподіваємось, ви знайдете те, що вам до душі
+              </p>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className={s.summaryBlock}>
-        <div className={s.totalRow}>
-          <span className={s.labelStrong}>Разом</span>
-          <span className={s.totalValue}>
-            <span className={s.amountTogether}>{total.toLocaleString()}</span>{" "}
-            <span className={s.currencyTogether}>₴</span>
-          </span>
-        </div>
-        <div className={s.summaryButtons}>
-          <button
-            className={s.primary}
-            onClick={handleCheckoutClick}
-            disabled={!hasItems}
-          >
-            Оформити замовлення
-          </button>
-          <button className={s.secondary} onClick={onContinue}>
-            Продовжити покупки
-          </button>
-        </div>
+        {hasItems ? (
+          <>
+            <div className={s.totalRow}>
+              <span className={s.labelStrong}>Разом</span>
+              <span className={s.totalValue}>
+                <span className={s.amountTogether}>
+                  {total.toLocaleString()}
+                </span>{" "}
+                <span className={s.currencyTogether}>₴</span>
+              </span>
+            </div>
+            <div className={s.summaryButtons}>
+              <button
+                className={s.primary}
+                onClick={handleCheckoutClick}
+                disabled={!hasItems}
+              >
+                Оформити замовлення
+              </button>
+              <button className={s.secondary} onClick={onContinue}>
+                Продовжити покупки
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className={s.summaryButtons}>
+            <button
+              type="button"
+              className={s.emptyCartButton}
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.location.href = "/catalog";
+                }
+              }}
+            >
+              До каталогу
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

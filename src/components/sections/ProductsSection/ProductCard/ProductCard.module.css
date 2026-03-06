@@ -198,6 +198,39 @@
   color: rgba(14, 14, 14, 0.6);
 }
 
+.ratingRow {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.starIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.starFilled {
+  color: #f3b43a;
+}
+
+.starEmpty {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.ratingText {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+}
+
 .subscriptionBlock {
   width: 100%;
   height: auto;

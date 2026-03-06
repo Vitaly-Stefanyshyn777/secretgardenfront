@@ -2,22 +2,17 @@
 import React from "react";
 import styles from "./ProductsFilter.module.css";
 import { RangeInput } from "@/components/ui/RangeInput/RangeInput";
-import { ColorFilter } from "../filters/ColorFilter/ColorFilter";
-import { SizeFilter } from "../filters/SizeFilter/SizeFilter";
 import { CertificationFilter } from "../filters/CertificationFilter/CertificationFilter";
 import ButtonFilter from "@/components/ui/ButtonFilter/ButtonFilter";
 import { useMemo } from "react";
-import {
-  useFilteredProducts,
-  type ProductFilters,
-} from "@/components/hooks/useFilteredProducts";
+import { type ProductFilters } from "@/components/hooks/useFilteredProducts";
 
 interface FilterState {
   priceMin: number;
   priceMax: number;
   colors: string[];
   sizes: string[];
-  certification: string;
+  certification: string[];
 }
 
 interface Product {
@@ -76,40 +71,15 @@ const ProductsFilter = ({
   // Build WC filter params for useFilteredProducts
   const wcFilters = useMemo(() => {
     const params: Partial<ProductFilters> = {};
-    const categoryId = filters.certification && String(filters.certification);
-    if (categoryId) {
-      params.category = [categoryId];
+    const selected = filters.certification ?? [];
+    if (selected.length === 1) {
+      params.category = selected[0];
+    } else if (selected.length > 1) {
+      // Декілька підкатегорій — відправляємо масив (fetchFilteredProducts замержить результати)
+      params.category = selected;
     }
-    if (filters.colors && filters.colors.length > 0) {
-      params.attribute = params.attribute || [];
-      params.attribute_term = params.attribute_term || [];
-      filters.colors.forEach((termId) => {
-        (params.attribute as string[]).push("pa_color");
-        (params.attribute_term as string[]).push(String(termId));
-      });
-    }
-    if (filters.sizes && filters.sizes.length > 0) {
-      params.attribute = params.attribute || [];
-      params.attribute_term = params.attribute_term || [];
-      filters.sizes.forEach((termId) => {
-        (params.attribute as string[]).push("pa_size");
-        (params.attribute_term as string[]).push(String(termId));
-      });
-    }
-    // Передаємо обмеження ціни тільки якщо користувач змінював діапазон,
-    // інакше деякі variable-товари без явної ціни можуть випадати з вибірки
-    if (typeof filters.priceMin === "number" && filters.priceMin > 0)
-      params.min_price = filters.priceMin;
-    if (
-      typeof filters.priceMax === "number" &&
-      filters.priceMax > 0 &&
-      filters.priceMax < 100000
-    )
-      params.max_price = filters.priceMax;
     return params as Record<string, unknown>;
   }, [filters]);
-
-  const { data: filteredProducts = [] } = useFilteredProducts(wcFilters);
 
   return (
     <div className={styles.filterContainer}>
@@ -119,17 +89,6 @@ const ProductsFilter = ({
           max={100000}
           value={{ min: filters.priceMin, max: filters.priceMax }}
           onChange={handlePriceChange}
-        />
-
-        <ColorFilter
-          selectedColors={filters.colors}
-          onChange={(colors) => handleFilterChange("colors", colors)}
-          products={products}
-        />
-
-        <SizeFilter
-          selectedSizes={filters.sizes}
-          onChange={(sizes) => handleFilterChange("sizes", sizes)}
         />
 
         <CertificationFilter

@@ -59,6 +59,8 @@ const ProductsCatalogContainer = ({
     categories?: unknown;
     stockStatus?: string;
     dateCreated?: string;
+    ratingAverage?: number;
+    ratingCount?: number;
   };
   const sortedProducts: ProductLike[] = useMemo(() => {
     const base: ProductLike[] = (filteredProducts ?? products) as ProductLike[];
@@ -122,6 +124,8 @@ const ProductsCatalogContainer = ({
     }>;
     type CamelCaseFields = Partial<{
       dateCreated?: string;
+      ratingAverage?: number;
+      ratingCount?: number;
     }>;
     const p = product as ProductLike & SnakeCaseFields & CamelCaseFields;
     const imagesArr =
@@ -144,6 +148,15 @@ const ProductsCatalogContainer = ({
       | { type?: string; variations?: number[] }
       | undefined;
 
+    const ratingAverage =
+      (product as any).ratingAverage ??
+      (product as any).averageRating ??
+      0;
+    const ratingCount =
+      (product as any).ratingCount ??
+      (product as any).ratingCount ??
+      0;
+
     return {
       id: Number(product.id),
       slug: (product as any).slug, // Додаємо slug з продукту
@@ -164,6 +177,8 @@ const ProductsCatalogContainer = ({
       attributes: [],
       stock_status: String(p.stock_status ?? product.stockStatus ?? ""),
       date_created: dateCreatedValue,
+      average_rating: String(ratingAverage ?? 0),
+      review_count: ratingCount ?? 0,
       // IMPORTANT: keep meta for subscription discount (proce_sell_registry)
       metaData: (product as any).metaData ?? [],
       wcProduct: (product as any).wcProduct,

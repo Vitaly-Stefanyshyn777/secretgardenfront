@@ -4,7 +4,6 @@ import styles from "./ChangePassword.module.css";
 import SectionDivider from "../SectionDivider/SectionDivider";
 
 import { useForm } from "react-hook-form";
-import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import PasswordField from "@/components/ui/FormFields/PasswordField";
 import { PasswordsIcon } from "@/components/Icons/Icons";
@@ -12,7 +11,6 @@ import SubmitButton from "@/components/ui/SubmitButton/SubmitButton";
 import { toast } from "react-toastify";
 
 const ChangePassword: React.FC = () => {
-  const user = useAuthStore((s) => s.user);
   const token = useAuthStore((s) => s.token);
   const isHydrated = useAuthStore((s) => s.isHydrated);
   const [isMobile, setIsMobile] = useState(false);
@@ -53,7 +51,7 @@ const ChangePassword: React.FC = () => {
     // Чекаємо на гідратацію перед перевіркою
     if (!isHydrated) return;
 
-    if (!token || !user?.id) {
+    if (!token) {
       toast.error("Потрібна авторизація для зміни пароля");
       return;
     }
@@ -77,14 +75,31 @@ const ChangePassword: React.FC = () => {
 
     try {
       setSubmitting(true);
-      await api.patch(
-        "/api/proxy",
-        { password: values.newPassword },
-        {
-          params: { path: `/wp-json/wp/v2/users/${user.id}` },
-          headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch("http://localhost:3000/user/password", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify({
+          oldPassword: values.currentPassword,
+          newPassword: values.newPassword,
+        }),
+      });
+
+      if (!res.ok) {
+        let message = "Не вдалося змінити пароль. Спробуйте ще раз.";
+        try {
+          const data = (await res.json()) as { message?: string; error?: string };
+          if (data.message) message = data.message;
+          else if (data.error) message = data.error;
+        } catch {
+          // ignore parse errors
+        }
+        toast.error(message);
+        return;
+      }
+
       toast.success("Пароль успішно змінено");
       reset();
     } catch {

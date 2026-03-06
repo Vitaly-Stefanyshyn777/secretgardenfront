@@ -1,10 +1,36 @@
 import api from "./api";
 
-// На клієнті використовуємо NEXT_PUBLIC_UPSTREAM_BASE, на сервері - UPSTREAM_BASE
+// На клієнті використовуємо NEXT_PUBLIC_UPSTREAM_BASE, на сервері - UPSTREAM_BASE (старий WP бекенд)
 const BASE_URL =
   (typeof window !== "undefined"
     ? process.env.NEXT_PUBLIC_UPSTREAM_BASE
     : process.env.UPSTREAM_BASE) || "";
+
+// Новий Node бекенд для REST /auth, /user, /catalog
+const NODE_API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
+
+// Категорії каталогу нового бекенду
+export interface CatalogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  parentId: string | null;
+  children?: CatalogCategory[];
+}
+
+export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
+  const res = await fetch(`${NODE_API_BASE_URL}/catalog/categories`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    if (res.status === 404) {
+      return [];
+    }
+    throw new Error(`Failed to fetch catalog categories: ${res.status}`);
+  }
+  return (await res.json()) as CatalogCategory[];
+}
 
 export type FaqCategory = {
   id: number;
@@ -624,52 +650,15 @@ export type ThemeSettingsPost = {
 };
 
 export async function fetchThemeSettings(): Promise<ThemeSettingsPost[]> {
-  // Використовуємо проксі на клієнті, прямий запит на сервері
-  const isClient = typeof window !== "undefined";
-  const path = `/wp-json/wp/v2/theme_settings?hl_data_gallery=1`;
-
-  let url: string;
-  let options: RequestInit = {};
-
-  if (isClient) {
-    // На клієнті використовуємо проксі
-    url = `/api/proxy?path=${encodeURIComponent(path)}`;
-  } else {
-    // На сервері використовуємо прямий запит
-    url = `${BASE_URL}${path}`;
-    options = { next: { revalidate: 60 } };
-  }
-
-  const res = await fetch(url, options);
-  if (!res.ok) {
-    throw new Error(`Request failed ${res.status}: ${await res.text()}`);
-  }
-  const data = await res.json();
-
-  // Нормалізуємо відповідь до масиву для стабільної роботи хуків
-  if (Array.isArray(data)) return data as ThemeSettingsPost[];
-  return [data as ThemeSettingsPost];
+  // Старі WP theme settings більше не використовуємо.
+  // Повертаємо порожній масив, щоб не робити жодних proxy‑запитів.
+  return [];
 }
 
 // Отримати проксований URL відео з налаштувань теми
 export async function fetchThemeVideoUrl(): Promise<string | null> {
-  try {
-    const settings = await fetchThemeSettings();
-    const firstSetting = settings[0];
-
-    // Перевіряємо спочатку в корені об'єкта, потім в acf (для fallback)
-    const videoUrl = (firstSetting?.theme_video_url ||
-      firstSetting?.acf?.theme_video_url) as string | undefined;
-
-    if (!videoUrl) {
-      return null;
-    }
-
-    // Повертаємо оригінальний URL (без проксі для кращої стабільності)
-    return videoUrl;
-  } catch (error) {
-    return null;
-  }
+  // Без WP theme settings відео для інструкцій не підтягуємо.
+  return null;
 }
 
 // Допоміжна функція для створення проксованого URL
@@ -1257,57 +1246,20 @@ export type WooCommerceCategory = {
 };
 
 export async function fetchProductCategories(): Promise<WooCommerceCategory[]> {
-  try {
-    // Отримуємо категорії товарів (фізичні товари) з батьківською категорією 77
-    const response = await fetch(
-      "/api/wc/products/categories?parent=77&per_page=100"
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    // Silent error handling
-    throw new Error("Не вдалося завантажити категорії товарів");
-  }
+  // Старий WooCommerce більше не використовуємо
+  return [];
 }
 
 // Отримання категорій тренувань (батьківська категорія 55)
 export async function fetchTrainingCategories(): Promise<
   WooCommerceCategory[]
 > {
-  try {
-    const response = await fetch(
-      "/api/wc/products/categories?parent=55&per_page=100"
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    // Silent error handling
-    throw new Error("Не вдалося завантажити категорії тренувань");
-  }
+  return [];
 }
 
 // Отримання категорій курсів (батьківська категорія 72)
 export async function fetchCourseCategories(): Promise<WooCommerceCategory[]> {
-  try {
-    const response = await fetch(
-      "/api/wc/products/categories?parent=72&per_page=100"
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    // Silent logging
-    return data;
-  } catch (error) {
-    // Silent error handling
-    throw new Error("Не вдалося завантажити категорії курсів");
-  }
+  return [];
 }
 
 // Отримання категорій FAQ
@@ -1350,40 +1302,18 @@ export async function fetchFilteredFAQ(
   }
 }
 
-// Отримання атрибутів товарів (колір, розмір, тощо)
+// Отримання атрибутів товарів (колір, розмір, тощо) – WooCommerce більше не використовуємо
 export async function fetchProductAttributes(): Promise<
   WooCommerceAttribute[]
 > {
-  try {
-    const response = await fetch("/api/wc/products/attributes");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    // Silent error handling
-    throw new Error("Не вдалося завантажити атрибути товарів");
-  }
+  return [];
 }
 
-// Отримання термінів (опцій) атрибуту
+// Отримання термінів (опцій) атрибуту – також відключено від WooCommerce
 export async function fetchAttributeTerms(
-  attributeId: number
+  _attributeId: number
 ): Promise<WooCommerceAttributeTerm[]> {
-  try {
-    const response = await fetch(
-      `/api/wc/products/attributes/${attributeId}/terms`
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    // Silent error handling
-    throw new Error("Не вдалося завантажити опції атрибуту");
-  }
+  return [];
 }
 
 export type WooCommerceAttribute = {
@@ -1884,78 +1814,156 @@ export async function fetchFilteredProducts(
   try {
     const params = new URLSearchParams();
 
-    // Додаємо параметри фільтрації
-    if (filters.category) {
-      if (Array.isArray(filters.category)) {
-        // Передаємо всі категорії через кому в одному параметрі (OR логіка)
-        params.append("category", filters.category.join(","));
-      } else {
-        params.append("category", filters.category);
+    // Нова логіка: використовуємо Node REST API /catalog/products
+    // categorySlug: очікуємо slug категорії/підкатегорії (НЕ числовий ID).
+    // Можемо передати одразу кілька підкатегорій — тоді зробимо кілька запитів і замержимо.
+    const rawCats = filters.category
+      ? Array.isArray(filters.category)
+        ? filters.category
+        : [filters.category]
+      : [];
+
+    const categorySlugs = rawCats
+      .filter((c): c is string => typeof c === "string")
+      .map((c) => c.trim())
+      .filter((c) => c !== "" && !/^\d+$/.test(c));
+
+    if (filters.search) {
+      params.append("search", String(filters.search));
+    }
+
+    if (filters.page) {
+      params.append("page", String(filters.page));
+    }
+
+    if (filters.per_page) {
+      params.append("limit", String(filters.per_page));
+      // Щоб бекенд не сварився на limit без page, явно ставимо page=1, якщо його ще немає
+      if (!filters.page) {
+        params.append("page", "1");
       }
     }
-    if (filters.attribute) {
-      if (Array.isArray(filters.attribute)) {
-        filters.attribute.forEach((attr) => params.append("attribute", attr));
-      } else {
-        params.append("attribute", filters.attribute);
-      }
-    }
-    if (filters.attribute_term) {
-      if (Array.isArray(filters.attribute_term)) {
-        filters.attribute_term.forEach((term) =>
-          params.append("attribute_term", term)
-        );
-      } else {
-        params.append("attribute_term", filters.attribute_term);
-      }
-    }
-    if (filters.min_price)
-      params.append("min_price", filters.min_price.toString());
-    if (filters.max_price)
-      params.append("max_price", filters.max_price.toString());
-    if (filters.on_sale !== undefined)
-      params.append("on_sale", filters.on_sale.toString());
-    if (filters.featured !== undefined)
-      params.append("featured", filters.featured.toString());
-    if (filters.status) params.append("status", filters.status);
-    if (filters.search) params.append("search", filters.search);
-    if (filters.orderby) params.append("orderby", filters.orderby);
-    if (filters.order) params.append("order", filters.order);
-    if (filters.per_page)
-      params.append("per_page", filters.per_page.toString());
-    if (filters.page) params.append("page", filters.page.toString());
 
     const queryString = params.toString();
+    const baseUrl = `${NODE_API_BASE_URL}/catalog/products`;
 
-    // Використовуємо WooCommerce v3 API для всіх запитів
-    const url = `/api/wc/v3/products${queryString ? `?${queryString}` : ""}`;
+    // Якщо вибрано декілька підкатегорій — робимо кілька запитів і мерджимо результати
+    if (categorySlugs.length > 1) {
+      const urls = categorySlugs.map((slug) => {
+        const p = new URLSearchParams(queryString);
+        p.set("categorySlug", slug);
+        return `${baseUrl}?${p.toString()}`;
+      });
 
-    const extraHeaders: Record<string, string> = {};
-    // Forward JWT to proxy if available
-    try {
-      if (typeof window !== "undefined") {
-        const jwt = localStorage.getItem("wp_jwt");
-        if (jwt) {
-          extraHeaders["x-wp-jwt"] = jwt; // for our proxy convenience
-          extraHeaders["Authorization"] = `Bearer ${jwt}`; // proxy prioritizes Authorization
+      const responses = await Promise.all(
+        urls.map((u) => fetch(u, { cache: "no-store" }))
+      );
+
+      const jsons = await Promise.all(
+        responses.map(async (res) => {
+          if (!res.ok) return null;
+          try {
+            return (await res.json()) as {
+              items: Array<{
+                id: string;
+                name: string;
+                slug: string;
+                price: string;
+                currency: string;
+                shortDescription?: string;
+                mainImageUrl?: string;
+                label?: string;
+                inStock?: boolean;
+              }>;
+            };
+          } catch {
+            return null;
+          }
+        })
+      );
+
+      const mergedById = new Map<string, any>();
+      for (const data of jsons) {
+        for (const item of data?.items ?? []) {
+          if (!mergedById.has(item.id)) {
+            mergedById.set(item.id, item);
+          }
         }
       }
-    } catch {}
 
-    const response = await fetch(url, { headers: extraHeaders });
+      const mergedItems = Array.from(mergedById.values());
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // Мапимо у формат, з яким вже працюють фільтри/грід
+      return mergedItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        regularPrice: item.price,
+        salePrice: undefined,
+        onSale: false,
+        image: item.mainImageUrl || "",
+        categories: item.label
+          ? [{ id: item.label, name: item.label, slug: item.label }]
+          : [],
+        stockStatus: item.inStock ? "instock" : "outofstock",
+        dateCreated: undefined,
+        slug: item.slug,
+      }));
     }
 
-    const data = await response.json();
+    // Одна категорія (або жодної) — один запит
+    if (categorySlugs.length === 1) {
+      params.set("categorySlug", categorySlugs[0]);
+    }
 
-    // Додаємо mapProductToUi для отримання dateCreated
-    const { mapProductToUi } = await import("./products");
-    return data.map(mapProductToUi);
+    const url = `${baseUrl}${params.toString() ? `?${params.toString()}` : ""}`;
+
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) {
+      // Якщо бекенд ще не реалізував ендпоїнт або немає товарів – повертаємо порожній список,
+      // щоб фронт не падав і не спамив помилками.
+      return [];
+    }
+
+    const data = (await res.json()) as {
+      items: Array<{
+        id: string;
+        name: string;
+        slug: string;
+        price: string;
+        currency: string;
+        shortDescription?: string;
+        mainImageUrl?: string;
+        label?: string;
+        inStock?: boolean;
+      }>;
+      page: number;
+      limit: number;
+      total: number;
+      pages: number;
+    };
+
+    // Мапимо у формат, з яким вже працюють фільтри/грід
+    return data.items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      regularPrice: item.price,
+      salePrice: undefined,
+      onSale: false,
+      image: item.mainImageUrl || "",
+      categories: item.label
+        ? [{ id: item.label, name: item.label, slug: item.label }]
+        : [],
+      stockStatus: item.inStock ? "instock" : "outofstock",
+      dateCreated: undefined,
+      // додатково залишаємо slug для переходів
+      slug: item.slug,
+    }));
   } catch (error) {
-    // Silent error handling
-    throw new Error("Не вдалося завантажити відфільтровані товари");
+    // На будь-яку помилку віддаємо порожній масив, щоб не ламати каталог
+    console.error("fetchFilteredProducts error", error);
+    return [];
   }
 }
 
@@ -2055,32 +2063,17 @@ export async function createWcReview(body: {
 }
 
 // WooCommerce products and categories (proxying our API routes)
+// Старі WooCommerce proxy‑ендпоїнти більше не використовуємо
 export async function fetchWcProducts(
-  params?: Record<string, string | number>
+  _params?: Record<string, string | number>
 ) {
-  const qs = params
-    ? "?" +
-      new URLSearchParams(
-        Object.entries(params).map(([k, v]) => [k, String(v)])
-      ).toString()
-    : "";
-  const res = await fetch(`/api/wc/products${qs}`);
-  if (!res.ok) throw new Error("Failed to fetch products");
-  return res.json();
+  return [];
 }
 
 export async function fetchWcCategories(
-  params?: Record<string, string | number>
+  _params?: Record<string, string | number>
 ) {
-  const qs = params
-    ? "?" +
-      new URLSearchParams(
-        Object.entries(params).map(([k, v]) => [k, String(v)])
-      ).toString()
-    : "";
-  const res = await fetch(`/api/wc/products/categories${qs}`);
-  if (!res.ok) throw new Error("Failed to fetch categories");
-  return res.json();
+  return [];
 }
 
 // FAQ Functions with logging
@@ -2247,12 +2240,8 @@ export const createWcOrder = async (orderData: {
 };
 
 export const fetchWcPaymentGateways = async (): Promise<unknown[]> => {
-  try {
-    const response = await api.get("/api/wc/payment-gateways");
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  // Платіжні шлюзи WooCommerce більше не потрібні на новому бекенді
+  return [];
 };
 
 // MyPlugin Subscription API (assign tariff / cancel subscription)

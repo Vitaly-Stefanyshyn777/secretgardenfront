@@ -2829,8 +2829,8 @@ export const ArcIcon = ({ className = "" }: { className?: string }) => (
         y2="176.972"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8426D7" />
-        <stop offset="1" stop-color="#F9F9F9" />
+        <stop stopColor="#8426D7" />
+        <stop offset="1" stopColor="#F9F9F9" />
       </linearGradient>
     </defs>
   </svg>
@@ -2857,8 +2857,8 @@ export const ArcIcon2 = ({ className = "" }: { className?: string }) => (
         y2="92.405"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8426D7" />
-        <stop offset="1" stop-color="#F9F9F9" />
+        <stop stopColor="#8426D7" />
+        <stop offset="1" stopColor="#F9F9F9" />
       </linearGradient>
     </defs>
   </svg>
@@ -3830,7 +3830,7 @@ export const LogoHeader = () => (
     <path
       d="M26.6788 51.6584C40.4736 51.6584 51.6565 40.4755 51.6565 26.6808C51.6565 12.886 40.4736 1.70312 26.6788 1.70312C12.884 1.70312 1.70117 12.886 1.70117 26.6808C1.70117 40.4755 12.884 51.6584 26.6788 51.6584Z"
       stroke="url(#paint0_linear_543_10240)"
-      stroke-width="1.334"
+      strokeWidth="1.334"
     />
     <path
       d="M21.2342 9.33594C21.7201 9.33594 22.2622 9.38268 22.8602 9.47616C23.4771 9.55093 24.0098 9.68181 24.4583 9.86877C24.9069 10.037 25.2807 10.1959 25.5798 10.3455C25.8975 10.4764 26.1591 10.5325 26.3647 10.5138C26.6825 10.5138 26.9628 10.4296 27.2058 10.2614C27.4488 10.0931 27.5702 9.83138 27.5702 9.47616H27.7385L27.5982 15.2531H27.43C27.43 14.4492 27.2338 13.7014 26.8413 13.0096C26.4675 12.3179 25.9816 11.7196 25.3834 11.2149C24.7854 10.6914 24.1219 10.2894 23.393 10.009C22.664 9.70985 21.9443 9.56028 21.2342 9.56028C20.7109 9.56028 20.1595 9.61637 19.5801 9.72855C19.0194 9.82203 18.5053 9.99029 18.0382 10.2333C17.5709 10.4764 17.1783 10.8036 16.8606 11.2149C16.5615 11.6262 16.412 12.1403 16.412 12.7573C16.412 13.3742 16.5709 13.9071 16.8887 14.3557C17.2064 14.7858 17.627 15.169 18.1503 15.5055C18.6736 15.8234 19.2623 16.1132 19.9165 16.3749C20.5894 16.6367 21.2716 16.9077 21.9631 17.1882C22.6546 17.4499 23.3275 17.7397 23.9817 18.0576C24.577 18.3222 25.1137 18.6453 25.5919 19.027L25.5837 19.0377C25.7936 19.2017 26.1092 19.4974 26.2999 19.7143L26.3094 19.7059C26.5934 20.0294 26.8361 20.3867 27.0376 20.7778C27.3553 21.376 27.5141 22.1052 27.5141 22.9652C27.5141 23.8438 27.3459 24.6665 27.0096 25.433C26.6919 26.1809 26.2338 26.8351 25.6358 27.396C25.0564 27.9383 24.3648 28.3683 23.5611 28.686C23.5132 28.7055 23.4649 28.7243 23.4163 28.7425C23.4175 28.6459 23.4208 28.5417 23.4255 28.4249C23.7258 28.2872 24.0048 28.1219 24.262 27.9289C24.7107 27.5924 25.0657 27.181 25.3273 26.695C25.589 26.1901 25.7199 25.62 25.7199 24.9842C25.7199 24.1617 25.4489 23.4793 24.9069 22.9372C24.6308 22.6514 24.3184 22.3827 23.9696 22.131C23.2389 23.6627 22.8604 25.7386 22.8337 28.3586L22.8259 28.3583C22.8121 28.7004 22.8034 28.9835 22.8422 29.2852L22.8457 29.2847C22.89 30.3141 23.0444 31.311 23.3089 32.2756C23.6266 33.416 24.0658 34.4257 24.6264 35.3043C25.2058 36.1643 25.8975 36.8561 26.7011 37.3796C27.5235 37.8844 28.43 38.1367 29.4206 38.1367C29.9065 38.1367 30.3364 38.0994 30.7103 38.0246H30.7664C31.0653 37.9871 31.3177 37.9311 31.5233 37.8564C32.0092 37.7067 32.411 37.4731 32.7288 37.1552C33.0653 36.8373 33.3269 36.4916 33.5138 36.1176C33.7007 35.7437 33.8315 35.3604 33.9063 34.9678C33.981 34.5565 34.0184 34.1919 34.0184 33.8741C34.0184 33.2198 33.9344 32.6495 33.7662 32.1635C33.5978 31.6774 33.2989 31.2755 32.8689 30.9576C32.4579 30.6397 31.8877 30.3967 31.1588 30.2284C30.4486 30.0602 29.5327 29.9761 28.4112 29.9761V29.6957H36.9342V38.3611H36.6819C36.6819 37.7815 36.6258 37.2861 36.5136 36.8747C36.4014 36.4635 36.1678 36.2578 35.8127 36.2578C35.6072 36.2578 35.4016 36.2952 35.196 36.3701C35.009 36.4261 34.7568 36.5663 34.439 36.7907C33.7287 37.389 32.8877 37.847 31.9157 38.1649C30.9626 38.4639 29.8971 38.6135 28.7197 38.6135C27.131 38.6135 25.7199 38.333 24.4863 37.7721C23.2528 37.1926 22.2154 36.4354 21.3744 35.5007C20.5519 34.5659 19.9259 33.5095 19.4959 32.3317C19.0931 31.2102 18.8789 30.0639 18.8537 28.893C18.5653 28.8198 18.3028 28.7416 18.0662 28.6579C17.7485 28.5458 17.4586 28.443 17.197 28.3495C16.9541 28.2374 16.7391 28.1533 16.5523 28.0972C16.3653 28.0224 16.1971 27.9849 16.0476 27.9849C15.7299 27.9849 15.4494 28.069 15.2065 28.2374C14.9635 28.4057 14.8421 28.6673 14.8421 29.0226H14.6738L14.814 23.2456H14.9822C14.9822 24.0308 15.1598 24.76 15.5149 25.433C15.8887 26.106 16.3559 26.7044 16.9167 27.2278C17.4961 27.7325 18.1409 28.1345 18.8512 28.4337L18.8531 28.4344C18.877 27.0808 19.1193 25.8279 19.5801 24.6758C20.0847 23.4418 20.7763 22.3763 21.6547 21.4789C21.7974 21.3361 21.9443 21.1981 22.0951 21.0653C21.4941 20.7734 20.8614 20.4906 20.1968 20.2169C19.2436 19.8242 18.3559 19.3662 17.5335 18.8427C16.7111 18.3006 16.029 17.6556 15.4868 16.9077C14.9448 16.1412 14.6738 15.1876 14.6738 14.0472C14.6738 13.206 14.8607 12.4862 15.2346 11.8879C15.627 11.2709 16.1317 10.7755 16.7485 10.4016C17.3839 10.0277 18.0942 9.7566 18.8792 9.58833C19.6642 9.42007 20.4492 9.33594 21.2342 9.33594ZM28.8318 18.6183C29.9346 18.6371 30.8877 18.7492 31.6915 18.955C32.4951 19.1418 33.196 19.3569 33.7942 19.6C34.3922 19.843 34.8969 20.0674 35.3081 20.273C35.7193 20.4599 36.0743 20.5534 36.3734 20.5534C36.8595 20.5534 37.2239 20.4131 37.4669 20.1327C37.7098 19.8522 37.9902 19.4597 38.3079 18.955L38.4481 19.011L34.7193 27.6484H34.4951C34.7754 26.6389 34.8689 25.676 34.7754 24.76C34.6819 23.8252 34.439 22.9744 34.0465 22.2079C33.6541 21.4414 33.1307 20.7964 32.4765 20.273C31.8223 19.7307 31.0747 19.3475 30.2336 19.1232C29.972 19.0485 29.7103 19.0016 29.4486 18.983C29.2056 18.9456 28.9534 18.9268 28.6917 18.9268C27.9805 18.9268 27.3285 19.051 26.7357 19.299C26.623 19.1723 26.4789 19.0275 26.3339 18.8922C27.1226 18.7096 27.9553 18.6183 28.8318 18.6183Z"
@@ -3849,8 +3849,8 @@ export const LogoHeader = () => (
         y2="51.6584"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.141033" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.141033" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint1_linear_543_10240"
@@ -3860,9 +3860,9 @@ export const LogoHeader = () => (
         y2="40.2764"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.0112519" stop-color="#F0D7AE" />
-        <stop offset="0.278846" stop-color="#ECCB95" />
-        <stop offset="1" stop-color="#E9B76E" />
+        <stop offset="0.0112519" stopColor="#F0D7AE" />
+        <stop offset="0.278846" stopColor="#ECCB95" />
+        <stop offset="1" stopColor="#E9B76E" />
       </linearGradient>
       <linearGradient
         id="paint2_linear_543_10240"
@@ -3872,8 +3872,8 @@ export const LogoHeader = () => (
         y2="44.0235"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.141033" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.141033" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
     </defs>
   </svg>
@@ -3944,8 +3944,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint1_linear_543_10245"
@@ -3955,8 +3955,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint2_linear_543_10245"
@@ -3966,8 +3966,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint3_linear_543_10245"
@@ -3977,8 +3977,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint4_linear_543_10245"
@@ -3988,8 +3988,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint5_linear_543_10245"
@@ -3999,8 +3999,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint6_linear_543_10245"
@@ -4010,8 +4010,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint7_linear_543_10245"
@@ -4021,8 +4021,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint8_linear_543_10245"
@@ -4032,8 +4032,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint9_linear_543_10245"
@@ -4043,8 +4043,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint10_linear_543_10245"
@@ -4054,8 +4054,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
       <linearGradient
         id="paint11_linear_543_10245"
@@ -4065,8 +4065,8 @@ export const LogoHeaderText = () => (
         y2="66.6219"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.262687" stop-color="#D9BB8A" />
-        <stop offset="0.844445" stop-color="#E0AC61" />
+        <stop offset="0.262687" stopColor="#D9BB8A" />
+        <stop offset="0.844445" stopColor="#E0AC61" />
       </linearGradient>
     </defs>
   </svg>

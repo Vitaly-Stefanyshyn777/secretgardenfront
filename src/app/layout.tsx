@@ -12,7 +12,6 @@ import { Inter } from "next/font/google";
 import QueryProvider from "@/components/providers/QueryProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
 import { ThemeSettingsProvider } from "@/components/providers/ThemeSettingsProvider";
-import AdminAutoLogin from "@/components/providers/AdminAutoLogin";
 import AnchorHandler from "@/components/layout/AnchorHandler/AnchorHandler";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -69,7 +68,6 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <ThemeSettingsProvider>
-              <AdminAutoLogin />
               <AnchorHandler />
               <ToastContainer
                 position="top-right"

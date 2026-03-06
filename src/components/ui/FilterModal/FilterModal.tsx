@@ -2,8 +2,6 @@
 import React from "react";
 import styles from "./FilterModal.module.css";
 import { RangeInput } from "@/components/ui/RangeInput/RangeInput";
-import { ColorFilter } from "@/components/sections/ProductsSection/filters/ColorFilter/ColorFilter";
-import { SizeFilter } from "@/components/sections/ProductsSection/filters/SizeFilter/SizeFilter";
 import { CertificationFilter } from "@/components/sections/ProductsSection/filters/CertificationFilter/CertificationFilter";
 import { useScrollLock } from "@/components/hooks/useScrollLock";
 import { useEffect } from "react";
@@ -16,7 +14,7 @@ interface FilterState {
   priceMax: number;
   colors: string[];
   sizes: string[];
-  certification: string;
+  certification: string[];
 }
 
 interface Product {
@@ -109,21 +107,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 onChange={handlePriceChange}
               />
             </div>
-          </div>
-
-          <div className={styles.filterSection}>
-            <ColorFilter
-              selectedColors={filters.colors}
-              onChange={(colors) => handleFilterChange("colors", colors)}
-              products={products}
-            />
-          </div>
-
-          <div className={styles.filterSection}>
-            <SizeFilter
-              selectedSizes={filters.sizes}
-              onChange={(sizes) => handleFilterChange("sizes", sizes)}
-            />
           </div>
 
           <div className={styles.filterSection}>

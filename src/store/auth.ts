@@ -40,6 +40,8 @@ function saveTokenToStorage(token: string) {
   if (typeof window !== "undefined" && token) {
     localStorage.setItem("bfb_token", token);
     localStorage.setItem("bfb_token_old", token);
+    // Токен нового Node-бекенду для REST /user/*
+    localStorage.setItem("accessToken", token);
   }
 }
 
@@ -208,6 +210,7 @@ export const useAuthStore = create<AuthState>()(
           try {
             localStorage.removeItem("bfb_token");
             localStorage.removeItem("bfb_token_old");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("wp_jwt");
             localStorage.removeItem("wp_jwt_override");
             localStorage.removeItem("bfb-auth");

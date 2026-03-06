@@ -1,18 +1,11 @@
-import {
-  getAllProducts,
-  getProductById,
-  getProductsByCategory,
-  mapProductToUi,
-} from "./products";
-import { fetchWcCategories } from "./bfbApi";
+import { fetchFilteredProducts } from "./bfbApi";
 
 export const productsQuery = () => ({
   queryKey: ["products"] as const,
   queryFn: async () => {
-    const products = await getAllProducts();
-    const mapped = await Promise.all(products.map(mapProductToUi));
-
-    return mapped;
+    // Для списків без фільтрів використовуємо новий REST /catalog/products
+    const products = (await fetchFilteredProducts({})) as unknown[];
+    return products;
   },
   staleTime: 5 * 60 * 1000,
   retry: 1,
@@ -26,93 +19,20 @@ export const productQuery = (slugOrId: string) => ({
       throw new Error("Product slug is empty");
     }
 
-    // Спочатку спробуємо отримати продукт напряму по ID через WC API
-    // Це працює для всіх продуктів, включаючи інвентар
-    if (/^\d+$/.test(slugOrId)) {
-      try {
-        const product = await getProductById(slugOrId);
-        return await mapProductToUi(product);
-      } catch (error) {
-        // Продовжуємо до пошуку по slug
-      }
-    }
+    // Нова логіка: отримуємо товар через REST /catalog/products/:slug
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/catalog/products/${encodeURIComponent(
+        slugOrId,
+      )}`,
+      { cache: "no-store" },
+    );
 
-    // Якщо slugOrId не є числом (тобто це slug), спробуємо знайти продукт через WC v3 API по slug'у
-    try {
-      // Використовуємо прямий fetch запит
-      const response = await fetch(
-        `/api/wc/v3/products?slug=${encodeURIComponent(slugOrId)}`
-      );
-
-      if (response.ok) {
-        const products = await response.json();
-        if (products && Array.isArray(products) && products.length > 0) {
-          const product = products[0];
-          return await mapProductToUi(product);
-        }
-      }
-    } catch (error) {
-      // Продовжуємо до fallback пошуку
-    }
-
-    // Fallback: шукаємо серед всіх продуктів по slug (старий спосіб)
-    const products = await getAllProducts();
-
-    // Next.js автоматично декодує slug з URL, тому slugOrId приходить декодованим
-    // Але slug з API може бути в різних форматах (encoded або decoded)
-    // Нормалізуємо обидва значення для порівняння
-    const normalizeSlug = (slug: string): string => {
-      if (!slug) return "";
-      try {
-        // Спробуємо декодувати, якщо це encoded
-        let decoded = slug;
-        try {
-          decoded = decodeURIComponent(slug);
-        } catch {
-          // Якщо не вдалося декодувати, використовуємо оригінал
-          decoded = slug;
-        }
-
-        // Нормалізуємо: приводимо до нижнього регістру та прибираємо зайві пробіли
-        return decoded.toLowerCase().trim();
-      } catch {
-        // Якщо виникла помилка, повертаємо як є
-        return slug.toLowerCase().trim();
-      }
-    };
-
-    const normalizedSlugOrId = normalizeSlug(slugOrId);
-
-    const product = products.find((p) => {
-      // Спочатку перевіряємо по ID (як fallback)
-      const idMatch = p.id.toString() === slugOrId;
-      if (idMatch) {
-        return true;
-      }
-
-      // Якщо у продукту немає slug, не перевіряємо по slug
-      if (!p.slug) {
-        return false;
-      }
-
-      // Нормалізуємо slug з API
-      const normalizedApiSlug = normalizeSlug(p.slug);
-
-      // Порівнюємо нормалізовані значення (case-insensitive)
-      const slugMatch =
-        p.slug === slugOrId || // Exact match (якщо обидва однаково)
-        normalizedApiSlug === normalizedSlugOrId || // Нормалізовані значення
-        p.slug.toLowerCase() === slugOrId.toLowerCase() || // Case-insensitive exact
-        normalizedApiSlug === slugOrId.toLowerCase(); // Нормалізований API slug === URL slug (lowercase)
-
-      return slugMatch;
-    });
-
-    if (!product) {
+    if (!res.ok) {
       throw new Error(`Product not found: ${slugOrId}`);
     }
 
-    return await mapProductToUi(product);
+    // Повертаємо об'єкт у тому вигляді, в якому його очікують ProductPage та інші компоненти
+    return (await res.json()) as unknown;
   },
   staleTime: 5 * 60 * 1000,
   retry: 1,
@@ -121,94 +41,10 @@ export const productQuery = (slugOrId: string) => ({
 export const productsWithFiltersQuery = (filters: Record<string, unknown>) => ({
   queryKey: ["products", "filtered", filters] as const,
   queryFn: async () => {
-    let products = await getAllProducts();
-
-    // Якщо передано slug категорії, спробуємо знайти її ID і отримати товари одразу з BE
-    if (filters.category && typeof filters.category === "string") {
-      try {
-        const categories = (await fetchWcCategories()) as Array<{
-          id: number;
-          slug: string;
-        }>;
-        const target = categories.find(
-          (c) => c.slug === (filters.category as string)
-        );
-        if (target) {
-          products = await getProductsByCategory(String(target.id));
-        }
-      } catch (e) {
-        // Якщо не вдалось — залишаємо fallback на клієнтську фільтрацію нижче
-      }
-    }
-
-    const mapped = products.map(mapProductToUi);
-
-    let filteredProducts = mapped;
-
-    if (filters.priceMin !== undefined && filters.priceMax !== undefined) {
-      filteredProducts = filteredProducts.filter((product) => {
-        const price = parseFloat(product.price);
-        return (
-          price >= (filters.priceMin as number) &&
-          price <= (filters.priceMax as number)
-        );
-      });
-    }
-
-    if (
-      filters.colors &&
-      Array.isArray(filters.colors) &&
-      (filters.colors as string[]).length > 0
-    ) {
-      filteredProducts = filteredProducts.filter((product) => {
-        return product.attributes.some((attr) =>
-          (filters.colors as string[]).some((color) =>
-            attr.options.includes(color)
-          )
-        );
-      });
-    }
-
-    if (
-      filters.sizes &&
-      Array.isArray(filters.sizes) &&
-      (filters.sizes as string[]).length > 0
-    ) {
-      filteredProducts = filteredProducts.filter((product) => {
-        return product.attributes.some((attr) =>
-          (filters.sizes as string[]).some((size) =>
-            attr.options.includes(size)
-          )
-        );
-      });
-    }
-
-    if (filters.category) {
-      const categoryFilter = filters.category as string;
-      // Перевіряємо, чи це ID (число) чи slug
-      const isNumericId = /^\d+$/.test(categoryFilter);
-
-      filteredProducts = filteredProducts.filter((product) =>
-        product.categories.some(
-          (cat) =>
-            // Порівнюємо по slug або по ID
-            cat.slug === categoryFilter ||
-            (isNumericId && cat.id.toString() === categoryFilter)
-        )
-      );
-    }
-
-    if (filters.search) {
-      const searchTerm = (filters.search as string).toLowerCase();
-      filteredProducts = filteredProducts.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchTerm) ||
-          product.description.toLowerCase().includes(searchTerm) ||
-          product.shortDescription.toLowerCase().includes(searchTerm)
-      );
-    }
-
-    return filteredProducts;
+    // productsWithFilters тепер просто делегує до fetchFilteredProducts,
+    // який вже працює через /catalog/products
+    const products = await fetchFilteredProducts(filters as any);
+    return products;
   },
   staleTime: 5 * 60 * 1000,
   retry: 1,

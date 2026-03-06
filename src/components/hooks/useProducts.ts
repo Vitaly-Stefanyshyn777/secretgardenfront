@@ -6,7 +6,8 @@ interface ProductFilters {
   priceMax: number;
   colors: string[];
   sizes: string[];
-  certification: string;
+  // Вибрані підкатегорії (slug). Може бути декілька.
+  certification: string[];
   workoutTypes: string[];
   category: string;
   search: string;
@@ -18,7 +19,7 @@ export const useProducts = () => {
     priceMax: 100000,
     colors: [],
     sizes: [],
-    certification: "",
+    certification: [],
     workoutTypes: [],
     category: "",
     search: "",
@@ -34,7 +35,7 @@ export const useProducts = () => {
       priceMax: 100000,
       colors: [],
       sizes: [],
-      certification: "",
+      certification: [],
       workoutTypes: [],
       category: "",
       search: "",

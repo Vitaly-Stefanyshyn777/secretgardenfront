@@ -270,6 +270,25 @@ const ProductCard = ({
   const shouldShowDisabledButton =
     hasNoCertification || isNoCertificationFilter;
 
+  const ratingValue = wcProduct
+    ? parseFloat(wcProduct.average_rating || "0")
+    : 0;
+  const ratingCount = wcProduct ? wcProduct.rating_count || 0 : 0;
+
+  const filledStars = Math.round(
+    Math.max(0, Math.min(5, ratingValue || 0))
+  );
+
+  const getReviewsLabel = (count: number) => {
+    const n = Math.abs(count);
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return "відгук";
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
+      return "відгуки";
+    return "відгуків";
+  };
+
   const getHref = () => {
     if (slug && slug.trim() !== "" && !/^\d+$/.test(slug)) {
       if (slug.startsWith("/")) {
@@ -364,6 +383,33 @@ const ProductCard = ({
         {variantInfo ? (
           <div className={styles.variantInfo}>{variantInfo}</div>
         ) : null}
+        {Number.isFinite(ratingValue) && ratingCount >= 0 && (
+          <div className={styles.ratingRow}>
+            <div className={styles.stars}>
+              {Array.from({ length: 5 }).map((_, i) => {
+                const filled = i < filledStars;
+                return (
+                  <svg
+                    key={i}
+                    viewBox="0 0 20 20"
+                    className={`${styles.starIcon} ${
+                      filled ? styles.starFilled : styles.starEmpty
+                    }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 1.66699L12.4722 6.67699L18 7.50033L14 11.3337L14.9444 16.8337L10 14.3337L5.05556 16.8337L6 11.3337L2 7.50033L7.52778 6.67699L10 1.66699Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                );
+              })}
+            </div>
+            <span className={styles.ratingText}>
+              {ratingCount} {getReviewsLabel(ratingCount)}
+            </span>
+          </div>
+        )}
         <div className={styles.subscriptionBlock}>
           <div className={styles.subscriptionPrice}>
             {!isLoggedIn && actualDiscountPercent > 0 && (

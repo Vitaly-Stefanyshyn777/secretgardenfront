@@ -1,15 +1,46 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./CertificationFilter.module.css";
 import { MinuswIcon, PlusIcon } from "@/components/Icons/Icons";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useWcCategoriesQuery } from "@/components/hooks/useWpQueries";
+import { useCatalogCategoriesQuery } from "@/components/hooks/useCatalogQueries";
+import type { CatalogCategory } from "@/lib/bfbApi";
 
 interface CertificationFilterProps {
-  value: string;
-  onChange: (value: string) => void;
+  // Вибрані підкатегорії (slug). Може бути декілька.
+  value: string[];
+  onChange: (value: string[]) => void;
   loading?: boolean;
+}
+
+function findCategoryById(
+  categories: CatalogCategory[],
+  id: string
+): CatalogCategory | null {
+  for (const cat of categories) {
+    if (cat.id === id) return cat;
+    if (cat.children && cat.children.length > 0) {
+      const found = findCategoryById(cat.children, id);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+function findRootCategoryBySlug(
+  categories: CatalogCategory[],
+  slug: string
+): CatalogCategory | null {
+  for (const root of categories) {
+    if (root.slug === slug) return root;
+    if (root.children && root.children.length > 0) {
+      const hit = root.children.some((c) => c.slug === slug);
+      if (hit) return root;
+    }
+  }
+  return null;
 }
 
 export const CertificationFilter = ({
@@ -17,41 +48,99 @@ export const CertificationFilter = ({
   onChange,
   loading,
 }: CertificationFilterProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [isExpanded, setIsExpanded] = useState(true);
-  const { data: cats = [], isLoading, isError } = useWcCategoriesQuery(77);
-  
-  // Обчислюємо опції на льоту без useEffect
-  // Додаємо категорії 78 та 79 в кінець списку
-  // Фільтруємо категорії з count === 0
-  const fetchedOptions = (cats || [])
-    .filter((c) => {
-      const cat = c as { id: number; count?: number };
-      // Фільтруємо тільки категорії 78 та 79, і виключаємо ті, де count === 0
-      return (cat.id === 79 || cat.id === 78) && cat.count !== 0;
-    })
-    .sort((a, b) => {
-      // Сортуємо: спочатку "Є сертифікат" (79), потім "Немає сертифікату" (78)
-      if (a.id === 79 && b.id === 78) return -1;
-      if (a.id === 78 && b.id === 79) return 1;
-      return 0;
-    });
-  
-  const showSkeleton = loading || (isLoading && fetchedOptions.length === 0);
+  const [activeParentId, setActiveParentId] = useState<string | null>(null);
+  const [isSubExpanded, setIsSubExpanded] = useState(true);
 
-  const fallbackOptions = [
-    { id: 79, name: "Є сертифікат", slug: "with-cert", parent: 77 },
-    { id: 78, name: "Немає сертифікату", slug: "without-cert", parent: 77 },
-  ];
+  const {
+    data: categories = [],
+    isLoading,
+    isError,
+  } = useCatalogCategoriesQuery();
 
-  const options = fetchedOptions.length > 0 ? fetchedOptions : fallbackOptions;
+  const showSkeleton = loading || isLoading;
 
-  // Якщо немає опцій і не завантажується, не відображаємо фільтр
-  if (!showSkeleton && options.length === 0) {
+  const activeCategorySlug = searchParams?.get("category") ?? "";
+
+  const activeRoot = useMemo(() => {
+    if (!activeCategorySlug) return null;
+    return findRootCategoryBySlug(categories, activeCategorySlug);
+  }, [categories, activeCategorySlug]);
+
+  useEffect(() => {
+    if (!activeRoot || !activeRoot.children || activeRoot.children.length === 0) {
+      setActiveParentId(null);
+      setIsSubExpanded(true);
+      return;
+    }
+    setActiveParentId(activeRoot.id);
+    setIsSubExpanded(true);
+  }, [activeRoot?.id]);
+
+  const activeParent = useMemo(() => {
+    if (!activeParentId) return null;
+    return findCategoryById(categories, activeParentId);
+  }, [categories, activeParentId]);
+
+  const rootCategories = useMemo(
+    () =>
+      (categories || []).filter(
+        (cat) =>
+          cat.name !== "Всі товари" &&
+          cat.slug !== "all-products" &&
+          cat.slug !== "all"
+      ),
+    [categories]
+  );
+  const subCategories = activeParent?.children ?? [];
+
+  // Якщо немає категорій і не завантажується, не відображаємо фільтр
+  if (!showSkeleton && rootCategories.length === 0) {
     return null;
   }
 
   const toggleSection = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const pushCategoryToUrl = (slug: string | null) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    if (!slug) {
+      params.delete("category");
+    } else {
+      params.set("category", slug);
+    }
+    const qs = params.toString();
+    router.push(qs ? `${pathname}?${qs}` : pathname);
+  };
+
+  const handleParentClick = (cat: CatalogCategory) => {
+    if (cat.children && cat.children.length > 0) {
+      setActiveParentId(cat.id);
+      // Батьківська категорія застосовується моментально через URL,
+      // а підкатегорії (чекбокси) накопичуються і застосовуються через кнопку "Застосувати".
+      onChange([]);
+      pushCategoryToUrl(cat.slug);
+      return;
+    }
+
+    // Якщо у категорії немає children — фільтруємо по її slug
+    // (категорія без children поводиться як звичайна категорія)
+    pushCategoryToUrl(cat.slug);
+    onChange([]);
+  };
+
+  const handleSubcategoryToggle = (cat: CatalogCategory) => {
+    const isSelected = value.includes(cat.slug);
+    const next = isSelected
+      ? value.filter((s) => s !== cat.slug)
+      : [...value, cat.slug];
+    // Для підкатегорій лише оновлюємо локальний стан фільтрів (чекбокси).
+    onChange(next);
   };
 
   return (
@@ -61,7 +150,7 @@ export const CertificationFilter = ({
       }`}
     >
       <div className={styles.sectionTitleContainer} onClick={toggleSection}>
-        <h3 className={styles.sectionTitle}>Сертифікація:</h3>
+        <h3 className={styles.sectionTitle}>Категорії</h3>
         {isExpanded ? <MinuswIcon /> : <PlusIcon />}
       </div>
       <div
@@ -70,58 +159,120 @@ export const CertificationFilter = ({
         }`}
       >
         {showSkeleton ? (
-          <div className={styles.radioGroup}>
-            {[...Array(2)].map((_, i) => {
-              const skeletonClasses = [
-                styles.skeletonRadioLabel170,
-                styles.skeletonRadioLabel165
-              ];
-              return (
-                <div key={i} className={styles.radioItem}>
-                  <Skeleton circle className={styles.skeletonRadioCircle} />
-                  <Skeleton className={skeletonClasses[i]} />
-                </div>
-              );
-            })}
+          <div className={styles.categoryBlocks}>
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} height={42} borderRadius={6} />
+            ))}
           </div>
-        ) : isError && fetchedOptions.length === 0 ? (
-          <div className={styles.error}>Помилка завантаження</div>
-        ) : options.length > 0 ? (
-          <div className={styles.radioGroup}>
-            {options.map((opt) => {
-              const isSelected = value === String(opt.id);
-              const inputId = `certification-${opt.id}`;
+        ) : isError ? (
+          <div className={styles.error}>Помилка завантаження категорій</div>
+        ) : activeParentId ? (
+          <>
+            <div className={styles.subHeader}>
+              <button
+                type="button"
+                className={`${styles.categoryBlockBtn} ${styles.categoryBlockBtnActive}`}
+                disabled
+              >
+                {activeParent?.name ?? "Категорія"}
+              </button>
+
+              <button
+                type="button"
+                className={styles.allCategoriesBtn}
+                onClick={() => {
+                  setIsSubExpanded((prev) => !prev);
+                }}
+              >
+                <span>Всі категорії</span>
+                <span className={styles.caret} aria-hidden="true" />
+              </button>
+            </div>
+
+            {isSubExpanded && (
+              <div className={styles.checkboxGroup}>
+                {subCategories.map((opt) => {
+                  const isSelected = value.includes(opt.slug);
+                  const inputId = `catalog-subcategory-${opt.id}`;
+                  return (
+                    <label
+                      key={opt.id}
+                      htmlFor={inputId}
+                      className={styles.checkboxItem}
+                    >
+                      <input
+                        id={inputId}
+                        type="checkbox"
+                        className={styles.checkboxInput}
+                        checked={isSelected}
+                        onChange={() => handleSubcategoryToggle(opt)}
+                      />
+                      <span className={styles.checkboxBox} aria-hidden="true" />
+                      <span className={styles.radioLabel}>{opt.name}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+
+            <button
+              type="button"
+              className={`${styles.categoryBlockBtn} ${styles.categoryBackBtn}`}
+              onClick={() => {
+                setActiveParentId(null);
+                setIsSubExpanded(true);
+                onChange([]);
+                pushCategoryToUrl(null);
+              }}
+            >
+              Всі товари
+            </button>
+          </>
+        ) : activeRoot && (!activeRoot.children || activeRoot.children.length === 0) ? (
+          <>
+            <div className={styles.subHeader}>
+              <button
+                type="button"
+                className={`${styles.categoryBlockBtn} ${styles.categoryBlockBtnActive}`}
+                disabled
+              >
+                {activeRoot.name}
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className={`${styles.categoryBlockBtn} ${styles.categoryBackBtn}`}
+              onClick={() => {
+                setActiveParentId(null);
+                setIsSubExpanded(true);
+                onChange([]);
+                pushCategoryToUrl(null);
+              }}
+            >
+              Всі товари
+            </button>
+          </>
+        ) : rootCategories.length > 0 ? (
+          <div className={styles.categoryBlocks}>
+            {rootCategories.map((cat) => {
+              const isActive = activeCategorySlug === cat.slug;
               return (
-                <label
-                  key={opt.id}
-                  htmlFor={inputId}
-                  className={`${styles.radioItem} ${
-                    isSelected ? styles.selected : ""
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`${styles.categoryBlockBtn} ${
+                    isActive ? styles.categoryBlockBtnActive : ""
                   }`}
+                  onClick={() => handleParentClick(cat)}
                 >
-                  <input
-                    type="checkbox"
-                    id={inputId}
-                    name="certification"
-                    value={String(opt.id)}
-                    checked={isSelected}
-                    onChange={() => {
-                      if (isSelected) {
-                        onChange(""); // скасувати вибір
-                      } else {
-                        onChange(String(opt.id)); // встановити
-                      }
-                    }}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioCircle} aria-hidden="true" />
-                  <span className={styles.radioLabel}>{opt.name}</span>
-                </label>
+                  {cat.name}
+                </button>
               );
             })}
           </div>
         ) : (
-          <div className={styles.noOptions}>Немає доступних опцій</div>
+          <div className={styles.noOptions}>Немає доступних категорій</div>
         )}
       </div>
     </div>

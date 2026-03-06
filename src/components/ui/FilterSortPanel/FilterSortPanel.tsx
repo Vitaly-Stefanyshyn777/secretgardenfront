@@ -10,7 +10,7 @@ interface FilterState {
   priceMax: number;
   colors: string[];
   sizes: string[];
-  certification: string;
+  certification: string[];
 }
 
 interface Product {
@@ -66,7 +66,7 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
     priceMax: 100000,
     colors: [],
     sizes: [],
-    certification: "",
+    certification: [],
   },
   onFiltersChange = () => {},
   onReset = () => {},

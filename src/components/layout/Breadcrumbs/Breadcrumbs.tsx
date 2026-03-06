@@ -235,7 +235,7 @@ const Breadcrumbs: React.FC = () => {
 
     const checkSliderState = () => {
       const hasClass = document.body.classList.contains(
-        "instructing-slider-open"
+        "instructing-slider-open",
       );
       setIsSliderOpen(hasClass);
     };

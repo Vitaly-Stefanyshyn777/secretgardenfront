@@ -345,24 +345,9 @@ function CartItemRow({ item }: CartItemRowProps) {
 }
 
 export default function CartItemsList({ items }: CartItemsListProps) {
-  const displayItems: CartItem[] =
-    items.length > 0
-      ? items
-      : [
-          {
-            id: "fallback-item",
-            name: "Рюкзак BFB",
-            price: 255,
-            originalPrice: 300,
-            quantity: 1,
-            image:
-              "https://www.api.bfb.projection-learn.website/wp-content/uploads/2026/01/photo_2026-01-05_18-27-14-10.jpg",
-          },
-        ];
-
   return (
     <div className={s.leftList}>
-      {displayItems.map((it) => (
+      {items.map((it) => (
         <CartItemRow key={it.id} item={it} />
       ))}
     </div>

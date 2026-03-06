@@ -44,59 +44,17 @@ export const useAttributeTermsQuery = (attributeId: number, enabled = true) =>
     gcTime: 20 * 60 * 1000,
   });
 
-export const useWcCategoriesQuery = (parent?: number) =>
+// WooCommerce categories більше не використовуємо – повертаємо порожній масив
+export const useWcCategoriesQuery = (_parent?: number) =>
   useQuery({
-    queryKey: ["wc_categories", parent ?? "all"],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (typeof parent === "number") params.set("parent", String(parent));
-      params.set("per_page", "100");
-
-      try {
-        const { data } = await api.get(
-          `/api/wc/products/categories?${params.toString()}`
-        );
-        return data as Array<{
-          id: number;
-          name: string;
-          slug: string;
-          parent: number;
-        }>;
-      } catch (error: unknown) {
-        // Silent error handling
-
-        // Якщо це 403 помилка, повертаємо порожній масив
-        if (
-          error &&
-          typeof error === "object" &&
-          "response" in error &&
-          error.response &&
-          typeof error.response === "object" &&
-          "status" in error.response &&
-          error.response.status === 403
-        ) {
-          return [] as Array<{
-            id: number;
-            name: string;
-            slug: string;
-            parent: number;
-          }>;
-        }
-
-        // Для інших помилок також повертаємо порожній масив
-        return [] as Array<{
-          id: number;
-          name: string;
-          slug: string;
-          parent: number;
-        }>;
-      }
-    },
-    staleTime: 30 * 60 * 1000, // 30 хвилин
-    gcTime: 60 * 60 * 1000, // 1 година
-    retry: false, // Не повторювати запити при помилці
-    refetchOnWindowFocus: false, // Не перезавантажувати при фокусі вікна
-    refetchOnMount: false, // Не перезавантажувати при монтуванні
+    queryKey: ["wc_categories_stub"],
+    queryFn: async () =>
+      [] as Array<{ id: number; name: string; slug: string; parent: number }>,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
 export const useInstructorQuery = (id: number) =>
