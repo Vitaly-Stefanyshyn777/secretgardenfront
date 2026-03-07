@@ -158,9 +158,11 @@ export interface Product {
     value: string;
   }>;
   permalink: string;
-  averageRating: string;
+  averageRating: string | number;
   ratingCount: number;
   dateCreated?: string; // Дата створення з WooCommerce v3 API
+  /** Характеристики товару з API (name, value, order) */
+  characteristics?: Array<{ id?: string; name: string; value: string; order?: number }>;
   isNew?: boolean;
   courseData?: {
     Required_equipment?: string;

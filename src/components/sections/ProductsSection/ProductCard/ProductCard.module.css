@@ -1,5 +1,4 @@
 .productCard {
-  background: white;
   border-radius: 16px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -9,6 +8,8 @@
   flex-direction: column;
   height: 100%;
   position: relative;
+
+  border: 1.33px solid var(--bіliy);
 }
 
 .productCardFluid {
@@ -169,7 +170,7 @@
   width: 100%;
   flex: 1 1 auto;
   height: auto;
-  gap: 40px;
+  gap: 10px;
 }
 
 .category {
@@ -182,11 +183,11 @@
 }
 
 .productName {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 140%;
-  color: var(--black);
+  font-family: var(--second-family);
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .variantInfo {
@@ -198,8 +199,13 @@
   color: rgba(14, 14, 14, 0.6);
 }
 
+.ratingPriceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .ratingRow {
-  margin-top: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -220,15 +226,21 @@
 }
 
 .starEmpty {
-  color: rgba(0, 0, 0, 0.2);
+  color: #fff;
 }
 
 .ratingText {
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 140%;
-  color: rgba(14, 14, 14, 0.8);
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.namePricingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .subscriptionBlock {
@@ -236,6 +248,7 @@
   height: auto;
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
 }
 
 .subscriptionPrice {
@@ -279,11 +292,11 @@
 }
 
 .currentPrice {
-  font-weight: 600;
-  color: var(--black);
-  font-size: 18px;
-  line-height: 1;
-  font-family: var(--font-family);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .originalPrice {
@@ -500,21 +513,19 @@
     align-items: flex-end;
   }
 
-
-.outOfStockOverlay {
-  padding: mvw(8) mvw(12);
-  font-size: mvw(12);
-  border-radius: mvw(8);
-  width: auto;
-  max-width: none;
-  height: auto;
-  white-space: nowrap;
-  text-align: center;
-  display: block;
-  font-family: var(--font-family);
-  font-weight: 500;
-  line-height: 140%;
-  color: var(--white);
-}
-
+  .outOfStockOverlay {
+    padding: mvw(8) mvw(12);
+    font-size: mvw(12);
+    border-radius: mvw(8);
+    width: auto;
+    max-width: none;
+    height: auto;
+    white-space: nowrap;
+    text-align: center;
+    display: block;
+    font-family: var(--font-family);
+    font-weight: 500;
+    line-height: 140%;
+    color: var(--white);
+  }
 }

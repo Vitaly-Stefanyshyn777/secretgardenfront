@@ -59,7 +59,6 @@ export default function ProductActions({
               <div
                 className={styles.registerBlock}
                 onClick={onRegisterOpen}
-                style={{ cursor: "pointer" }}
               >
                 <p className={styles.registerText}>
                   Зареєструйтесь, щоб придбати борд

@@ -11,6 +11,33 @@
   height: auto;
 }
 
+/* Контейнер для PriceOrderDropdown (тільки іконка) */
+.priceOrderContainer {
+  position: relative;
+  width: auto;
+  height: auto;
+  flex-shrink: 0; /* іконка не стискається при нестачі місця */
+}
+
+.priceOrderButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 48px;
+  min-height: 48px;
+
+  img {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+}
+
 /* Кнопки для "Показувати по" */
 .itemsPerPageButton {
   display: flex;
@@ -105,6 +132,32 @@
   transition: transform 0.2s ease;
 }
 
+.sortIconWrapper,
+.itemsPerPageIconWrapper {
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+/* Спільний клас для обох іконок 48x48 (SortDropdown sort + PriceOrderDropdown) */
+.sortDropdownIcon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.itemsPerPageDropdownIcon {
+  width: 14px;
+  height: 8px;
+  flex-shrink: 0;
+}
+
+.priceOrderDropdown {
+  left: 0;
+  min-width: 180px;
+}
+
 /* Випадаючий список для "Сортування" */
 .sortDropdown {
   position: absolute;
@@ -140,12 +193,13 @@
 }
 
 .iconRotated {
-  transition: transform 0.3s ease-in-out; /* 0.3 секунди, цей блок може бути продубльований */
+  transition: transform 0.3s ease-in-out;
   transform: rotate(180deg);
 }
-/* Загальний клас для обертання іконки */
-.iconRotated {
-  transform: rotate(180deg);
+
+.priceOrderDropdown {
+  left: 0;
+  min-width: 180px;
 }
 
 @media (max-width: 1000px) {

@@ -4,6 +4,7 @@ import { useCartStore } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
 import { useFavoriteStore } from "@/store/favorites";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   BasketIcon,
   SmitnikIcon,
@@ -141,7 +142,7 @@ export default function CartButton({
             stockQuantity,
             metaData,
           },
-          1
+          1,
         );
       } catch (error) {
         alert((error as Error).message);
@@ -163,17 +164,10 @@ export default function CartButton({
       aria-pressed={inCart}
       aria-label={inCart ? "Видалити з кошика" : "Додати в кошик"}
     >
-      {isMobile ? (
-        inCart ? (
-          <BasketMobileVioletGreenIcon />
-        ) : (
-          <BasketMobileVioletIcon />
-        )
-      ) : inCart ? (
-        <SmitnikIcon />
-      ) : (
-        <BasketIcon />
-      )}
+      <div className={s.cartIconWrapper}>
+        <span className={s.cartIconText}>Додати в кошик</span>
+        <Image src="/icons/icon-18.svg" alt="Cart" width={18} height={18} />
+      </div>
     </button>
   );
 }

@@ -45,6 +45,59 @@ const ProductInfo = memo(function ProductInfo({
               {isActuallyHit && <Badge variant="hit" />}
             </div>
           </div>
+          {/* В наявності */}
+          {product.stockStatus === "instock" && (
+            <p className={styles.stockInfo}>
+              В наявності - {product.stockQuantity ?? 1}
+            </p>
+          )}
+          {/* Рейтинг і відгуки */}
+          {(Number(product.averageRating) > 0 ||
+            (product.ratingCount ?? 0) > 0) && (
+            <div className={styles.ratingRow}>
+              <div className={styles.stars}>
+                {Array.from({ length: 5 }).map((_, i) => {
+                  const rating = Number(product.averageRating) || 0;
+                  const filled =
+                    i < Math.round(Math.min(5, Math.max(0, rating)));
+                  const starClass =
+                    [
+                      styles.starIcon,
+                      filled ? styles.starFilled : styles.starEmpty,
+                    ]
+                      .filter(
+                        (c): c is string =>
+                          typeof c === "string" && c.length > 0,
+                      )
+                      .join(" ") || undefined;
+                  return (
+                    <svg
+                      key={i}
+                      viewBox="0 0 20 20"
+                      className={starClass}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 1.66699L12.4722 6.67699L18 7.50033L14 11.3337L14.9444 16.8337L10 14.3337L5.05556 16.8337L6 11.3337L2 7.50033L7.52778 6.67699L10 1.66699Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  );
+                })}
+              </div>
+              <span className={styles.ratingText}>
+                {product.ratingCount ?? 0}{" "}
+                {((n: number) => {
+                  const mod10 = n % 10;
+                  const mod100 = n % 100;
+                  if (mod10 === 1 && mod100 !== 11) return "відгук";
+                  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
+                    return "відгуки";
+                  return "відгуків";
+                })(product.ratingCount ?? 0)}
+              </span>
+            </div>
+          )}
           {product.shortDescription?.trim() && (
             <p className={styles.productText}>
               <span
@@ -107,64 +160,45 @@ const ProductInfo = memo(function ProductInfo({
           />
         </div>
 
-        {/* Розгорнути секції з інформацією про товар */}
+        {/* Характеристика та особливості + Опис (статичні блоки) + Доставка/Оплата/Повернення (розгортані) */}
         <div className={styles.expandableSections}>
-          {/* Опис товару - завжди відкритий */}
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionHeaderText}>Опис товару</span>
-            </div>
-            <div className={styles.sectionContent}>
-              <div className={styles.sectionContentText}>
-                {product?.description?.trim() ||
-                product?.shortDescription?.trim() ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        product.description?.trim() ||
-                        product.shortDescription?.trim() ||
-                        "",
-                    }}
-                  />
-                ) : (
-                  <p>Опис товару відсутній</p>
-                )}
+          {/* Характеристика та особливості - статичний блок, двоколонкова таблиця */}
+          {(product.characteristics?.length ?? 0) > 0 && (
+            <div className={styles.characteristicsBlock}>
+              <h3 className={styles.characteristicsBlockTitle}>
+                Характеристика та особливості
+              </h3>
+              <div className={styles.characteristicsTable}>
+                {product.characteristics!.map((ch, idx) => (
+                  <div key={idx} className={styles.characteristicRow}>
+                    <span className={styles.characteristicName}>{ch.name}</span>
+                    <span className={styles.characteristicValue}>
+                      {ch.value}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Доставка */}
-          <div className={styles.section}>
-            <button
-              className={styles.sectionHeader}
-              onClick={() => onToggleSection("delivery")}
-            >
-              <span className={styles.sectionHeaderText}>Доставка</span>
-              <span
-                className={`${styles.chevron} ${
-                  expandedSections.delivery ? "" : styles.rotated
-                }`}
-              >
-                <СhevronIcon />
-              </span>
-            </button>
-            {expandedSections.delivery && (
-              <div className={styles.sectionContent}>
-                <div className={styles.sectionContentText}>
-                  <p className={styles.sectionContentTextOne}>
-                    Нова пошта – доставка у відділення або кур'єром за 1–3 дні.{" "}
-                    <br />
-                    Укрпошта - бюджетний варіант доставки, термін 2-5
-                    <br />
-                    Самовивіз (за наявності шоуруму) - уточнюйте локацію. <br />
-                  </p>
-                  <p className={styles.sectionContentTextTwo}>
-                    {" "}
-                    Для уточнень звертайтесь в Instagram.{" "}
-                  </p>
-                </div>
-              </div>
-            )}
+          {/* Опис - статичний блок */}
+          <div className={styles.descriptionBlock}>
+            <h3 className={styles.descriptionBlockTitle}>Опис</h3>
+            <div className={styles.descriptionContent}>
+              {product?.description?.trim() ||
+              product?.shortDescription?.trim() ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      product.description?.trim() ||
+                      product.shortDescription?.trim() ||
+                      "",
+                  }}
+                />
+              ) : (
+                <p>Опис товару відсутній</p>
+              )}
+            </div>
           </div>
 
           {/* Оплата */}
@@ -222,93 +256,6 @@ const ProductInfo = memo(function ProductInfo({
                   оригінальній упаковці можна повернути. Доставка повернення -
                   за рахунок покупця, якщо товар не має браку.
                 </p>
-              </div>
-            )}
-          </div>
-
-          {/* Характеристики */}
-          <div className={styles.sectionCharacteristics}>
-            <button
-              className={styles.sectionHeader}
-              onClick={() => onToggleSection("characteristics")}
-            >
-              <span className={styles.sectionHeaderText}>Характеристики</span>
-              <span
-                className={`${styles.chevron} ${
-                  expandedSections.characteristics ? "" : styles.rotated
-                }`}
-              >
-                <СhevronIcon />
-              </span>
-            </button>
-            {expandedSections.characteristics && (
-              <div className={styles.sectionContent}>
-                <div className={styles.sectionContentBlock}>
-                  {(product.dimensions?.length?.trim() ||
-                    product.dimensions?.width?.trim() ||
-                    product.dimensions?.height?.trim() ||
-                    product.weight?.trim()) && (
-                    <>
-                      <div className={styles.characteristicsTitle}>
-                        Габарити та вага:
-                      </div>
-                      <div className={styles.characteristics}>
-                        {product.dimensions?.length?.trim() && (
-                          <div className={styles.characteristic}>
-                            <span>Довжина:</span>
-                            <span
-                              style={{
-                                textAlign: "center",
-                                color: "#0e0e0e",
-                              }}
-                            >
-                              {product.dimensions.length} см
-                            </span>
-                          </div>
-                        )}
-                        {product.dimensions?.width?.trim() && (
-                          <div className={styles.characteristic}>
-                            <span>Ширина:</span>
-                            <span
-                              style={{
-                                textAlign: "center",
-                                color: "#0e0e0e",
-                              }}
-                            >
-                              {product.dimensions.width} см
-                            </span>
-                          </div>
-                        )}
-                        {product.dimensions?.height?.trim() && (
-                          <div className={styles.characteristic}>
-                            <span>Висота:</span>
-                            <span
-                              style={{
-                                textAlign: "center",
-                                color: "#0e0e0e",
-                              }}
-                            >
-                              {product.dimensions.height} см
-                            </span>
-                          </div>
-                        )}
-                        {product.weight?.trim() && (
-                          <div className={styles.characteristic}>
-                            <span>Вага:</span>
-                            <span
-                              style={{
-                                textAlign: "center",
-                                color: "#0e0e0e",
-                              }}
-                            >
-                              {product.weight} кг
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
               </div>
             )}
           </div>

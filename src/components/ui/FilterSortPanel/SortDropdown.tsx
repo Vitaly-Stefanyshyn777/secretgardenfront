@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./SortDropdown.module.css";
-import { SortArrowIcon } from "@/components/Icons/Icons";
+import Image from "next/image";
 
 export interface SortOption {
   value: string;
@@ -60,19 +60,13 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         className={
           variant === "itemsPerPage"
             ? styles.itemsPerPageButton
-            : styles.sortButton
+            : `${styles.sortButton} ${styles.priceOrderButton}`
         }
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span
-          className={
-            variant === "itemsPerPage"
-              ? styles.itemsPerPageLabel
-              : styles.sortLabel
-          }
-        >
-          {label}
-        </span>
+        {variant === "itemsPerPage" && (
+          <span className={styles.itemsPerPageLabel}>{label}</span>
+        )}
         <div
           className={`${
             variant === "itemsPerPage"
@@ -80,7 +74,17 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
               : styles.sortIconWrapper
           } ${isOpen ? styles.iconRotated : ""}`}
         >
-          <SortArrowIcon />
+          <Image
+            src={variant === "itemsPerPage" ? "/icons/Dropdown.svg" : "/icons/Dropdown.svg"}
+            alt=""
+            width={variant === "itemsPerPage" ? 14 : 48}
+            height={variant === "itemsPerPage" ? 8 : 48}
+            className={
+              variant === "itemsPerPage"
+                ? styles.itemsPerPageDropdownIcon
+                : styles.sortDropdownIcon
+            }
+          />
         </div>
       </button>
       {isOpen && (

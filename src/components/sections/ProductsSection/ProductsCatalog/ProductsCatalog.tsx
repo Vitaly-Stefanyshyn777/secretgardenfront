@@ -14,10 +14,23 @@ import {
   type ProductFilters,
 } from "@/components/hooks/useFilteredProducts";
 // import { ProductsNewShowcase } from "@/components/ProductsShowcase/ProductsNewShowcase";
-import { ProductsShowcase } from "@/components/ProductsShowcase/ProductsShowcase";
+
 import { mapSortTypeToWcParams } from "@/lib/sortMapping";
 import { useCatalogCategoriesQuery } from "@/components/hooks/useCatalogQueries";
 import type { CatalogCategory } from "@/lib/bfbApi";
+
+type FilterProduct = {
+  id?: string | number;
+  name?: string;
+  price?: string | number;
+  regularPrice?: string | number;
+  salePrice?: string | number;
+  onSale?: boolean;
+  image?: string;
+  categories?: Array<{ id: number; name: string; slug: string }>;
+  stockStatus?: string;
+  dateCreated?: string;
+};
 
 const ProductsCatalog = () => {
   const { filters, updateFilters, resetFilters } = useProducts();
@@ -28,10 +41,11 @@ const ProductsCatalog = () => {
   const [catalogTitle, setCatalogTitle] = useState<string>("Всі товари");
   const [sortBy, setSortBy] = useState<SortType>("popular");
   const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+  const [searchTerm, setSearchTerm] = useState("");
   const appliedCategoryRef = useRef<string | undefined>(
     typeof appliedWcFilters?.category === "string"
       ? appliedWcFilters.category
-      : undefined
+      : undefined,
   );
 
   const { data: catalogCategories = [] } = useCatalogCategoriesQuery();
@@ -43,7 +57,10 @@ const ProductsCatalog = () => {
         : undefined;
   }, [appliedWcFilters?.category]);
 
-  const findBySlug = (cats: CatalogCategory[], slug: string): CatalogCategory | null => {
+  const findBySlug = (
+    cats: CatalogCategory[],
+    slug: string,
+  ): CatalogCategory | null => {
     for (const c of cats) {
       if (c.slug === slug) return c;
       if (c.children && c.children.length > 0) {
@@ -83,8 +100,9 @@ const ProductsCatalog = () => {
       order: sortParams.order,
       per_page: itemsPerPage,
       ...(sortParams.on_sale !== undefined && { on_sale: sortParams.on_sale }),
+      ...(searchTerm.trim() && { search: searchTerm.trim() }),
     };
-  }, [appliedWcFilters, sortBy, itemsPerPage]);
+  }, [appliedWcFilters, sortBy, itemsPerPage, searchTerm]);
 
   const {
     data: wcFilteredProducts = [],
@@ -119,11 +137,9 @@ const ProductsCatalog = () => {
     dateCreated: p.dateCreated,
   }));
 
-  const searchTerm = "";
-
   // Функція для побудови WC фільтрів з локальних фільтрів
   const buildWcFilters = (
-    localFilters: typeof filters
+    localFilters: typeof filters,
   ): Partial<ProductFilters> => {
     const params: Partial<ProductFilters> = {};
     const selected = localFilters.certification ?? [];
@@ -148,27 +164,28 @@ const ProductsCatalog = () => {
     }
   };
 
+  const handleFilterApply = (params: Partial<ProductFilters>) => {
+    const merged: Partial<ProductFilters> = { ...appliedWcFilters, ...params };
+    setAppliedWcFilters(merged);
+  };
+
+  const handleSortPanelApply = () => {
+    setAppliedWcFilters(buildWcFilters(filters));
+  };
+
+  // Кнопки «Застосувати» / «Скинути» показуємо тільки в підкатегоріях (не в основних категоріях)
+  const categorySlug = searchParams.get("category");
+  const currentCategory = categorySlug
+    ? findBySlug(catalogCategories, categorySlug)
+    : null;
+  const isSubcategory = !!(currentCategory?.parentId);
+
   return (
     <div className={styles.productsCatalog}>
       <div className={styles.catalogContentBlock}>
         {/* <ProductsNewShowcase /> */}
-        <ProductsShowcase title={catalogTitle} />
+
         <div className={styles.catalogContentContainer}>
-          <FilterSortPanel
-            filters={filters}
-            onFiltersChange={(newFilters) => updateFilters(newFilters)}
-            onReset={handleReset}
-            products={wcFilteredProductsForFilter}
-            onApply={() => {
-              // Використовуємо той самий onApply що і в ProductsFilter
-              const wcFilters = buildWcFilters(filters);
-              setAppliedWcFilters(wcFilters as Partial<ProductFilters>);
-            }}
-            sortBy={sortBy}
-            onSortChange={setSortBy}
-            itemsPerPage={itemsPerPage}
-            onItemsPerPageChange={setItemsPerPage}
-          />
           <div className={styles.catalogContent}>
             <ProductsFilter
               filters={filters}
@@ -177,31 +194,46 @@ const ProductsCatalog = () => {
               products={wcFilteredProductsForFilter}
               searchTerm={searchTerm}
               loading={isLoading}
-              onApply={(params) => {
-                // Зберігаємо поточні категорії та додаємо фільтри
-                setAppliedWcFilters({
-                  ...appliedWcFilters,
-                  ...params,
-                } as Partial<ProductFilters>);
-              }}
+              onApply={handleFilterApply}
+              showFilterActions={isSubcategory}
             />
-            <ProductsCatalogContainer
-              block={{
-                subtitle: "Наші товари",
-                title: catalogTitle,
-              }}
-              filteredProducts={wcFilteredProducts}
-              selectedCertificationFilter={
-                typeof appliedWcFilters?.category === "string"
-                  ? appliedWcFilters.category
-                  : ""
-              }
-              isLoading={isLoading}
-            />
-            {/* {isError && (
+            <div className={styles.catalogRightColumn}>
+              <div className={styles.catalogHeaderRow}>
+                <h2 className={styles.catalogTitle}>{catalogTitle}</h2>
+                <FilterSortPanel
+                  filters={filters}
+                  onFiltersChange={(newFilters) => updateFilters(newFilters)}
+                  onReset={handleReset}
+                  products={wcFilteredProductsForFilter}
+                  onApply={handleSortPanelApply}
+                  sortBy={sortBy}
+                  onSortChange={setSortBy}
+                  itemsPerPage={itemsPerPage}
+                  onItemsPerPageChange={setItemsPerPage}
+                  hideItemsPerPage
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  embeddedInCatalog
+                />
+              </div>
+              <ProductsCatalogContainer
+                block={{
+                  subtitle: "Наші товари",
+                  title: catalogTitle,
+                }}
+                filteredProducts={wcFilteredProducts}
+                selectedCertificationFilter={
+                  typeof appliedWcFilters?.category === "string"
+                    ? appliedWcFilters.category
+                    : ""
+                }
+                isLoading={isLoading}
+              />
+              {/* {isError && (
               <div className={styles.error}>Не вдалося завантажити товари</div>
             )} */}
-            {isLoading && <div className={styles.loading}>Завантаження…</div>}
+              {isLoading && <div className={styles.loading}>Завантаження…</div>}
+            </div>
           </div>
         </div>
       </div>

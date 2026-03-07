@@ -4,8 +4,6 @@ import AdvantagesSection from "@/components/sections/AdvantagesSection/Advantage
 import HomeFaqSection from "@/components/sections/HomeFaqSection/HomeFaqSection";
 import HomeReviewsSection from "@/components/sections/HomeReviewsSection/HomeReviewsSection";
 
-import ProductsShowcase from "@/components/sections/ProductsSection/ProductsShowcase/ProductsShowcase";
-
 import PageLoader from "@/components/PageLoader";
 
 type YoastRobots = {
@@ -138,7 +136,7 @@ export default function Home() {
       <PageLoader />
       <HeroSection />
       <AdvantagesSection />
-      <ProductsShowcase />
+
       <HomeFaqSection />
       <HomeReviewsSection />
     </>

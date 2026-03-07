@@ -33,7 +33,7 @@ export const RangeInput: React.FC<RangeInputProps> = ({
         }`}
       >
         <div className={styles.sectionTitleContainer} onClick={toggleSection}>
-          <h3 className={styles.sectionTitle}>Фільтрувати за ціною</h3>
+          <h3 className={styles.sectionTitle}>Фільтр за ціною</h3>
           {isExpanded ? <MinuswIcon /> : <PlusIcon />}
         </div>
         <div

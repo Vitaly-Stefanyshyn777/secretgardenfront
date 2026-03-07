@@ -21,6 +21,41 @@
   line-height: 140%;
   color: rgba(14, 14, 14, 0.8);
 }
+
+/* Рейтинг зірочки та кількість відгуків */
+.ratingRow {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.starIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.starFilled {
+  color: #f3b43a;
+}
+
+.starEmpty {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.ratingText {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+}
+
 .breadcrumb {
   margin-bottom: 20px;
 
@@ -43,14 +78,667 @@
   align-items: start;
 }
 
+.productLeftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stockInfo {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+}
+
+/* ProductReviews */
+.productReviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewsTabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(14, 14, 14, 0.15);
+}
+
+.reviewsTab {
+  padding: 12px 20px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: rgba(14, 14, 14, 0.6);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.reviewsTab:hover {
+  color: var(--black);
+}
+
+.reviewsTabActive {
+  color: var(--black);
+  border-bottom-color: var(--violet);
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewsLoading,
+.reviewsEmpty {
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: rgba(14, 14, 14, 0.6);
+}
+
+.reviewCard {
+  padding: 16px;
+  background: var(--bg-color);
+  border-radius: 12px;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.reviewAuthor {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+}
+
+.reviewTitle {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+  margin: 0 0 8px;
+}
+
+.reviewText {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+  margin: 0;
+}
+
+.leaveReviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewSuccess {
+  color: #22c55e;
+  font-size: 14px;
+}
+
+.reviewError {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.formField label {
+  display: block;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--black);
+}
+
+.formField input,
+.formField textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(14, 14, 14, 0.2);
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+.starButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.submitReviewBtn {
+  padding: 14px 24px;
+  background: var(--violet);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submitReviewBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.productLeftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stockInfo {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+  margin: 0;
+}
+
+/* ProductReviews */
+.productReviews {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewsTabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(14, 14, 14, 0.15);
+}
+
+.reviewsTab {
+  padding: 12px 20px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  color: rgba(14, 14, 14, 0.6);
+}
+
+.reviewsTab:hover {
+  color: var(--black);
+}
+
+.reviewsTabActive {
+  color: var(--black);
+  border-bottom-color: var(--violet);
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reviewsLoading,
+.reviewsEmpty {
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: rgba(14, 14, 14, 0.6);
+}
+
+.reviewCard {
+  padding: 16px;
+  background: var(--bg-color);
+  border-radius: 12px;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reviewAuthor {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+}
+
+.reviewTitle {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+  margin: 0 0 8px 0;
+}
+
+.reviewText {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+  margin: 0;
+}
+
+.leaveReviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewSuccess {
+  color: #22c55e;
+  font-size: 14px;
+}
+
+.reviewError {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.formField label {
+  display: block;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--black);
+}
+
+.formField input,
+.formField textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(14, 14, 14, 0.2);
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+.starButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.submitReviewBtn {
+  padding: 14px 24px;
+  background: var(--violet);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submitReviewBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.productLeftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stockInfo {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+}
+
+/* ProductReviews */
+.productReviews {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewsTabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(14, 14, 14, 0.15);
+}
+
+.reviewsTab {
+  padding: 12px 20px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: rgba(14, 14, 14, 0.6);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.reviewsTab:hover {
+  color: var(--black);
+}
+
+.reviewsTabActive {
+  color: var(--violet);
+  border-bottom-color: var(--violet);
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewsLoading,
+.reviewsEmpty {
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: rgba(14, 14, 14, 0.6);
+}
+
+.reviewCard {
+  padding: 16px;
+  background: var(--bg-color);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reviewAuthor {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+}
+
+.reviewTitle {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+  margin: 0;
+}
+
+.reviewText {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+  margin: 0;
+}
+
+.leaveReviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewSuccess {
+  color: #22c55e;
+  font-size: 14px;
+}
+
+.reviewError {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.formField label {
+  display: block;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--black);
+}
+
+.formField input,
+.formField textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(14, 14, 14, 0.2);
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+.starButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.submitReviewBtn {
+  padding: 14px 24px;
+  background: var(--violet);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submitReviewBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.productLeftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stockInfo {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+}
+
+/* ProductReviews */
+.productReviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewsTabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(14, 14, 14, 0.15);
+}
+
+.reviewsTab {
+  padding: 12px 20px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  color: rgba(14, 14, 14, 0.6);
+  margin-bottom: -1px;
+}
+
+.reviewsTab:hover {
+  color: var(--black);
+}
+
+.reviewsTabActive {
+  color: var(--black);
+  border-bottom-color: var(--violet);
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewsLoading,
+.reviewsEmpty {
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: rgba(14, 14, 14, 0.6);
+}
+
+.reviewCard {
+  padding: 16px;
+  background: var(--bg-color);
+  border-radius: 12px;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.reviewAuthor {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+}
+
+.reviewTitle {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+  margin: 0 0 8px;
+}
+
+.reviewText {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(14, 14, 14, 0.8);
+  margin: 0;
+}
+
+.leaveReviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewSuccess {
+  color: #22c55e;
+  font-size: 14px;
+}
+
+.reviewError {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.leaveReviewForm .formField label {
+  display: block;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.leaveReviewForm .formField input,
+.leaveReviewForm .formField textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(14, 14, 14, 0.2);
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+.starButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.submitReviewBtn {
+  padding: 12px 24px;
+  background: var(--violet);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submitReviewBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .imageSection {
   display: flex;
   gap: 20px;
   width: 100%;
   max-width: 1012px;
   max-height: 800px;
-  position: sticky;
-  top: 150px;
+  /* position: sticky;
+  top: 150px; */
   align-self: flex-start;
 }
 
@@ -604,7 +1292,7 @@
 
   .skeletonMarginBottom24 {
     margin-bottom: mvw(16);
-  
+
     height: mvw(56);
   }
 
@@ -957,6 +1645,95 @@
   color: rgba(14, 14, 14, 0.4);
 }
 
+.characteristic span:last-child {
+  text-align: center;
+  color: #0e0e0e;
+}
+
+/* Характеристика та особливості - статичний блок, двоколонкова таблиця */
+.characteristicsBlock {
+  width: 100%;
+  padding: 24px;
+  background: var(--bg-color, #f7f7f7);
+  border-radius: 12px;
+  border: 1px solid rgba(14, 14, 14, 0.08);
+}
+
+.characteristicsBlockTitle {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 140%;
+  color: var(--black);
+  margin: 0 0 20px 0;
+}
+
+.characteristicsTable {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.characteristicRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(14, 14, 14, 0.12);
+  align-items: start;
+}
+
+.characteristicRow:last-child {
+  border-bottom: none;
+}
+
+.characteristicName {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--black);
+}
+
+.characteristicValue {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+}
+
+/* Опис - статичний блок */
+.descriptionBlock {
+  width: 100%;
+  padding: 24px 0;
+}
+
+.descriptionBlockTitle {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 140%;
+  color: var(--black);
+  margin: 0 0 16px 0;
+}
+
+.descriptionContent {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 160%;
+  color: rgba(14, 14, 14, 0.8);
+}
+
+.descriptionContent p {
+  margin: 0 0 16px 0;
+}
+
+.descriptionContent p:last-child {
+  margin-bottom: 0;
+}
+
 .relatedProducts {
   margin-top: 70px;
   padding: 0px 100px;
@@ -1146,6 +1923,7 @@
   border-radius: 12px;
   padding: 24px;
   background: rgba(244, 67, 54, 0.12);
+  cursor: pointer;
 }
 
 .quantityControls {
@@ -1291,7 +2069,7 @@
     max-width: 100%;
     max-height: none;
     flex-direction: column-reverse;
-      position: static;
+    position: static;
   }
 
   .thumbnails {
@@ -1300,7 +2078,7 @@
     max-height: none;
     overflow-x: auto;
     overflow-y: hidden;
-    padding:  mvw(0);
+    padding: mvw(0);
     position: relative;
     align-items: center;
     scrollbar-width: none;
@@ -1788,31 +2566,116 @@
   }
 
   /* Mobile adaptive styles for new skeleton classes */
-  .skeletonThumbnail { width: mvw(76); height: mvw(76); border-radius: mvw(6); }
-  .skeletonBadge { width: mvw(56); height: mvw(28); border-radius: mvw(8); }
-  .skeletonCategoryTag { width: mvw(60); height: mvw(16); }
-  .skeletonProductTitle { width: mvw(300); height: mvw(24); }
-  .skeletonDiscountBadge { width: mvw(48); height: mvw(20); border-radius: mvw(4); }
-  .skeletonColorOption { width: mvw(60); height: mvw(60); border-radius: mvw(6); }
-  .skeletonSizeButton { width: mvw(80); height: mvw(32); border-radius: mvw(6); }
-  .skeletonPriceBlock { width: mvw(120); height: mvw(32); }
-  .skeletonQuantityIcon { width: mvw(24); height: mvw(24); border-radius: mvw(3); }
-  .skeletonAddToCartBtn { width: mvw(96); height: mvw(38); border-radius: mvw(6); }
-  .skeletonFavoriteBtn { width: mvw(160); height: mvw(38); border-radius: mvw(6); }
-  .skeletonBuyNowBtn { width: mvw(38); height: mvw(38); border-radius: mvw(6); }
-  .skeletonDescriptionLine { width: mvw(96); height: mvw(16); }
-  .skeletonCharacteristicsLine { width: mvw(120); height: mvw(16); }
-  .skeletonCharacteristic { width: mvw(120); height: mvw(20); }
-  .skeletonRelatedTitle { width: mvw(80); height: mvw(16); }
-  .skeletonRelatedSubtitle { width: mvw(240); height: mvw(26); }
-  .skeletonColorSectionTitle { width: mvw(60); height: mvw(16); }
-  .skeletonSizeSectionTitle { width: mvw(80); height: mvw(16); }
-  .skeletonSubscriptionIcon { width: mvw(24); height: mvw(24); border-radius: mvw(3); }
-  .skeletonRelatedProductName { width: 80%; height: mvw(16); }
-  .skeletonRelatedProductPrice { width: 60%; height: mvw(20); }
-  .skeletonSubscriptionText { width: 80%; height: mvw(12); }
-  .skeletonAdditionalBlock1 { width: mvw(78); height: mvw(16); }
-  .skeletonAdditionalBlock2 { width: mvw(100); height: mvw(16); }
+  .skeletonThumbnail {
+    width: mvw(76);
+    height: mvw(76);
+    border-radius: mvw(6);
+  }
+  .skeletonBadge {
+    width: mvw(56);
+    height: mvw(28);
+    border-radius: mvw(8);
+  }
+  .skeletonCategoryTag {
+    width: mvw(60);
+    height: mvw(16);
+  }
+  .skeletonProductTitle {
+    width: mvw(300);
+    height: mvw(24);
+  }
+  .skeletonDiscountBadge {
+    width: mvw(48);
+    height: mvw(20);
+    border-radius: mvw(4);
+  }
+  .skeletonColorOption {
+    width: mvw(60);
+    height: mvw(60);
+    border-radius: mvw(6);
+  }
+  .skeletonSizeButton {
+    width: mvw(80);
+    height: mvw(32);
+    border-radius: mvw(6);
+  }
+  .skeletonPriceBlock {
+    width: mvw(120);
+    height: mvw(32);
+  }
+  .skeletonQuantityIcon {
+    width: mvw(24);
+    height: mvw(24);
+    border-radius: mvw(3);
+  }
+  .skeletonAddToCartBtn {
+    width: mvw(96);
+    height: mvw(38);
+    border-radius: mvw(6);
+  }
+  .skeletonFavoriteBtn {
+    width: mvw(160);
+    height: mvw(38);
+    border-radius: mvw(6);
+  }
+  .skeletonBuyNowBtn {
+    width: mvw(38);
+    height: mvw(38);
+    border-radius: mvw(6);
+  }
+  .skeletonDescriptionLine {
+    width: mvw(96);
+    height: mvw(16);
+  }
+  .skeletonCharacteristicsLine {
+    width: mvw(120);
+    height: mvw(16);
+  }
+  .skeletonCharacteristic {
+    width: mvw(120);
+    height: mvw(20);
+  }
+  .skeletonRelatedTitle {
+    width: mvw(80);
+    height: mvw(16);
+  }
+  .skeletonRelatedSubtitle {
+    width: mvw(240);
+    height: mvw(26);
+  }
+  .skeletonColorSectionTitle {
+    width: mvw(60);
+    height: mvw(16);
+  }
+  .skeletonSizeSectionTitle {
+    width: mvw(80);
+    height: mvw(16);
+  }
+  .skeletonSubscriptionIcon {
+    width: mvw(24);
+    height: mvw(24);
+    border-radius: mvw(3);
+  }
+  .skeletonRelatedProductName {
+    width: 80%;
+    height: mvw(16);
+  }
+  .skeletonRelatedProductPrice {
+    width: 60%;
+    height: mvw(20);
+  }
+  .skeletonSubscriptionText {
+    width: 80%;
+    height: mvw(12);
+  }
+  .skeletonAdditionalBlock1 {
+    width: mvw(78);
+    height: mvw(16);
+  }
+  .skeletonAdditionalBlock2 {
+    width: mvw(100);
+    height: mvw(16);
+  }
 
   .mobileOnlyDescription {
     display: block;

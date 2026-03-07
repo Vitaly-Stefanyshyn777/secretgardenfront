@@ -14,7 +14,9 @@ import { calculatePrice } from "@/lib/priceUtils";
 import ProductPageSkeleton from "./ProductPageSkeleton";
 import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
+import ProductReviews from "./ProductReviews";
 import RelatedProducts from "./RelatedProducts";
+import Link from "next/link";
 import { СhevronIcon } from "@/components/Icons/Icons";
 import {
   isNewProduct,
@@ -34,7 +36,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     error,
   } = useProductQuery(productSlug);
 
-  const { data: relatedCategoryProducts = [] } = useProductsByCategory("30");
+  const categorySlug = product?.categories?.[0]?.slug ?? "";
+  const { data: relatedCategoryProducts = [] } = useProductsByCategory(categorySlug);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
@@ -189,15 +192,38 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     );
   }
 
+  const breadcrumbItems = [
+    { label: "Головна", href: "/" },
+    { label: "Магазин", href: "/shop" },
+    { label: "Всі товари", href: "/shop" },
+    ...(product.categories?.map((c) => ({ label: c.name, href: `/shop?category=${c.slug}` })) ?? []),
+    { label: product.name, href: undefined },
+  ];
+
   return (
     <div
       className={`${styles.productPage} ${
         isOutOfStock ? styles.productPageOutOfStock : ""
       }`}
     >
+      {/* Хлібні крихти */}
+      <nav className={styles.breadcrumb} aria-label="Навігація">
+        {breadcrumbItems.map((item, i) => (
+          <span key={i}>
+            {i > 0 && " > "}
+            {item.href ? (
+              <Link href={item.href}>{item.label}</Link>
+            ) : (
+              <span>{item.label}</span>
+            )}
+          </span>
+        ))}
+      </nav>
+
       <div className={styles.productContainer}>
-        {/* Галерея зображень */}
-        <ProductGallery
+        <div className={styles.productLeftColumn}>
+          {/* Галерея зображень */}
+          <ProductGallery
           images={product?.images || []}
           productName={product?.name || ""}
           isMobile={isMobile || false}
@@ -206,6 +232,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           totalDiscount={totalDiscount}
           isActuallyHit={isActuallyHit}
         />
+          <ProductReviews productSlug={product.slug} />
+        </div>
 
         {/* Інформація про товар */}
         <ProductInfo

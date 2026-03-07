@@ -1,4 +1,4 @@
-import ProductPage from "@/components/sections/ProductsSection/ProductPage/ProductPage";
+import ProductPage from "@/components/sections/ProductsSection/ProductPage/ProductPageNew";
 import type { Metadata } from "next";
 import { fetchProductSeo, yoastToMetadata } from "@/lib/seoUtils";
 

@@ -4,13 +4,13 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
-  padding: 24px 24px 28px;
+  /* padding: 24px 24px 28px; */
   transition: all 0.3s ease-in-out;
 }
 
 .filterSection.collapsedSection {
   gap: 0;
-  padding: 24px 24px 24px;
+  /* padding: 24px 24px 24px; */
   border-radius: 8px;
 }
 
@@ -64,23 +64,33 @@
 .categoryBlocks {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 }
 
 .categoryBlockBtn {
   width: 100%;
-  border-radius: 6px;
-  padding: 12px 14px;
+
   background: rgba(28, 56, 35, 0.14);
   border: 1px solid rgba(14, 14, 14, 0.2);
-  font-family: var(--font-family);
+
   font-weight: 500;
-  font-size: 14px;
-  line-height: 140%;
+
   color: var(--black);
   cursor: pointer;
   text-align: left;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+  border-radius: 5px;
+  padding: 10px;
+  background: var(--temno-zeleniy);
+
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .categoryBlockBtn:hover {
@@ -161,7 +171,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .checkboxBox::after {
@@ -205,7 +217,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .radioInput + .radioCircle::after {
@@ -235,7 +249,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .radioCircle::after {

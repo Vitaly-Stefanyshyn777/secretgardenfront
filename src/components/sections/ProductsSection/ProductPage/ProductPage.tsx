@@ -983,7 +983,6 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                     <div
                       className={styles.registerBlock}
                       onClick={() => setIsRegisterOpen(true)}
-                      style={{ cursor: "pointer" }}
                     >
                       <p className={styles.registerText}>
                         Зареєструйтесь, щоб придбати борд
@@ -1155,7 +1154,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
               </div>
             </div>
 
-            <div className={styles.section}>
+            {/* Блок Доставка видалено */}
+            <div className={styles.section} style={{ display: "none" }}>
               <button
                 className={styles.sectionHeader}
                 onClick={() => toggleSection("delivery")}
@@ -1275,53 +1275,25 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                           {product.dimensions?.length?.trim() && (
                             <div className={styles.characteristic}>
                               <span>Довжина:</span>
-                              <span
-                                style={{
-                                  textAlign: "center",
-                                  color: "#0e0e0e",
-                                }}
-                              >
-                                {product.dimensions.length} см
-                              </span>
+                              <span>{product.dimensions.length} см</span>
                             </div>
                           )}
                           {product.dimensions?.width?.trim() && (
                             <div className={styles.characteristic}>
                               <span>Ширина:</span>
-                              <span
-                                style={{
-                                  textAlign: "center",
-                                  color: "#0e0e0e",
-                                }}
-                              >
-                                {product.dimensions.width} см
-                              </span>
+                              <span>{product.dimensions.width} см</span>
                             </div>
                           )}
                           {product.dimensions?.height?.trim() && (
                             <div className={styles.characteristic}>
                               <span>Висота:</span>
-                              <span
-                                style={{
-                                  textAlign: "center",
-                                  color: "#0e0e0e",
-                                }}
-                              >
-                                {product.dimensions.height} см
-                              </span>
+                              <span>{product.dimensions.height} см</span>
                             </div>
                           )}
                           {product.weight?.trim() && (
                             <div className={styles.characteristic}>
                               <span>Вага:</span>
-                              <span
-                                style={{
-                                  textAlign: "center",
-                                  color: "#0e0e0e",
-                                }}
-                              >
-                                {product.weight} кг
-                              </span>
+                              <span>{product.weight} кг</span>
                             </div>
                           )}
                         </div>

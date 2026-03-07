@@ -130,7 +130,7 @@ const ProductCard = ({
     return Math.round(
       ((parseFloat(regularPrice) - parseFloat(salePrice)) /
         parseFloat(regularPrice)) *
-        100
+        100,
     );
   };
 
@@ -171,8 +171,8 @@ const ProductCard = ({
     calculatedOriginalPrice > 0
       ? formatPriceUtil(calculatedOriginalPrice)
       : normalizedPrices.regularPrice && normalizedPrices.regularPrice > 0
-      ? formatPriceUtil(normalizedPrices.regularPrice)
-      : null;
+        ? formatPriceUtil(normalizedPrices.regularPrice)
+        : null;
   const formattedSalePrice =
     normalizedPrices.salePrice && normalizedPrices.salePrice > 0
       ? formatPriceUtil(normalizedPrices.salePrice)
@@ -219,7 +219,7 @@ const ProductCard = ({
       rating_count?: number;
       featured?: boolean;
       on_sale?: boolean;
-    }>
+    }>,
   ) => {
     if (!wcProduct || !allProducts || allProducts.length === 0) return false;
 
@@ -275,9 +275,7 @@ const ProductCard = ({
     : 0;
   const ratingCount = wcProduct ? wcProduct.rating_count || 0 : 0;
 
-  const filledStars = Math.round(
-    Math.max(0, Math.min(5, ratingValue || 0))
-  );
+  const filledStars = Math.round(Math.max(0, Math.min(5, ratingValue || 0)));
 
   const getReviewsLabel = (count: number) => {
     const n = Math.abs(count);
@@ -379,10 +377,6 @@ const ProductCard = ({
       </div>
 
       <div className={styles.cardContent}>
-        <h3 className={styles.productName}>{name || "Товар без назви"}</h3>
-        {variantInfo ? (
-          <div className={styles.variantInfo}>{variantInfo}</div>
-        ) : null}
         {Number.isFinite(ratingValue) && ratingCount >= 0 && (
           <div className={styles.ratingRow}>
             <div className={styles.stars}>
@@ -392,9 +386,14 @@ const ProductCard = ({
                   <svg
                     key={i}
                     viewBox="0 0 20 20"
-                    className={`${styles.starIcon} ${
-                      filled ? styles.starFilled : styles.starEmpty
-                    }`}
+                    className={
+                      [
+                        styles.starIcon,
+                        filled ? styles.starFilled : styles.starEmpty,
+                      ]
+                        .filter(Boolean)
+                        .join(" ") || undefined
+                    }
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
@@ -410,58 +409,67 @@ const ProductCard = ({
             </span>
           </div>
         )}
-        <div className={styles.subscriptionBlock}>
-          <div className={styles.subscriptionPrice}>
-            {!isLoggedIn && actualDiscountPercent > 0 && (
-              <div className={styles.subscriptionDiscount}>
-                <SubscriptionBadge>
-                  -{Math.round(actualDiscountPercent)}% з підпискою
-                </SubscriptionBadge>
-              </div>
-            )}
+        {variantInfo ? (
+          <div className={styles.variantInfo}>{variantInfo}</div>
+        ) : null}
 
-            <div className={styles.pricing}>
-              {isPriceLoading ? (
-                <>
-                  <div
-                    className={`${styles.skeleton} ${styles.skeletonPrice}`}
-                  ></div>
-                  <div
-                    className={`${styles.skeleton} ${styles.skeletonOriginalPrice}`}
-                  ></div>
-                </>
-              ) : isLoggedIn ? (
-                <>
-                  <span className={styles.currentPrice}>
-                    <span className={styles.currentPriceValue}>
-                      {formattedFinalPrice}
+        <div className={styles.namePricingBlock}>
+          <h3 className={styles.productName}>{name || "Товар без назви"}</h3>
+
+          <div className={styles.pricing}>
+            {isPriceLoading ? (
+              <>
+                <div
+                  className={`${styles.skeleton} ${styles.skeletonPrice}`}
+                ></div>
+                <div
+                  className={`${styles.skeleton} ${styles.skeletonOriginalPrice}`}
+                ></div>
+              </>
+            ) : isLoggedIn ? (
+              <>
+                <span className={styles.currentPrice}>
+                  <span className={styles.currentPriceValue}>
+                    {formattedFinalPrice}
+                  </span>
+                </span>
+                {shouldShowOldPrice && formattedRegularPrice && (
+                  <span className={styles.originalPrice}>
+                    <span className={styles.originalPriceValue}>
+                      {formattedRegularPrice}
                     </span>
                   </span>
-                  {shouldShowOldPrice && formattedRegularPrice && (
+                )}
+              </>
+            ) : (
+              <>
+                <span className={styles.currentPrice}>
+                  <span className={styles.currentPriceValue}>
+                    {formattedCurrentPrice || formattedFinalPrice}
+                  </span>
+                </span>
+                {formattedRegularPrice &&
+                  totalDiscount > 0 &&
+                  formattedCurrentPrice !== formattedRegularPrice && (
                     <span className={styles.originalPrice}>
                       <span className={styles.originalPriceValue}>
                         {formattedRegularPrice}
                       </span>
                     </span>
                   )}
-                </>
-              ) : (
-                <>
-                  <span className={styles.currentPrice}>
-                    <span className={styles.currentPriceValue}>
-                      {formattedCurrentPrice || formattedFinalPrice}
-                    </span>
-                  </span>
-                  {formattedRegularPrice &&
-                    totalDiscount > 0 &&
-                    formattedCurrentPrice !== formattedRegularPrice && (
-                      <span className={styles.originalPrice}>
-                        <span className={styles.originalPriceValue}>
-                          {formattedRegularPrice}
-                        </span>
-                      </span>
-                    )}
-                </>
+              </>
+            )}
+          </div>
+        </div>
+        <div className={styles.subscriptionBlock}>
+          <div className={styles.ratingPriceBlock}>
+            <div className={styles.subscriptionPrice}>
+              {!isLoggedIn && actualDiscountPercent > 0 && (
+                <div className={styles.subscriptionDiscount}>
+                  <SubscriptionBadge>
+                    -{Math.round(actualDiscountPercent)}% з підпискою
+                  </SubscriptionBadge>
+                </div>
               )}
             </div>
           </div>

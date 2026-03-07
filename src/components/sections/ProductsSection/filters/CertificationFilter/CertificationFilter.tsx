@@ -17,7 +17,7 @@ interface CertificationFilterProps {
 
 function findCategoryById(
   categories: CatalogCategory[],
-  id: string
+  id: string,
 ): CatalogCategory | null {
   for (const cat of categories) {
     if (cat.id === id) return cat;
@@ -31,7 +31,7 @@ function findCategoryById(
 
 function findRootCategoryBySlug(
   categories: CatalogCategory[],
-  slug: string
+  slug: string,
 ): CatalogCategory | null {
   for (const root of categories) {
     if (root.slug === slug) return root;
@@ -72,7 +72,11 @@ export const CertificationFilter = ({
   }, [categories, activeCategorySlug]);
 
   useEffect(() => {
-    if (!activeRoot || !activeRoot.children || activeRoot.children.length === 0) {
+    if (
+      !activeRoot ||
+      !activeRoot.children ||
+      activeRoot.children.length === 0
+    ) {
       setActiveParentId(null);
       setIsSubExpanded(true);
       return;
@@ -92,9 +96,9 @@ export const CertificationFilter = ({
         (cat) =>
           cat.name !== "Всі товари" &&
           cat.slug !== "all-products" &&
-          cat.slug !== "all"
+          cat.slug !== "all",
       ),
-    [categories]
+    [categories],
   );
   const subCategories = activeParent?.children ?? [];
 
@@ -149,10 +153,10 @@ export const CertificationFilter = ({
         !isExpanded ? styles.collapsedSection : ""
       }`}
     >
-      <div className={styles.sectionTitleContainer} onClick={toggleSection}>
+      {/* <div className={styles.sectionTitleContainer} onClick={toggleSection}>
         <h3 className={styles.sectionTitle}>Категорії</h3>
         {isExpanded ? <MinuswIcon /> : <PlusIcon />}
-      </div>
+      </div> */}
       <div
         className={`${styles.sectionContent} ${
           isExpanded ? styles.expanded : styles.collapsed
@@ -228,7 +232,8 @@ export const CertificationFilter = ({
               Всі товари
             </button>
           </>
-        ) : activeRoot && (!activeRoot.children || activeRoot.children.length === 0) ? (
+        ) : activeRoot &&
+          (!activeRoot.children || activeRoot.children.length === 0) ? (
           <>
             <div className={styles.subHeader}>
               <button

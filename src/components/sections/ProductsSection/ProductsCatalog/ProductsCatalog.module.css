@@ -14,7 +14,6 @@
   height: auto;
   display: flex;
   flex-direction: column;
-  padding: 50px 0px 0px 0px;
 }
 .catalogContentBlock {
   width: auto;
@@ -26,9 +25,31 @@
 
 .catalogContent {
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 25px;
-  margin-top: 30px;
+  grid-template-columns: 250px 1fr;
+  gap: 30px;
+}
+
+.catalogRightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.catalogHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  /* padding-bottom: 16px; */
+  border-bottom: 1px solid rgba(14, 14, 14, 0.15);
+}
+
+.catalogTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 53px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 .filters {

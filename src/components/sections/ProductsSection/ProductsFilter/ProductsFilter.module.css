@@ -4,10 +4,21 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
+  max-width: 250px;
+}
+
+.filterHeading,
+.filterSectionTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
+  width: 100%;
 }
 
 .filterSidebar {
-  background: #fff;
   border-radius: 12px;
   height: fit-content;
   width: 100%;

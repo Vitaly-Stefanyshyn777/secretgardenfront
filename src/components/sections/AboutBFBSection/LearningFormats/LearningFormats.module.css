@@ -1,0 +1,57 @@
+.learningFormats {
+  padding: 60px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.subtitle {
+  display: block;
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.6);
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--black);
+  margin: 0 0 40px 0;
+}
+
+.formatsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.formatCard {
+  background: #f9f9f9;
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.formatTitle {
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 130%;
+  color: var(--black);
+  margin: 0 0 12px 0;
+}
+
+.formatDescription {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  color: rgba(14, 14, 14, 0.8);
+  margin: 0;
+}

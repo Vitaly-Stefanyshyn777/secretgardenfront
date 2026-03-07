@@ -21,31 +21,43 @@ const RelatedProducts = memo(function RelatedProducts({
       return [];
     }
 
-    const mapped = relatedCategoryProducts.slice(0, 12).map((p) => ({
-      id: String(p.id),
-      slug: p.slug || "",
-      name: p.name,
-      productType: p.type,
-      variations: p.variations,
-      price: Number(p.price) || 0,
-      originalPrice: Number(p.regularPrice) || undefined,
-      discount:
-        p.onSale
-          ? Math.max(
-              0,
-              Math.round(
-                ((Number(p.regularPrice) - Number(p.price)) /
-                  Number(p.regularPrice)) *
-                  100
+    const mapped = relatedCategoryProducts.slice(0, 12).map((p: any) => {
+      const img = p.image || p.images?.[0]?.src;
+      const ratingAvg = p.ratingAverage ?? p.averageRating;
+      const ratingCnt = p.ratingCount ?? p.rating_count ?? 0;
+      return {
+        id: String(p.id),
+        slug: p.slug || "",
+        name: p.name,
+        productType: p.type,
+        variations: p.variations,
+        price: Number(p.price) || 0,
+        originalPrice: Number(p.regularPrice) || undefined,
+        discount:
+          p.onSale
+            ? Math.max(
+                0,
+                Math.round(
+                  ((Number(p.regularPrice) - Number(p.price)) /
+                    Number(p.regularPrice)) *
+                    100
+                )
               )
-            )
-          : 0,
-      isNew: !!p.isNew,
-      isHit: !!p.isHit,
-      image: normalizeImageUrl(p.images?.[0]?.src),
-      category: p.categories?.[0]?.name || "",
-      stockStatus: p.stockStatus || "instock",
-    }));
+            : 0,
+        isNew: !!p.isNew,
+        isHit: !!p.isHit,
+        image: normalizeImageUrl(img),
+        category: p.categories?.[0]?.name || p.label || "",
+        stockStatus: p.stockStatus || "instock",
+        wcProduct:
+          (ratingAvg != null || ratingCnt > 0)
+            ? {
+                average_rating: String(ratingAvg ?? 0),
+                rating_count: Number(ratingCnt) || 0,
+              }
+            : undefined,
+      };
+    });
     return mapped;
   }, [relatedCategoryProducts]);
 
@@ -73,7 +85,7 @@ const RelatedProducts = memo(function RelatedProducts({
     <div className={styles.relatedProducts}>
       <div className={styles.relatedProductsHeader}>
         <p className={styles.relatedProductsSubtitle}>Інвентар</p>
-        <h2>З цим товаром купують</h2>
+        <h2>Вам може сподобатись</h2>
       </div>
       <div className={styles.relatedGrid}>
         {visible.map((item) => (
@@ -92,6 +104,7 @@ const RelatedProducts = memo(function RelatedProducts({
             image={item.image}
             category={item.category}
             stockStatus={item.stockStatus}
+            wcProduct={(item as any).wcProduct}
             isFluid
           />
         ))}

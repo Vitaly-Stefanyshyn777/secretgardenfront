@@ -1,4 +1,12 @@
-import { fetchFilteredProducts } from "./bfbApi";
+import { fetchFilteredProducts, fetchProductReviews } from "./bfbApi";
+import type { Product } from "./products";
+
+export const productReviewsQuery = (productSlug: string) => ({
+  queryKey: ["product", productSlug, "reviews"] as const,
+  queryFn: () => fetchProductReviews(productSlug),
+  staleTime: 2 * 60 * 1000,
+  retry: 1,
+});
 
 export const productsQuery = () => ({
   queryKey: ["products"] as const,
@@ -31,8 +39,79 @@ export const productQuery = (slugOrId: string) => ({
       throw new Error(`Product not found: ${slugOrId}`);
     }
 
-    // Повертаємо об'єкт у тому вигляді, в якому його очікують ProductPage та інші компоненти
-    return (await res.json()) as unknown;
+    const raw = await res.json();
+    // Підтримка обгорнутої відповіді { data: {...} } або прямої відповіді
+    const data = (raw?.data ?? raw) as {
+      id: string;
+      name: string;
+      slug: string;
+      price: string;
+      currency: string;
+      shortDescription?: string;
+      description?: string;
+      mainImageUrl?: string | null;
+      imageUrls?: string[];
+      label?: string;
+      inStock?: boolean;
+      stockQuantity?: number | null;
+      ratingAverage?: number;
+      ratingCount?: number;
+      categories?: Array<{ id: string; name: string; slug: string }>;
+      characteristics?: Array<{ id?: string; name: string; value: string; order?: number }>;
+    };
+
+    const placeholderImage = data.mainImageUrl || "/placeholder.svg";
+    const imageUrls = data.imageUrls && data.imageUrls.length > 0
+      ? data.imageUrls
+      : data.mainImageUrl
+        ? [data.mainImageUrl]
+        : [placeholderImage];
+
+    const product: Product = {
+      id: data.id,
+      name: data.name,
+      slug: data.slug,
+      price: data.price,
+      regularPrice: data.price,
+      salePrice: data.price,
+      onSale: false,
+      description: data.description || "",
+      shortDescription: data.shortDescription || "",
+      sku: "",
+      stockStatus: data.inStock ? "instock" : "outofstock",
+      stockQuantity: data.stockQuantity ?? null,
+      image: imageUrls[0] || placeholderImage,
+      images: imageUrls.map((src, idx) => ({
+        id: idx + 1,
+        src,
+        name: data.name,
+        alt: data.name,
+      })),
+      characteristics: data.characteristics
+        ? [...data.characteristics].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        : undefined,
+      categories:
+        data.categories?.map((c, idx) => ({
+          id: idx,
+          name: c.name,
+          slug: c.slug,
+        })) ?? [],
+      brands: [],
+      attributes: [],
+      metaData: [],
+      isNew: false,
+      isHit: false,
+      dateCreated: "",
+      averageRating: String(data.ratingAverage ?? 0),
+      ratingCount: data.ratingCount ?? 0,
+      permalink: `/products/${data.slug}`,
+      weight: undefined,
+      dimensions: undefined,
+      color: undefined,
+      originalPrice: undefined,
+    };
+
+    return product;
   },
   staleTime: 5 * 60 * 1000,
   retry: 1,

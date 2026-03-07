@@ -39,6 +39,8 @@ interface ProductsFilterProps {
   searchTerm: string;
   onApply?: (params: Record<string, unknown>) => void;
   loading?: boolean;
+  /** Показувати кнопки «Застосувати» / «Скинути» — тільки в підкатегоріях */
+  showFilterActions?: boolean;
 }
 
 const ProductsFilter = ({
@@ -48,10 +50,11 @@ const ProductsFilter = ({
   products,
   onApply,
   loading = false,
+  showFilterActions = false,
 }: ProductsFilterProps) => {
   const handleFilterChange = (
     key: keyof FilterState,
-    value: string | string[] | number
+    value: string | string[] | number,
   ) => {
     const newFilters = { ...filters, [key]: value };
     onFiltersChange(newFilters);
@@ -83,6 +86,10 @@ const ProductsFilter = ({
 
   return (
     <div className={styles.filterContainer}>
+      <h2 className={styles.filterSectionTitle}>
+        Категорії <br />
+        та фільтри
+      </h2>
       <div className={styles.filterSidebar}>
         <RangeInput
           min={0}
@@ -96,14 +103,15 @@ const ProductsFilter = ({
           onChange={(value) => handleFilterChange("certification", value)}
         />
       </div>
-      <ButtonFilter
-        onApply={() => {
-          if (onApply) onApply(wcFilters);
-        }}
-        onReset={() => {
-          onReset();
-        }}
-      />
+      {showFilterActions && (
+        <ButtonFilter
+          onApply={() => {
+            if (onApply) onApply(wcFilters);
+          }}
+          onReset={onReset}
+          loading={loading}
+        />
+      )}
     </div>
   );
 };

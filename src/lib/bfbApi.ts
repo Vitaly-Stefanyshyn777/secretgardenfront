@@ -1874,6 +1874,8 @@ export async function fetchFilteredProducts(
                 mainImageUrl?: string;
                 label?: string;
                 inStock?: boolean;
+                ratingAverage?: number;
+                ratingCount?: number;
               }>;
             };
           } catch {
@@ -1902,12 +1904,15 @@ export async function fetchFilteredProducts(
         salePrice: undefined,
         onSale: false,
         image: item.mainImageUrl || "",
+        images: item.mainImageUrl ? [{ id: 1, src: item.mainImageUrl, name: item.name, alt: item.name }] : [],
         categories: item.label
           ? [{ id: item.label, name: item.label, slug: item.label }]
           : [],
         stockStatus: item.inStock ? "instock" : "outofstock",
         dateCreated: undefined,
         slug: item.slug,
+        ratingAverage: item.ratingAverage,
+        ratingCount: item.ratingCount ?? 0,
       }));
     }
 
@@ -1936,6 +1941,8 @@ export async function fetchFilteredProducts(
         mainImageUrl?: string;
         label?: string;
         inStock?: boolean;
+        ratingAverage?: number;
+        ratingCount?: number;
       }>;
       page: number;
       limit: number;
@@ -1952,19 +1959,73 @@ export async function fetchFilteredProducts(
       salePrice: undefined,
       onSale: false,
       image: item.mainImageUrl || "",
+      images: item.mainImageUrl ? [{ id: 1, src: item.mainImageUrl, name: item.name, alt: item.name }] : [],
       categories: item.label
         ? [{ id: item.label, name: item.label, slug: item.label }]
         : [],
       stockStatus: item.inStock ? "instock" : "outofstock",
       dateCreated: undefined,
-      // додатково залишаємо slug для переходів
       slug: item.slug,
+      ratingAverage: item.ratingAverage,
+      ratingCount: item.ratingCount ?? 0,
     }));
   } catch (error) {
     // На будь-яку помилку віддаємо порожній масив, щоб не ламати каталог
     console.error("fetchFilteredProducts error", error);
     return [];
   }
+}
+
+// Відгуки товару (новий REST API)
+export interface ProductReview {
+  id: string;
+  productId: string;
+  authorName: string;
+  rating: number;
+  title?: string;
+  text: string;
+  createdAt?: string;
+}
+
+export async function fetchProductReviews(
+  productSlug: string
+): Promise<ProductReview[]> {
+  const res = await fetch(
+    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(productSlug)}/reviews`,
+    { cache: "no-store" }
+  );
+  if (!res.ok) {
+    if (res.status === 404) return [];
+    throw new Error(`Failed to fetch reviews: ${res.status}`);
+  }
+  const data = await res.json();
+  if (Array.isArray(data)) return data as ProductReview[];
+  if (data && typeof data === "object") {
+    const arr = (data as Record<string, unknown>).items
+      ?? (data as Record<string, unknown>).reviews
+      ?? (data as Record<string, unknown>).data;
+    if (Array.isArray(arr)) return arr as ProductReview[];
+  }
+  return [];
+}
+
+export async function createProductReview(
+  productSlug: string,
+  body: { rating: number; title?: string; text: string; authorName: string }
+): Promise<{ success: boolean; review?: ProductReview }> {
+  const res = await fetch(
+    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(productSlug)}/reviews`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }
+  );
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `Failed to create review: ${res.status}`);
+  }
+  return (await res.json()) as { success: boolean; review?: ProductReview };
 }
 
 // Trainer profile update

@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import styles from "./FilterSortPanel.module.css";
-import { SortArrowIcon, FilterMobileIcon } from "@/components/Icons/Icons";
+import { FilterMobileIcon } from "@/components/Icons/Icons";
 import FilterModal from "@/components/ui/FilterModal/FilterModal";
 import SortDropdown, { type SortOption } from "./SortDropdown";
+import PriceOrderDropdown from "./PriceOrderDropdown";
 
 interface FilterState {
   priceMin: number;
@@ -37,13 +39,16 @@ export interface FilterSortPanelProps {
   onReset?: () => void;
   products?: Product[];
   onApply?: () => void;
-  // Нові пропси для сортування та пагінації
   sortBy?: SortType;
   onSortChange?: (sort: SortType) => void;
   itemsPerPage?: number;
   onItemsPerPageChange?: (perPage: number) => void;
   hideSort?: boolean;
   hideItemsPerPage?: boolean;
+  searchTerm?: string;
+  onSearchChange?: (value: string) => void;
+  /** Коли true — рендерить тільки sortSection (для вбудовування поруч з "Всі товари") */
+  embeddedInCatalog?: boolean;
 }
 
 export const SORT_OPTIONS: SortOption[] = [
@@ -78,6 +83,9 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
   onItemsPerPageChange = () => {},
   hideSort = false,
   hideItemsPerPage = false,
+  searchTerm = "",
+  onSearchChange = () => {},
+  embeddedInCatalog = false,
 }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -93,6 +101,46 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
       else mql.removeListener(update);
     };
   }, []);
+
+  if (embeddedInCatalog && !isMobile) {
+    return (
+      <div className={styles.sortSection}>
+        {!hideSort && (
+          <>
+            <SortDropdown
+              label="Сортування"
+              value={sortBy}
+              options={SORT_OPTIONS}
+              onChange={(value) => onSortChange(value as SortType)}
+              variant="sort"
+            />
+            <PriceOrderDropdown
+              value={
+                sortBy === "price_desc" || sortBy === "price_asc"
+                  ? sortBy
+                  : "price_desc"
+              }
+              onChange={(value) => onSortChange(value)}
+            />
+          </>
+        )}
+        <div className={styles.searchWrapper}>
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="Пошук..."
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+          <img
+            src="/icons/Icon-12.svg"
+            alt=""
+            className={styles.searchIcon}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -124,31 +172,39 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
                 <span className={styles.label}>Фільтр</span>
               </div>
               <div className={styles.sortSection}>
-                {!hideItemsPerPage && (
-                <SortDropdown
-                  label="Показувати по"
-                  value={String(itemsPerPage)}
-                  options={ITEMS_PER_PAGE_OPTIONS}
-                  onChange={(value) => {
-                    onItemsPerPageChange(Number(value));
-                  }}
-                  className="itemsPerPage"
-                  variant="itemsPerPage"
-                />
-                )}
                 {!hideSort && (
-                  <SortDropdown
-                    label="Сортування"
-                    value={sortBy}
-                    options={SORT_OPTIONS}
-                    onChange={(value) => {
-                      if (process.env.NODE_ENV !== "production") {
+                  <>
+                    <SortDropdown
+                      label="Сортування"
+                      value={sortBy}
+                      options={SORT_OPTIONS}
+                      onChange={(value) => onSortChange(value as SortType)}
+                      variant="sort"
+                    />
+                    <PriceOrderDropdown
+                      value={
+                        sortBy === "price_desc" || sortBy === "price_asc"
+                          ? sortBy
+                          : "price_desc"
                       }
-                      onSortChange(value as SortType);
-                    }}
-                    variant="sort"
-                  />
+                      onChange={(value) => onSortChange(value)}
+                    />
+                  </>
                 )}
+                <div className={styles.searchWrapper}>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="Пошук..."
+                    value={searchTerm}
+                    onChange={(e) => onSearchChange(e.target.value)}
+                  />
+                  <img
+                    src="/icons/Icon-12.svg"
+                    alt=""
+                    className={styles.searchIcon}
+                  />
+                </div>
               </div>
             </>
           )}

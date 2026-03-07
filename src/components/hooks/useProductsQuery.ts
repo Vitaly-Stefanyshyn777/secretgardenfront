@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   productsQuery,
   productQuery,
+  productReviewsQuery,
   productsWithFiltersQuery,
   newProductsQuery,
   bestSellingProductsQuery,
@@ -47,4 +48,11 @@ export function useProductsByCategoryQuery(categoryId: string) {
 
 export function useProductCategoriesQuery() {
   return useQuery(productCategoriesQuery());
+}
+
+export function useProductReviewsQuery(productSlug: string) {
+  return useQuery({
+    ...productReviewsQuery(productSlug),
+    enabled: !!productSlug && productSlug.trim() !== "",
+  });
 }

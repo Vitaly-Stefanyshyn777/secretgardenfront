@@ -21,7 +21,7 @@ const PriceFilter = ({ minPrice, maxPrice, onChange }: PriceFilterProps) => {
 
   return (
     <div className={styles.priceFilter}>
-      <h3 className={styles.filterTitle}>Фільтрувати за ціною</h3>
+      <h3 className={styles.filterTitle}>Фільтр за ціною</h3>
       <div className={styles.priceInputs}>
         <input
           type="number"
