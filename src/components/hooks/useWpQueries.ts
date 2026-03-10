@@ -98,7 +98,7 @@ export const useFaqCategoriesQuery = () =>
   useQuery({
     queryKey: ["faq_categories"],
     queryFn: async () => {
-      const baseUrl = process.env.NEXT_PUBLIC_UPSTREAM_BASE;
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await fetch(`${baseUrl}/wp-json/wp/v2/faq_category`);
       if (!response.ok) {
         throw new Error("Failed to fetch FAQ categories");

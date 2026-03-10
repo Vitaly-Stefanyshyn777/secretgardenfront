@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE as string;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Формуємо URL для WordPress Theme Settings API з параметром hl_data_gallery
-    const url = new URL(`${UPSTREAM_BASE}/wp-json/wp/v2/theme_settings`);
+    const url = new URL(`${API_BASE}/wp-json/wp/v2/theme_settings`);
     url.searchParams.set("hl_data_gallery", "1");
     
 

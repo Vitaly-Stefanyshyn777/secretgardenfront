@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
   try {
-    const url = `${UPSTREAM_BASE}/wp-json/wp/v2/faq_category`;
+    const url = `${API_BASE}/wp-json/wp/v2/faq_category`;
 
     const response = await fetch(url, {
       method: "GET",

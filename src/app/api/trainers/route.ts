@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const url = new URL(`${UPSTREAM_BASE}/wp-json/wp/v2/users`);
+    const url = new URL(`${API_BASE}/wp-json/wp/v2/users`);
 
     searchParams.forEach((value, key) => {
       url.searchParams.append(key, value);
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     let shouldSetAdminCookie = false;
 
     if (!bearerToken) {
-      const upstreamBase = UPSTREAM_BASE;
+      const upstreamBase = API_BASE;
       const username = process.env.ADMIN_USER;
       const password = process.env.ADMIN_PASS;
 
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     // Auto-relogin and retry once on 401/403
     if (!response.ok && (response.status === 401 || response.status === 403)) {
       try {
-        const upstreamBase = process.env.UPSTREAM_BASE;
+        const upstreamBase = process.env.NEXT_PUBLIC_API_BASE_URL;
         const username = normalize(process.env.ADMIN_USER);
         const password = normalize(process.env.ADMIN_PASS);
         if (username && password && upstreamBase) {

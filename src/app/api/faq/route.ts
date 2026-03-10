@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get("faq_category");
 
     // Отримуємо всі FAQ (WordPress не підтримує фільтрацію за faq_category напряму)
-    let url = `${UPSTREAM_BASE}/wp-json/wp/v2/faq`;
+    let url = `${API_BASE}/wp-json/wp/v2/faq`;
 
     // Мапінг наших категорій до реальних ID в WordPress
     // Реальні ID в WordPress: 93 (Головна), 94 (Борди), 95 (Курси)

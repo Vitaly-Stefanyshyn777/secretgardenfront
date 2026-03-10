@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       authHeader = "Basic " + Buffer.from(`${ck}:${cs}`).toString("base64");
     }
 
-    const url = `${UPSTREAM_BASE}/wp-json/applications/v2/question`;
+    const url = `${API_BASE}/wp-json/applications/v2/question`;
     const upstreamRes = await fetch(url, {
       method: "POST",
       headers: {

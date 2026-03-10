@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE as string;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 export async function GET(
   req: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const url = `${UPSTREAM_BASE}/wp-json/wp/v2/product/${id}`;
+    const url = `${API_BASE}/wp-json/wp/v2/product/${id}`;
 
 
     const upstreamRes = await fetch(url.toString(), {

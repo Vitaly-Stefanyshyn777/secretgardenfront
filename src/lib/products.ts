@@ -421,7 +421,7 @@ export const getProductsByCategory = async (
     const { fetchFilteredProducts } = await import("./bfbApi");
     const items = (await fetchFilteredProducts({
       category: categoryIdOrSlug,
-    })) as Array<{ id: string; name: string; slug?: string; price?: string; mainImageUrl?: }>;
+    })) as Array<{ id: string; name: string; slug?: string; price?: string; mainImageUrl?: string }>;
     return items.map((p) => ({
       id: parseInt(p.id, 10) || 0,
       name: p.name,

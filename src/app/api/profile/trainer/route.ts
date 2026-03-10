@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function PUT(req: NextRequest) {
   try {
@@ -25,7 +25,7 @@ export async function PUT(req: NextRequest) {
       typeof (body as Record<string, unknown>)?.id !== "undefined"
         ? String((body as Record<string, unknown>).id)
         : "me";
-    const url = `${UPSTREAM_BASE}/wp-json/wp/v2/users/${targetId}`;
+    const url = `${API_BASE}/wp-json/wp/v2/users/${targetId}`;
 
     const upstreamRes = await fetch(url, {
       method: "PUT",
@@ -152,7 +152,7 @@ export async function PATCH(req: NextRequest) {
       targetId = "me";
     }
 
-    const url = `${UPSTREAM_BASE}/wp-json/wp/v2/users/${targetId}`;
+    const url = `${API_BASE}/wp-json/wp/v2/users/${targetId}`;
 
     const upstreamRes = await fetch(url, {
       method: "PATCH",

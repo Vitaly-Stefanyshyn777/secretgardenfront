@@ -12,7 +12,7 @@ type AdvantageItem = {
   id: string;
   title: string;
   description: string;
-  icon?: () => JSX.Element;
+  icon?: () => React.ReactElement;
   iconPath?: string;
 };
 

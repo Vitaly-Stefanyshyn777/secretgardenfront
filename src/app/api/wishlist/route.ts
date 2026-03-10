@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function getUserIdFromToken(token: string): Promise<number | null> {
   try {
-    const response = await fetch(`${UPSTREAM_BASE}/wp-json/wp/v2/users/me`, {
+    const response = await fetch(`${API_BASE}/wp-json/wp/v2/users/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -44,7 +44,7 @@ function buildHeaders(token: string | null): Record<string, string> {
 export async function GET(req: NextRequest) {
   try {
 
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -69,9 +69,9 @@ export async function GET(req: NextRequest) {
       headers["X-User-ID"] = String(userId);
     }
 
-    let endpoint = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list`;
+    let endpoint = `${API_BASE}/wp-json/wp/v2/sl_wish_list`;
     if (isCheck && productId) {
-      endpoint = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list/check/${productId}`;
+      endpoint = `${API_BASE}/wp-json/wp/v2/sl_wish_list/check/${productId}`;
     } else if (userId && !isCheck) {
       endpoint += `?user_id=${userId}`;
     }
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
 
     if (tokenToValidate && userId) {
       try {
-        await fetch(`${UPSTREAM_BASE}/wp-json/wp/v2/users/me`, {
+        await fetch(`${API_BASE}/wp-json/wp/v2/users/me`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${tokenToValidate}`,
@@ -117,7 +117,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
 
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
 
     // Якщо action=remove, то це видалення товару
     if (action === "remove" && product_id) {
-      wishlistUrl = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list/${product_id}`;
+      wishlistUrl = `${API_BASE}/wp-json/wp/v2/sl_wish_list/${product_id}`;
       if (userId) {
         wishlistUrl += `${wishlistUrl.includes("?") ? "&" : "?"}user_id=${userId}`;
       }
@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Звичайне додавання в wishlist
-    wishlistUrl = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list${userId ? `?user_id=${userId}` : ""}`;
+    wishlistUrl = `${API_BASE}/wp-json/wp/v2/sl_wish_list${userId ? `?user_id=${userId}` : ""}`;
 
 
     const response = await fetch(wishlistUrl, {
@@ -199,7 +199,7 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
 
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -217,8 +217,8 @@ export async function DELETE(req: NextRequest) {
     }
 
     let endpoint = isClear
-      ? `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list/clear`
-      : `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list/${productId}`;
+      ? `${API_BASE}/wp-json/wp/v2/sl_wish_list/clear`
+      : `${API_BASE}/wp-json/wp/v2/sl_wish_list/${productId}`;
 
     if (userId) {
       endpoint += `${endpoint.includes("?") ? "&" : "?"}user_id=${userId}`;

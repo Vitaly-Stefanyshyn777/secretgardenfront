@@ -91,12 +91,20 @@ export function useProductActions(
     });
 
     try {
+      const productIdNum =
+        product?.id != null
+          ? typeof product.id === "number"
+            ? product.id
+            : parseInt(String(product.id), 10)
+          : undefined;
+
       await addItem(
         {
           id:
             selectedVariation?.id.toString() ||
             product.id?.toString() ||
             "unknown",
+          productId: !isNaN(Number(productIdNum)) ? Number(productIdNum) : undefined,
           name: productName,
           price: normalizedPrices.salePrice || normalizedPrices.price,
           image: previewImage,

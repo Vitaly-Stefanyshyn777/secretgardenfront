@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
     // 2) Дістаємо власний userId
     const meRes = await fetch(
-      `${UPSTREAM_BASE}/wp-json/wp/v2/users/me?context=edit`,
+      `${API_BASE}/wp-json/wp/v2/users/me?context=edit`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${userJwt}` },
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const tokenRes = await fetch(`${UPSTREAM_BASE}/wp-json/jwt-auth/v1/token`, {
+    const tokenRes = await fetch(`${API_BASE}/wp-json/jwt-auth/v1/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: adminUser, password: adminPass }),
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
 
     // 4) Отримуємо повний профіль користувача як адмін і повертаємо лише аватар-мету
     const userRes = await fetch(
-      `${UPSTREAM_BASE}/wp-json/wp/v2/users/${encodeURIComponent(
+      `${API_BASE}/wp-json/wp/v2/users/${encodeURIComponent(
         String(userId)
       )}?context=edit`,
       {
@@ -128,7 +128,7 @@ export async function DELETE(req: NextRequest) {
 
     // resolve current user id from their JWT
     const meRes = await fetch(
-      `${UPSTREAM_BASE}/wp-json/wp/v2/users/me?context=edit`,
+      `${API_BASE}/wp-json/wp/v2/users/me?context=edit`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${userJwt}` },
@@ -159,7 +159,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const tokenRes = await fetch(`${UPSTREAM_BASE}/wp-json/jwt-auth/v1/token`, {
+    const tokenRes = await fetch(`${API_BASE}/wp-json/jwt-auth/v1/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: adminUser, password: adminPass }),
@@ -186,7 +186,7 @@ export async function DELETE(req: NextRequest) {
       meta: { img_link_data_avatar: null },
     };
     const putRes = await fetch(
-      `${UPSTREAM_BASE}/wp-json/wp/v2/users/${encodeURIComponent(
+      `${API_BASE}/wp-json/wp/v2/users/${encodeURIComponent(
         String(userId)
       )}`,
       {
@@ -218,7 +218,7 @@ export async function DELETE(req: NextRequest) {
       meta: { img_link_data_avatar: "" },
     };
     await fetch(
-      `${UPSTREAM_BASE}/wp-json/wp/v2/users/${encodeURIComponent(
+      `${API_BASE}/wp-json/wp/v2/users/${encodeURIComponent(
         String(userId)
       )}`,
       {

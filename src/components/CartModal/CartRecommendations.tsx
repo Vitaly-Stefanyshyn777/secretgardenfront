@@ -88,7 +88,19 @@ export default function CartRecommendations() {
     }
   }, []);
 
-  const productsList = products || [];
+  const productsList = (products || []) as Array<{
+    id: string;
+    name: string;
+    image?: string;
+    price?: number;
+    originalPrice?: number;
+    regularPrice?: number;
+    salePrice?: number;
+    color?: string;
+    stockQuantity?: number | null;
+    metaData?: Array<{ key: string; value: string }>;
+    wcProduct?: Record<string, unknown>;
+  }>;
 
   // Показуємо skeleton під час завантаження або коли товарів немає
   if (isLoading || productsList.length === 0) {
@@ -287,7 +299,7 @@ export default function CartRecommendations() {
                           try {
                             await addItem({
                               id: String(p.id),
-                              productId: typeof p.id === "string" ? parseInt(p.id) : p.id,
+                              productId: !isNaN(Number(p.id)) ? Number(p.id) : undefined,
                               name: p.name,
                               price: priceToAdd,
                               image: p.image,

@@ -20,6 +20,7 @@ function normalizeCartKey(id: string): string {
 
 type Props = {
   id: string;
+  productId?: number;
   name: string;
   slug?: string;
   productType?: string;
@@ -39,6 +40,7 @@ type Props = {
 
 export default function CartButton({
   id,
+  productId: productIdProp,
   name,
   slug,
   productType,
@@ -133,6 +135,7 @@ export default function CartButton({
         await addItem(
           {
             id,
+            productId: productIdProp,
             name,
             price,
             originalPrice,

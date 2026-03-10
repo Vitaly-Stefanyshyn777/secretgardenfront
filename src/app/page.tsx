@@ -30,8 +30,8 @@ type YoastHeadJson = {
 async function fetchHomeSeo(): Promise<YoastHeadJson | null> {
   try {
     // Викликаємо WordPress API напряму для статичної генерації
-    const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
-    if (!UPSTREAM_BASE) {
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!API_BASE) {
       return null;
     }
 
@@ -44,7 +44,7 @@ async function fetchHomeSeo(): Promise<YoastHeadJson | null> {
     if (username && password) {
       try {
         const tokenRes = await fetch(
-          `${UPSTREAM_BASE}/wp-json/jwt-auth/v1/token`,
+          `${API_BASE}/wp-json/jwt-auth/v1/token`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -63,7 +63,7 @@ async function fetchHomeSeo(): Promise<YoastHeadJson | null> {
     }
 
     // Запитуємо дані банерів напряму з WordPress
-    const targetUrl = new URL(`${UPSTREAM_BASE}/wp-json/wp/v2/banner`);
+    const targetUrl = new URL(`${API_BASE}/wp-json/wp/v2/banner`);
 
     const headers: Record<string, string> = {};
     if (freshToken) {

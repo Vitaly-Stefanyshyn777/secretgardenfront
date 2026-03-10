@@ -95,86 +95,17 @@ export function yoastToMetadata(yoast: YoastHeadJson | null | undefined): Metada
   };
 }
 
-/**
- * Отримує SEO дані для товару за slug
- */
-export async function fetchProductSeo(slug: string): Promise<YoastHeadJson | null> {
-  try {
-    const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
-    if (!UPSTREAM_BASE) return null;
-
-    const response = await fetch(
-      `${UPSTREAM_BASE}/wp-json/wc/v3/products?slug=${slug}&consumer_key=${process.env.WC_CONSUMER_KEY}&consumer_secret=${process.env.WC_CONSUMER_SECRET}`,
-      { next: { revalidate: 3600 } }
-    );
-
-    if (!response.ok) return null;
-
-    const products = await response.json();
-    const product = Array.isArray(products) ? products[0] : products;
-    
-    return product?.yoast_head_json as YoastHeadJson | null;
-  } catch {
-    return null;
-  }
+/** SEO для товару — через catalog API (yoast не підтримується) */
+export async function fetchProductSeo(_slug: string): Promise<YoastHeadJson | null> {
+  return null;
 }
 
-/**
- * Отримує SEO дані для курсу за slug або ID
- */
-export async function fetchCourseSeo(courseIdOrSlug: string | number): Promise<YoastHeadJson | null> {
-  try {
-    const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
-    if (!UPSTREAM_BASE) return null;
-
-    // Якщо це число, використовуємо як ID
-    if (typeof courseIdOrSlug === "number" || /^\d+$/.test(String(courseIdOrSlug))) {
-      const response = await fetch(
-        `${UPSTREAM_BASE}/wp-json/wc/v3/products/${courseIdOrSlug}?consumer_key=${process.env.WC_CONSUMER_KEY}&consumer_secret=${process.env.WC_CONSUMER_SECRET}`,
-        { next: { revalidate: 3600 } }
-      );
-      
-      if (!response.ok) return null;
-      const product = await response.json();
-      return product?.yoast_head_json as YoastHeadJson | null;
-    }
-
-    // Якщо це slug, шукаємо через API
-    const response = await fetch(
-      `${UPSTREAM_BASE}/wp-json/wc/v3/products?slug=${courseIdOrSlug}&category=72&consumer_key=${process.env.WC_CONSUMER_KEY}&consumer_secret=${process.env.WC_CONSUMER_SECRET}`,
-      { next: { revalidate: 3600 } }
-    );
-
-    if (!response.ok) return null;
-    const products = await response.json();
-    const course = Array.isArray(products) ? products[0] : products;
-    
-    return course?.yoast_head_json as YoastHeadJson | null;
-  } catch {
-    return null;
-  }
+/** SEO для курсу — через catalog API (yoast не підтримується) */
+export async function fetchCourseSeo(_courseIdOrSlug: string | number): Promise<YoastHeadJson | null> {
+  return null;
 }
 
-/**
- * Отримує SEO дані для категорії товарів за slug
- */
-export async function fetchCategorySeo(slug: string): Promise<YoastHeadJson | null> {
-  try {
-    const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
-    if (!UPSTREAM_BASE) return null;
-
-    // Отримуємо категорії
-    const categoriesResponse = await fetch(
-      `${UPSTREAM_BASE}/wp-json/wc/v3/products/categories?slug=${slug}&consumer_key=${process.env.WC_CONSUMER_KEY}&consumer_secret=${process.env.WC_CONSUMER_SECRET}`,
-      { next: { revalidate: 3600 } }
-    );
-
-    if (!categoriesResponse.ok) return null;
-    const categories = await categoriesResponse.json();
-    const category = Array.isArray(categories) ? categories[0] : categories;
-    
-    return category?.yoast_head_json as YoastHeadJson | null;
-  } catch {
-    return null;
-  }
+/** SEO для категорії — WooCommerce відключено */
+export async function fetchCategorySeo(_slug: string): Promise<YoastHeadJson | null> {
+  return null;
 }

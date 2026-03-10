@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE as string | undefined;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL as string | undefined;
 
 export async function POST(request: NextRequest) {
   try {
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json(
-        { error: "Missing UPSTREAM_BASE" },
+        { error: "Missing API_BASE" },
         { status: 500 }
       );
     }
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       "Basic " + Buffer.from(`${basicUser}:${basicPass}`).toString("base64");
 
     const upstreamRes = await fetch(
-      `${UPSTREAM_BASE}/wp-json/myplugin/v1/assign-tariff`,
+      `${API_BASE}/wp-json/myplugin/v1/assign-tariff`,
       {
         method: "POST",
         headers: {

@@ -124,7 +124,7 @@ export default function Team() {
     setIsLoading(true);
     (async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_UPSTREAM_BASE;
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         const res = await fetch(`${baseUrl}/wp-json/wp/v2/instructors`, {
           signal: controller.signal,
           cache: "no-store",

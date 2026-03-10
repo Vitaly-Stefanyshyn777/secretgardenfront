@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET() {
   try {
@@ -11,7 +11,7 @@ export async function GET() {
     let freshToken: string | undefined;
     if (username && password) {
       const tokenRes = await fetch(
-        `${UPSTREAM_BASE}/wp-json/jwt-auth/v1/token`,
+        `${API_BASE}/wp-json/jwt-auth/v1/token`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@ export async function GET() {
       }
     }
 
-    const targetUrl = new URL(`${UPSTREAM_BASE}/wp-json/wp/v2/main_courses`);
+    const targetUrl = new URL(`${API_BASE}/wp-json/wp/v2/main_courses`);
     targetUrl.searchParams.set("_", Date.now().toString());
 
     const headers: Record<string, string> = {};

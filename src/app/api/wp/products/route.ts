@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE as string;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -15,7 +15,7 @@ export async function OPTIONS() {
 
 export async function GET(req: NextRequest) {
   try {
-    const url = new URL(`${UPSTREAM_BASE}/wp-json/wp/v2/product`);
+    const url = new URL(`${API_BASE}/wp-json/wp/v2/product`);
     const incoming = new URL(req.url);
     incoming.searchParams.forEach((v, k) => {
       url.searchParams.set(k, v);

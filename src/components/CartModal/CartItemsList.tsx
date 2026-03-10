@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useCartStore, CartItem } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
@@ -89,7 +89,7 @@ function CartItemRow({ item }: CartItemRowProps) {
     shouldShowOldPrice || (originalPrice > finalPrice && originalPrice > 0);
 
   return (
-    <div className={s.item} ref={rowRef}>
+    <div className={s.item}>
       <div className={s.itemMain}>
         <Image
           src={finalImageUrl}

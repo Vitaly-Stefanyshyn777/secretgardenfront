@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function getUserIdFromToken(token: string): Promise<number | null> {
   try {
-    const response = await fetch(`${UPSTREAM_BASE}/wp-json/wp/v2/users/me`, {
+    const response = await fetch(`${API_BASE}/wp-json/wp/v2/users/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ function buildHeaders(token: string | null): Record<string, string> {
 
 export async function GET(req: NextRequest) {
   try {
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
       headers["X-User-ID"] = String(userId);
     }
 
-    const cartUrl = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_cart${userId ? `?user_id=${userId}` : ""}`;
+    const cartUrl = `${API_BASE}/wp-json/wp/v2/sl_cart${userId ? `?user_id=${userId}` : ""}`;
 
     const response = await fetch(cartUrl, {
       method: "GET",
@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const cartUrl = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_cart${userId ? `?user_id=${userId}` : ""}`;
+    const cartUrl = `${API_BASE}/wp-json/wp/v2/sl_cart${userId ? `?user_id=${userId}` : ""}`;
 
     const response = await fetch(cartUrl, {
       method: "POST",
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -162,7 +162,7 @@ export async function PUT(req: NextRequest) {
       headers["X-User-ID"] = String(userId);
     }
 
-    const cartUrl = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_cart/${cartItemKey}${userId ? `?user_id=${userId}` : ""}`;
+    const cartUrl = `${API_BASE}/wp-json/wp/v2/sl_cart/${cartItemKey}${userId ? `?user_id=${userId}` : ""}`;
 
     const response = await fetch(cartUrl, {
       method: "PUT",
@@ -189,7 +189,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -207,8 +207,8 @@ export async function DELETE(req: NextRequest) {
     }
 
     const endpoint = isClear
-      ? `${UPSTREAM_BASE}/wp-json/wp/v2/sl_cart/clear`
-      : `${UPSTREAM_BASE}/wp-json/wp/v2/sl_cart/${cartItemKey}`;
+      ? `${API_BASE}/wp-json/wp/v2/sl_cart/clear`
+      : `${API_BASE}/wp-json/wp/v2/sl_cart/${cartItemKey}`;
 
     const finalUrl = userId ? `${endpoint}${endpoint.includes("?") ? "&" : "?"}user_id=${userId}` : endpoint;
 

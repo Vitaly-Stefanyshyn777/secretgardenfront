@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Отримуємо продукт
-    const productResponse = await fetch(`${process.env.NEXT_PUBLIC_UPSTREAM_BASE}/wp-json/wc/v3/products/${productId}`, {
+    const productResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/wp-json/wc/v3/products/${productId}`, {
       headers: {
         'Authorization': 'Basic ' + Buffer.from('ck_fbd08d0a763d79d93aff6c3a56306214710ebb71:cs_871e6f287926ed84839018c2d7578ef9a71865c4').toString('base64'),
         'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     // Отримуємо перші 5 варіацій
     const variations = await Promise.all(
       product.variations.slice(0, 5).map(async (variationId: number) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_UPSTREAM_BASE}/wp-json/wc/v3/products/${productId}/variations/${variationId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/wp-json/wc/v3/products/${productId}/variations/${variationId}`, {
           headers: {
             'Authorization': 'Basic ' + Buffer.from('ck_fbd08d0a763d79d93aff6c3a56306214710ebb71:cs_871e6f287926ed84839018c2d7578ef9a71865c4').toString('base64'),
             'Content-Type': 'application/json'

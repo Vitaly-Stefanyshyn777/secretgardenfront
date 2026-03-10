@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function getUserIdFromToken(token: string): Promise<number | null> {
   try {
-    const response = await fetch(`${UPSTREAM_BASE}/wp-json/wp/v2/users/me`, {
+    const response = await fetch(`${API_BASE}/wp-json/wp/v2/users/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -44,7 +44,7 @@ function buildHeaders(token: string | null): Record<string, string> {
 /** POST /api/wishlist/sync — синхронізація улюбленого одним запитом */
 export async function POST(req: NextRequest) {
   try {
-    if (!UPSTREAM_BASE) {
+    if (!API_BASE) {
       return NextResponse.json(
         { error: "Server configuration error" },
         { status: 500 }
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       headers["X-User-ID"] = String(userId);
     }
 
-    const baseUrl = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list`;
+    const baseUrl = `${API_BASE}/wp-json/wp/v2/sl_wish_list`;
     const query = userId ? `?user_id=${userId}` : "";
 
     // 1. Отримати поточний wishlist
@@ -87,17 +87,19 @@ export async function POST(req: NextRequest) {
       cache: "no-store",
     });
     const currentData = getRes.ok ? await getRes.json() : { items: [] };
-    const currentIds = new Set(
-      (currentData.items || []).map((i: { product_id: number }) => i.product_id)
+    const currentIds = new Set<number>(
+      (currentData.items || []).map(
+        (i: { product_id?: number }) => Number(i?.product_id ?? 0)
+      )
     );
     const desiredIds = new Set(productIds);
 
-    const toAdd = [...desiredIds].filter((id) => !currentIds.has(id));
-    const toRemove = [...currentIds].filter((id) => !desiredIds.has(id));
+    const toAdd = [...desiredIds].filter((id: number) => !currentIds.has(id));
+    const toRemove = [...currentIds].filter((id: number) => !desiredIds.has(id));
 
     // 2. Видалити зайві
     for (const productId of toRemove) {
-      const deleteUrl = `${UPSTREAM_BASE}/wp-json/wp/v2/sl_wish_list/${productId}${userId ? `?user_id=${userId}` : ""}`;
+      const deleteUrl = `${API_BASE}/wp-json/wp/v2/sl_wish_list/${productId}${userId ? `?user_id=${userId}` : ""}`;
       await fetch(deleteUrl, {
         method: "DELETE",
         headers,

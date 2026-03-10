@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Silent login: fetch JWT from WP and set httpOnly cookie
 export async function GET(_req: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(_req: NextRequest) {
       );
     }
 
-    const url = `${UPSTREAM_BASE}/wp-json/jwt-auth/v1/token`;
+    const url = `${API_BASE}/wp-json/jwt-auth/v1/token`;
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const UPSTREAM_BASE = process.env.UPSTREAM_BASE;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const courseId = searchParams.get("id");
 
-    let url = `${UPSTREAM_BASE}/wp-json/wp/v2/product`;
+    let url = `${API_BASE}/wp-json/wp/v2/product`;
     if (courseId) {
       url += `/${courseId}`;
     }

@@ -31,6 +31,29 @@
   justify-content: space-between;
   flex-direction: row-reverse;
 }
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.syncClose {
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  background: var(--violet, #6c3bd7);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.syncClose:hover {
+  opacity: 0.9;
+}
+.close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
 .title {
   font-family: var(--font3);
   font-weight: 400;

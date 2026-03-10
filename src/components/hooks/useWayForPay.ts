@@ -18,9 +18,9 @@ export function useWayForPay({ safeTotal, setErrors }: UseWayForPayProps) {
     }
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_UPSTREAM_BASE;
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       if (!baseUrl) {
-        throw new Error("NEXT_PUBLIC_UPSTREAM_BASE не налаштовано");
+        throw new Error("NEXT_PUBLIC_API_BASE_URL не налаштовано");
       }
 
       const res = await fetch(

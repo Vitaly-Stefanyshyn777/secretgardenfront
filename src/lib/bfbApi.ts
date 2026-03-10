@@ -1,10 +1,6 @@
 import api from "./api";
 
-// На клієнті використовуємо NEXT_PUBLIC_UPSTREAM_BASE, на сервері - UPSTREAM_BASE (старий WP бекенд)
-const BASE_URL =
-  (typeof window !== "undefined"
-    ? process.env.NEXT_PUBLIC_UPSTREAM_BASE
-    : process.env.UPSTREAM_BASE) || "";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 // Новий Node бекенд для REST /auth, /user, /catalog (з глобальним префіксом /api)
 const NODE_API_BASE_URL =
@@ -1664,9 +1660,9 @@ export async function uploadMedia(
     // але залишаємо для сумісності
 
     // На клієнті використовуємо публічний базовий URL
-    const browserBaseUrl = process.env.NEXT_PUBLIC_UPSTREAM_BASE as string;
+    const browserBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL as string;
     if (!browserBaseUrl) {
-      throw new Error("NEXT_PUBLIC_UPSTREAM_BASE не встановлено");
+      throw new Error("NEXT_PUBLIC_API_BASE_URL не встановлено");
     }
 
     const mediaUrl = `${browserBaseUrl}/wp-json/wp/v2/media`;
@@ -1732,7 +1728,7 @@ export async function uploadCoachMedia(params: {
   for (const f of params.files) form.append("files", f);
 
   // На клієнті використовуємо тільки публічний базовий URL
-  const browserBaseUrl = process.env.NEXT_PUBLIC_UPSTREAM_BASE as string;
+  const browserBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL as string;
   const targetUrl = `${browserBaseUrl}/wp-json/custom/v1/upload-media`;
 
   const res = await fetch(targetUrl, {
@@ -2444,7 +2440,8 @@ export const clearCart = async (): Promise<{
 };
 
 export interface SyncCartItem {
-  product_id: number;
+  product_id?: number;
+  slug?: string;
   variation_id?: number;
   quantity: number;
 }
@@ -2452,9 +2449,10 @@ export interface SyncCartItem {
 export const syncCart = async (items: SyncCartItem[]): Promise<CartResponse> => {
   const body = {
     items: items.map((it) => ({
-      productId: String(it.product_id),
+      ...(it.product_id ? { productId: it.product_id } : {}),
+      ...(it.slug ? { slug: it.slug } : {}),
       quantity: it.quantity,
-      ...(it.variation_id ? { variationId: it.variation_id } : {}),
+      variationId: it.variation_id ?? 0,
     })),
   };
   const response = await api.post("/api/cart/sync", body);
