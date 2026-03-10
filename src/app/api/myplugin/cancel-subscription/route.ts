@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     const upstreamRes = await fetch(
-      `${API_BASE}/wp-json/myplugin/v1/cancel-subscription`,
+      `${API_BASE}/api/subscription/cancel`,
       {
         method: "POST",
         headers,

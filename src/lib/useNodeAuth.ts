@@ -22,19 +22,45 @@ function saveRefreshToken(token: string) {
   }
 }
 
+function saveTokenToStorage(token: string) {
+  if (typeof window === "undefined" || !token) return;
+  try {
+    localStorage.setItem("bfb_token", token);
+    localStorage.setItem("bfb_token_old", token);
+    localStorage.setItem("accessToken", token);
+  } catch {}
+}
+
 export const useNodeLogin = () => {
   const { setAuth } = useAuthStore();
 
   return useMutation({
     mutationFn: (payload: LoginPayload) => loginNode(payload),
-    onSuccess: (tokens: AuthTokens, variables: LoginPayload) => {
+    onSuccess: async (tokens: AuthTokens, variables: LoginPayload) => {
       saveRefreshToken(tokens.refreshToken);
+      saveTokenToStorage(tokens.accessToken);
 
       const email = variables.email;
-      const user = {
+      let user: { id?: string; email?: string; displayName?: string } = {
+        id: email,
         email,
         displayName: email,
       };
+
+      try {
+        const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "";
+        const res = await fetch(`${base}/api/user/me`, {
+          headers: { Authorization: `Bearer ${tokens.accessToken}` },
+        });
+        if (res.ok) {
+          const me = (await res.json()) as { id?: string | number };
+          if (me?.id != null) {
+            user = { ...user, id: String(me.id) };
+          }
+        }
+      } catch {
+        // залишаємо id: email як fallback
+      }
 
       setAuth(tokens.accessToken, user);
     },

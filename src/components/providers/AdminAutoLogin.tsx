@@ -6,9 +6,8 @@ export default function AdminAutoLogin() {
   useEffect(() => {
     const run = async () => {
       try {
-        const probe = await fetch(
-          "/api/proxy?path=" +
-            encodeURIComponent("/wp-json/wp/v2/users?per_page=1"),
+        const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "";
+        const probe = await fetch(`${base}/api/trainers?per_page=1`,
           {
             method: "GET",
             cache: "no-store",

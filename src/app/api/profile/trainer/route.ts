@@ -25,7 +25,7 @@ export async function PUT(req: NextRequest) {
       typeof (body as Record<string, unknown>)?.id !== "undefined"
         ? String((body as Record<string, unknown>).id)
         : "me";
-    const url = `${API_BASE}/wp-json/wp/v2/users/${targetId}`;
+    const url = `${API_BASE}/api/user/profile/${targetId}`;
 
     const upstreamRes = await fetch(url, {
       method: "PUT",
@@ -152,7 +152,7 @@ export async function PATCH(req: NextRequest) {
       targetId = "me";
     }
 
-    const url = `${API_BASE}/wp-json/wp/v2/users/${targetId}`;
+    const url = `${API_BASE}/api/user/profile/${targetId}`;
 
     const upstreamRes = await fetch(url, {
       method: "PATCH",

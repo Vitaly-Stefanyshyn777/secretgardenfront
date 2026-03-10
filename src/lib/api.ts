@@ -17,7 +17,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   }
 
   const isJwtTokenEndpoint = (config.url || "").includes(
-    "/wp-json/jwt-auth/v1/token"
+    "/api/auth/wp-token"
   );
 
   const wantsAdmin =

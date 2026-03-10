@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const url = new URL(`${API_BASE}/wp-json/wp/v2/users`);
+    const url = new URL(`${API_BASE}/api/trainers`);
 
     searchParams.forEach((value, key) => {
       url.searchParams.append(key, value);
@@ -57,8 +57,7 @@ export async function GET(request: NextRequest) {
 
       if (username && password && upstreamBase) {
         try {
-          const wpRes = await fetch(
-            `${upstreamBase}/wp-json/jwt-auth/v1/token`,
+          const wpRes = await fetch(`${upstreamBase}/api/auth/login`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -100,8 +99,7 @@ export async function GET(request: NextRequest) {
         const username = normalize(process.env.ADMIN_USER);
         const password = normalize(process.env.ADMIN_PASS);
         if (username && password && upstreamBase) {
-          const wpRes = await fetch(
-            `${upstreamBase}/wp-json/jwt-auth/v1/token`,
+          const wpRes = await fetch(`${upstreamBase}/api/auth/login`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

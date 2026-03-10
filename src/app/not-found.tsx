@@ -1,17 +1,12 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import Link from "next/link";
-import Header from "@/components/layout/Header/Header";
-import Breadcrumbs from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import styles from "./not-found.module.css";
 
-const NotFoundContent: React.FC = () => {
+export default function NotFound() {
   return (
-    <>
-      <Header />
-      <Breadcrumbs />
-      <div className={styles.notFoundContainer} data-page="404">
+    <div className={styles.notFoundContainer} data-page="404">
         <div className={styles.notFoundContent}>
           <div className={styles.errorNumber}>404</div>
           <div className={styles.errorBlock}>
@@ -27,17 +22,6 @@ const NotFoundContent: React.FC = () => {
             </Link>
           </div>
         </div>
-      </div>
-    </>
+    </div>
   );
-};
-
-const NotFound: React.FC = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <NotFoundContent />
-    </Suspense>
-  );
-};
-
-export default NotFound;
+}

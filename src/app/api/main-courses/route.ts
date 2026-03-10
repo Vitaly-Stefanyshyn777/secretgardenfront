@@ -11,7 +11,7 @@ export async function GET() {
     let freshToken: string | undefined;
     if (username && password) {
       const tokenRes = await fetch(
-        `${API_BASE}/wp-json/jwt-auth/v1/token`,
+        `${API_BASE}/api/auth/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@ export async function GET() {
       }
     }
 
-    const targetUrl = new URL(`${API_BASE}/wp-json/wp/v2/main_courses`);
+    const targetUrl = new URL(`${API_BASE}/api/main-courses`);
     targetUrl.searchParams.set("_", Date.now().toString());
 
     const headers: Record<string, string> = {};

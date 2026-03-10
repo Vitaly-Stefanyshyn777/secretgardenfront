@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const courseId = searchParams.get("id");
 
-    let url = `${API_BASE}/wp-json/wp/v2/product`;
+    let url = `${API_BASE}/api/course`;
     if (courseId) {
       url += `/${courseId}`;
     }

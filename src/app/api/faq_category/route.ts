@@ -4,7 +4,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
   try {
-    const url = `${API_BASE}/wp-json/wp/v2/faq_category`;
+    const url = `${API_BASE}/api/faq_category`;
 
     const response = await fetch(url, {
       method: "GET",

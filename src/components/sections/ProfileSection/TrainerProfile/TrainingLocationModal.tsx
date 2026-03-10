@@ -94,11 +94,9 @@ export default function TrainingLocationModal({
       if (!baseProfile?.id) return null;
       const id = String(baseProfile.id);
       try {
-        const response = await api.get("/api/proxy", {
-          params: {
-            path: `/wp-json/wp/v2/users/${id}?context=edit`,
-          },
-          headers: { "x-internal-admin": "1" },
+        const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "";
+        const response = await api.get(`${base}/api/user/profile/${id}`, {
+          headers: { "x-internal-admin": "1" } as Record<string, string>,
         });
         return response.data;
       } catch (error) {

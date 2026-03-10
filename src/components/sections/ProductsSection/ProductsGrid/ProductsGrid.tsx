@@ -7,7 +7,7 @@ import EmptyState from "@/components/ui/EmptyState";
 // Видалено fetchProductCategoriesFromWp - використовуємо категорії з продуктів
 
 interface Product {
-  id: number;
+  id: string | number;
   slug?: string; // Slug продукту
   name: string;
   type?: string;
@@ -91,7 +91,7 @@ export default function ProductsGrid({
             stockStatus={p.stock_status}
             dateCreated={p.date_created}
             wcProduct={storeProduct ? {
-              id: p.id,
+              id: typeof p.id === "number" ? p.id : (/^\d+$/.test(String(p.id)) ? parseInt(String(p.id), 10) : 0),
               name: p.name,
               type: storeProduct.type || "simple",
               variations: storeProduct.variations || [],

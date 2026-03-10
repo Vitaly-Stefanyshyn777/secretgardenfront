@@ -44,7 +44,7 @@ async function fetchHomeSeo(): Promise<YoastHeadJson | null> {
     if (username && password) {
       try {
         const tokenRes = await fetch(
-          `${API_BASE}/wp-json/jwt-auth/v1/token`,
+          `${API_BASE}/api/auth/login`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -63,7 +63,7 @@ async function fetchHomeSeo(): Promise<YoastHeadJson | null> {
     }
 
     // Запитуємо дані банерів напряму з WordPress
-    const targetUrl = new URL(`${API_BASE}/wp-json/wp/v2/banner`);
+    const targetUrl = new URL(`${API_BASE}/api/banners`);
 
     const headers: Record<string, string> = {};
     if (freshToken) {

@@ -24,7 +24,7 @@ export function useWayForPay({ safeTotal, setErrors }: UseWayForPayProps) {
       }
 
       const res = await fetch(
-        `${baseUrl}/wp-json/myplugin/v1/wayforpay?order_id=${orderId}`,
+        `${baseUrl}/api/wayforpay?order_id=${orderId}`,
         { cache: "no-store" }
       );
 

@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       authHeader = "Basic " + Buffer.from(`${ck}:${cs}`).toString("base64");
     }
 
-    const url = `${API_BASE}/wp-json/applications/v2/question`;
+    const url = `${API_BASE}/api/applications/question`;
     const upstreamRes = await fetch(url, {
       method: "POST",
       headers: {

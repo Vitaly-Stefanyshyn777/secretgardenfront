@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get("faq_category");
 
     // Отримуємо всі FAQ (WordPress не підтримує фільтрацію за faq_category напряму)
-    let url = `${API_BASE}/wp-json/wp/v2/faq`;
+    let url = `${API_BASE}/api/faq`;
 
     // Мапінг наших категорій до реальних ID в WordPress
     // Реальні ID в WordPress: 93 (Головна), 94 (Борди), 95 (Курси)

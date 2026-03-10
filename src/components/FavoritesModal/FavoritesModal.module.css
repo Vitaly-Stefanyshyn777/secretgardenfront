@@ -36,6 +36,23 @@
   align-items: center;
   justify-content: space-between;
 }
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.syncClose {
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  background: var(--violet, #6c3bd7);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.syncClose:hover {
+  opacity: 0.9;
+}
 .title {
 }
 .topbarTitle {

@@ -20,7 +20,7 @@ function normalizeCartKey(id: string): string {
 
 type Props = {
   id: string;
-  productId?: number;
+  productId?: number | string;
   name: string;
   slug?: string;
   productType?: string;
@@ -135,7 +135,15 @@ export default function CartButton({
         await addItem(
           {
             id,
-            productId: productIdProp,
+            productId:
+              productIdProp != null
+                ? typeof productIdProp === "string" && /^c[a-z0-9]{10,}$/i.test(productIdProp)
+                  ? productIdProp
+                  : productIdProp
+                : /^c[a-z0-9]{10,}$/i.test(id)
+                  ? id
+                  : undefined,
+            slug,
             name,
             price,
             originalPrice,

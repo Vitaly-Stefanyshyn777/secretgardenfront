@@ -10,15 +10,12 @@ export async function GET() {
 
     let freshToken: string | undefined;
     if (username && password) {
-      const tokenRes = await fetch(
-        `${API_BASE}/wp-json/jwt-auth/v1/token`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-          cache: "no-store",
-        }
-      );
+      const tokenRes = await fetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+        cache: "no-store",
+      });
 
       if (tokenRes.ok) {
         const tokenData = await tokenRes.json();
@@ -26,7 +23,7 @@ export async function GET() {
       }
     }
 
-    const targetUrl = new URL(`${API_BASE}/wp-json/wp/v2/banner`);
+    const targetUrl = new URL(`${API_BASE}/api/banners`);
     targetUrl.searchParams.set("_", Date.now().toString());
 
     const headers: Record<string, string> = {};

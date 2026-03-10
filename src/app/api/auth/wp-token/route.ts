@@ -15,7 +15,7 @@ export async function GET(_req: NextRequest) {
       );
     }
 
-    const url = `${API_BASE}/wp-json/jwt-auth/v1/token`;
+    const url = `${API_BASE}/api/auth/login`;
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

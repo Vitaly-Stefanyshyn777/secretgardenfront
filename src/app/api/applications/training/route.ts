@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const url = `${API_BASE}/wp-json/applications/v2/training`;
+    const url = `${API_BASE}/api/applications/training`;
     const upstreamRes = await fetch(url, {
       method: "POST",
       headers: {

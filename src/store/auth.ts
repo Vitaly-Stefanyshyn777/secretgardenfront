@@ -1,8 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { login as loginApi, getMyProfile } from "@/lib/auth";
-import { useCartStore } from "./cart";
-import { useFavoriteStore } from "./favorites";
 
 const initial = {
   token: null,
@@ -45,10 +43,7 @@ function saveTokenToStorage(token: string) {
   }
 }
 
-function loadUserData(userId: string) {
-  const cartStore = useCartStore.getState();
-  const favoriteStore = useFavoriteStore.getState();
-
+async function loadUserData(userId: string) {
   const tokenInStorage =
     typeof window !== "undefined" &&
     (localStorage.getItem("bfb_token") ||
@@ -56,47 +51,20 @@ function loadUserData(userId: string) {
 
   if (!tokenInStorage) return;
 
-  setTimeout(async () => {
-    try {
-      await cartStore.loadUserData(userId);
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      await favoriteStore.loadUserData(userId);
-    } catch (err) {
-      // Silently handle errors
-    }
-  }, 200);
-}
-
-// Функція для синхронізації даних після авторизації
-function syncUserDataAfterLogin(userId: string) {
-  // Використовуємо setTimeout щоб дати час на ініціалізацію компонентів
-  setTimeout(async () => {
-    try {
-      // Динамічно імпортуємо stores щоб уникнути циклічних залежностей
-      const { useCartStore } = await import("./cart");
-      const { useFavoriteStore } = await import("./favorites");
-
-      const cartStore = useCartStore.getState();
-      const favoriteStore = useFavoriteStore.getState();
-
-      // Встановлюємо ID користувача
-      cartStore.setUserId(userId);
-      favoriteStore.setUserId(userId);
-
-      // Очищаємо старі дані та завантажуємо нові
-      cartStore.clear();
-      favoriteStore.clear();
-
-      await cartStore.loadUserData(userId);
-      await favoriteStore.loadUserData(userId);
-
-      // Синхронізуємо переглянуті товари з localStorage
-      const { syncWithServer } = await import("@/components/hooks/useRecentlyViewed");
-      await syncWithServer();
-    } catch (err) {
-      console.error("Error syncing user data after login:", err);
-    }
-  }, 500); // Трохи більше часу для ініціалізації
+  try {
+    const { useCartStore } = await import("./cart");
+    const { useFavoriteStore } = await import("./favorites");
+    const cartStore = useCartStore.getState();
+    const favoriteStore = useFavoriteStore.getState();
+    cartStore.setUserId(userId);
+    favoriteStore.setUserId(userId);
+    await cartStore.loadUserData(userId);
+    await favoriteStore.loadUserData(userId);
+    const { syncWithServer } = await import("@/components/hooks/useRecentlyViewed");
+    await syncWithServer();
+  } catch (err) {
+    console.error("Error loading cart/favorites:", err);
+  }
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -112,8 +80,10 @@ export const useAuthStore = create<AuthState>()(
         saveTokenToStorage(token);
         set({ token, user, isLoggedIn: true });
 
-        if (user?.id) {
-          loadUserData(user.id);
+        // Викликаємо loadUserData для cart/wishlist — userId або email (useNodeLogin передає без id)
+        const userId = user?.id ?? user?.email;
+        if (userId) {
+          loadUserData(userId);
         }
       },
 
@@ -142,8 +112,7 @@ export const useAuthStore = create<AuthState>()(
         saveTokenToStorage(token);
 
         if (user?.id) {
-          loadUserData(user.id);
-          syncUserDataAfterLogin(user.id);
+          await loadUserData(user.id);
         }
 
         return true;
@@ -181,9 +150,7 @@ export const useAuthStore = create<AuthState>()(
 
           const finalUserId = numericId || user.id;
           if (finalUserId) {
-            loadUserData(finalUserId);
-            // Синхронізуємо кошик після авторизації
-            syncUserDataAfterLogin(finalUserId);
+            await loadUserData(finalUserId);
           }
         } catch (error) {
           throw error;
@@ -194,6 +161,8 @@ export const useAuthStore = create<AuthState>()(
         const { user } = get();
         const userId = user?.id;
 
+        const { useCartStore } = await import("./cart");
+        const { useFavoriteStore } = await import("./favorites");
         const cartStore = useCartStore.getState();
         const favoriteStore = useFavoriteStore.getState();
 

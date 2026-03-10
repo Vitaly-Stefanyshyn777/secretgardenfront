@@ -10,46 +10,56 @@ import { normalizeImageUrl } from "@/lib/imageUtils";
 const getUserCartKey = (userId?: string | null) =>
   userId ? `bfb-cart-${userId}` : "bfb-cart";
 
-const productImageCache = new Map<number, string>();
+const productImageCache = new Map<number | string, string>();
 
 const isUsableImage = (url?: string) => {
   const u = (url || "").trim();
   return u !== "" && u !== "/placeholder.svg";
 };
 
+function getCartItemId(item: CartItemResponse): string {
+  if (item.variation_id != null && item.variation_id > 0) {
+    return String(item.variation_id);
+  }
+  if (item.productId != null) return String(item.productId);
+  if (item.product_id != null) return String(item.product_id);
+  return "unknown";
+}
+
+function getCartItemProductId(item: CartItemResponse): number | string | null {
+  if (item.productId != null) return item.productId;
+  if (item.product_id != null) return item.product_id;
+  return null;
+}
+
 async function hydrateCartItemImages(
   cartItems: CartItemResponse[],
   currentItems: Record<string, CartItem>
 ) {
-  const missingProductIds: number[] = [];
+  const missingProductIds: Array<number | string> = [];
 
   for (const cartItem of cartItems) {
-    const itemId =
-      cartItem.variation_id && cartItem.variation_id > 0
-        ? cartItem.variation_id.toString()
-        : cartItem.product_id.toString();
-
+    const itemId = getCartItemId(cartItem);
+    const pid = getCartItemProductId(cartItem);
     const existing = currentItems[itemId];
 
-    if (isUsableImage(cartItem.product_image)) {
-      productImageCache.set(
-        cartItem.product_id,
-        normalizeImageUrl(cartItem.product_image!)
-      );
+    const img = cartItem.product_image ?? cartItem.image ?? (cartItem.product as { mainImageUrl?: string })?.mainImageUrl;
+    if (isUsableImage(img)) {
+      if (pid != null) productImageCache.set(pid, normalizeImageUrl(img));
       continue;
     }
 
     const fromExisting = isUsableImage(existing?.image)
       ? normalizeImageUrl(existing!.image!)
       : undefined;
-    const fromCache = productImageCache.get(cartItem.product_id);
+    const fromCache = pid != null ? productImageCache.get(pid) : undefined;
 
     const candidate = fromExisting || fromCache;
     if (candidate) {
-      cartItem.product_image = candidate;
-      productImageCache.set(cartItem.product_id, candidate);
-    } else {
-      missingProductIds.push(cartItem.product_id);
+      (cartItem as { product_image?: string }).product_image = candidate;
+      if (pid != null) productImageCache.set(pid, candidate);
+    } else if (pid != null) {
+      missingProductIds.push(pid);
     }
   }
 
@@ -61,7 +71,7 @@ async function hydrateCartItemImages(
     await Promise.all(
       uniqueMissing.map(async (productId) => {
         try {
-          const product = await getProductById(productId.toString());
+          const product = await getProductById(String(productId));
           const src = product.images?.[0]?.src;
           if (isUsableImage(src)) {
             productImageCache.set(productId, normalizeImageUrl(src));
@@ -76,9 +86,12 @@ async function hydrateCartItemImages(
   }
 
   for (const cartItem of cartItems) {
-    if (!isUsableImage(cartItem.product_image)) {
-      const cached = productImageCache.get(cartItem.product_id);
-      if (cached) cartItem.product_image = cached;
+    if (!isUsableImage(cartItem.product_image ?? cartItem.image)) {
+      const pid = getCartItemProductId(cartItem);
+      if (pid != null) {
+        const cached = productImageCache.get(pid);
+        if (cached) (cartItem as { product_image?: string }).product_image = cached;
+      }
     }
   }
 }
@@ -108,10 +121,17 @@ const saveUserCart = (
   } catch {}
 };
 
+/** CUID з каталогу NestJS (напр. cmmejq6hs000vr870v7dt47nq) — не тільки "cl" */
+function isCuidLike(value: string): boolean {
+  return /^c[a-z0-9]{10,}$/i.test(String(value).trim());
+}
+
 export interface CartItem {
   id: string;
-  /** product_id (number) або CUID з каталогу (string) для sync на NestJS */
+  /** CUID з каталогу (string) або legacy number — для sync на NestJS */
   productId?: number | string;
+  /** slug з каталогу (напр. cbd-oil-5) — fallback для sync, якщо немає CUID */
+  slug?: string;
   /**
    * Актуальна WooCommerce ціна (price) для відображення/розрахунків у кошику.
    * Для варіативних товарів — ціна обраної варіації.
@@ -141,6 +161,7 @@ export interface CartItem {
 export interface AddItemData {
   id: string;
   productId?: number | string;
+  slug?: string;
   wcPrice?: number;
   wcRegularPrice?: number;
   name: string;
@@ -196,10 +217,15 @@ const mapCartItemResponseToCartItem = (
   item: CartItemResponse,
   existingItem?: CartItem
 ): CartItem => {
-  let finalImage = "";
+  const itemId = getCartItemId(item);
 
+  let finalImage = "";
   if (item.product_image && item.product_image.trim() !== "") {
     finalImage = item.product_image;
+  } else if (item.mainImageUrl && item.mainImageUrl.trim() !== "") {
+    finalImage = item.mainImageUrl;
+  } else if (item.product?.mainImageUrl) {
+    finalImage = item.product.mainImageUrl;
   } else if (
     existingItem?.image &&
     existingItem.image.trim() !== "" &&
@@ -210,17 +236,15 @@ const mapCartItemResponseToCartItem = (
     finalImage = existingItem?.image || "";
   }
 
-  const itemId = item.variation_id && item.variation_id > 0
-    ? item.variation_id.toString()
-    : item.product_id.toString();
+  const priceValue = item.price ?? item.product_price ?? item.product?.price ?? "0";
+  const productName = item.name ?? item.product_name ?? item.product?.name ?? "";
+  const productImage = item.image ?? item.product_image ?? item.product?.mainImageUrl ?? "";
 
-  const priceValue = item.price || item.product_price || "0";
-  const productName = item.name || item.product_name || "";
-  const productImage = item.image || item.product_image || "";
+  const rawProductId = item.productId ?? item.product_id;
 
   return {
     id: itemId,
-    productId: item.product_id,
+    productId: rawProductId != null ? rawProductId : itemId,
     wcPrice: existingItem?.wcPrice,
     wcRegularPrice: existingItem?.wcRegularPrice,
     name: productName,
@@ -244,17 +268,12 @@ const mapCartItemResponseToCartItem = (
 };
 
 function extractProductId(id: string): number | null {
-  if (/^\d+$/.test(id)) {
-    return parseInt(id, 10);
-  }
+  if (isCuidLike(id)) return null;
+  if (/^\d+$/.test(id)) return parseInt(id, 10);
   const match = id.match(/(?:course|product)-(\d+)/i);
-  if (match && match[1]) {
-    return parseInt(match[1], 10);
-  }
-  const numberMatch = id.match(/\d+/);
-  if (numberMatch) {
-    return parseInt(numberMatch[0], 10);
-  }
+  if (match?.[1]) return parseInt(match[1], 10);
+  const numberMatch = id.match(/^\d+/);
+  if (numberMatch) return parseInt(numberMatch[0], 10);
   return null;
 }
 
@@ -270,9 +289,8 @@ export const useCartStore = create<CartState>()(
       close: () => {
         const state = get();
         const { token } = useAuthStore.getState();
-        const shouldSync =
-          token &&
-          (state.pendingCartSync || Object.keys(state.items).length > 0);
+        // Sync тільки якщо є незбережені зміни (add/remove/increment/decrement)
+        const shouldSync = token && state.pendingCartSync;
         if (shouldSync) {
           get().syncAndClose();
         } else {
@@ -286,9 +304,8 @@ export const useCartStore = create<CartState>()(
           set({ isOpen: false });
           return;
         }
-        const items = Object.values(state.items);
-        const hasItemsToSync = items.some((it) => it.quantity > 0 && (it.productId != null || it.id));
-        if (!hasItemsToSync && !state.pendingCartSync) {
+        // Якщо змін не було — не робимо запит (користувач лише переглядав)
+        if (!state.pendingCartSync) {
           set({ isOpen: false });
           return;
         }
@@ -316,16 +333,19 @@ export const useCartStore = create<CartState>()(
               .map((it) => {
                 const rawProductId = it.productId;
                 const idStr = String(it.id ?? "").trim();
-                const isCuid = (idStr.startsWith("cl") && idStr.length > 5) || (typeof rawProductId === "string" && rawProductId.startsWith("cl") && rawProductId.length > 5);
+                const slugStr = it.slug ? String(it.slug).trim() : undefined;
+                const hasCuid = isCuidLike(idStr) || (typeof rawProductId === "string" && isCuidLike(rawProductId));
                 const isNumericId = typeof rawProductId === "number" || (typeof rawProductId === "string" && /^\d+$/.test(String(rawProductId)));
                 const toStr = (v: unknown) => (v != null && v !== "" ? String(v).trim() : "");
-                if (isCuid) {
+                if (hasCuid) {
                   const pid = toStr(rawProductId ?? idStr);
-                  return pid ? { productId: pid, quantity: it.quantity } : { slug: idStr || undefined, quantity: it.quantity };
+                  return pid ? { productId: pid, quantity: it.quantity } : { slug: slugStr || idStr || undefined, quantity: it.quantity };
+                }
+                if (slugStr) {
+                  return { slug: slugStr, quantity: it.quantity };
                 }
                 if (isNumericId && rawProductId != null) {
-                  const pid = toStr(rawProductId);
-                  return pid ? { productId: pid, quantity: it.quantity } : { slug: idStr || undefined, quantity: it.quantity };
+                  return { productId: toStr(rawProductId), quantity: it.quantity };
                 }
                 if (/^\d+$/.test(idStr)) {
                   return { productId: idStr, quantity: it.quantity };
@@ -340,13 +360,18 @@ export const useCartStore = create<CartState>()(
           set({ isLoading: true, pendingCartSync: false });
           const cartData = await syncCartApi(syncItems);
           const currentItems = get().items;
+          const responseItems = cartData?.items ?? [];
+          if (responseItems.length === 0 && syncItems.length > 0) {
+            if (process.env.NODE_ENV === "development") {
+              console.warn("[Cart Sync] Бекенд повернув порожній items. Можливо productId/slug не знайдено на бекенді.", { sent: syncItems });
+            }
+            set({ items: currentItems, pendingCartSync: true, isLoading: false });
+            return;
+          }
           const itemsMap: Record<string, CartItem> = {};
-          await hydrateCartItemImages(cartData.items, currentItems);
-          cartData.items.forEach((item) => {
-            const itemId =
-              item.variation_id && item.variation_id > 0
-                ? item.variation_id.toString()
-                : item.product_id.toString();
+          await hydrateCartItemImages(responseItems, currentItems);
+          responseItems.forEach((item) => {
+            const itemId = getCartItemId(item);
             const existing = currentItems[itemId];
             const cartItem = mapCartItemResponseToCartItem(item, existing);
             itemsMap[cartItem.id] = cartItem;
@@ -413,14 +438,14 @@ export const useCartStore = create<CartState>()(
           saveUserCart(state.currentUserId, state.items);
         }
 
-        const { token } = useAuthStore.getState();
-        const hasTokenInStore = !!token;
-        const hasTokenInStorage =
-          typeof window !== "undefined" &&
-          (!!localStorage.getItem("bfb_token") ||
-            !!localStorage.getItem("bfb_token_old"));
+        const authState = useAuthStore.getState();
+        const token =
+          authState.token ||
+          (typeof window !== "undefined" &&
+            (localStorage.getItem("bfb_token") ||
+              localStorage.getItem("bfb_token_old")));
 
-        if (userId && hasTokenInStore && hasTokenInStorage) {
+        if (userId && token) {
           try {
             set({ isLoading: true });
             // Завжди синхронізуємо з API при вході користувача, щоб уникнути застарілих даних
@@ -431,9 +456,7 @@ export const useCartStore = create<CartState>()(
             await hydrateCartItemImages(cartData.items, currentItems);
 
             cartData.items.forEach((item) => {
-              const itemId = item.variation_id && item.variation_id > 0
-                ? item.variation_id.toString()
-                : item.product_id.toString();
+              const itemId = getCartItemId(item);
               const existing = currentItems[itemId];
 
               const cartItem = mapCartItemResponseToCartItem(item, existing);
@@ -475,7 +498,8 @@ export const useCartStore = create<CartState>()(
           await hydrateCartItemImages(cartData.items, currentItems);
 
           cartData.items.forEach((item) => {
-            const existing = currentItems[item.product_id.toString()];
+            const itemId = getCartItemId(item);
+            const existing = currentItems[itemId];
 
             const cartItem = mapCartItemResponseToCartItem(item, existing);
             itemsMap[cartItem.id] = cartItem;
@@ -489,14 +513,19 @@ export const useCartStore = create<CartState>()(
         const state = get();
         const { token } = useAuthStore.getState();
         
-        // productId потрібен для sync на бекенд; для локального кошика — опційно
-        let productId: number | null = null;
-        if (item.productId != null && !isNaN(Number(item.productId))) {
-          productId = Number(item.productId);
-        } else if (!item.variationId) {
-          productId = extractProductId(item.id);
+        let productId: number | string | null = null;
+        if (item.productId != null) {
+          if (isCuidLike(String(item.productId))) {
+            productId = String(item.productId).trim();
+          } else if (!isNaN(Number(item.productId))) {
+            productId = Number(item.productId);
+          }
         }
-        // Товари без productId (напр. slug як id) додаються тільки локально, не синхронізуються
+        if (productId == null && !item.variationId) {
+          const extracted = extractProductId(item.id);
+          if (extracted != null) productId = extracted;
+          else if (isCuidLike(item.id)) productId = item.id;
+        }
 
         const isLoggedIn = !!token && !!state.currentUserId;
         
@@ -545,7 +574,8 @@ export const useCartStore = create<CartState>()(
 
         const newItem: CartItem = {
           id: item.id,
-          productId: item.productId ?? productId ?? undefined,
+          productId: (item.productId ?? productId ?? undefined) as number | string | undefined,
+          slug: item.slug,
           wcPrice: item.wcPrice,
           wcRegularPrice: item.wcRegularPrice,
           name: item.name,
@@ -580,6 +610,7 @@ export const useCartStore = create<CartState>()(
         const state = get();
         const { token } = useAuthStore.getState();
 
+        // Видалення тільки в стані. Sync на бекенд — один раз при close (якщо pendingCartSync)
         // Шукаємо товар за різними можливими ключами
         let item = state.items[id];
         let actualKey = id;

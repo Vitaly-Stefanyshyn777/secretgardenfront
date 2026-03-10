@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       "Basic " + Buffer.from(`${basicUser}:${basicPass}`).toString("base64");
 
     const upstreamRes = await fetch(
-      `${API_BASE}/wp-json/myplugin/v1/assign-tariff`,
+      `${API_BASE}/api/subscription/assign-tariff`,
       {
         method: "POST",
         headers: {

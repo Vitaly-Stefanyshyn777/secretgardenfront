@@ -108,6 +108,7 @@ export function useProductActions(
             product.id?.toString() ||
             "unknown",
           productId: productId !== undefined ? productId : undefined,
+          slug: product?.slug,
           name: productName,
           price: normalizedPrices.salePrice || normalizedPrices.price,
           image: previewImage,

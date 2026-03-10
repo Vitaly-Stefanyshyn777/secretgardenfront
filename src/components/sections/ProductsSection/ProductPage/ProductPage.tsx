@@ -578,9 +578,15 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
             selectedVariation?.id.toString() ||
             product.id?.toString() ||
             productSlug,
-          // ВАЖЛИВО: для варіацій `id` === variation_id, але бекенд/кошик має знати parent product_id
-          // щоб коректно тягнути meta_data (proce_sell_registry) і ціни.
-          productId: product?.id ? Number(product.id) : undefined,
+          productId:
+            product?.id != null
+              ? typeof product.id === "string" && /^c[a-z0-9]{10,}$/i.test(product.id)
+                ? product.id
+                : !isNaN(Number(product.id))
+                  ? Number(product.id)
+                  : String(product.id)
+              : undefined,
+          slug: product?.slug || productSlug || undefined,
           // Щоб CartModal не "довго підгружався" — одразу кладемо metaData та WC-ціни в item
           metaData: Array.isArray((product as any)?.metaData)
             ? (product as any).metaData.map((m: any) => ({

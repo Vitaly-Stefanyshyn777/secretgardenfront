@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const url = `${API_BASE}/wp-json/wp/v2/product/${id}`;
+    const url = `${API_BASE}/api/catalog/products/${id}`;
 
 
     const upstreamRes = await fetch(url.toString(), {

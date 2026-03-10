@@ -1,6 +1,5 @@
 "use client";
 import PaginationNav from "@/components/ui/PaginationNav/PaginationNav";
-import { adminRequest } from "@/lib/api";
 import { normalizeImageUrl } from "@/lib/imageUtils";
 import {
   calculatePrice,
@@ -107,28 +106,18 @@ const OrdersHistory: React.FC = () => {
     queryKey: ["orders", user?.id],
     enabled: Boolean(user?.id),
     queryFn: async () => {
-      // WooCommerce API очікує числовий customer_id, а не slug
-      // Перевіряємо, чи user?.id є числом, якщо ні - отримуємо числовий ID з профілю
-      let customerId = user?.id;
-      if (customerId && isNaN(Number(customerId))) {
-        // Якщо ID не число (наприклад, slug "trainer_123"), отримуємо числовий ID
-        try {
-          const { getMyProfile } = await import("@/lib/auth");
-          const profile = await getMyProfile();
-          if (profile?.id) {
-            customerId = String(profile.id);
-          }
-        } catch {}
-      }
-      const path = `/wp-json/wc/v3/orders?customer=${encodeURIComponent(
-        String(customerId || user?.id || ""),
-      )}`;
-      const { data } = await adminRequest({
-        method: "GET",
-        url: "/api/proxy",
-        params: { path },
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("bfb_token") || localStorage.getItem("bfb_token_old")
+          : null;
+      const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "";
+      const res = await fetch(`${base}/api/orders`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        cache: "no-store",
       });
-      return data as WCOrder[];
+      if (!res.ok) return [] as WCOrder[];
+      const data = await res.json();
+      return (Array.isArray(data) ? data : data?.orders ?? data?.items ?? []) as WCOrder[];
     },
     staleTime: 2 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
@@ -152,12 +141,13 @@ const OrdersHistory: React.FC = () => {
     queries: productIds.map((productId) => ({
       queryKey: ["product", productId],
       queryFn: async () => {
-        const { data } = await adminRequest({
-          method: "GET",
-          url: "/api/proxy",
-          params: { path: `/wp-json/wc/v3/products/${productId}` },
+        const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "";
+        const res = await fetch(`${base}/api/catalog/products/${encodeURIComponent(String(productId))}`, {
+          cache: "no-store",
         });
-        return data;
+        if (!res.ok) return null;
+        const d = await res.json();
+        return d?.data ?? d;
       },
       enabled: productIds.length > 0,
       staleTime: 5 * 60 * 1000,
@@ -170,9 +160,9 @@ const OrdersHistory: React.FC = () => {
     const map = new Map<number, string>();
     productQueries.forEach((query, index) => {
       const productId = productIds[index];
-      if (query.data?.images?.[0]?.src) {
-        map.set(productId, query.data.images[0].src);
-      }
+      const d = query.data;
+      const src = d?.mainImageUrl ?? d?.images?.[0]?.src;
+      if (src) map.set(productId, src);
     });
     return map;
   }, [productQueries, productIds]);
@@ -182,7 +172,7 @@ const OrdersHistory: React.FC = () => {
     const map = new Map<number, Array<{ key: string; value: string }>>();
     productQueries.forEach((query, index) => {
       const productId = productIds[index];
-      const meta = query.data?.meta_data;
+      const meta = query.data?.meta_data ?? query.data?.metaData;
       if (productId && Array.isArray(meta) && meta.length > 0) {
         map.set(
           productId,

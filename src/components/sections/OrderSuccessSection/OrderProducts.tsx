@@ -3,27 +3,11 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useCartStore } from "@/store/cart";
 import s from "./OrderSuccessSection.module.css";
-import type { WooCommerceOrder } from "@/lib/bfbApi";
-
-// Функція для витягування числового ID з рядка
-function extractProductId(id: string): number | null {
-  if (/^\d+$/.test(id)) {
-    return parseInt(id, 10);
-  }
-  const match = id.match(/(?:course|product)-(\d+)/i);
-  if (match && match[1]) {
-    return parseInt(match[1], 10);
-  }
-  const numberMatch = id.match(/\d+/);
-  if (numberMatch) {
-    return parseInt(numberMatch[0], 10);
-  }
-  return null;
-}
+import type { OrderResponse } from "@/lib/bfbApi";
 
 interface OrderProductsProps {
   orderNumber: string;
-  order?: WooCommerceOrder | null;
+  order?: OrderResponse | null;
 }
 
 interface ProductWithImage {

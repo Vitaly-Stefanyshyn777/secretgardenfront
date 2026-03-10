@@ -225,7 +225,7 @@ async function safeFetch<T>(url: string): Promise<T> {
 }
 
 export async function fetchFaqCategories(): Promise<FaqCategory[]> {
-  return safeFetch<FaqCategory[]>(`/wp-json/wp/v2/faq_category`);
+  return safeFetch<FaqCategory[]>(`/api/faq_category`);
 }
 
 export async function fetchFaqByCategory(
@@ -388,7 +388,7 @@ export async function fetchCourse(
     // Якщо дані інструктора вже є, отримуємо також ACF дані
     try {
       const coachResponse = await fetch(
-        `/api/proxy?path=/wp-json/wp/v2/instructors/${courseCoachData.ID}`
+        `${BASE_URL}/api/trainers/${courseCoachData.ID}`
       );
       let coachAcf = {};
       if (coachResponse.ok) {
@@ -459,7 +459,7 @@ export async function fetchCourse(
       const coachId = parseInt(courseCoachId);
       if (!isNaN(coachId)) {
         const coachResponse = await fetch(
-          `/api/proxy?path=/wp-json/wp/v2/instructors/${coachId}`
+          `${BASE_URL}/api/trainers/${coachId}`
         );
         if (coachResponse.ok) {
           const coachData = await coachResponse.json();
@@ -540,7 +540,7 @@ export async function fetchCourse(
 }
 
 export async function fetchEvents(): Promise<EventPost[]> {
-  return safeFetch<EventPost[]>(`/wp-json/wp/v2/events`);
+  return safeFetch<EventPost[]>(`/api/events`);
 }
 
 export async function fetchMainCourses(): Promise<MainCoursePost[]> {
@@ -718,7 +718,7 @@ export type CoursePost = {
 };
 
 export async function fetchCourses(): Promise<CoursePost[]> {
-  return safeFetch<CoursePost[]>(`/wp-json/wp/v2/main_courses`);
+  return safeFetch<CoursePost[]>(`/api/main-courses`);
 }
 
 export type InstructorPost = {
@@ -787,7 +787,7 @@ export type InstructorPost = {
 };
 
 export async function fetchInstructor(id: number): Promise<InstructorPost> {
-  return safeFetch<InstructorPost>(`/wp-json/wp/v2/instructors/${id}`);
+  return safeFetch<InstructorPost>(`/api/trainers/${id}`);
 }
 
 export type CasePost = {
@@ -809,7 +809,7 @@ export type CasePost = {
 };
 
 export async function fetchCases(): Promise<CasePost[]> {
-  return safeFetch<CasePost[]>(`/wp-json/wp/v2/casec`);
+  return safeFetch<CasePost[]>(`/api/cases`);
 }
 
 export type TariffPost = {
@@ -836,7 +836,7 @@ export type UserCategoryPost = {
 };
 
 export async function fetchUserCategories(): Promise<UserCategoryPost[]> {
-  return safeFetch<UserCategoryPost[]>(`/wp-json/wp/v2/user_category`);
+  return safeFetch<UserCategoryPost[]>(`/api/user-category`);
 }
 
 export type ApplicationData = {
@@ -933,7 +933,7 @@ export type Tariff = {
 
 export async function fetchTariffs(): Promise<Tariff[]> {
   try {
-    const response = await fetch(`${BASE_URL}/wp-json/wp/v2/tariff`, {
+    const response = await fetch(`${BASE_URL}/api/tariff`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -968,7 +968,7 @@ export async function fetchPurchasedProductsApi(
     }
 
     const response = await fetch(
-      `${BASE_URL}/wp-json/custom/v1/purchased-products?user_id=${userId}&product_list=true`,
+      `${BASE_URL}/api/user/purchased-products?user_id=${userId}&product_list=true`,
       {
         headers,
       }
@@ -1003,7 +1003,7 @@ export async function fetchPurchasedProducts(
 
         // Отримуємо інформацію про продукт з WooCommerce API для додаткових даних
         const productResponse = await fetch(
-          `${BASE_URL}/wp-json/wc/v3/products/${apiItem.product_id}`,
+          `${BASE_URL}/api/catalog/products/${apiItem.product_id}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
           }
@@ -1089,14 +1089,11 @@ export async function fetchUserSubscription(
       headers.Authorization = `Bearer ${token}`;
     }
 
-    // Спочатку отримуємо інформацію про користувача та його підписку
-    const userPath = `/wp-json/wp/v2/users/${userId}?context=edit`;
     const userResponse = await fetch(
-      `/api/proxy?path=${encodeURIComponent(userPath)}`,
+      `${BASE_URL}/api/user/profile/${userId}`,
       {
         headers: {
           "Content-Type": "application/json",
-          "x-internal-admin": "1", // Адмінський доступ
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
       }
@@ -1219,7 +1216,7 @@ export async function fetchInstructorAdvantages(): Promise<
   InstructorAdvantagePost[]
 > {
   try {
-    const fullUrl = `${BASE_URL}/wp-json/wp/v2/instructor_advantages`;
+    const fullUrl = `${BASE_URL}/api/instructor-advantages`;
     const res = await fetch(fullUrl, { next: { revalidate: 60 } });
 
     // Якщо ендпоінт не існує (404) або інша помилка, повертаємо порожній масив без помилки
@@ -1275,7 +1272,7 @@ export async function fetchCourseCategories(): Promise<WooCommerceCategory[]> {
 // Отримання категорій FAQ
 export async function fetchFAQCategories(): Promise<unknown[]> {
   try {
-    const response = await fetch(`${BASE_URL}/wp-json/wp/v2/faq_category`);
+    const response = await fetch(`${BASE_URL}/api/faq_category`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -1294,8 +1291,8 @@ export async function fetchFilteredFAQ(
 ): Promise<unknown[]> {
   try {
     const url = categoryId
-      ? `${BASE_URL}/wp-json/wp/v2/faq?faq_category=${categoryId}`
-      : `${BASE_URL}/wp-json/wp/v2/faq`;
+      ? `${BASE_URL}/api/faq?faq_category=${categoryId}`
+      : `${BASE_URL}/api/faq`;
 
     // Silent logging
 
@@ -1362,7 +1359,7 @@ export async function requestPasswordReset(
 ): Promise<PasswordResetResponse> {
   try {
     const response = await fetch(
-      `${BASE_URL}/wp-json/bdpwr/v1/reset-password`,
+      `${BASE_URL}/api/auth/reset-password`,
       {
         method: "POST",
         headers: {
@@ -1394,7 +1391,7 @@ export async function validateResetCode(
   data: ValidateCodeData
 ): Promise<PasswordResetResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/wp-json/bdpwr/v1/validate-code`, {
+    const response = await fetch(`${BASE_URL}/api/auth/validate-code`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1425,7 +1422,7 @@ export async function setNewPassword(
   data: SetPasswordData
 ): Promise<PasswordResetResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/wp-json/bdpwr/v1/set-password`, {
+    const response = await fetch(`${BASE_URL}/api/auth/set-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1609,9 +1606,8 @@ export async function fetchUserOrders(
 ): Promise<WooCommerceOrder[]> {
   try {
     // Використовуємо proxy з адмінськими правами для отримання замовлень
-    const path = `/wp-json/wc/v3/orders?customer=${userId}`;
     const response = await fetch(
-      `/api/proxy?path=${encodeURIComponent(path)}`,
+      `${BASE_URL}/api/orders?customer=${encodeURIComponent(String(userId))}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -1665,7 +1661,7 @@ export async function uploadMedia(
       throw new Error("NEXT_PUBLIC_API_BASE_URL не встановлено");
     }
 
-    const mediaUrl = `${browserBaseUrl}/wp-json/wp/v2/media`;
+    const mediaUrl = `${browserBaseUrl}/api/media`;
 
     const response = await fetch(mediaUrl, {
       method: "POST",
@@ -1729,7 +1725,7 @@ export async function uploadCoachMedia(params: {
 
   // На клієнті використовуємо тільки публічний базовий URL
   const browserBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-  const targetUrl = `${browserBaseUrl}/wp-json/custom/v1/upload-media`;
+  const targetUrl = `${browserBaseUrl}/api/upload-media`;
 
   const res = await fetch(targetUrl, {
     method: "POST",
@@ -2265,7 +2261,86 @@ export async function fetchTrainersWithLogging(
 
 // (duplicated CasePost removed)
 
-// WooCommerce Orders API
+// Orders API (NestJS)
+export interface CreateOrderPayload {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  deliveryToAnother?: boolean;
+  recipientFirstName?: string;
+  recipientLastName?: string;
+  recipientPhone?: string;
+  deliveryMethod?: string;
+  deliveryCity?: string;
+  deliveryAddress?: string;
+  comment?: string;
+  newsletterConsent?: boolean;
+  termsAccepted: boolean;
+  discountAmount?: number;
+  deliveryCost?: number;
+  items?: Array<{ productId: string; quantity: number }>;
+}
+
+export interface OrderResponse {
+  id: string;
+  status: string;
+  total: number;
+  subtotal: number;
+  discountAmount?: number;
+  deliveryCost?: number;
+  items?: Array<{
+    productId: string;
+    quantity: number;
+    price: number;
+    product?: { name?: string; mainImageUrl?: string; [key: string]: unknown };
+  }>;
+  /** NestJS може повертати items; WC використовує line_items */
+  line_items?: Array<{
+    product_id: number | string;
+    quantity: number;
+    name?: string;
+    total?: string;
+    subtotal?: string;
+  }>;
+  billing?: { first_name?: string; last_name?: string; phone?: string; email?: string; address_1?: string; city?: string };
+  shipping?: { first_name?: string; last_name?: string; phone?: string; address_1?: string; address_2?: string; city?: string };
+  number?: string;
+  date_created?: string;
+  payment_method_title?: string;
+}
+
+/** Нормалізує NestJS order (items) до WC-подібного формату (line_items) */
+export function normalizeOrderForDisplay(raw: OrderResponse | null): OrderResponse | null {
+  if (!raw) return null;
+  if (raw.line_items && raw.line_items.length > 0) return raw;
+  if (!raw.items || raw.items.length === 0) return raw;
+
+  const line_items = raw.items.map((it) => ({
+    product_id: it.productId ?? (it.product as { id?: string })?.id ?? "",
+    quantity: it.quantity,
+    name: (it.product as { name?: string })?.name ?? "",
+    total: String((it.price ?? 0) * it.quantity),
+    subtotal: String((it.price ?? 0) * it.quantity),
+  }));
+
+  return { ...raw, line_items };
+}
+
+export const createOrder = async (
+  payload: CreateOrderPayload
+): Promise<OrderResponse> => {
+  const res = await api.post("/api/orders", payload);
+  return res.data as OrderResponse;
+};
+
+export const getOrders = async (): Promise<OrderResponse[]> => {
+  const res = await api.get("/api/orders");
+  const data = res.data;
+  return Array.isArray(data) ? data : (data?.items ?? data?.orders ?? []);
+};
+
+// WooCommerce Orders API (deprecated)
 export const createWcOrder = async (orderData: {
   payment_method: string;
   payment_method_title: string;
@@ -2355,11 +2430,12 @@ export async function cancelSubscription(params: {
   return res.data as CancelSubscriptionResponse;
 }
 
-// Cart API
+// Cart API — підтримка NestJS (productId, product) та WooCommerce (product_id)
 export interface CartItemResponse {
-  cart_item_key: string;
-  product_id: number;
-  variation_id: number;
+  cart_item_key?: string;
+  product_id?: number;
+  productId?: string;
+  variation_id?: number;
   quantity: number;
   product_name?: string;
   name?: string;
@@ -2371,8 +2447,10 @@ export interface CartItemResponse {
   sale_price?: string;
   product_image?: string;
   image?: string;
+  mainImageUrl?: string;
   item_total?: number;
-  added_at: string;
+  added_at?: string;
+  product?: { name?: string; price?: string; mainImageUrl?: string; slug?: string; [key: string]: unknown };
 }
 
 export interface CartResponse {
@@ -2471,22 +2549,40 @@ export const syncCart = async (items: SyncCartItem[]): Promise<CartResponse> => 
   return response.data;
 };
 
-// Wishlist API
+// Wishlist API (NestJS)
+export interface WishlistProductResponse {
+  id: string;
+  name: string;
+  slug: string;
+  price?: string;
+  mainImageUrl?: string;
+  [key: string]: unknown;
+}
+
+export interface WishlistApiItem {
+  productId?: string;
+  slug?: string;
+  product?: WishlistProductResponse;
+}
+
 export interface WishlistItemResponse {
-  product_id: number;
-  variation_id: number;
-  product_name: string;
-  product_price: string;
-  product_image: string;
-  product_url: string;
-  in_stock: boolean;
-  added_at: string;
+  product_id?: number;
+  productId?: string;
+  variation_id?: number;
+  product_name?: string;
+  product_price?: string;
+  product_image?: string;
+  product_url?: string;
+  in_stock?: boolean;
+  added_at?: string;
+  product?: WishlistProductResponse;
 }
 
 export interface WishlistResponse {
-  user_id: number;
+  user_id?: number;
   items: WishlistItemResponse[];
-  items_count: number;
+  items_count?: number;
+  productIds?: string[];
 }
 
 export const getWishlist = async (): Promise<WishlistResponse> => {
@@ -2589,11 +2685,22 @@ export const clearWishlist = async (): Promise<{
   }
 };
 
+export interface SyncWishlistItem {
+  productId?: string;
+  slug?: string;
+}
+
 export const syncWishlist = async (
-  productIds: number[]
+  items: SyncWishlistItem[]
 ): Promise<WishlistResponse> => {
   const body = {
-    productIds: productIds.map(String),
+    items: items
+      .filter((i) => i.productId || i.slug)
+      .map((i) => ({
+        productId: i.productId != null ? String(i.productId).trim() : undefined,
+        slug: i.slug ? String(i.slug).trim() : undefined,
+      }))
+      .filter((i) => i.productId || i.slug),
   };
   const response = await api.post("/api/wishlist/sync", body);
   return response.data;

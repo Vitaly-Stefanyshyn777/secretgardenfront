@@ -9,8 +9,11 @@ function getAuthToken(req: NextRequest): string | null {
   return auth || userCookie || null;
 }
 
-/** POST /api/cart/sync — проксі до NestJS POST /api/cart/sync */
-export async function POST(req: NextRequest) {
+/** GET /api/orders/[id] — замовлення за ID */
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     if (!API_BASE) {
       return NextResponse.json(
@@ -30,41 +33,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json();
-    const rawItems = Array.isArray(body?.items) ? body.items : [];
-    type RawItem = { productId?: unknown; product_id?: unknown; slug?: unknown; quantity?: unknown };
-    const items = rawItems as RawItem[];
+    const { id } = await params;
+    if (!id) {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Order ID is required" },
+        { status: 400 }
+      );
+    }
 
-    const toStr = (v: unknown): string | undefined => {
-      if (v == null || v === "") return undefined;
-      const s = String(v).trim();
-      return s === "" ? undefined : s;
-    };
-
-    const nestItems = items
-      .filter((it: RawItem) => it && (Number(it.quantity ?? 0) > 0))
-      .map((it: RawItem) => {
-        const productId = toStr(it.productId ?? it.product_id);
-        const slug = toStr(it.slug);
-        if (!productId && !slug) return null;
-        return {
-          ...(productId ? { productId } : {}),
-          ...(slug ? { slug } : {}),
-          quantity: typeof it.quantity === "number" && it.quantity > 0 ? it.quantity : 1,
-        };
-      })
-      .filter((i): i is { productId?: string; slug?: string; quantity: number } => i != null && (!!i.productId || !!i.slug));
-
-    const nestUrl = `${API_BASE.replace(/\/$/, "")}/api/cart/sync`;
+    const nestUrl = `${API_BASE.replace(/\/$/, "")}/api/orders/${encodeURIComponent(id)}`;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
     };
 
     const res = await fetch(nestUrl, {
-      method: "POST",
+      method: "GET",
       headers,
-      body: JSON.stringify({ items: nestItems }),
       cache: "no-store",
     });
 
@@ -78,7 +63,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       {
-        error: "Cart sync error",
+        error: "Order fetch error",
         details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }

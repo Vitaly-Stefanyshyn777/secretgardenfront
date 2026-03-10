@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Формуємо URL для WordPress Theme Settings API з параметром hl_data_gallery
-    const url = new URL(`${API_BASE}/wp-json/wp/v2/theme_settings`);
+    const url = new URL(`${API_BASE}/api/theme-settings`);
     url.searchParams.set("hl_data_gallery", "1");
     
 

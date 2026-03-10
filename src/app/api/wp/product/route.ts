@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const apiUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   if (!apiUrl) {
     return NextResponse.json(
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   const queryString = searchParams.toString();
-  const wpApiUrl = `${apiUrl}/wp-json/wp/v2/product?${queryString}`;
+  const wpApiUrl = `${apiUrl}/api/catalog/products?${queryString}`;
 
   try {
     const response = await fetch(wpApiUrl, {

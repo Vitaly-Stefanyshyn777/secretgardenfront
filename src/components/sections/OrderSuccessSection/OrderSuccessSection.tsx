@@ -11,7 +11,8 @@ import OrderProducts from "./OrderProducts";
 import OrderDetails from "./OrderDetails";
 import OrderSummary from "./OrderSummary";
 import s from "./OrderSuccessSection.module.css";
-import type { WooCommerceOrder } from "@/lib/bfbApi";
+import type { OrderResponse } from "@/lib/bfbApi";
+import { normalizeOrderForDisplay } from "@/lib/bfbApi";
 import {
   calculatePrice,
   getPriceSellRegistry,
@@ -27,11 +28,11 @@ export default function OrderSuccessSection({
   const total = useCartStore(selectCartTotal);
   const itemsMap = useCartStore((st) => st.items);
   const items = Object.values(itemsMap);
-  const [order, setOrder] = useState<WooCommerceOrder | null>(null);
+  const [order, setOrder] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isHeaderSkeleton, setIsHeaderSkeleton] = useState(true);
   const [productMetaById, setProductMetaById] = useState<
-    Record<number, Array<{ key: string; value: string }>>
+    Record<string, Array<{ key: string; value: string }>>
   >({});
 
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
@@ -65,12 +66,16 @@ export default function OrderSuccessSection({
     const fetchOrder = async () => {
       try {
         if (orderId) {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/orders/${orderId}`
-          );
+          const token =
+            typeof window !== "undefined"
+              ? localStorage.getItem("bfb_token") || localStorage.getItem("bfb_token_old")
+              : null;
+          const response = await fetch(`/api/orders/${encodeURIComponent(String(orderId))}`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          });
           if (response.ok) {
             const orderData = await response.json();
-            setOrder(orderData);
+            setOrder(normalizeOrderForDisplay(orderData));
           }
         }
       } catch (error) {
@@ -88,8 +93,8 @@ export default function OrderSuccessSection({
     const run = async () => {
       if (!order?.line_items || order.line_items.length === 0) return;
       const ids = Array.from(
-        new Set(order.line_items.map((it) => it.product_id).filter(Boolean))
-      ) as number[];
+        new Set(order.line_items.map((it) => String(it.product_id ?? "")).filter(Boolean))
+      );
       if (ids.length === 0) return;
 
       try {
@@ -165,8 +170,9 @@ export default function OrderSuccessSection({
           ? unitWcPrice
           : undefined;
 
+      const pid = String(it.product_id ?? "");
       const priceSellRegistry = getPriceSellRegistry({
-        metaData: productMetaById[it.product_id],
+        metaData: productMetaById[pid],
       });
 
       const calc = calculatePrice({

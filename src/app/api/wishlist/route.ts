@@ -1,27 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-async function getUserIdFromToken(token: string): Promise<number | null> {
-  try {
-    const response = await fetch(`${API_BASE}/wp-json/wp/v2/users/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
-
-    if (response.ok) {
-      const userData = await response.json();
-      return userData?.id || null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
 
 function getAuthToken(req: NextRequest): string | null {
   const auth = req.headers.get("authorization") || req.headers.get("Authorization");
@@ -62,36 +41,13 @@ export async function GET(req: NextRequest) {
     }
 
     const headers = buildHeaders(token);
-    const tokenToValidate = token.replace(/^Bearer\s+/i, "");
-    const userId = await getUserIdFromToken(tokenToValidate);
+    const params = new URLSearchParams();
+    if (isCheck && productId) params.set("check", "true");
+    if (productId) params.set("product_id", productId);
+    const qs = params.toString();
+    const url = `${API_BASE}/api/wishlist${qs ? `?${qs}` : ""}`;
 
-    if (userId) {
-      headers["X-User-ID"] = String(userId);
-    }
-
-    let endpoint = `${API_BASE}/wp-json/wp/v2/sl_wish_list`;
-    if (isCheck && productId) {
-      endpoint = `${API_BASE}/wp-json/wp/v2/sl_wish_list/check/${productId}`;
-    } else if (userId && !isCheck) {
-      endpoint += `?user_id=${userId}`;
-    }
-
-
-    if (tokenToValidate && userId) {
-      try {
-        await fetch(`${API_BASE}/wp-json/wp/v2/users/me`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${tokenToValidate}`,
-            "Content-Type": "application/json",
-          },
-          cache: "no-store",
-        });
-      } catch (sessionError) {
-      }
-    }
-
-    const response = await fetch(endpoint, {
+    const response = await fetch(url, {
       method: "GET",
       headers,
       cache: "no-store",
@@ -125,33 +81,18 @@ export async function POST(req: NextRequest) {
     const { action, product_id } = body;
     const token = getAuthToken(req);
     const headers = buildHeaders(token);
-    const tokenToValidate = token?.replace(/^Bearer\s+/i, "") || "";
-    const userId = tokenToValidate ? await getUserIdFromToken(tokenToValidate) : null;
 
-    if (userId) {
-      headers["X-User-ID"] = String(userId);
-      if (body && typeof body === "object") {
-        body.user_id = userId;
-      }
-    }
-
-    let wishlistUrl: string;
+    let url: string;
     let method = "POST";
 
-    // Якщо action=remove, то це видалення товару
     if (action === "remove" && product_id) {
-      wishlistUrl = `${API_BASE}/wp-json/wp/v2/sl_wish_list/${product_id}`;
-      if (userId) {
-        wishlistUrl += `${wishlistUrl.includes("?") ? "&" : "?"}user_id=${userId}`;
-      }
+      url = `${API_BASE}/api/wishlist/${product_id}`;
       method = "DELETE";
-
-      // Створюємо новий body без action і product_id для upstream
       const cleanBody = { ...body };
       delete cleanBody.action;
       delete cleanBody.product_id;
 
-      const response = await fetch(wishlistUrl, {
+      const response = await fetch(url, {
         method,
         headers,
         body: Object.keys(cleanBody).length > 0 ? JSON.stringify(cleanBody) : undefined,
@@ -159,7 +100,6 @@ export async function POST(req: NextRequest) {
       });
 
       const data = await response.text();
-
       return new NextResponse(data, {
         status: response.status,
         headers: {
@@ -168,11 +108,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Звичайне додавання в wishlist
-    wishlistUrl = `${API_BASE}/wp-json/wp/v2/sl_wish_list${userId ? `?user_id=${userId}` : ""}`;
+    url = `${API_BASE}/api/wishlist`;
 
-
-    const response = await fetch(wishlistUrl, {
+    const response = await fetch(url, {
       method: "POST",
       headers,
       body: JSON.stringify(body),
@@ -209,22 +147,11 @@ export async function DELETE(req: NextRequest) {
 
     const token = getAuthToken(req);
     const headers = buildHeaders(token);
-    const tokenToValidate = token?.replace(/^Bearer\s+/i, "") || "";
-    const userId = tokenToValidate ? await getUserIdFromToken(tokenToValidate) : null;
 
-    if (userId) {
-      headers["X-User-ID"] = String(userId);
-    }
-
-    let endpoint = isClear
-      ? `${API_BASE}/wp-json/wp/v2/sl_wish_list/clear`
-      : `${API_BASE}/wp-json/wp/v2/sl_wish_list/${productId}`;
-
-    if (userId) {
-      endpoint += `${endpoint.includes("?") ? "&" : "?"}user_id=${userId}`;
-    }
-
-    const response = await fetch(endpoint, {
+    const path = isClear
+      ? "/api/wishlist/clear"
+      : `/api/wishlist/${productId}`;
+    const response = await fetch(`${API_BASE}${path}`, {
       method: "DELETE",
       headers,
       cache: "no-store",

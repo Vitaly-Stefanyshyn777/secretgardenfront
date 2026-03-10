@@ -139,6 +139,49 @@ export default function CartModal() {
       <div className={s.modal} onClick={(e) => e.stopPropagation()}>
         <div className={s.topbarListBlock}>
           <CartHeader onClose={close} />
+          <div style={{ display: "flex", gap: 8, padding: "8px 20px", background: "#1a1a1a" }}>
+            <button
+              type="button"
+              onClick={() => {
+                console.log("[Тест кошика] items:", itemsMap);
+              }}
+              style={{
+                padding: "6px 12px",
+                fontSize: 12,
+                background: "#333",
+                color: "#fff",
+                border: "none",
+                borderRadius: 4,
+              }}
+            >
+              Тест: log cart
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                useCartStore.getState().addItem(
+                  {
+                    id: "test-product-1",
+                    productId: "test-product-1",
+                    slug: "test-product",
+                    name: "Тестовий товар",
+                    price: 100,
+                  },
+                  1
+                );
+              }}
+              style={{
+                padding: "6px 12px",
+                fontSize: 12,
+                background: "#6b4",
+                color: "#fff",
+                border: "none",
+                borderRadius: 4,
+              }}
+            >
+              Тест: додати товар
+            </button>
+          </div>
           <div className={s.bodyTwoCols}>
             <CartSummary
               total={total}

@@ -56,6 +56,28 @@ export default function CheckoutSection() {
 
   const safeTotal = total || 0;
 
+  const { subtotal, discountAmount } = useMemo(() => {
+    const withoutDiscount = items.reduce((acc, it) => {
+      const normalized = normalizePriceParams({
+        wcPrice: it.wcPrice,
+        wcRegularPrice: it.wcRegularPrice,
+        price: it.price,
+        originalPrice: it.originalPrice,
+        regularPrice: it.regularPrice,
+        salePrice: it.salePrice,
+      });
+      const regular = normalized.regularPrice || normalized.price || it.price;
+      return acc + regular * it.quantity;
+    }, 0);
+    const withDiscount = safeTotal;
+    return {
+      subtotal: withoutDiscount,
+      discountAmount: Math.max(0, withoutDiscount - withDiscount),
+    };
+  }, [items, safeTotal]);
+
+  const deliveryCost = 0;
+
   // Хуки для управління станом
   const checkoutState = useCheckoutState();
   const { validateForm, parseWcValidationErrors, validateCartAndTotal } =
@@ -72,6 +94,9 @@ export default function CheckoutSection() {
     deliveryType: checkoutState.deliveryType,
     items,
     safeTotal,
+    subtotal,
+    discountAmount,
+    deliveryCost,
     setErrors: checkoutState.setErrors,
     parseWcValidationErrors,
   });

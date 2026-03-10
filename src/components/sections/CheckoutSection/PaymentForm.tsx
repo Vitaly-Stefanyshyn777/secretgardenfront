@@ -49,17 +49,23 @@ export default function PaymentForm({
     bacs: "Оплата при отриманні",
   };
 
-  type Gateway = { id: string; title: string; enabled: boolean };
+  type Gateway = { id: string; title: string; enabled?: boolean };
+
+  const defaultGateways: Gateway[] = [
+    { id: "cod", title: "Накладений платіж", enabled: true },
+    { id: "wayforpay", title: "Онлайн-оплата WayForPay", enabled: true },
+    { id: "bacs", title: "Оплата при отриманні", enabled: true },
+  ];
 
   const activePaymentGateways = useMemo(() => {
-    const allGateways = (paymentGateways as Gateway[]).filter(
-      (gateway) => gateway.enabled
-    );
+    const allGateways =
+      (paymentGateways as Gateway[])?.filter((g) => g.enabled !== false)?.length > 0
+        ? (paymentGateways as Gateway[]).filter((g) => g.enabled !== false)
+        : defaultGateways;
 
     if (hasCourses) {
-      return allGateways.filter((gateway) => gateway.id === "wayforpay");
+      return allGateways.filter((g) => g.id === "wayforpay");
     }
-
     return allGateways;
   }, [paymentGateways, hasCourses]);
 

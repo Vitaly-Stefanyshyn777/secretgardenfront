@@ -52,9 +52,7 @@ function ResetPasswordModal({
   const handleEmailSubmit = async (data: ResetPasswordEmailFormValues) => {
     try {
       // Викликаємо API для відправки коду на email
-      await api.post("/api/proxy", { email: data.email }, {
-        params: { path: "/wp-json/bdpwr/v1/reset-password" },
-      });
+      await api.post("/api/auth/reset-password", { email: data.email });
 
       setUserEmail(data.email);
       setStep("code");
@@ -69,11 +67,9 @@ function ResetPasswordModal({
   const handleCodeSubmit = async (data: ResetPasswordCodeFormValues) => {
     try {
       // Перевіряємо код через API
-      await api.post("/api/proxy", {
+      await api.post("/api/auth/validate-code", {
         email: userEmail,
         code: data.code,
-      }, {
-        params: { path: "/wp-json/bdpwr/v1/validate-code" },
       });
 
       setResetCode(data.code);
@@ -91,12 +87,10 @@ function ResetPasswordModal({
   ) => {
     try {
       // Змінюємо пароль через API
-      await api.post("/api/proxy", {
+      await api.post("/api/auth/set-password", {
         email: userEmail,
         code: resetCode,
         password: data.password,
-      }, {
-        params: { path: "/wp-json/bdpwr/v1/set-password" },
       });
 
       setStep("success");
@@ -136,9 +130,7 @@ function ResetPasswordModal({
   const handleResendEmail = async () => {
     try {
       // Повторно надсилаємо код на email
-      await api.post("/api/proxy", { email: userEmail }, {
-        params: { path: "/wp-json/bdpwr/v1/reset-password" },
-      });
+      await api.post("/api/auth/reset-password", { email: userEmail });
       // Можна додати повідомлення про успішну повторну відправку
     } catch (error) {
       console.error("Error resending reset code:", error);

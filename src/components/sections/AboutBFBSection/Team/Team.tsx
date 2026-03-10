@@ -125,7 +125,7 @@ export default function Team() {
     (async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const res = await fetch(`${baseUrl}/wp-json/wp/v2/instructors`, {
+        const res = await fetch(`${baseUrl}/api/trainers`, {
           signal: controller.signal,
           cache: "no-store",
         });

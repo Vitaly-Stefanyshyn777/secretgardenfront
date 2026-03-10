@@ -1,7 +1,10 @@
 "use client";
-import { calculatePrice } from "@/lib/priceUtils";
+import { calculatePrice, getPriceSellRegistry, normalizePriceParams } from "@/lib/priceUtils";
 import { type CartItem } from "@/store/cart";
 import { FormData } from "@/components/sections/CheckoutSection/types";
+import type { CreateOrderPayload } from "@/lib/bfbApi";
+
+const isCuidLike = (v: string): boolean => /^c[a-z0-9]{10,}$/i.test(String(v).trim());
 
 interface CreateOrderDataProps {
   formData: FormData;
@@ -9,150 +12,87 @@ interface CreateOrderDataProps {
   deliveryType: string;
   items: CartItem[];
   isLoggedIn: boolean;
-  userId?: number;
+  /** Сума замовлення з урахуванням знижки (без доставки) */
+  subtotal: number;
+  /** Сума знижки в грн */
+  discountAmount: number;
+  /** Вартість доставки в грн (0 = за тарифами НП) */
+  deliveryCost: number;
+}
+
+function mapDeliveryTypeToMethod(deliveryType: string): string {
+  if (deliveryType === "branch" || deliveryType === "postomat" || deliveryType === "courier") {
+    return "nova_poshta";
+  }
+  return "nova_poshta";
+}
+
+function toProductId(item: CartItem): string | null {
+  const raw = item.productId ?? item.id;
+  if (raw == null || String(raw).trim() === "") return null;
+  const str = String(raw).trim();
+  if (isCuidLike(str)) return str;
+  if (/^\d+$/.test(str)) return str;
+  return str;
 }
 
 export function useOrderData() {
-  const createPaymentMethodTitle = (paymentMethod: string): string => {
-    const paymentMethodTitleMap: Record<string, string> = {
-      cod: "Накладений платіж",
-      wayforpay: "Онлайн-оплата WayForPay",
-      bacs: "Оплата при отриманні",
-    };
-
-    return paymentMethodTitleMap[paymentMethod] || paymentMethod;
-  };
-
-  const extractProductId = (id: string): number | null => {
-    if (/^\d+$/.test(id)) {
-      return parseInt(id, 10);
-    }
-
-    const match = id.match(/(?:course|product)-(\d+)/i);
-    if (match && match[1]) {
-      return parseInt(match[1], 10);
-    }
-
-    const numberMatch = id.match(/\d+/);
-    if (numberMatch) {
-      return parseInt(numberMatch[0], 10);
-    }
-
-    return null;
-  };
-
-  const createLineItems = (items: CartItem[], isLoggedIn: boolean) => {
-    return items
-      .map((item) => {
-        const productId = extractProductId(item.id);
-        if (productId === null || productId <= 0) {
-          return null;
-        }
-        if (!item.quantity || item.quantity <= 0) {
-          return null;
-        }
-
-        const { finalPrice, originalPrice, totalDiscount } = calculatePrice({
-          price: item.price,
-          originalPrice: item.originalPrice,
-          isLoggedIn,
-        });
-
-        const originalItemPrice = item.originalPrice || item.price;
-        const originalTotalPrice = originalItemPrice * item.quantity;
-
-        return {
-          product_id: productId,
-          quantity: item.quantity,
-          price: finalPrice,
-          subtotal: originalTotalPrice.toString(),
-          total: (finalPrice * item.quantity).toString(),
-          meta_data: [
-            {
-              key: "_bfb_frontend_price",
-              value: finalPrice.toString(),
-            },
-            {
-              key: "_bfb_original_price",
-              value: (item.originalPrice || item.price).toString(),
-            },
-            {
-              key: "_bfb_discount_percent",
-              value: totalDiscount.toFixed(2),
-            },
-            {
-              key: "_bfb_user_logged_in",
-              value: isLoggedIn.toString(),
-            },
-          ],
-        };
-      })
-      .filter((item) => item !== null);
-  };
-
-  const createOrderData = ({
+  const createOrderPayload = ({
     formData,
     hasDifferentRecipient,
     deliveryType,
     items,
-    isLoggedIn,
-    userId,
-  }: CreateOrderDataProps) => {
-    const paymentMethod = formData.paymentMethod || "cod";
-    const paymentMethodTitle = createPaymentMethodTitle(paymentMethod);
-    const lineItems = createLineItems(items, isLoggedIn);
+    subtotal,
+    discountAmount,
+    deliveryCost,
+  }: CreateOrderDataProps): CreateOrderPayload => {
+    const itemsPayload = items
+      .filter((it) => it.quantity > 0)
+      .map((it) => {
+        const productId = toProductId(it);
+        return productId ? { productId, quantity: it.quantity } : null;
+      })
+      .filter((i): i is { productId: string; quantity: number } => i != null);
 
-    if (lineItems.length === 0) {
-      throw new Error("Не вдалося підготувати товари для замовлення. Перевірте кошик.");
+    const deliveryMethod = mapDeliveryTypeToMethod(deliveryType);
+    const deliveryAddress =
+      deliveryType === "courier"
+        ? [formData.branch, formData.house, formData.building, formData.apartment]
+            .filter(Boolean)
+            .join(", ")
+        : formData.branch || "";
+
+    const payload: CreateOrderPayload = {
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      phone: formData.phone.trim(),
+      email: formData.email.trim(),
+      deliveryToAnother: hasDifferentRecipient,
+      deliveryMethod,
+      deliveryCity: formData.city?.trim() || undefined,
+      deliveryAddress: deliveryAddress.trim() || undefined,
+      comment: formData.comment?.trim() || undefined,
+      newsletterConsent: formData.mailSend ?? false,
+      termsAccepted: formData.acceptTerms ?? false,
+      discountAmount: Math.round(discountAmount) || 0,
+      deliveryCost: Math.round(deliveryCost) || 0,
+    };
+
+    if (hasDifferentRecipient) {
+      payload.recipientFirstName = formData.recipientFirstName?.trim() || undefined;
+      payload.recipientLastName = formData.recipientLastName?.trim() || undefined;
+      payload.recipientPhone = formData.recipientPhone?.trim() || undefined;
     }
 
-    const shouldSetPaid = paymentMethod === "cod" || paymentMethod === "bacs";
+    // items опційні — якщо не передати, бекенд візьме з кошика. Але передаємо для прозорості.
+    if (itemsPayload.length > 0) {
+      payload.items = itemsPayload;
+    }
 
-    return {
-      payment_method: paymentMethod,
-      payment_method_title: paymentMethodTitle,
-      set_paid: shouldSetPaid,
-      customer_id: userId || 0,
-      billing: {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        address_1: formData.branch || formData.house,
-        city: formData.city,
-        country: "UA",
-      },
-      shipping: {
-        first_name: hasDifferentRecipient
-          ? formData.recipientFirstName
-          : formData.firstName,
-        last_name: hasDifferentRecipient
-          ? formData.recipientLastName
-          : formData.lastName,
-        address_1: formData.branch || formData.house,
-        city: formData.city,
-        country: "UA",
-      },
-      line_items: lineItems,
-      ...((deliveryType === "branch" ||
-        deliveryType === "postomat" ||
-        deliveryType === "courier") && {
-        shipping_lines: [
-          {
-            method_id: "nova_poshta",
-            method_title: "Нова Пошта",
-            total: "0.00",
-          },
-        ],
-      }),
-      ...(formData.comment && { customer_note: formData.comment }),
-    };
+    return payload;
   };
 
   return {
-    createOrderData,
-    createPaymentMethodTitle,
-    extractProductId,
-    createLineItems,
+    createOrderPayload,
   };
 }

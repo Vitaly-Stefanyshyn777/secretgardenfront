@@ -20,7 +20,7 @@ export function useCheckoutState() {
     house: "",
     building: "",
     apartment: "",
-    paymentMethod: "Накладений платіж",
+    paymentMethod: "cod",
     comment: "",
     mailSend: false,
     acceptTerms: false,

@@ -1,7 +1,7 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMyProfile } from "@/lib/auth";
-import { adminRequest } from "@/lib/api";
+import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 
 export type WpUserMe = {
@@ -51,16 +51,12 @@ export function useUpdateUserProfile() {
         meta?: Record<string, unknown>;
       };
     }) => {
-      const res = await adminRequest({
-        method: "PATCH",
-        url: "/api/proxy",
-        params: {
-          path: `/wp-json/wp/v2/users/${encodeURIComponent(
-            String(payload.id)
-          )}`,
-        },
-        data: payload.body,
-      });
+      const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "";
+      const res = await api.patch(
+        `${base}/api/user/profile/${encodeURIComponent(String(payload.id))}`,
+        payload.body,
+        { headers: { "Content-Type": "application/json" } }
+      );
       return res.data as unknown;
     },
     onSuccess: () => {

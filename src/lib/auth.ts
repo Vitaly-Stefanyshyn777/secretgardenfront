@@ -1,4 +1,4 @@
-import api, { adminRequest } from "./api";
+import api from "./api";
 import axios from "axios";
 
 const adminApi = axios.create({
@@ -70,15 +70,9 @@ export const login = async (
 ): Promise<LoginResponse> => {
   try {
     // Використовуємо адмінський канал через проксі: якщо немає кукі — інтерцептор зробить /api/admin-login і ретрайнеться
-    const response = await adminRequest({
-      method: "POST",
-      url:
-        "/api/proxy?path=" +
-        encodeURIComponent("/wp-json/jwt-auth/v1/token"),
-      data: {
-        username: credentials.username,
-        password: credentials.password,
-      },
+    const response = await api.post("/api/auth/wp-token", {
+      username: credentials.username,
+      password: credentials.password,
     });
 
     try {
@@ -110,11 +104,7 @@ export const register = async (
 
   try {
     // Через адмінський канал: проксі підтягне Authorization з httpOnly кукі (bfb_admin_jwt)
-    const response = await adminRequest({
-      method: "POST",
-      url: "/api/proxy?path=" + encodeURIComponent("/wp-json/custom/v2/users"),
-      data: registerData,
-    });
+    const response = await api.post("/api/auth/register", registerData);
     
     const customResponse = response.data as CustomRegisterResponse;
     

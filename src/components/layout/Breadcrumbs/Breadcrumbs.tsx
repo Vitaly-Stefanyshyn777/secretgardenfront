@@ -20,7 +20,7 @@ const Breadcrumbs: React.FC = () => {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [isEventsModalOpen, setIsEventsModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [is404Page, setIs404Page] = useState(false);
+  const is404Page = pathname === "/not-found";
 
   // Якщо ми на сторінці продукту /products/[slug] — підтягнемо назву
   const productSlugMatch = pathname.match(/^\/products\/(.+)$/);
@@ -33,24 +33,6 @@ const Breadcrumbs: React.FC = () => {
   const courseSlug = courseSlugMatch?.[1] || "";
   // Викликаємо useCourseQuery тільки якщо є slug (не порожній)
   const { data: courseData } = useCourseQuery(courseSlug || "skip");
-
-  // Перевіряємо чи це 404 сторінка
-  React.useEffect(() => {
-    const checkFor404Page = () => {
-      if (
-        typeof window !== "undefined" &&
-        document.querySelector('[data-page="404"]')
-      ) {
-        setIs404Page(true);
-      } else {
-        setIs404Page(false);
-      }
-    };
-
-    checkFor404Page();
-    const timeoutId = setTimeout(checkFor404Page, 100);
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   // Обробка кліку на breadcrumb item
   const handleBreadcrumbClick = (item: BreadcrumbItem, e: React.MouseEvent) => {
@@ -154,11 +136,9 @@ const Breadcrumbs: React.FC = () => {
 
   let breadcrumbs = generateBreadcrumbs();
 
-  // Спеціальна логіка для сторінки 404
-  if (
-    typeof window !== "undefined" &&
-    document.querySelector('[data-page="404"]')
-  ) {
+  // Спеціальна логіка для сторінки 404 — використовуємо pathname замість document
+  // щоб уникнути hydration mismatch (document доступний тільки на клієнті)
+  if (pathname === "/not-found") {
     breadcrumbs = [
       { label: "Головна", href: "/" },
       { label: "404", isActive: true },

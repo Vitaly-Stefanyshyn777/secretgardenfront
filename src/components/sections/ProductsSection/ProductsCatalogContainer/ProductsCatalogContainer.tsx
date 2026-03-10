@@ -158,7 +158,8 @@ const ProductsCatalogContainer = ({
       0;
 
     return {
-      id: Number(product.id),
+      // CUID (clx...) зберігаємо як string; числовий id теж через String()
+      id: typeof product.id === "string" ? product.id : String(product.id ?? ""),
       slug: (product as any).slug, // Додаємо slug з продукту
       name: product.name,
       type: wc?.type,

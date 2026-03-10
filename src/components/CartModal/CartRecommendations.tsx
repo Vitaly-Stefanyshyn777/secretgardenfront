@@ -299,7 +299,13 @@ export default function CartRecommendations() {
                           try {
                             await addItem({
                               id: String(p.id),
-                              productId: !isNaN(Number(p.id)) ? Number(p.id) : undefined,
+                              productId:
+                                typeof p.id === "string" && /^c[a-z0-9]{10,}$/i.test(p.id)
+                                  ? p.id
+                                  : !isNaN(Number(p.id))
+                                    ? Number(p.id)
+                                    : undefined,
+                              slug: (p as { slug?: string }).slug,
                               name: p.name,
                               price: priceToAdd,
                               image: p.image,

@@ -15,7 +15,7 @@ export async function OPTIONS() {
 
 export async function GET(req: NextRequest) {
   try {
-    const url = new URL(`${API_BASE}/wp-json/wp/v2/product`);
+    const url = new URL(`${API_BASE}/api/catalog/products`);
     const incoming = new URL(req.url);
     incoming.searchParams.forEach((v, k) => {
       url.searchParams.set(k, v);

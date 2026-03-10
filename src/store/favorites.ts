@@ -5,8 +5,11 @@ import {
   syncWishlist as syncWishlistApi,
   checkWishlistItem,
   type WishlistItemResponse,
+  type WishlistApiItem,
 } from "@/lib/bfbApi";
 import { useAuthStore } from "./auth";
+
+const isCuidLike = (v: string): boolean => /^c[a-z0-9]{10,}$/i.test(String(v).trim());
 
 const getUserFavoritesKey = (userId?: string | null) =>
   userId ? `bfb-favorites-${userId}` : "bfb-favorites";
@@ -64,50 +67,46 @@ export interface FavoriteItem {
   };
 }
 
+const baseKey = (item: WishlistItemResponse | WishlistApiItem): string => {
+  const api = item as WishlistApiItem;
+  if (api.productId) return api.productId;
+  if (api.product?.id) return api.product.id;
+  if (api.product?.slug) return api.product.slug;
+  const old = item as WishlistItemResponse;
+  if (old.product_id != null) return String(old.product_id);
+  return "unknown";
+};
+
 const mapWishlistItemResponseToFavoriteItem = (
-  item: WishlistItemResponse,
+  item: WishlistItemResponse | WishlistApiItem,
   existingItem?: FavoriteItem
-): FavoriteItem => ({
-  id: item.product_id.toString(),
-  name: item.product_name,
-  price: parseFloat(item.product_price),
-  image: item.product_image,
-  slug: existingItem?.slug,
-  originalPrice: existingItem?.originalPrice,
-  discount: existingItem?.discount,
-  isNew: existingItem?.isNew,
-  isHit: existingItem?.isHit,
-  variationId: existingItem?.variationId,
-  color: existingItem?.color,
-  size: existingItem?.size,
-  stockQuantity: existingItem?.stockQuantity,
-  productType: existingItem?.productType,
-  variations: existingItem?.variations,
-  wcProduct: existingItem?.wcProduct,
-});
-
-function extractProductId(id: string): number | null {
-  if (/^\d+$/.test(id)) {
-    return parseInt(id, 10);
-  }
-  const match = id.match(/(?:course|product)-(\d+)/i);
-  if (match && match[1]) {
-    return parseInt(match[1], 10);
-  }
-  const numberMatch = id.match(/\d+/);
-  if (numberMatch) {
-    return parseInt(numberMatch[0], 10);
-  }
-  return null;
-}
-
-function countItemsByProductId(
-  items: Record<string, FavoriteItem>,
-  productId: number
-): number {
-  return Object.keys(items).filter((key) => extractProductId(key) === productId)
-    .length;
-}
+): FavoriteItem => {
+  const productId = (item as WishlistApiItem).productId ?? (item as WishlistItemResponse).product_id?.toString();
+  const product = (item as WishlistApiItem).product;
+  const id = productId ?? product?.id ?? product?.slug ?? "unknown";
+  const name = product?.name ?? (item as WishlistItemResponse).product_name ?? "";
+  const price = product?.price != null ? parseFloat(String(product.price)) : parseFloat((item as WishlistItemResponse).product_price ?? "0");
+  const image = product?.mainImageUrl ?? (item as WishlistItemResponse).product_image;
+  const slug = product?.slug ?? existingItem?.slug;
+  return {
+    id: String(id),
+    name,
+    price: Number.isFinite(price) ? price : 0,
+    image,
+    slug,
+    originalPrice: existingItem?.originalPrice,
+    discount: existingItem?.discount,
+    isNew: existingItem?.isNew,
+    isHit: existingItem?.isHit,
+    variationId: existingItem?.variationId,
+    color: existingItem?.color,
+    size: existingItem?.size,
+    stockQuantity: existingItem?.stockQuantity,
+    productType: existingItem?.productType,
+    variations: existingItem?.variations,
+    wcProduct: existingItem?.wcProduct,
+  };
+};
 
 interface FavoriteState {
   items: Record<string, FavoriteItem>;
@@ -117,6 +116,7 @@ interface FavoriteState {
   pendingFavoritesSync: boolean;
   open: () => void;
   close: () => void;
+  syncAndClose: () => Promise<void>;
   toggle: () => void;
   syncFavoritesToApi: () => Promise<void>;
   toggleFavorite: (item: FavoriteItem) => Promise<void>;
@@ -149,34 +149,73 @@ export const useFavoriteStore = create<FavoriteState>()(
         }
         set({ isOpen: false });
       },
+      syncAndClose: async () => {
+        const state = get();
+        const token =
+          useAuthStore.getState().token ||
+          (typeof window !== "undefined" &&
+            (localStorage.getItem("bfb_token") ||
+              localStorage.getItem("bfb_token_old")));
+        if (!token) {
+          console.warn("[Favorites syncAndClose] Немає токена — тільки закриття");
+          set({ isOpen: false });
+          return;
+        }
+        // Якщо змін не було — не робимо запит (користувач лише переглядав)
+        if (!state.pendingFavoritesSync) {
+          set({ isOpen: false });
+          return;
+        }
+        try {
+          console.log("[Favorites syncAndClose] Викликаю syncFavoritesToApi…");
+          await get().syncFavoritesToApi();
+        } catch (err) {
+          const msg =
+            err && typeof err === "object" && "response" in err
+              ? (err as { response?: { data?: unknown } }).response?.data
+              : err;
+          console.error("[Favorites Sync] Помилка:", msg ?? err);
+        } finally {
+          set({ isOpen: false });
+        }
+      },
       toggle: () => set((s) => ({ isOpen: !s.isOpen })),
       syncFavoritesToApi: async () => {
         const state = get();
-        const { token } = useAuthStore.getState();
-        if (!state.currentUserId || !token) return;
-        const productIds = Object.keys(state.items)
-          .map((k) => extractProductId(k))
-          .filter((id): id is number => id !== null);
+        const authState = useAuthStore.getState();
+        const token =
+          authState.token ||
+          (typeof window !== "undefined" &&
+            (localStorage.getItem("bfb_token") ||
+              localStorage.getItem("bfb_token_old")));
+        if (!token) return;
+        const favItems = Object.values(state.items);
+        const syncItems = favItems
+          .filter((f) => f.id || f.slug)
+          .map((f) => {
+            const idStr = String(f.id ?? "").trim();
+            const slugStr = f.slug ? String(f.slug).trim() : undefined;
+            if (isCuidLike(idStr) || /^\d+$/.test(idStr)) {
+              return { productId: idStr, slug: slugStr };
+            }
+            if (slugStr) return { slug: slugStr };
+            return { slug: idStr || undefined };
+          })
+          .filter((i) => i.productId || i.slug);
         try {
           set({ isLoading: true, pendingFavoritesSync: false });
-          const wishlistData = await syncWishlistApi(productIds);
+          console.log("[Favorites syncFavoritesToApi] POST /api/wishlist/sync, items:", syncItems.length);
+          const wishlistData = await syncWishlistApi(syncItems);
           const currentItems = get().items;
-          const itemsMap: Record<string, FavoriteItem> = { ...currentItems };
-          (wishlistData.items || []).forEach((apiItem) => {
-            const baseKey = apiItem.product_id.toString();
-            const existingBase = currentItems[baseKey];
+          const itemsMap: Record<string, FavoriteItem> = {};
+          const apiItems = wishlistData.items || [];
+          apiItems.forEach((apiItem: WishlistItemResponse | WishlistApiItem) => {
+            const key = baseKey(apiItem);
             const base = mapWishlistItemResponseToFavoriteItem(
               apiItem,
-              existingBase
+              currentItems[key]
             );
-            const hasAnyForProduct = Object.keys(itemsMap).some(
-              (k) => extractProductId(k) === apiItem.product_id
-            );
-            if (!hasAnyForProduct) {
-              itemsMap[base.id] = base;
-            } else if (itemsMap[baseKey] && !itemsMap[baseKey].variationId) {
-              itemsMap[baseKey] = { ...itemsMap[baseKey], ...base };
-            }
+            itemsMap[base.id] = base;
           });
           set({ items: itemsMap, isLoading: false });
         } catch {
@@ -197,55 +236,57 @@ export const useFavoriteStore = create<FavoriteState>()(
           saveUserFavorites(state.currentUserId, state.items);
         }
 
-        const { token } = useAuthStore.getState();
-        const hasTokenInStore = !!token;
-        const hasTokenInStorage =
-          typeof window !== "undefined" &&
-          (!!localStorage.getItem("bfb_token") ||
-            !!localStorage.getItem("bfb_token_old"));
+        const authState = useAuthStore.getState();
+        const token =
+          authState.token ||
+          (typeof window !== "undefined" &&
+            (localStorage.getItem("bfb_token") ||
+              localStorage.getItem("bfb_token_old")));
 
-        if (userId && hasTokenInStore && hasTokenInStorage) {
+        if (userId && token) {
           try {
             set({ isLoading: true });
             await new Promise((resolve) => setTimeout(resolve, 100));
 
             const wishlistData = await getWishlist();
+            const apiItemsRaw = wishlistData.items || [];
+            if (typeof window !== "undefined") {
+              console.log("[Favorites loadUserData] GET /api/wishlist →", apiItemsRaw.length, "items");
+            }
             const currentItems = state.items;
-            const itemsMap: Record<string, FavoriteItem> = { ...currentItems };
+            const itemsMap: Record<string, FavoriteItem> = {};
 
-            wishlistData.items.forEach((apiItem) => {
-              const baseKey = apiItem.product_id.toString();
-              const existingBase = currentItems[baseKey];
-              const base = mapWishlistItemResponseToFavoriteItem(
-                apiItem,
-                existingBase
-              );
-
-              // Оновлюємо базовий елемент або створюємо його, якщо взагалі нічого немає по цьому продукту
-              const hasAnyForProduct =
-                Object.keys(itemsMap).some(
-                  (k) => extractProductId(k) === apiItem.product_id
+            apiItemsRaw.forEach(
+              (apiItem: WishlistItemResponse | WishlistApiItem) => {
+                const key = baseKey(apiItem);
+                const base = mapWishlistItemResponseToFavoriteItem(
+                  apiItem,
+                  currentItems[key]
                 );
-              if (!hasAnyForProduct) {
                 itemsMap[base.id] = base;
-              } else if (itemsMap[baseKey] && !itemsMap[baseKey].variationId) {
-                itemsMap[baseKey] = { ...itemsMap[baseKey], ...base };
               }
-            });
+            );
 
             set({
               items: itemsMap,
               currentUserId: userId,
               isLoading: false,
             });
+            if (typeof window !== "undefined") {
+              console.log("[Favorites loadUserData] Завантажено з API:", Object.keys(itemsMap).length, "items");
+            }
           } catch (error: any) {
             const is401 =
               error?.response?.status === 401 ||
               error?.message?.includes("401");
+            console.warn("[Favorites loadUserData] Помилка API:", is401 ? "401" : error?.message, "→ fallback localStorage");
             const userItems = loadUserFavorites(userId);
             set({ items: userItems, currentUserId: userId, isLoading: false });
           }
         } else {
+          if (typeof window !== "undefined" && userId) {
+            console.warn("[Favorites loadUserData] Пропуск API: userId=", !!userId, "token=", !!token, "→ fallback localStorage");
+          }
           // При логауті (userId === null) очищуємо улюблені повністю
           if (userId === null) {
             set({ items: {}, currentUserId: null });
@@ -271,25 +312,18 @@ export const useFavoriteStore = create<FavoriteState>()(
         try {
           const wishlistData = await getWishlist();
           const currentItems = get().items;
-          const itemsMap: Record<string, FavoriteItem> = { ...currentItems };
+          const itemsMap: Record<string, FavoriteItem> = {};
 
-          wishlistData.items.forEach((apiItem) => {
-            const baseKey = apiItem.product_id.toString();
-            const existingBase = currentItems[baseKey];
-            const base = mapWishlistItemResponseToFavoriteItem(
-              apiItem,
-              existingBase
-            );
-
-            const hasAnyForProduct = Object.keys(itemsMap).some(
-              (k) => extractProductId(k) === apiItem.product_id
-            );
-            if (!hasAnyForProduct) {
+          (wishlistData.items || []).forEach(
+            (apiItem: WishlistItemResponse | WishlistApiItem) => {
+              const key = baseKey(apiItem);
+              const base = mapWishlistItemResponseToFavoriteItem(
+                apiItem,
+                currentItems[key]
+              );
               itemsMap[base.id] = base;
-            } else if (itemsMap[baseKey] && !itemsMap[baseKey].variationId) {
-              itemsMap[baseKey] = { ...itemsMap[baseKey], ...base };
             }
-          });
+          );
 
           set({ items: itemsMap });
         } catch (error) {
@@ -315,16 +349,9 @@ export const useFavoriteStore = create<FavoriteState>()(
       toggleFavorite: async (item: FavoriteItem) => {
         const state = get();
         const { token } = useAuthStore.getState();
-        const productId = extractProductId(item.id);
 
-        if (productId === null) {
-          return;
-        }
-
-        // Для варіацій зберігаємо унікальні елементи (не затираємо інші варіації цього ж товару)
+        // Підтримуємо CUID, slug і числовий id
         const existing = state.items[item.id];
-        const beforeCount = countItemsByProductId(state.items, productId);
-
         const exists = !!existing;
 
         const next = { ...state.items };
@@ -350,13 +377,8 @@ export const useFavoriteStore = create<FavoriteState>()(
       remove: async (id: string) => {
         const state = get();
         const { token } = useAuthStore.getState();
-        const productId = extractProductId(id);
 
-        if (productId === null) {
-          return;
-        }
-
-        // Негайне оновлення UI стану для кращого UX
+        // Негайне оновлення UI стану для кращого UX (підтримуємо CUID, slug, числовий id)
         const next = { ...state.items };
         delete next[id];
         set({ items: next });
