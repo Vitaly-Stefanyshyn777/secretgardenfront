@@ -98,8 +98,7 @@
 }
 
 .categoryBlockBtnActive {
-  border-color: rgba(14, 14, 14, 0.4);
-  background: rgba(28, 56, 35, 0.28);
+  border: 1.33px solid var(--zoloto);
 }
 
 .categoryBackBtn {
@@ -110,20 +109,26 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 6px;
+}
+
+.subHeaderDivider {
+  width: 100%;
+  height: 1px;
+  background: var(--zoloto);
+  margin: 12px 0 12px 0;
 }
 
 .allCategoriesBtn {
   width: 100%;
   border-radius: 6px;
-  padding: 12px 14px;
-  background: rgba(28, 56, 35, 0.14);
+  padding: 10px;
+  background: var(--temno-zeleniy);
   border: 1px solid rgba(14, 14, 14, 0.2);
-  font-family: var(--font-family);
+  font-family: var(--second-family);
   font-weight: 500;
-  font-size: 14px;
-  line-height: 140%;
-  color: var(--black);
+  font-size: 17px;
+  line-height: 120%;
+  color: var(--bіliy);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -139,6 +144,35 @@
   border-top: 6px solid currentColor;
   opacity: 0.8;
   transition: transform 0.2s ease;
+}
+
+.caretIcon {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.caretIcon img {
+  display: block;
+}
+
+.caretIconUp {
+  transform: rotate(180deg);
+}
+
+/* Filter group with title (fallback when API has no filters) */
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.filterGroupTitle {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
 }
 
 /* Checkbox list for subcategories */
@@ -163,10 +197,10 @@
 }
 
 .checkboxBox {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  border: 1.5px solid rgba(14, 14, 14, 0.35);
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1.33px solid var(--temno-sіriy);
   background: transparent;
   display: flex;
   align-items: center;
@@ -266,12 +300,12 @@
 }
 
 .radioLabel {
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 140%;
-  color: var(--black);
-  cursor: pointer;
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  text-align: center;
+  color: var(--bіliy);
 }
 
 .radioItem.selected .radioCircle {

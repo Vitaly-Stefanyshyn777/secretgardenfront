@@ -6,9 +6,22 @@ const BASE_URL =
     ? process.env.NEXT_PUBLIC_UPSTREAM_BASE
     : process.env.UPSTREAM_BASE) || "";
 
-// Новий Node бекенд для REST /auth, /user, /catalog
+// Новий Node бекенд для REST /auth, /user, /catalog (з глобальним префіксом /api)
 const NODE_API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
+  `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api`;
+
+// Динамічні фільтри категорії (Виробник, Тип, Матеріал тощо)
+export interface CatalogFilterValue {
+  value: string;
+  slug: string;
+}
+
+export interface CatalogFilter {
+  name: string;
+  slug: string;
+  values: CatalogFilterValue[];
+  order?: number;
+}
 
 // Категорії каталогу нового бекенду
 export interface CatalogCategory {
@@ -17,6 +30,7 @@ export interface CatalogCategory {
   slug: string;
   parentId: string | null;
   children?: CatalogCategory[];
+  filters?: CatalogFilter[];
 }
 
 export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
@@ -245,24 +259,24 @@ export async function fetchCourse(
 
   // Якщо це число або числовий рядок, використовуємо як ID
   let wcCourse;
+  const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
   if (
     typeof courseIdOrSlug === "number" ||
     /^\d+$/.test(String(courseIdOrSlug))
   ) {
-    const wcResponse = await fetch(`/api/wc/v3/products/${courseIdOrSlug}`);
+    const wcResponse = await fetch(
+      `${base}/api/catalog/products/${courseIdOrSlug}`
+    );
     if (!wcResponse.ok) {
       throw new Error(`Failed to fetch course: ${wcResponse.status}`);
     }
-    wcCourse = await wcResponse.json();
+    const raw = await wcResponse.json();
+    wcCourse = raw?.data ?? raw;
   } else {
-    // Якщо це slug, спочатку отримуємо всі курси та шукаємо за slug
-    const allCoursesResponse = await fetch(
-      `/api/wc/v3/products?category=72&per_page=100`
-    );
-    if (!allCoursesResponse.ok) {
-      throw new Error(`Failed to fetch courses: ${allCoursesResponse.status}`);
-    }
-    const allCourses = await allCoursesResponse.json();
+    const allCourses = (await fetchFilteredProducts({
+      category: "72",
+      per_page: 100,
+    })) as Array<{ slug?: string; [k: string]: unknown }>;
 
     // Нормалізуємо slug: декодуємо URL-encoded значення та очищаємо від ____full____
     const normalizeSlug = (slug: string): string => {
@@ -1779,6 +1793,8 @@ export async function uploadCoachMedia(params: {
 }
 export type ProductFilters = {
   category?: string | string[];
+  /** Динамічні фільтри: { manufacturer: ['raw','phoenix'], type: ['organic'] } → ?manufacturer=raw,phoenix&type=organic */
+  categoryFilters?: Record<string, string[]>;
   attribute?: string | string[];
   attribute_term?: string | string[];
   min_price?: number;
@@ -1830,6 +1846,15 @@ export async function fetchFilteredProducts(
 
     if (filters.search) {
       params.append("search", String(filters.search));
+    }
+
+    // Динамічні фільтри категорії (manufacturer, type, material тощо)
+    if (filters.categoryFilters && Object.keys(filters.categoryFilters).length > 0) {
+      for (const [key, values] of Object.entries(filters.categoryFilters)) {
+        if (Array.isArray(values) && values.length > 0) {
+          params.append(key, values.join(","));
+        }
+      }
     }
 
     if (filters.page) {
@@ -2011,7 +2036,12 @@ export async function fetchProductReviews(
 
 export async function createProductReview(
   productSlug: string,
-  body: { rating: number; title?: string; text: string; authorName: string }
+  body: {
+    rating: number;
+    title?: string;
+    text?: string;
+    authorName?: string;
+  }
 ): Promise<{ success: boolean; review?: ProductReview }> {
   const res = await fetch(
     `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(productSlug)}/reviews`,
@@ -2095,32 +2125,18 @@ export interface WcReview {
   rating?: number;
 }
 
-export async function fetchWcReviews(params?: Record<string, string | number>) {
-  const qs = params
-    ? "?" +
-      new URLSearchParams(
-        Object.entries(params).map(([k, v]) => [k, String(v)])
-      ).toString()
-    : "";
-  const res = await fetch(`/api/wc/reviews${qs}`);
-  if (!res.ok) throw new Error("Failed to fetch reviews");
-  return res.json();
+export async function fetchWcReviews(_params?: Record<string, string | number>) {
+  return { reviews: [] };
 }
 
-export async function createWcReview(body: {
+export async function createWcReview(_body: {
   product_id: number;
   review: string;
   reviewer: string;
   reviewer_email: string;
   rating: number;
 }) {
-  const res = await fetch(`/api/wc/reviews`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error("Failed to create review");
-  return res.json();
+  throw new Error("WooCommerce reviews відключено");
 }
 
 // WooCommerce products and categories (proxying our API routes)
@@ -2293,8 +2309,9 @@ export const createWcOrder = async (orderData: {
   customer_note?: string;
 }): Promise<unknown> => {
   try {
-    const response = await api.post("/api/wc/orders", orderData);
-    return response.data;
+    throw new Error(
+      "WooCommerce відключено. Оформлення замовлень потребує альтернативного бекенду."
+    );
   } catch (error) {
     throw error;
   }
@@ -2426,6 +2443,24 @@ export const clearCart = async (): Promise<{
   return response.data;
 };
 
+export interface SyncCartItem {
+  product_id: number;
+  variation_id?: number;
+  quantity: number;
+}
+
+export const syncCart = async (items: SyncCartItem[]): Promise<CartResponse> => {
+  const body = {
+    items: items.map((it) => ({
+      productId: String(it.product_id),
+      quantity: it.quantity,
+      ...(it.variation_id ? { variationId: it.variation_id } : {}),
+    })),
+  };
+  const response = await api.post("/api/cart/sync", body);
+  return response.data;
+};
+
 // Wishlist API
 export interface WishlistItemResponse {
   product_id: number;
@@ -2542,4 +2577,14 @@ export const clearWishlist = async (): Promise<{
     }
     throw error;
   }
+};
+
+export const syncWishlist = async (
+  productIds: number[]
+): Promise<WishlistResponse> => {
+  const body = {
+    productIds: productIds.map(String),
+  };
+  const response = await api.post("/api/wishlist/sync", body);
+  return response.data;
 };

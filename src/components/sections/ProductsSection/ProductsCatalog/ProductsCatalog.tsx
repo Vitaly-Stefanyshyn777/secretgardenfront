@@ -148,6 +148,12 @@ const ProductsCatalog = () => {
     } else if (selected.length > 1) {
       params.category = selected;
     }
+    if (
+      localFilters.dynamicFilters &&
+      Object.keys(localFilters.dynamicFilters).length > 0
+    ) {
+      params.categoryFilters = localFilters.dynamicFilters;
+    }
     return params;
   };
 
@@ -155,7 +161,6 @@ const ProductsCatalog = () => {
   const handleReset = () => {
     resetFilters();
 
-    // Зберігаємо поточну категорію з URL
     const categoryParam = searchParams.get("category");
     if (categoryParam) {
       setAppliedWcFilters({ category: categoryParam });
@@ -170,15 +175,23 @@ const ProductsCatalog = () => {
   };
 
   const handleSortPanelApply = () => {
-    setAppliedWcFilters(buildWcFilters(filters));
+    setAppliedWcFilters((prev) => ({
+      ...prev,
+      ...buildWcFilters(filters),
+    }));
   };
 
-  // Кнопки «Застосувати» / «Скинути» показуємо тільки в підкатегоріях (не в основних категоріях)
+  // Кнопки «Застосувати» / «Скинути» показуємо, коли відкриті підкатегорії-фільтри
+  // (категорія з children, напр. CBD масло) або обрана підкатегорія
   const categorySlug = searchParams.get("category");
   const currentCategory = categorySlug
     ? findBySlug(catalogCategories, categorySlug)
     : null;
-  const isSubcategory = !!(currentCategory?.parentId);
+  const showFilterActions =
+    !!(
+      currentCategory &&
+      (currentCategory.children?.length || currentCategory.parentId)
+    );
 
   return (
     <div className={styles.productsCatalog}>
@@ -195,7 +208,7 @@ const ProductsCatalog = () => {
               searchTerm={searchTerm}
               loading={isLoading}
               onApply={handleFilterApply}
-              showFilterActions={isSubcategory}
+              showFilterActions={showFilterActions}
             />
             <div className={styles.catalogRightColumn}>
               <div className={styles.catalogHeaderRow}>

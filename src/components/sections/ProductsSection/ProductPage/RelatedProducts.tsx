@@ -9,9 +9,10 @@ import styles from "./ProductPage.module.css";
 
 const RelatedProducts = memo(function RelatedProducts({
   relatedCategoryProducts,
+  currentProductSlug,
   isMobile,
 }: RelatedProductsProps) {
-  const baseItemsPerView = 5;
+  const baseItemsPerView = 6;
   const [slideIdx, setSlideIdx] = useState(0);
   const itemsPerView = isMobile ? 4 : baseItemsPerView;
 
@@ -21,7 +22,12 @@ const RelatedProducts = memo(function RelatedProducts({
       return [];
     }
 
-    const mapped = relatedCategoryProducts.slice(0, 12).map((p: any) => {
+    const filtered = relatedCategoryProducts.filter(
+      (p: any) =>
+        (p.slug || "").toLowerCase() !==
+        (currentProductSlug || "").toLowerCase(),
+    );
+    const mapped = filtered.slice(0, 12).map((p: any) => {
       const img = p.image || p.images?.[0]?.src;
       const ratingAvg = p.ratingAverage ?? p.averageRating;
       const ratingCnt = p.ratingCount ?? p.rating_count ?? 0;
@@ -33,24 +39,23 @@ const RelatedProducts = memo(function RelatedProducts({
         variations: p.variations,
         price: Number(p.price) || 0,
         originalPrice: Number(p.regularPrice) || undefined,
-        discount:
-          p.onSale
-            ? Math.max(
-                0,
-                Math.round(
-                  ((Number(p.regularPrice) - Number(p.price)) /
-                    Number(p.regularPrice)) *
-                    100
-                )
-              )
-            : 0,
+        discount: p.onSale
+          ? Math.max(
+              0,
+              Math.round(
+                ((Number(p.regularPrice) - Number(p.price)) /
+                  Number(p.regularPrice)) *
+                  100,
+              ),
+            )
+          : 0,
         isNew: !!p.isNew,
         isHit: !!p.isHit,
         image: normalizeImageUrl(img),
         category: p.categories?.[0]?.name || p.label || "",
         stockStatus: p.stockStatus || "instock",
         wcProduct:
-          (ratingAvg != null || ratingCnt > 0)
+          ratingAvg != null || ratingCnt > 0
             ? {
                 average_rating: String(ratingAvg ?? 0),
                 rating_count: Number(ratingCnt) || 0,
@@ -59,7 +64,7 @@ const RelatedProducts = memo(function RelatedProducts({
       };
     });
     return mapped;
-  }, [relatedCategoryProducts]);
+  }, [relatedCategoryProducts, currentProductSlug]);
 
   // Показуємо 5 карток, але перелистуємо по 1
   const totalSlides = useMemo(() => {
@@ -67,7 +72,7 @@ const RelatedProducts = memo(function RelatedProducts({
       1,
       mappedRelated.length > itemsPerView
         ? mappedRelated.length - itemsPerView + 1
-        : 1
+        : 1,
     );
   }, [mappedRelated.length, itemsPerView]);
 
@@ -84,7 +89,6 @@ const RelatedProducts = memo(function RelatedProducts({
   return (
     <div className={styles.relatedProducts}>
       <div className={styles.relatedProductsHeader}>
-        <p className={styles.relatedProductsSubtitle}>Інвентар</p>
         <h2>Вам може сподобатись</h2>
       </div>
       <div className={styles.relatedGrid}>
@@ -109,7 +113,7 @@ const RelatedProducts = memo(function RelatedProducts({
           />
         ))}
       </div>
-      {mappedRelated.length > 5 && (
+      {mappedRelated.length > 6 && (
         <SliderNav
           activeIndex={slideIdx}
           dots={totalSlides}

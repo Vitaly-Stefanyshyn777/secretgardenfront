@@ -10,7 +10,7 @@ interface ResetFilterButtonProps {
 export const ResetFilterButton: React.FC<ResetFilterButtonProps> = ({
   onClick,
   disabled = false,
-  children = "Скинути всі налаштування",
+  children = "Скинути Фільтрування",
 }) => {
   return (
     <button
@@ -22,4 +22,3 @@ export const ResetFilterButton: React.FC<ResetFilterButtonProps> = ({
     </button>
   );
 };
-

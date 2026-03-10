@@ -101,7 +101,7 @@ export default function OrderProducts({
             try {
               // Спочатку намагаємося отримати як WooCommerce продукт
               const wcResponse = await fetch(
-                `/api/wc/products/${item.product_id}`
+                `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${item.product_id}`
               );
               if (wcResponse.ok) {
                 const product = await wcResponse.json();

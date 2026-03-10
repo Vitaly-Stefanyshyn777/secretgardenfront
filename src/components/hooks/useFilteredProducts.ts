@@ -3,9 +3,11 @@ import { fetchFilteredProducts } from "@/lib/bfbApi";
 
 export interface ProductFilters {
   category?: string | string[];
+  /** Динамічні фільтри категорії: { manufacturer: ['raw','phoenix'], type: ['organic'] } */
+  categoryFilters?: Record<string, string[]>;
   attribute?: string | string[];
   attribute_term?: string | string[];
-  sizes?: string[]; // Розміри для фільтрації по варіаціях
+  sizes?: string[];
   min_price?: number;
   max_price?: number;
   on_sale?: boolean;
@@ -45,8 +47,11 @@ export function useFilteredProducts(filters: ProductFilters = {}) {
 }
 
 // Спеціалізовані хуки для різних типів фільтрації
-export function useProductsByCategory(categorySlug: string) {
-  return useFilteredProducts({ category: categorySlug });
+export function useProductsByCategory(
+  categorySlug: string,
+  options?: { per_page?: number }
+) {
+  return useFilteredProducts({ category: categorySlug, ...options });
 }
 
 export function useProductsByPriceRange(minPrice: number, maxPrice: number) {

@@ -61,8 +61,8 @@ const ProductsShowcaseSkeleton = () => {
         {/* Skeleton для карток */}
         <div className={s.coursesSlider}>
           <div className={s.grid}>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className={i === 5 ? `${s.slide} ${s.slideDesktopOnly}` : s.slide}>
+{[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className={i === 6 ? `${s.slide} ${s.slideDesktopOnly}` : s.slide}>
                 <CardSkeleton />
               </div>
             ))}

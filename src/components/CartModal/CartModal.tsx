@@ -98,6 +98,26 @@ export default function CartModal() {
 
   useScrollLock(isOpen);
 
+  // Синхронізація при закритті сторінки/таба (якщо є незбережені зміни)
+  useEffect(() => {
+    const trySync = () => {
+      const s = useCartStore.getState();
+      if (s.pendingCartSync && s.currentUserId && token) {
+        s.syncCartToApi();
+      }
+    };
+    const onBeforeUnload = () => trySync();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") trySync();
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [token]);
+
   useEffect(() => {
     if (!isOpen) return;
     setShowSkeleton(true);

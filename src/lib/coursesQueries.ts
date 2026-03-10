@@ -356,19 +356,18 @@ export const fetchCourses = async (filters: CourseFilters = {}) => {
       params.append("search", filters.search);
     }
 
-    // Отримуємо курси з WooCommerce API - фільтруємо тільки курси (категорія 72)
-    const apiUrl = `/api/wc/v3/products?${params.toString()}`;
+    const { fetchFilteredProducts } = await import("./bfbApi");
+    const wcCourses = (await fetchFilteredProducts({
+      category: "72",
+      per_page: parseInt(params.get("per_page") ?? "100", 10),
+      search: filters.search,
+      min_price: filters.min_price,
+      max_price: filters.max_price,
+    })) as unknown[];
 
-    const wcResponse = await fetch(apiUrl);
-
-    if (!wcResponse.ok) {
-      throw new Error(
-        `Failed to fetch courses from WooCommerce: ${wcResponse.status}`
-      );
-    }
-    const wcCourses = await wcResponse.json();
-
-    const mappedCourses = wcCourses.map(mapWcCourseToCourse);
+    const mappedCourses = Array.isArray(wcCourses)
+      ? wcCourses.map(mapWcCourseToCourse)
+      : [];
 
     return mappedCourses;
   } catch (error) {

@@ -3,7 +3,7 @@ import React from "react";
 import {
   Favorite2Icon,
   FavoriteBlacIcon,
-  BasketHeader,
+  CartPrefixIcon,
   MinuswIcon,
   PlusIcon,
   CheckMarkIcon,
@@ -56,10 +56,7 @@ export default function ProductActions({
 
           {isBoardProduct && !isLoggedIn ? (
             <div className={styles.registerCallout}>
-              <div
-                className={styles.registerBlock}
-                onClick={onRegisterOpen}
-              >
+              <div className={styles.registerBlock} onClick={onRegisterOpen}>
                 <p className={styles.registerText}>
                   Зареєструйтесь, щоб придбати борд
                 </p>
@@ -112,10 +109,12 @@ export default function ProductActions({
                   }}
                   disabled={isControlsDisabled || isAddingToCart}
                 >
-                  <BasketHeader />
                   {isAddingToCart
                     ? `Додано в кошик ${cartQuantity}`
                     : "Додати в кошик"}
+                  <span className={styles.addToCartBtnIcon}>
+                    <CartPrefixIcon />
+                  </span>
                 </button>
                 <button
                   className={`${styles.favoriteBtn} ${
@@ -137,7 +136,7 @@ export default function ProductActions({
       )}
 
       {/* Десктопні дії */}
-      {!isMobile && (
+      {/* {!isMobile && (
         <div className={styles.detailsRow}>
           <div className={styles.availability}>
             <span className={styles.checkmark}>
@@ -150,7 +149,7 @@ export default function ProductActions({
             {product?.sku || product?.id || ""}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Загальні дії для десктопу */}
       {!isMobile && (
@@ -196,10 +195,12 @@ export default function ProductActions({
               }}
               disabled={isControlsDisabled || isAddingToCart}
             >
-              <BasketHeader />
               {isAddingToCart
                 ? `Додано в кошик ${cartQuantity}`
                 : "Додати в кошик"}
+              <span className={styles.addToCartBtnIcon}>
+                <CartPrefixIcon />
+              </span>
             </button>
             <button
               className={`${styles.favoriteBtn} ${

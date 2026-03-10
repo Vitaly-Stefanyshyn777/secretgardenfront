@@ -91,7 +91,7 @@ const ProductsShowcase: React.FC = () => {
   // Дані вже відфільтровані на етапі запиту; можна напряму відображати
   const displayedCourses = list.length > 0 ? list : fallbackProducts;
 
-  const hasSlider = displayedCourses.length > 5;
+  const hasSlider = displayedCourses.length > 6;
 
   const useSlider = hasSlider && !isMobile;
 
@@ -169,7 +169,10 @@ const ProductsShowcase: React.FC = () => {
     if (list.length > 0) return;
     const fetchFallback = async () => {
       try {
-        const res = await fetch("/api/wc/v3/products?category=30&per_page=20");
+        const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+        const res = await fetch(
+          `${base}/api/catalog/products?categorySlug=30&limit=20`
+        );
         if (!res.ok) return;
         const data = await res.json();
         // нормалізуємо під ProductCard очікування
@@ -313,7 +316,7 @@ const ProductsShowcase: React.FC = () => {
               ref={swiperRef}
               modules={[Navigation, Pagination]}
               spaceBetween={16}
-              slidesPerView={5}
+              slidesPerView={6}
               slidesPerGroup={1}
               loop={true}
               allowSlideNext={true}
@@ -329,7 +332,7 @@ const ProductsShowcase: React.FC = () => {
                   spaceBetween: 16,
                 },
                 1024: {
-                  slidesPerView: 5,
+                  slidesPerView: 6,
                   spaceBetween: 16,
                 },
               }}

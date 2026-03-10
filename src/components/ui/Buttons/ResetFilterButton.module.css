@@ -1,17 +1,19 @@
 .resetButton {
-  width: 100%;
-  padding: 16px 24px;
-  background: var(--white);
-  color: var(--violet);
-  border: 2px solid var(--violet);
-  border-radius: 16px;
-  font-family: var(--font-family);
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 100%;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
-  height: 66px;
+  border: 1px solid var(--zoloto);
+  min-width: 9.6875vw;
+  color: var(--zoloto);
+  font-family: var(--third-family);
+  background: none;
+  border-radius: 0.20833vw;
+  padding: 0.72917vw 1.04167vw;
+  font-size: 0.83333vw;
+  font-weight: 500;
+  line-height: 150%;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
 }
 
 .resetButton:hover {

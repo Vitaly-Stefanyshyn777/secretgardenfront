@@ -93,7 +93,7 @@ export function ProductsShowcase({
           categories.map(async (cat) => {
             try {
               const res = await fetch(
-                `/api/wc/v3/products?category=${cat.id}&per_page=1&orderby=date&order=desc`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products?categorySlug=${cat.id}&limit=1`,
                 { signal: controller.signal }
               );
               if (!res.ok) return [cat.id, false] as const;

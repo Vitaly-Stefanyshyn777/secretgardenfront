@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./ProductsFilter.module.css";
 import { RangeInput } from "@/components/ui/RangeInput/RangeInput";
 import { CertificationFilter } from "../filters/CertificationFilter/CertificationFilter";
+import { CategoryFiltersCheckboxes } from "../filters/CategoryFiltersCheckboxes/CategoryFiltersCheckboxes";
 import ButtonFilter from "@/components/ui/ButtonFilter/ButtonFilter";
 import { useMemo } from "react";
 import { type ProductFilters } from "@/components/hooks/useFilteredProducts";
@@ -13,6 +14,7 @@ interface FilterState {
   colors: string[];
   sizes: string[];
   certification: string[];
+  dynamicFilters: Record<string, string[]>;
 }
 
 interface Product {
@@ -78,8 +80,10 @@ const ProductsFilter = ({
     if (selected.length === 1) {
       params.category = selected[0];
     } else if (selected.length > 1) {
-      // Декілька підкатегорій — відправляємо масив (fetchFilteredProducts замержить результати)
       params.category = selected;
+    }
+    if (filters.dynamicFilters && Object.keys(filters.dynamicFilters).length > 0) {
+      params.categoryFilters = filters.dynamicFilters;
     }
     return params as Record<string, unknown>;
   }, [filters]);
@@ -101,6 +105,11 @@ const ProductsFilter = ({
         <CertificationFilter
           value={filters.certification}
           onChange={(value) => handleFilterChange("certification", value)}
+        />
+
+        <CategoryFiltersCheckboxes
+          value={filters.dynamicFilters ?? {}}
+          onChange={(value) => handleFilterChange("dynamicFilters", value)}
         />
       </div>
       {showFilterActions && (

@@ -6,11 +6,12 @@ interface ProductFilters {
   priceMax: number;
   colors: string[];
   sizes: string[];
-  // Вибрані підкатегорії (slug). Може бути декілька.
   certification: string[];
   workoutTypes: string[];
   category: string;
   search: string;
+  /** Динамічні фільтри підкатегорії: { manufacturer: ['raw','phoenix'], type: ['organic'] } */
+  dynamicFilters: Record<string, string[]>;
 }
 
 export const useProducts = () => {
@@ -23,6 +24,7 @@ export const useProducts = () => {
     workoutTypes: [],
     category: "",
     search: "",
+    dynamicFilters: {},
   });
 
   const updateFilters = (newFilters: Partial<ProductFilters>) => {
@@ -39,6 +41,7 @@ export const useProducts = () => {
       workoutTypes: [],
       category: "",
       search: "",
+      dynamicFilters: {},
     });
   };
 

@@ -4,6 +4,7 @@ import ProductCard from "@/components/sections/ProductsSection/ProductCard/Produ
 import ModalCloseButton from "@/components/ui/ModalCloseButton";
 import SliderNav from "@/components/ui/SliderNav/SliderNavActions";
 import { normalizeImageUrl } from "@/lib/imageUtils";
+import { useAuthStore } from "@/store/auth";
 import { useCartStore } from "@/store/cart";
 import { useFavoriteStore } from "@/store/favorites";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -48,6 +49,7 @@ function extractProductSlug(slug?: string): string | null {
 export default function FavoritesModal() {
   const isOpen = useFavoriteStore((st) => st.isOpen);
   const close = useFavoriteStore((st) => st.close);
+  const token = useAuthStore((st) => st.token);
   const remove = useFavoriteStore((st) => st.remove);
   const removeAll = useFavoriteStore((st) => st.removeAll);
   const clear = useFavoriteStore((st) => st.clear);
@@ -81,6 +83,25 @@ export default function FavoritesModal() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  useEffect(() => {
+    const trySync = () => {
+      const s = useFavoriteStore.getState();
+      if (s.pendingFavoritesSync && s.currentUserId && token) {
+        s.syncFavoritesToApi();
+      }
+    };
+    const onBeforeUnload = () => trySync();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") trySync();
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [token]);
+
   const [showSkeleton, setShowSkeleton] = useState(false);
 
   useEffect(() => {
@@ -90,113 +111,52 @@ export default function FavoritesModal() {
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  // Підтягуємо з WC meta_data (proce_sell_registry) + regular_price для коректного розрахунку ціни у FavoritesModal
+  // Підтягуємо meta та ціни з catalog API
   useEffect(() => {
     if (!isOpen) return;
     if (items.length === 0) return;
 
     let cancelled = false;
+    const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
     const run = async () => {
-      // кеш slug -> product (id/meta/regular) щоб не робити зайві запити
-      const productCache = new Map<
-        string,
-        { id: number; meta_data?: Array<{ key: string; value: unknown }>; regular_price?: unknown; price?: unknown; sale_price?: unknown }
-      >();
+      const productCache = new Map<string, { price?: string; characteristics?: Array<{ name: string; value: string }> }>();
 
       const tasks = items.map(async (it) => {
-        // Курси не обробляємо через WC
         if (it.id.startsWith("course-")) return;
 
-        // якщо вже є metaData+originalPrice — не чіпаємо
         const already =
           enrichedByKey[it.id] ||
           (it.metaData && it.metaData.length > 0 && it.originalPrice);
         if (already) return;
 
-        const slug = extractProductSlug(it.slug);
-        let parentProduct: any | null = null;
-        let parentId: number | null = null;
+        const slug = extractProductSlug(it.slug) ?? it.id;
+        if (!slug) return;
 
         try {
-          if (slug) {
-            if (productCache.has(slug)) {
-              const cached = productCache.get(slug)!;
-              parentId = cached.id;
-              parentProduct = cached;
-            } else {
-              const res = await fetch(
-                `/api/wc/v3/products?slug=${encodeURIComponent(slug)}`
-              );
-              const arr = res.ok ? await res.json() : null;
-              parentProduct = Array.isArray(arr) ? arr[0] : null;
-              parentId =
-                parentProduct && typeof parentProduct.id === "number"
-                  ? parentProduct.id
-                  : null;
-              if (parentId) {
-                productCache.set(slug, parentProduct);
-              }
-            }
-          }
-
-          // fallback: якщо slug немає/не спрацювало — пробуємо як числовий id
-          if (!parentId) {
-            const numeric = it.id.match(/\d+/)?.[0];
-            parentId = numeric ? parseInt(numeric, 10) : null;
-          }
-
-          // якщо досі нема parentId — нічого не робимо
-          if (!parentId) return;
-
-          if (!parentProduct || !parentProduct.meta_data) {
+          let cached = productCache.get(slug);
+          if (!cached) {
             const res = await fetch(
-              `/api/wc/v3/products/${encodeURIComponent(String(parentId))}`
+              `${base}/api/catalog/products/${encodeURIComponent(slug)}`
             );
-            parentProduct = res.ok ? await res.json() : parentProduct;
+            const raw = res.ok ? await res.json() : null;
+            const d = raw?.data ?? raw;
+            cached = {
+              price: d?.price,
+              characteristics: d?.characteristics,
+            };
+            if (cached) productCache.set(slug, cached);
           }
+          if (!cached || cancelled) return;
 
           const metaData: Array<{ key: string; value: string }> =
-            Array.isArray(parentProduct?.meta_data) && parentProduct.meta_data.length > 0
-              ? parentProduct.meta_data.map(
-                  (m: { key: unknown; value: unknown }) => ({
-                    key: String(m.key),
-                    value:
-                      m.value === null || m.value === undefined
-                        ? ""
-                        : String(m.value),
-                  })
-                )
-              : [];
+            (cached.characteristics ?? []).map((c: { name: string; value: string }) => ({
+              key: c.name,
+              value: String(c.value ?? ""),
+            }));
 
-          let price: number | undefined;
-          let originalPrice: number | undefined;
-
-          // якщо це варіація — беремо ціну/regular_price з варіації
-          if (it.variationId && it.variationId > 0) {
-            const vRes = await fetch(
-              `/api/wc/v3/products/${encodeURIComponent(
-                String(parentId)
-              )}/variations/${encodeURIComponent(String(it.variationId))}`
-            );
-            const variation = vRes.ok ? await vRes.json() : null;
-            const vPrice =
-              toNumber(variation?.price) ??
-              toNumber(variation?.sale_price) ??
-              toNumber(variation?.regular_price);
-            const vRegular = toNumber(variation?.regular_price);
-            price = vPrice;
-            originalPrice = vRegular;
-          } else {
-            // simple — беремо з продукту
-            const pPrice =
-              toNumber(parentProduct?.price) ??
-              toNumber(parentProduct?.sale_price) ??
-              toNumber(parentProduct?.regular_price);
-            const pRegular = toNumber(parentProduct?.regular_price);
-            price = pPrice;
-            originalPrice = pRegular;
-          }
+          const price = toNumber(cached.price);
+          const originalPrice = price;
 
           if (cancelled) return;
 

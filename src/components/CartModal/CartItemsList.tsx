@@ -14,8 +14,6 @@ import {
   getPriceSellRegistry,
   normalizePriceParams,
 } from "@/lib/priceUtils";
-import { getProductPriceAsync } from "@/lib/useProductPrices";
-import { fetchProductVariation, getProductById } from "@/lib/products";
 import s from "./CartModal.module.css";
 
 interface CartItemsListProps {
@@ -30,8 +28,6 @@ function CartItemRow({ item }: CartItemRowProps) {
   const increment = useCartStore((st) => st.increment);
   const decrement = useCartStore((st) => st.decrement);
   const removeItem = useCartStore((st) => st.removeItem);
-  const setItemMetaDataInStore = useCartStore((st) => st.setItemMetaData);
-  const setItemWcPrices = useCartStore((st) => st.setItemWcPrices);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const token = useAuthStore((state) => state.token);
   const effectiveIsLoggedIn =
@@ -43,28 +39,9 @@ function CartItemRow({ item }: CartItemRowProps) {
 
   const imageUrl = normalizeImageUrl(item.image);
   const [imageError, setImageError] = useState(false);
-  const [correctedPrices, setCorrectedPrices] = useState<{
-    price: number;
-    originalPrice?: number;
-  } | null>(null);
-  const [itemMetaData, setItemMetaData] = useState<
-    Array<{ key: string; value: string }> | undefined
-  >(item.metaData);
-  const [wcBasePrice, setWcBasePrice] = useState<number | undefined>(
-    item.wcPrice,
-  );
-  const [wcBaseRegularPrice, setWcBaseRegularPrice] = useState<
-    number | undefined
-  >(item.wcRegularPrice);
-  const rowRef = useRef<HTMLDivElement | null>(null);
-
-  const parseWcPrice = (v: unknown): number => {
-    if (v === null || v === undefined) return 0;
-    const s = String(v);
-    const cleaned = s.replace(/[₴$€£\s,]/g, "").replace(",", ".");
-    const num = parseFloat(cleaned);
-    return Number.isFinite(num) ? num : 0;
-  };
+  const itemMetaData = item.metaData;
+  const wcBasePrice = item.wcPrice ?? item.price;
+  const wcBaseRegularPrice = item.wcRegularPrice ?? item.regularPrice ?? item.originalPrice;
 
   const handleImageError = () => {
     setImageError(true);
@@ -73,157 +50,6 @@ function CartItemRow({ item }: CartItemRowProps) {
   useEffect(() => {
     setImageError(false);
   }, [imageUrl]);
-
-  // Отримуємо metaData з API, якщо її немає в товарі
-  useEffect(() => {
-    const fetchMetaData = async () => {
-      // Якщо metaData вже є, не робимо запит
-      if (itemMetaData && itemMetaData.length > 0) {
-        return;
-      }
-
-      try {
-        // Отримуємо ПРОДУКТ (parent), бо `proce_sell_registry` зазвичай на продукті, а не на варіації
-        // В кошику `item.id` у нас зберігається ключ елемента (часто це productId),
-        // тому спочатку пробуємо ним.
-        const productId = item.productId ? String(item.productId) : item.id;
-
-        // Виключаємо курси
-        if (productId.startsWith("course-")) {
-          return;
-        }
-
-        // ВАЖЛИВО: /api/wc/products/{id} часто повертає meta_data: []
-        // На product page meta приходить через WC v3. Тут робимо так само.
-        const response = await fetch(
-          `/api/wc/v3/products/${encodeURIComponent(productId)}`,
-        );
-        const product = response.ok ? await response.json() : null;
-
-        if (product?.meta_data && product.meta_data.length > 0) {
-          // Конвертуємо meta_data в формат metaData
-          const metaData: Array<{ key: string; value: string }> =
-            product.meta_data.map((meta: { key: string; value: unknown }) => ({
-              key: String(meta.key),
-              value:
-                meta.value === null || meta.value === undefined
-                  ? ""
-                  : String(meta.value),
-            }));
-          setItemMetaData(metaData);
-          // Важливо: зберігаємо в store, щоб CartModal (summary) теж перерахувався
-          setItemMetaDataInStore(item.id, metaData);
-        } else {
-        }
-      } catch (error) {
-        // При помилці не оновлюємо metaData
-      }
-    };
-
-    // Перевіряємо тільки якщо товар може бути WooCommerce продуктом
-    if (/\d/.test(item.id) && !item.id.startsWith("course-")) {
-      fetchMetaData();
-    }
-  }, [item.id, item.productId, itemMetaData, setItemMetaDataInStore]);
-
-  // Узгоджуємо логіку з ProductPage: беремо price/regular_price з WooCommerce продукту/варіації
-  useEffect(() => {
-    const fetchWcPrices = async () => {
-      if (wcBasePrice !== undefined && wcBaseRegularPrice !== undefined) return;
-
-      const parentId =
-        item.productId ?? (/^\d+$/.test(item.id) ? Number(item.id) : null);
-      if (!parentId) return;
-
-      try {
-        if (item.variationId && item.variationId > 0) {
-          const variation = await fetchProductVariation(
-            item.variationId,
-            parentId,
-          );
-          const vPrice = parseWcPrice(
-            variation?.price ||
-              variation?.sale_price ||
-              variation?.regular_price,
-          );
-          const vRegular = parseWcPrice(variation?.regular_price);
-          const nextWcPrice = vPrice || 0;
-          const nextWcRegular = vRegular || 0;
-          setWcBasePrice(nextWcPrice);
-          setWcBaseRegularPrice(nextWcRegular);
-          setItemWcPrices(item.id, {
-            wcPrice: nextWcPrice,
-            wcRegularPrice: nextWcRegular,
-          });
-          return;
-        }
-
-        // Як і для meta: беремо товар через WC v3, щоб дані були консистентні з product page
-        const response = await fetch(`/api/wc/v3/products/${parentId}`);
-        const product = response.ok ? await response.json() : null;
-        const pPrice = parseWcPrice(
-          product?.price || product?.sale_price || product?.regular_price,
-        );
-        const pRegular = parseWcPrice(product?.regular_price);
-        const nextWcPrice = pPrice || 0;
-        const nextWcRegular = pRegular || 0;
-        setWcBasePrice(nextWcPrice);
-        setWcBaseRegularPrice(nextWcRegular);
-        setItemWcPrices(item.id, {
-          wcPrice: nextWcPrice,
-          wcRegularPrice: nextWcRegular,
-        });
-      } catch {
-        // ignore
-      }
-    };
-
-    if (!item.id.startsWith("course-")) {
-      fetchWcPrices();
-    }
-  }, [
-    item.id,
-    item.productId,
-    item.variationId,
-    wcBasePrice,
-    wcBaseRegularPrice,
-    setItemWcPrices,
-  ]);
-
-  // Перевіряємо та оновлюємо ціни для варіативних товарів
-  useEffect(() => {
-    const checkAndUpdatePrices = async () => {
-      try {
-        // Отримуємо свіжі ціни з API
-        const freshPrices = await getProductPriceAsync(item.id);
-
-        // Якщо отримали некоректні ціни (0), не оновлюємо
-        if (freshPrices.currentPrice === 0) {
-          return;
-        }
-
-        // Якщо ціни відрізняються від тих, що в кошику, оновлюємо
-        if (
-          freshPrices.currentPrice !== item.price ||
-          freshPrices.originalPrice !== item.originalPrice
-        ) {
-          // Зберігаємо виправлені ціни для поточного рендерингу
-          setCorrectedPrices({
-            price: freshPrices.currentPrice,
-            originalPrice: freshPrices.originalPrice,
-          });
-        }
-      } catch (error) {
-        // При помилці не перезаписуємо ціни - залишаємо оригінальні з кошика
-      }
-    };
-
-    // Перевіряємо тільки якщо товар може бути варіативним WooCommerce продуктом
-    // Виключаємо курси (course-XXX) та інші не-WooCommerce товари
-    if (/\d/.test(item.id) && !item.id.startsWith("course-")) {
-      checkAndUpdatePrices();
-    }
-  }, [item.id, item.price, item.originalPrice]);
 
   const baseImageUrl = imageUrl || "/placeholder.svg";
   const finalImageUrl = imageError ? "/placeholder.svg" : baseImageUrl;
@@ -261,15 +87,6 @@ function CartItemRow({ item }: CartItemRowProps) {
   // показуємо стару ціну (це може статися, якщо regularPrice не був переданий)
   const shouldDisplayOldPrice =
     shouldShowOldPrice || (originalPrice > finalPrice && originalPrice > 0);
-
-  useEffect(() => {
-    const el = rowRef.current;
-    if (!el) return;
-    const oldEl = el.querySelector(`.${s.oldPrice}`) as HTMLElement | null;
-    const curEl = el.querySelector(
-      `.${s.currentPriceValue}`,
-    ) as HTMLElement | null;
-  }, [item.id, shouldDisplayOldPrice, finalPrice, originalPrice]);
 
   return (
     <div className={s.item} ref={rowRef}>

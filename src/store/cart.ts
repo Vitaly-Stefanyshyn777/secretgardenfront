@@ -2,10 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   getCart,
-  addToCart as addToCartApi,
-  updateCartItem as updateCartItemApi,
-  removeCartItem as removeCartItemApi,
-  clearCart as clearCartApi,
+  syncCart as syncCartApi,
   type CartItemResponse,
 } from "@/lib/bfbApi";
 import { useAuthStore } from "./auth";
@@ -14,9 +11,6 @@ const getUserCartKey = (userId?: string | null) =>
   userId ? `bfb-cart-${userId}` : "bfb-cart";
 
 const productImageCache = new Map<number, string>();
-const qtyDebounceTimers = new Map<string, ReturnType<typeof setTimeout>>();
-const pendingQtyByCartKey = new Map<string, number>();
-const QTY_DEBOUNCE_MS = 450;
 
 const isUsableImage = (url?: string) => {
   const u = (url || "").trim();
@@ -87,17 +81,6 @@ async function hydrateCartItemImages(
       if (cached) cartItem.product_image = cached;
     }
   }
-}
-
-async function flushPendingQty(cartItemKey: string) {
-  const qty = pendingQtyByCartKey.get(cartItemKey);
-  pendingQtyByCartKey.delete(cartItemKey);
-  if (qty === undefined) return null;
-
-  if (qty <= 0) {
-    return await removeCartItemApi(cartItemKey);
-  }
-  return await updateCartItemApi(cartItemKey, qty);
 }
 
 const loadUserCart = (userId?: string | null): Record<string, CartItem> => {
@@ -182,9 +165,11 @@ interface CartState {
   currentUserId: string | null;
   isOpen: boolean;
   isLoading: boolean;
+  pendingCartSync: boolean;
   open: () => void;
   close: () => void;
   toggle: () => void;
+  syncCartToApi: () => Promise<void>;
   addItem: (item: AddItemData, qty?: number) => Promise<void>;
   removeItem: (id: string) => Promise<void>;
   increment: (id: string, step?: number) => Promise<void>;
@@ -282,9 +267,50 @@ export const useCartStore = create<CartState>()(
       currentUserId: null,
       isOpen: false,
       isLoading: false,
+      pendingCartSync: false,
       open: () => set({ isOpen: true }),
-      close: () => set({ isOpen: false }),
+      close: () => {
+        const state = get();
+        if (state.pendingCartSync && state.currentUserId && useAuthStore.getState().token) {
+          get().syncCartToApi();
+        }
+        set({ isOpen: false });
+      },
       toggle: () => set((s) => ({ isOpen: !s.isOpen })),
+      syncCartToApi: async () => {
+        const state = get();
+        const { token } = useAuthStore.getState();
+        if (!state.currentUserId || !token) return;
+        const items = Object.values(state.items);
+        const syncItems = items.length === 0
+          ? []
+          : items
+              .filter((it) => it.productId && it.quantity > 0)
+              .map((it) => ({
+                product_id: it.productId!,
+                variation_id: it.variationId ?? 0,
+                quantity: it.quantity,
+              }));
+        try {
+          set({ isLoading: true, pendingCartSync: false });
+          const cartData = await syncCartApi(syncItems);
+          const currentItems = get().items;
+          const itemsMap: Record<string, CartItem> = {};
+          await hydrateCartItemImages(cartData.items, currentItems);
+          cartData.items.forEach((item) => {
+            const itemId =
+              item.variation_id && item.variation_id > 0
+                ? item.variation_id.toString()
+                : item.product_id.toString();
+            const existing = currentItems[itemId];
+            const cartItem = mapCartItemResponseToCartItem(item, existing);
+            itemsMap[cartItem.id] = cartItem;
+          });
+          set({ items: itemsMap, isLoading: false });
+        } catch {
+          set({ pendingCartSync: true, isLoading: false });
+        }
+      },
       setItemMetaData: (id, metaData) => {
         const state = get();
         const existing = state.items[id];
@@ -492,108 +518,10 @@ export const useCartStore = create<CartState>()(
         };
 
         if (isLoggedIn) {
-          // Негайне оновлення UI
-          set({ items: { ...state.items, [item.id]: newItem } });
-
-          // API запит в бекграунді
-          (async () => {
-            try {
-              set({ isLoading: true });
-
-
-              let result;
-              if (existing?.cart_item_key) {
-                result = await updateCartItemApi(
-                  existing.cart_item_key,
-                  nextQty
-                );
-              } else {
-                result = await addToCartApi(
-                  productId,
-                  nextQty,
-                  item.variationId || 0
-                );
-              }
-
-              if (result?.cart?.items) {
-                const currentItems = get().items;
-                const updatedItems = { ...currentItems };
-
-                result.cart.items.forEach((apiItem: CartItemResponse) => {
-                  const backendItemId = apiItem.variation_id && apiItem.variation_id > 0
-                    ? apiItem.variation_id.toString()
-                    : apiItem.product_id.toString();
-
-                  // Спочатку шукаємо за нашим item.id (який ми передали)
-                  let existingItem = updatedItems[item.id];
-                  
-                  // Якщо не знайшли за item.id, шукаємо за ID з бекенду
-                  if (!existingItem) {
-                    existingItem = updatedItems[backendItemId];
-                    // Якщо знайшли за backendItemId, видаляємо старий запис і використовуємо item.id
-                    if (existingItem && backendItemId !== item.id) {
-                      delete updatedItems[backendItemId];
-                    }
-                  }
-                  
-                  // Якщо все ще не знайшли, шукаємо за variationId
-                  if (!existingItem && item.variationId && apiItem.variation_id === item.variationId) {
-                    const foundByVariation = Object.values(updatedItems).find(
-                      (cartItem) => cartItem.variationId === item.variationId
-                    );
-                    if (foundByVariation) {
-                      existingItem = foundByVariation;
-                      delete updatedItems[foundByVariation.id];
-                    }
-                  }
-
-                  // Якщо знайшли існуючий товар, оновлюємо його, зберігаючи item.id
-                  if (existingItem) {
-                    updatedItems[item.id] = {
-                      ...existingItem,
-                      id: item.id, // Зберігаємо оригінальний ID
-                      regularPrice: parsePrice(apiItem.regular_price) ?? existingItem.regularPrice,
-                      salePrice: parsePrice(apiItem.sale_price) ?? existingItem.salePrice,
-                      cart_item_key: apiItem.cart_item_key || existingItem.cart_item_key,
-                      variationId: apiItem.variation_id && apiItem.variation_id > 0 ? apiItem.variation_id : existingItem.variationId,
-                    };
-                  } else {
-                    // Якщо не знайшли, створюємо новий товар з item.id
-                    const mappedItem = mapCartItemResponseToCartItem(apiItem, newItem);
-                    // Використовуємо item.id замість mappedItem.id, щоб зберегти консистентність
-                    updatedItems[item.id] = {
-                      ...mappedItem,
-                      id: item.id,
-                    };
-                  }
-                });
-
-                set({ items: updatedItems });
-              }
-
-              set({ isLoading: false });
-            } catch (error: any) {
-              // Розрізняємо типи помилок
-              const isConflict =
-                error?.response?.status === 409 ||
-                error?.status === 409 ||
-                error?.message?.includes("409") ||
-                error?.message?.includes("already");
-
-              if (!isConflict) {
-                // Інші помилки - видаляємо доданий товар назад
-                const currentState = get();
-                const restored = { ...currentState.items };
-                delete restored[item.id];
-                set({ items: restored, isLoading: false });
-                if (state.currentUserId) {
-                  saveUserCart(state.currentUserId, restored);
-                }
-              } else {
-                set({ isLoading: false });
-              }
-            }
-          })();
+          set({
+            items: { ...state.items, [item.id]: newItem },
+            pendingCartSync: true,
+          });
         } else {
           const newItems = { ...state.items, [item.id]: newItem };
           if (state.currentUserId) {
@@ -621,50 +549,13 @@ export const useCartStore = create<CartState>()(
 
         if (!item) return; // Товар не знайдено
 
-        if (item.cart_item_key) {
-          const t = qtyDebounceTimers.get(item.cart_item_key);
-          if (t) clearTimeout(t);
-          qtyDebounceTimers.delete(item.cart_item_key);
-          pendingQtyByCartKey.delete(item.cart_item_key);
-        }
-
-        // НЕГАЙНЕ оновлення стану для кращого UX
         const next = { ...state.items };
         delete next[actualKey];
         set({ items: next });
 
-        if (state.currentUserId && token && item?.cart_item_key) {
-          // API запит в бекграунді - як в FavoritesModal, тільки для перевірки успішності
-          (async () => {
-            try {
-              set({ isLoading: true });
-              await removeCartItemApi(item.cart_item_key!);
-              set({ isLoading: false });
-            } catch (error: any) {
-              // Розрізняємо типи помилок
-              const isNotFound =
-                error?.response?.status === 404 ||
-                error?.status === 404 ||
-                error?.message?.includes("404") ||
-                error?.message?.includes("Not Found");
-
-              if (isNotFound) {
-                // Товар вже видалений або cart_item_key неправильний - ігноруємо
-                set({ isLoading: false });
-              } else {
-                // Інші помилки - повертаємо товар назад
-                const currentState = get();
-                const restored = { ...currentState.items, [actualKey]: item };
-                set({ items: restored, isLoading: false });
-                if (state.currentUserId) {
-                  saveUserCart(state.currentUserId, restored);
-                }
-              }
-            }
-          })();
+        if (state.currentUserId && token) {
+          set((s) => ({ ...s, pendingCartSync: true }));
         }
-
-        // Завжди зберігаємо зміни в localStorage для незареєстрованих користувачів або коли немає cart_item_key
         if (state.currentUserId) {
           saveUserCart(state.currentUserId, next);
         }
@@ -678,63 +569,16 @@ export const useCartStore = create<CartState>()(
         const newQuantity = item.quantity + step;
         const newItem = { ...item, quantity: newQuantity };
 
-        // ⚡ Спочатку миттєво оновлюємо UI
         set({ items: { ...state.items, [id]: newItem } });
 
-        // 🔄 Потім робимо API запит в бекграунді
-        if (state.currentUserId && token && item.cart_item_key) {
-          pendingQtyByCartKey.set(item.cart_item_key, newQuantity);
-
-          const existingTimer = qtyDebounceTimers.get(item.cart_item_key);
-          if (existingTimer) clearTimeout(existingTimer);
-
-          qtyDebounceTimers.set(
-            item.cart_item_key,
-            setTimeout(() => {
-              const cartItemKey = item.cart_item_key!;
-              qtyDebounceTimers.delete(cartItemKey);
-
-              (async () => {
-                try {
-                  set({ isLoading: true });
-                  const result = await flushPendingQty(cartItemKey);
-                  if (!result?.cart?.items) {
-                    set({ isLoading: false });
-                    return;
-                  }
-
-                  const currentItems = get().items;
-                  const itemsMap: Record<string, CartItem> = {};
-
-                  await hydrateCartItemImages(result.cart.items, currentItems);
-
-                  result.cart.items.forEach((cartItem) => {
-                    const itemId =
-                      cartItem.variation_id && cartItem.variation_id > 0
-                        ? cartItem.variation_id.toString()
-                        : cartItem.product_id.toString();
-                    const existing = currentItems[itemId];
-                    const mapped = mapCartItemResponseToCartItem(
-                      cartItem,
-                      existing
-                    );
-                    itemsMap[mapped.id] = mapped;
-                  });
-
-                  set({ items: itemsMap, isLoading: false });
-                } catch {
-                  set({ isLoading: false });
-                }
-              })();
-            }, QTY_DEBOUNCE_MS)
-          );
-        } else {
-          if (state.currentUserId) {
-            saveUserCart(state.currentUserId, {
-              ...state.items,
-              [id]: newItem,
-            });
-          }
+        if (state.currentUserId && token) {
+          set((s) => ({ ...s, pendingCartSync: true }));
+        }
+        if (state.currentUserId) {
+          saveUserCart(state.currentUserId, {
+            ...state.items,
+            [id]: newItem,
+          });
         }
       },
       decrement: async (id: string, step = 1) => {
@@ -752,93 +596,26 @@ export const useCartStore = create<CartState>()(
           next[id] = { ...item, quantity: newQuantity };
         }
 
-        // ⚡ Спочатку миттєво оновлюємо UI
         set({ items: next });
 
-        // 🔄 Потім робимо API запит в бекграунді
-        if (state.currentUserId && token && item.cart_item_key) {
-          pendingQtyByCartKey.set(item.cart_item_key, newQuantity);
-
-          const existingTimer = qtyDebounceTimers.get(item.cart_item_key);
-          if (existingTimer) clearTimeout(existingTimer);
-
-          qtyDebounceTimers.set(
-            item.cart_item_key,
-            setTimeout(() => {
-              const cartItemKey = item.cart_item_key!;
-              qtyDebounceTimers.delete(cartItemKey);
-
-              (async () => {
-                try {
-                  set({ isLoading: true });
-                  const result = await flushPendingQty(cartItemKey);
-                  if (!result?.cart?.items) {
-                    set({ isLoading: false });
-                    return;
-                  }
-
-                  const currentItems = get().items;
-                  const itemsMap: Record<string, CartItem> = {};
-
-                  await hydrateCartItemImages(result.cart.items, currentItems);
-
-                  result.cart.items.forEach((cartItem) => {
-                    const itemId =
-                      cartItem.variation_id && cartItem.variation_id > 0
-                        ? cartItem.variation_id.toString()
-                        : cartItem.product_id.toString();
-                    const existing = currentItems[itemId];
-                    const mapped = mapCartItemResponseToCartItem(
-                      cartItem,
-                      existing
-                    );
-                    itemsMap[mapped.id] = mapped;
-                  });
-
-                  set({ items: itemsMap, isLoading: false });
-                } catch {
-                  set({ isLoading: false });
-                }
-              })();
-            }, QTY_DEBOUNCE_MS)
-          );
-        } else {
-          if (state.currentUserId) {
-            saveUserCart(state.currentUserId, next);
-          }
+        if (state.currentUserId && token) {
+          set((s) => ({ ...s, pendingCartSync: true }));
+        }
+        if (state.currentUserId) {
+          saveUserCart(state.currentUserId, next);
         }
       },
       clear: async () => {
         const state = get();
         const { token } = useAuthStore.getState();
 
-        for (const t of qtyDebounceTimers.values()) clearTimeout(t);
-        qtyDebounceTimers.clear();
-        pendingQtyByCartKey.clear();
-
-        // Негайне оновлення UI стану для кращого UX
         set({ items: {} });
 
         if (state.currentUserId && token) {
-          // API запит в бекграунді
-          (async () => {
-            try {
-              set({ isLoading: true });
-              await clearCartApi();
-              set({ isLoading: false });
-            } catch (error) {
-              // При помилці стан залишається оновленим
-              set({ isLoading: false });
-              if (state.currentUserId) {
-                saveUserCart(state.currentUserId, {});
-              }
-            }
-          })();
-        } else {
-          if (state.currentUserId) {
-            saveUserCart(state.currentUserId, {});
-          }
-          // Стан вже оновлений вище
+          set((s) => ({ ...s, pendingCartSync: true }));
+        }
+        if (state.currentUserId) {
+          saveUserCart(state.currentUserId, {});
         }
       },
     }),

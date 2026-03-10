@@ -65,7 +65,9 @@ export default function OrderSuccessSection({
     const fetchOrder = async () => {
       try {
         if (orderId) {
-          const response = await fetch(`/api/wc/orders/${orderId}`);
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/orders/${orderId}`
+          );
           if (response.ok) {
             const orderData = await response.json();
             setOrder(orderData);
@@ -93,7 +95,9 @@ export default function OrderSuccessSection({
       try {
         const results = await Promise.all(
           ids.map(async (id) => {
-            const res = await fetch(`/api/wc/v3/products/${encodeURIComponent(String(id))}`);
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${encodeURIComponent(String(id))}`
+            );
             const product = res.ok ? await res.json() : null;
             const meta = Array.isArray(product?.meta_data) ? product.meta_data : [];
             const normalized: Array<{ key: string; value: string }> = meta.map(

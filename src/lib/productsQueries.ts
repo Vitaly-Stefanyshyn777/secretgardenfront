@@ -29,7 +29,7 @@ export const productQuery = (slugOrId: string) => ({
 
     // Нова логіка: отримуємо товар через REST /catalog/products/:slug
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/catalog/products/${encodeURIComponent(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/catalog/products/${encodeURIComponent(
         slugOrId,
       )}`,
       { cache: "no-store" },
@@ -58,6 +58,20 @@ export const productQuery = (slugOrId: string) => ({
       ratingCount?: number;
       categories?: Array<{ id: string; name: string; slug: string }>;
       characteristics?: Array<{ id?: string; name: string; value: string; order?: number }>;
+      descriptionBlocks?: Array<{
+        type: "paragraph" | "list" | "heading";
+        content?: string;
+        items?: string[];
+        order: number;
+        level?: number;
+      }>;
+      description_blocks?: Array<{
+        type: "paragraph" | "list" | "heading";
+        content?: string;
+        items?: string[];
+        order: number;
+        level?: number;
+      }>;
     };
 
     const placeholderImage = data.mainImageUrl || "/placeholder.svg";
@@ -90,6 +104,11 @@ export const productQuery = (slugOrId: string) => ({
       characteristics: data.characteristics
         ? [...data.characteristics].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
         : undefined,
+      descriptionBlocks: (() => {
+        const blocks = data.descriptionBlocks ?? data.description_blocks;
+        if (!Array.isArray(blocks) || blocks.length === 0) return undefined;
+        return [...blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      })(),
       categories:
         data.categories?.map((c, idx) => ({
           id: idx,

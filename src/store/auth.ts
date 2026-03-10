@@ -89,6 +89,10 @@ function syncUserDataAfterLogin(userId: string) {
 
       await cartStore.loadUserData(userId);
       await favoriteStore.loadUserData(userId);
+
+      // Синхронізуємо переглянуті товари з localStorage
+      const { syncWithServer } = await import("@/components/hooks/useRecentlyViewed");
+      await syncWithServer();
     } catch (err) {
       console.error("Error syncing user data after login:", err);
     }
@@ -208,6 +212,10 @@ export const useAuthStore = create<AuthState>()(
 
         if (typeof window !== "undefined") {
           try {
+            const { clearSyncFlag } = await import(
+              "@/components/hooks/useRecentlyViewed"
+            );
+            clearSyncFlag();
             localStorage.removeItem("bfb_token");
             localStorage.removeItem("bfb_token_old");
             localStorage.removeItem("accessToken");

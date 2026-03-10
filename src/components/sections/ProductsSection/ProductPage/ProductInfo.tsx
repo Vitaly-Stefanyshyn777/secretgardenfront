@@ -36,25 +36,25 @@ const ProductInfo = memo(function ProductInfo({
     <div className={styles.productInfo}>
       <div className={styles.productInfoBlock}>
         <div className={styles.categoryTagBlock}>
-          <div className={styles.categoryTag}>
+          {/* <div className={styles.categoryTag}>
             {product.categories?.[0]?.name || "Без категорії"}
-          </div>
+          </div> */}
           <div className={styles.titleWithBadges}>
             <h1 className={styles.productTitle}>{product.name}</h1>
             <div className={styles.productBadges}>
               {isActuallyHit && <Badge variant="hit" />}
             </div>
           </div>
-          {/* В наявності */}
-          {product.stockStatus === "instock" && (
-            <p className={styles.stockInfo}>
-              В наявності - {product.stockQuantity ?? 1}
-            </p>
-          )}
-          {/* Рейтинг і відгуки */}
-          {(Number(product.averageRating) > 0 ||
-            (product.ratingCount ?? 0) > 0) && (
-            <div className={styles.ratingRow}>
+          {/* В наявності та рейтинг */}
+          <div className={styles.stockRatingBlock}>
+            {product.stockStatus === "instock" && (
+              <p className={styles.stockInfo}>
+                В наявності - {product.stockQuantity ?? 1}
+              </p>
+            )}
+            {(Number(product.averageRating) > 0 ||
+              (product.ratingCount ?? 0) > 0) && (
+              <div className={styles.ratingRow}>
               <div className={styles.stars}>
                 {Array.from({ length: 5 }).map((_, i) => {
                   const rating = Number(product.averageRating) || 0;
@@ -70,17 +70,29 @@ const ProductInfo = memo(function ProductInfo({
                           typeof c === "string" && c.length > 0,
                       )
                       .join(" ") || undefined;
+                  const starPathFilled =
+                    "M16.5703 0.00162601C17.1956 0.00162601 17.6958 0.376814 17.946 0.877063L22.2606 9.69397L31.8279 11.1322C32.3907 11.1947 32.8284 11.6324 33.016 12.1327C33.2036 12.6955 33.0785 13.2583 32.6408 13.696L25.6998 20.5744L27.3257 30.2667C27.4507 30.8295 27.2006 31.4548 26.7629 31.7675C26.2626 32.0802 25.6373 32.1427 25.1371 31.8926L16.5703 27.2653L8.0035 31.8926C7.50325 32.1427 6.94047 32.0802 6.44022 31.7675C6.0025 31.4548 5.75238 30.8295 5.81491 30.2667L7.50325 20.5744L0.562282 13.696C0.124564 13.2583 -0.000498921 12.6955 0.187095 12.1327C0.374689 11.6324 0.812407 11.1947 1.37519 11.1322L10.9425 9.69397L15.2571 0.877063C15.5073 0.376814 16.0075 0.00162601 16.5703 0.00162601Z";
+                  const starPathEmpty =
+                    "M16.5703 0.00162601C17.1956 0.00162601 17.6958 0.376814 17.946 0.877063L22.2606 9.69397L31.8279 11.1322C32.3907 11.1947 32.8284 11.6324 33.016 12.1327C33.2036 12.6955 33.0785 13.2583 32.6408 13.696L25.6998 20.5744L27.3257 30.2667C27.4507 30.8295 27.2006 31.4548 26.7629 31.7675C26.2626 32.0802 25.6373 32.1427 25.1371 31.8926L16.5703 27.2653L8.0035 31.8926C7.50325 32.1427 6.94047 32.0802 6.44022 31.7675C6.0025 31.4548 5.75238 30.8295 5.81491 30.2667L7.50325 20.5744L0.562282 13.696C0.124564 13.2583 -0.000498921 12.6955 0.187095 12.1327C0.374689 11.6324 0.812407 11.1947 1.37519 11.1322L10.9425 9.69397L15.2571 0.877063C15.5073 0.376814 16.0075 0.00162601 16.5703 0.00162601ZM16.5703 4.94159L13.3187 11.7575C13.0685 12.1952 12.6933 12.5079 12.1931 12.5704L4.75188 13.6334L10.1296 18.9486C10.5048 19.3238 10.6298 19.824 10.5673 20.3243L9.31666 27.7655L15.8824 24.2638C16.3202 24.0136 16.8829 24.0136 17.3207 24.2638L23.8864 27.7655L22.6358 20.3243C22.5108 19.824 22.6983 19.3238 23.0735 18.9486L28.3887 13.6334L21.01 12.5704C20.5098 12.5079 20.072 12.1952 19.8844 11.7575L16.5703 4.94159Z";
                   return (
                     <svg
                       key={i}
-                      viewBox="0 0 20 20"
+                      viewBox="0 0 34 33"
                       className={starClass}
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path
-                        d="M10 1.66699L12.4722 6.67699L18 7.50033L14 11.3337L14.9444 16.8337L10 14.3337L5.05556 16.8337L6 11.3337L2 7.50033L7.52778 6.67699L10 1.66699Z"
-                        fill="currentColor"
-                      />
+                      {filled ? (
+                        <path d={starPathFilled} fill="var(--zhovtiy)" />
+                      ) : (
+                        <path
+                          d={starPathEmpty}
+                          fill="transparent"
+                          fillRule="evenodd"
+                          stroke="currentColor"
+                          strokeWidth="1.2"
+                          strokeLinejoin="round"
+                        />
+                      )}
                     </svg>
                   );
                 })}
@@ -97,7 +109,8 @@ const ProductInfo = memo(function ProductInfo({
                 })(product.ratingCount ?? 0)}
               </span>
             </div>
-          )}
+            )}
+          </div>
           {product.shortDescription?.trim() && (
             <p className={styles.productText}>
               <span
@@ -163,30 +176,97 @@ const ProductInfo = memo(function ProductInfo({
         {/* Характеристика та особливості + Опис (статичні блоки) + Доставка/Оплата/Повернення (розгортані) */}
         <div className={styles.expandableSections}>
           {/* Характеристика та особливості - статичний блок, двоколонкова таблиця */}
-          {(product.characteristics?.length ?? 0) > 0 && (
-            <div className={styles.characteristicsBlock}>
-              <h3 className={styles.characteristicsBlockTitle}>
-                Характеристика та особливості
-              </h3>
-              <div className={styles.characteristicsTable}>
-                {product.characteristics!.map((ch, idx) => (
-                  <div key={idx} className={styles.characteristicRow}>
-                    <span className={styles.characteristicName}>{ch.name}</span>
-                    <span className={styles.characteristicValue}>
-                      {ch.value}
-                    </span>
-                  </div>
-                ))}
+          {(product.characteristics?.length ?? 0) > 0 && (() => {
+            const chars = product.characteristics!;
+            const startIdx = chars.findIndex(
+              (ch) => ch.name === "Кількість капсул в упаковці"
+            );
+            const endIdx = chars.findIndex(
+              (ch) => ch.name === "Важливі застереження"
+            );
+            const renderRow = (ch: { name: string; value: string }, idx: number) => (
+              <div key={idx} className={styles.characteristicRow}>
+                <span className={styles.characteristicName}>{ch.name}</span>
+                <span className={styles.characteristicValue}>{ch.value}</span>
               </div>
-            </div>
-          )}
+            );
+            const hasRange =
+              startIdx >= 0 && endIdx >= 0 && endIdx >= startIdx;
+            const before = hasRange ? chars.slice(0, startIdx) : [];
+            const wrapped = hasRange
+              ? chars.slice(startIdx, endIdx + 1)
+              : [];
+            const after = hasRange ? chars.slice(endIdx + 1) : [];
+
+            return (
+              <div className={styles.characteristicsBlock}>
+                <h3 className={styles.characteristicsBlockTitle}>
+                  Характеристика та особливості
+                </h3>
+                <div className={styles.characteristicsTable}>
+                  {hasRange ? (
+                    <>
+                      {before.map((ch, i) => renderRow(ch, i))}
+                      <div className={styles.characteristicsRowsBlock}>
+                        {wrapped.map((ch, i) => renderRow(ch, startIdx + i))}
+                      </div>
+                      {after.map((ch, i) => renderRow(ch, endIdx + 1 + i))}
+                    </>
+                  ) : (
+                    chars.map((ch, i) => renderRow(ch, i))
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Опис - статичний блок */}
           <div className={styles.descriptionBlock}>
             <h3 className={styles.descriptionBlockTitle}>Опис</h3>
             <div className={styles.descriptionContent}>
-              {product?.description?.trim() ||
-              product?.shortDescription?.trim() ? (
+              {(product.descriptionBlocks?.length ?? 0) > 0 ? (
+                product
+                  .descriptionBlocks!.slice()
+                  .sort((a, b) => a.order - b.order)
+                  .map((block, idx) => {
+                    if (block.type === "paragraph" && block.content) {
+                      return (
+                        <p
+                          key={idx}
+                          className={styles.descriptionParagraph}
+                          dangerouslySetInnerHTML={{ __html: block.content }}
+                        />
+                      );
+                    }
+                    if (block.type === "list" && block.items?.length) {
+                      return (
+                        <ul key={idx} className={styles.descriptionList}>
+                          {block.items.map((item, i) => (
+                            <li key={i} className={styles.descriptionListItem}>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      );
+                    }
+                    if (block.type === "heading" && block.content) {
+                      const Tag =
+                        block.level === 3
+                          ? "h3"
+                          : block.level === 4
+                            ? "h4"
+                            : "h2";
+                      return (
+                        <Tag
+                          key={idx}
+                          className={styles.descriptionHeading}
+                          dangerouslySetInnerHTML={{ __html: block.content }}
+                        />
+                      );
+                    }
+                    return null;
+                  })
+              ) : product?.description?.trim() || product?.shortDescription?.trim() ? (
                 <div
                   dangerouslySetInnerHTML={{
                     __html:
@@ -199,65 +279,6 @@ const ProductInfo = memo(function ProductInfo({
                 <p>Опис товару відсутній</p>
               )}
             </div>
-          </div>
-
-          {/* Оплата */}
-          <div className={styles.section}>
-            <button
-              className={styles.sectionHeader}
-              onClick={() => onToggleSection("payment")}
-            >
-              <span className={styles.sectionHeaderText}>Оплата</span>
-              <span
-                className={`${styles.chevron} ${
-                  expandedSections.payment ? "" : styles.rotated
-                }`}
-              >
-                <СhevronIcon />
-              </span>
-            </button>
-            {expandedSections.payment && (
-              <div className={styles.sectionContent}>
-                <p className={styles.sectionContentText}>
-                  Онлайн-оплата – банківською карткою Visa/MasterCard. <br />{" "}
-                  Оплата при отриманні (накладений платіж) – можливість огляду
-                  перед покупкою. <br /> Оплата через Apple Pay / Google Pay –
-                  швидко та зручно.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Обмін та повернення */}
-          <div className={styles.section}>
-            <button
-              className={styles.sectionHeader}
-              onClick={() => onToggleSection("return")}
-            >
-              <span className={styles.sectionHeaderText}>
-                Обмін та повернення
-              </span>
-              <span
-                className={`${styles.chevron} ${
-                  expandedSections.return ? "" : styles.rotated
-                }`}
-              >
-                <СhevronIcon />
-              </span>
-            </button>
-            {expandedSections.return && (
-              <div className={styles.sectionContent}>
-                <p className={styles.sectionContentText}>
-                  Обмін та повернення можливі протягом 14 днів відповідно до
-                  Закону України «Про захист прав споживачів».
-                </p>
-                <p className={styles.sectionContentText}>
-                  Товари без слідів носіння, зі збереженими бирками та в
-                  оригінальній упаковці можна повернути. Доставка повернення -
-                  за рахунок покупця, якщо товар не має браку.
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>

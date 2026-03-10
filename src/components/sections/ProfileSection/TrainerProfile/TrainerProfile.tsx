@@ -39,20 +39,20 @@ const TrainerProfile: React.FC = () => {
       if (typeof window === "undefined") return;
       const token = window.localStorage.getItem("accessToken");
       if (!token) {
-        return;
+      return;
       }
 
       try {
         setIsLoading(true);
-        const res = await fetch("http://localhost:3000/user/me", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (res.status === 401) {
-          return;
-        }
+        return;
+      }
 
         if (!res.ok) {
           throw new Error("Не вдалося завантажити профіль");
@@ -109,10 +109,10 @@ const TrainerProfile: React.FC = () => {
 
     try {
       setIsSaving(true);
-      const res = await fetch("http://localhost:3000/user/profile", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/profile`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify(body),

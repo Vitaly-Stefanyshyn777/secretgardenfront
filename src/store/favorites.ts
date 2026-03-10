@@ -2,9 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   getWishlist,
-  addToWishlist as addToWishlistApi,
-  removeFromWishlist as removeFromWishlistApi,
-  clearWishlist as clearWishlistApi,
+  syncWishlist as syncWishlistApi,
   checkWishlistItem,
   type WishlistItemResponse,
 } from "@/lib/bfbApi";
@@ -116,9 +114,11 @@ interface FavoriteState {
   currentUserId: string | null;
   isOpen: boolean;
   isLoading: boolean;
+  pendingFavoritesSync: boolean;
   open: () => void;
   close: () => void;
   toggle: () => void;
+  syncFavoritesToApi: () => Promise<void>;
   toggleFavorite: (item: FavoriteItem) => Promise<void>;
   remove: (id: string) => Promise<void>;
   clear: () => Promise<void>;
@@ -136,9 +136,53 @@ export const useFavoriteStore = create<FavoriteState>()(
       currentUserId: null,
       isOpen: false,
       isLoading: false,
+      pendingFavoritesSync: false,
       open: () => set({ isOpen: true }),
-      close: () => set({ isOpen: false }),
+      close: () => {
+        const state = get();
+        if (
+          state.pendingFavoritesSync &&
+          state.currentUserId &&
+          useAuthStore.getState().token
+        ) {
+          get().syncFavoritesToApi();
+        }
+        set({ isOpen: false });
+      },
       toggle: () => set((s) => ({ isOpen: !s.isOpen })),
+      syncFavoritesToApi: async () => {
+        const state = get();
+        const { token } = useAuthStore.getState();
+        if (!state.currentUserId || !token) return;
+        const productIds = Object.keys(state.items)
+          .map((k) => extractProductId(k))
+          .filter((id): id is number => id !== null);
+        try {
+          set({ isLoading: true, pendingFavoritesSync: false });
+          const wishlistData = await syncWishlistApi(productIds);
+          const currentItems = get().items;
+          const itemsMap: Record<string, FavoriteItem> = { ...currentItems };
+          (wishlistData.items || []).forEach((apiItem) => {
+            const baseKey = apiItem.product_id.toString();
+            const existingBase = currentItems[baseKey];
+            const base = mapWishlistItemResponseToFavoriteItem(
+              apiItem,
+              existingBase
+            );
+            const hasAnyForProduct = Object.keys(itemsMap).some(
+              (k) => extractProductId(k) === apiItem.product_id
+            );
+            if (!hasAnyForProduct) {
+              itemsMap[base.id] = base;
+            } else if (itemsMap[baseKey] && !itemsMap[baseKey].variationId) {
+              itemsMap[baseKey] = { ...itemsMap[baseKey], ...base };
+            }
+          });
+          set({ items: itemsMap, isLoading: false });
+        } catch {
+          set({ pendingFavoritesSync: true, isLoading: false });
+        }
+      },
       setUserId: (userId: string | null) => {
         const state = get();
         if (state.currentUserId && state.currentUserId !== userId) {
@@ -292,32 +336,10 @@ export const useFavoriteStore = create<FavoriteState>()(
           next[item.id] = item;
         }
 
-        // Негайне оновлення UI стану для кращого UX
         set({ items: next });
 
         if (state.currentUserId && token) {
-          // Виконуємо API запит асинхронно, без блокування UI
-          (async () => {
-            try {
-              set({ isLoading: true });
-              const afterCount = countItemsByProductId(next, productId);
-
-              // Бекенд wishlist зберігає тільки product_id:
-              // - при додаванні першої варіації/товару -> додаємо product_id
-              // - при видаленні останньої варіації/товару -> видаляємо product_id
-              if (!exists && beforeCount === 0 && afterCount > 0) {
-                await addToWishlistApi(productId);
-              } else if (exists && afterCount === 0) {
-                await removeFromWishlistApi(productId);
-              }
-              // Не оновлюємо стан після API, бо він вже оновлений негайно
-              set({ isLoading: false });
-            } catch (error) {
-              // При помилці залишаємо стан оновленим (кращий UX - не повертаємо назад)
-              // Можливо, можна показати повідомлення про помилку синхронізації
-              set({ isLoading: false });
-            }
-          })();
+          set((s) => ({ ...s, pendingFavoritesSync: true }));
         } else {
           if (state.currentUserId) {
             saveUserFavorites(state.currentUserId, next);
@@ -340,84 +362,38 @@ export const useFavoriteStore = create<FavoriteState>()(
         set({ items: next });
 
         if (state.currentUserId && token) {
-          // API запит в бекграунді
-          (async () => {
-            try {
-              set({ isLoading: true });
-              await removeFromWishlistApi(productId);
-              set({ isLoading: false });
-            } catch (error) {
-              // При помилці стан залишається оновленим (кращий UX)
-              set({ isLoading: false });
-              if (state.currentUserId) {
-                saveUserFavorites(state.currentUserId, get().items);
-              }
-            }
-          })();
-        } else {
-          if (state.currentUserId) {
-            saveUserFavorites(state.currentUserId, next);
-          }
-          // Стан вже оновлений вище
+          set((s) => ({ ...s, pendingFavoritesSync: true }));
+        }
+        if (state.currentUserId) {
+          saveUserFavorites(state.currentUserId, next);
         }
       },
       removeAll: async (ids: string[]) => {
         const state = get();
         const { token } = useAuthStore.getState();
 
-        // Негайне оновлення UI стану для кращого UX
         const next = { ...state.items };
         ids.forEach((id) => delete next[id]);
         set({ items: next });
 
         if (state.currentUserId && token) {
-          // Послідовні API запити для надійності
-          for (const id of ids) {
-            const productId = extractProductId(id);
-            if (productId !== null) {
-              try {
-                await removeFromWishlistApi(productId);
-              } catch (error) {
-                // Ігноруємо помилки (товар вже видалений або інші проблеми)
-                console.warn('Failed to remove item from wishlist:', productId, error);
-              }
-            }
-          }
-          set({ isLoading: false });
-        } else {
-          if (state.currentUserId) {
-            saveUserFavorites(state.currentUserId, next);
-          }
-          // Стан вже оновлений вище
+          set((s) => ({ ...s, pendingFavoritesSync: true }));
+        }
+        if (state.currentUserId) {
+          saveUserFavorites(state.currentUserId, next);
         }
       },
       clear: async () => {
         const state = get();
         const { token } = useAuthStore.getState();
 
-        // Негайне оновлення UI стану для кращого UX
         set({ items: {} });
 
         if (state.currentUserId && token) {
-          // API запит в бекграунді
-          (async () => {
-            try {
-              set({ isLoading: true });
-              await clearWishlistApi();
-              set({ isLoading: false });
-            } catch (error) {
-              // При помилці стан залишається оновленим
-              set({ isLoading: false });
-              if (state.currentUserId) {
-                saveUserFavorites(state.currentUserId, {});
-              }
-            }
-          })();
-        } else {
-          if (state.currentUserId) {
-            saveUserFavorites(state.currentUserId, {});
-          }
-          // Стан вже оновлений вище
+          set((s) => ({ ...s, pendingFavoritesSync: true }));
+        }
+        if (state.currentUserId) {
+          saveUserFavorites(state.currentUserId, {});
         }
       },
     }),

@@ -16,72 +16,24 @@ export interface WooCommerceProductBasic {
   sale_price: string;
 }
 
-// Функція для отримання ціни товару за його ID (асинхронна)
+// Функція для отримання ціни товару — використовує catalog API
 export const getProductPriceAsync = async (
   productId: string
 ): Promise<{ currentPrice: number; originalPrice?: number }> => {
   try {
-    // Якщо це курс у форматі "course-{id}", витягуємо числовий ID
     let actualProductId = productId;
     if (productId.startsWith("course-")) {
       actualProductId = productId.replace("course-", "");
     }
-
-    // Спробуємо отримати продукт з WooCommerce API
-    const response = await fetch(`/api/wc/products/${actualProductId}`);
-
-    if (response.ok) {
-      const wcProduct = await response.json();
-
-      // Якщо це варіативний товар, отримуємо дані першої варіації
-      if (wcProduct.type === "variable" && wcProduct.variations?.[0]) {
-        const firstVariationId = wcProduct.variations[0];
-        const variation = await fetchProductVariation(
-          firstVariationId,
-          wcProduct.id
-        );
-
-        const currentPrice = parseFloat(
-          variation.price ||
-            variation.sale_price ||
-            variation.regular_price ||
-            "0"
-        );
-        const regularPrice = variation.regular_price
-          ? parseFloat(variation.regular_price)
-          : undefined;
-
-        return {
-          currentPrice,
-          originalPrice:
-            regularPrice && regularPrice > currentPrice
-              ? regularPrice
-              : undefined,
-        };
-      } else {
-        // Для звичайних товарів
-        const currentPrice = parseFloat(wcProduct.price || "0");
-        const originalPrice = wcProduct.regular_price
-          ? parseFloat(wcProduct.regular_price)
-          : undefined;
-
-        return {
-          currentPrice,
-          originalPrice:
-            originalPrice && originalPrice > currentPrice
-              ? originalPrice
-              : undefined,
-        };
-      }
-    } else {
-      // Якщо це 404, можливо продукт не існує або видалений
-      if (response.status === 404) {
-        console.warn(`Product ${actualProductId} not found in WooCommerce`);
-      }
-    }
-
-    return { currentPrice: 0 };
-  } catch (error) {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${actualProductId}`
+    );
+    if (!res.ok) return { currentPrice: 0 };
+    const data = await res.json();
+    const d = data?.data ?? data;
+    const price = parseFloat(d?.price ?? "0") || 0;
+    return { currentPrice: price, originalPrice: price };
+  } catch {
     return { currentPrice: 0 };
   }
 };
@@ -158,7 +110,6 @@ export const useProductPrices = (
             isLoading: false,
           });
         } else {
-          // Якщо wcProduct не передано, отримуємо його з API
           const result = await getProductPriceAsync(productId);
           setPrices({
             currentPrice: result.currentPrice,

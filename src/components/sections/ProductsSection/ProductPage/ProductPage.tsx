@@ -20,12 +20,16 @@ import {
   GiftIcon,
 } from "@/components/Icons/Icons";
 import styles from "./ProductPage.module.css";
-import FAQSection from "../../FAQSection/FAQSection";
 import { useAuthStore } from "@/store/auth";
 import RegisterModal from "@/components/auth/RegisterModal/RegisterModal";
 import { normalizeImageUrl } from "@/lib/imageUtils";
 import { useCartStore } from "@/store/cart";
-import { calculatePrice, formatPrice, getPriceSellRegistry, normalizePriceParams } from "@/lib/priceUtils";
+import {
+  calculatePrice,
+  formatPrice,
+  getPriceSellRegistry,
+  normalizePriceParams,
+} from "@/lib/priceUtils";
 import ProductPageSkeleton from "./ProductPageSkeleton";
 
 export default function ProductPage({ productSlug }: { productSlug: string }) {
@@ -39,31 +43,6 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
   // Товари для спорту (категорія 30)
   const { data: relatedCategoryProducts = [] } = useProductsByCategory("85");
 
-  // Визначаємо категорію FAQ на основі категорій продукту
-  const getFaqCategoryId = (): number | undefined => {
-    if (!product?.categories || product.categories.length === 0) {
-      return undefined; // Використаємо автоматичне визначення в FAQSection
-    }
-
-    // Якщо продукт належить до категорії "Борди" - використовуємо 70
-    if (
-      product.categories.some(
-        (cat) =>
-          cat.id === 71 || // Категорія "Борди" за ID
-          cat.id === 30 || // Інша категорія бордів за ID
-          cat.slug.toLowerCase().includes("board") || // Slug містить "board"
-          cat.slug.toLowerCase().includes("борд") // Slug містить "борд"
-      )
-    ) {
-      return 70; // Борди
-    }
-
-    // За замовчуванням для продуктів використовуємо категорію "Борди"
-    return 70;
-  };
-
-  const faqCategoryId = getFaqCategoryId();
-
   // Перевіряємо, чи товар відноситься до бордів (за ID або slug)
   const isBoardProduct = (): boolean => {
     if (!product?.categories || product.categories.length === 0) {
@@ -75,7 +54,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
         cat.id === 71 || // Категорія "Борди" за ID
         cat.id === 30 || // Інша категорія бордів за ID
         cat.slug.toLowerCase().includes("board") || // Slug містить "board"
-        cat.slug.toLowerCase().includes("борд") // Slug містить "борд"
+        cat.slug.toLowerCase().includes("борд"), // Slug містить "борд"
     );
   };
 
@@ -126,7 +105,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
   const [thumbStart, setThumbStart] = useState(0);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const itemsPerView = isMobile ? 4 : baseItemsPerView;
-  const thumbNavThreshold = isMobile ?? false ? 4 : maxVisibleThumbs;
+  const thumbNavThreshold = (isMobile ?? false) ? 4 : maxVisibleThumbs;
   const shouldShowThumbNav = imagesLength > thumbNavThreshold;
 
   // WC v3 variations часто повертають attributes без `slug` (лише { id, name, option }).
@@ -136,10 +115,18 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     if (rawSlug) return rawSlug;
 
     const name = String(attr?.name ?? "").toLowerCase();
-    if (name === "pa_color" || name.includes("колір") || name.includes("color")) {
+    if (
+      name === "pa_color" ||
+      name.includes("колір") ||
+      name.includes("color")
+    ) {
       return "pa_color";
     }
-    if (name === "pa_size" || name.includes("розмір") || name.includes("size")) {
+    if (
+      name === "pa_size" ||
+      name.includes("розмір") ||
+      name.includes("size")
+    ) {
       return "pa_size";
     }
     return name;
@@ -172,11 +159,11 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
             .slice(0, 10)
             .map(async (variationId: number) => {
               const response = await fetch(
-                `/api/wc/v3/products/${product.id}/variations/${variationId}`
+                `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${product.id}/variations/${variationId}`,
               );
               if (!response.ok) return null;
               return response.json();
-            })
+            }),
         );
 
         const validVariations = variations.filter(Boolean) as any[];
@@ -185,7 +172,10 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           attributes: Array.isArray(v?.attributes)
             ? v.attributes.map((a: any) => ({
                 ...a,
-                slug: typeof a?.slug === "string" ? a.slug : normalizeVariationAttrSlug(a),
+                slug:
+                  typeof a?.slug === "string"
+                    ? a.slug
+                    : normalizeVariationAttrSlug(a),
               }))
             : [],
         }));
@@ -220,10 +210,10 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
 
     const first = variationsData[0];
     const firstColor = first.attributes?.find(
-      (a) => normalizeVariationAttrSlug(a) === "pa_color"
+      (a) => normalizeVariationAttrSlug(a) === "pa_color",
     )?.option;
     const firstSize = first.attributes?.find(
-      (a) => normalizeVariationAttrSlug(a) === "pa_size"
+      (a) => normalizeVariationAttrSlug(a) === "pa_size",
     )?.option;
 
     if (!selectedColor && firstColor) setSelectedColor(firstColor);
@@ -245,12 +235,12 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
             v.attributes?.some(
               (attr: any) =>
                 normalizeVariationAttrSlug(attr) === "pa_size" &&
-                attr.option === selectedSize
+                attr.option === selectedSize,
             ) &&
             v.attributes?.some(
               (attr: any) =>
                 normalizeVariationAttrSlug(attr) === "pa_color" &&
-                attr.option === selectedColor
+                attr.option === selectedColor,
             )
           );
         }
@@ -259,7 +249,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           return v.attributes?.some(
             (attr: any) =>
               normalizeVariationAttrSlug(attr) === "pa_color" &&
-              attr.option === selectedColor
+              attr.option === selectedColor,
           );
         }
 
@@ -267,7 +257,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           return v.attributes?.some(
             (attr: any) =>
               normalizeVariationAttrSlug(attr) === "pa_size" &&
-              attr.option === selectedSize
+              attr.option === selectedSize,
           );
         }
 
@@ -292,7 +282,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     if (isMobile && thumbsRef.current) {
       // На мобільному прокручуємо мініатюри
       const thumbButtons = Array.from(
-        thumbsRef.current.querySelectorAll("button")
+        thumbsRef.current.querySelectorAll("button"),
       ).filter((btn) => btn.querySelector("img") !== null) as HTMLElement[];
       if (thumbButtons.length > 0) {
         const scrollAmount = thumbButtons[0].offsetWidth + 8; // thumbnail width + gap
@@ -310,7 +300,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     if (isMobile && thumbsRef.current) {
       // На мобільному прокручуємо мініатюри
       const thumbButtons = Array.from(
-        thumbsRef.current.querySelectorAll("button")
+        thumbsRef.current.querySelectorAll("button"),
       ).filter((btn) => btn.querySelector("img") !== null) as HTMLElement[];
       if (thumbButtons.length > 0) {
         const scrollAmount = thumbButtons[0].offsetWidth + 8; // thumbnail width + gap
@@ -340,23 +330,16 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
       // зсуваємо вікно так, щоб selected опинився останнім елементом
       setThumbStart(
         (selectedImageIndex - (maxVisibleThumbs - 1) + imagesLength) %
-          imagesLength
+          imagesLength,
       );
     }
   }, [selectedImageIndex, imagesLength, thumbStart]);
-  type SectionKey =
-    | "description"
-    | "delivery"
-    | "payment"
-    | "return"
-    | "characteristics";
+  type SectionKey = "description" | "delivery" | "characteristics";
   const [expandedSections, setExpandedSections] = useState<
     Record<SectionKey, boolean>
   >({
     description: false, // Закрита за замовчуванням
     delivery: false, // Закрита за замовчуванням
-    payment: false, // Закрита за замовчуванням
-    return: false, // Закрита за замовчуванням
     characteristics: false, // Закрита за замовчуванням
   });
 
@@ -400,8 +383,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
               | string
               | number
               | undefined
-          )?.toString() || "0"
-        )
+          )?.toString() || "0",
+        ),
       )
       .filter((sales) => sales > 0)
       .sort((a, b) => b - a); // Сортуємо від більшого до меншого
@@ -416,7 +399,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
             (product as unknown as { total_sales?: unknown })
               .total_sales as unknown as string | number
           ).toString()
-        : "0"
+        : "0",
     );
     return top10Sales.includes(currentProductSales);
   };
@@ -443,13 +426,17 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
   });
 
   const priceSellRegistry = getPriceSellRegistry(
-    product ? {
-      metaData: product.metaData,
-      meta_data: product.metaData,
-      wcProduct: (product.wcProduct as any)?.meta_data ? {
-        meta_data: (product.wcProduct as any).meta_data
-      } : undefined,
-    } : null
+    product
+      ? {
+          metaData: product.metaData,
+          meta_data: product.metaData,
+          wcProduct: (product.wcProduct as any)?.meta_data
+            ? {
+                meta_data: (product.wcProduct as any).meta_data,
+              }
+            : undefined,
+        }
+      : null,
   );
 
   const priceCalculation = calculatePrice({
@@ -467,7 +454,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
   // Отримуємо унікальні розміри та кольори з атрибутів продукту або варіацій
   // Спочатку пробуємо отримати з основних атрибутів продукту
   const productSizeAttribute = product.attributes?.find(
-    (attr) => attr.slug === "pa_size"
+    (attr) => attr.slug === "pa_size",
   );
   const productSizes = productSizeAttribute?.options || [];
 
@@ -479,14 +466,15 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
         .flatMap((v) => v.attributes || [])
         .filter((attr) => normalizeVariationAttrSlug(attr) === "pa_size")
         .map((attr) => attr.option)
-        .filter(Boolean)
-    )
+        .filter(Boolean),
+    ),
   );
-  const availableSizes = variationSizes.length > 0 ? variationSizes : productSizes;
+  const availableSizes =
+    variationSizes.length > 0 ? variationSizes : productSizes;
 
   // Аналогічно для кольорів
   const productColorAttribute = product.attributes?.find(
-    (attr) => attr.slug === "pa_color"
+    (attr) => attr.slug === "pa_color",
   );
   const productColors = productColorAttribute?.options || [];
 
@@ -496,8 +484,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
         .flatMap((v) => v.attributes || [])
         .filter((attr) => normalizeVariationAttrSlug(attr) === "pa_color")
         .map((attr) => attr.option)
-        .filter(Boolean)
-    )
+        .filter(Boolean),
+    ),
   );
   const availableColors =
     variationColors.length > 0 ? variationColors : productColors;
@@ -534,7 +522,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
 
     // Базова ціна для кошика - використовуємо sale_price якщо є, інакше price
     // Це та ціна, яка буде відображатися як основна
-    const priceToUse = cartNormalizedPrices.salePrice || cartNormalizedPrices.price;
+    const priceToUse =
+      cartNormalizedPrices.salePrice || cartNormalizedPrices.price;
     const previewImage =
       normalizeImageUrl(product.images?.[selectedImageIndex]?.src) ||
       normalizeImageUrl(product.images?.[0]?.src) ||
@@ -546,7 +535,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
 
     if (selectedVariation && variationsData.length > 0) {
       const variation = variationsData.find(
-        (v) => v.id === selectedVariation.id
+        (v) => v.id === selectedVariation.id,
       );
       if (variation?.attributes) {
         variation.attributes.forEach((attr) => {
@@ -563,7 +552,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     // Створюємо назву товару - очищаємо від зайвих слів
     let productName = (product.name || "Товар без назви").replace(
       /\s*-\s*.*$/gi,
-      ""
+      "",
     ); // видаляємо все після тире з пробілом
 
     // Динамічно видаляємо вибрані розмір і колір з назви
@@ -596,7 +585,10 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           metaData: Array.isArray((product as any)?.metaData)
             ? (product as any).metaData.map((m: any) => ({
                 key: String(m?.key ?? ""),
-                value: m?.value === null || m?.value === undefined ? "" : String(m.value),
+                value:
+                  m?.value === null || m?.value === undefined
+                    ? ""
+                    : String(m.value),
               }))
             : [],
           wcPrice: cartNormalizedPrices.price,
@@ -613,7 +605,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           stockQuantity: product.stockQuantity,
           variationId: selectedVariation?.id,
         },
-        quantity
+        quantity,
       );
     } catch (error) {
       alert((error as Error).message);
@@ -687,8 +679,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                   ((Number(p.regular_price || p.regularPrice) -
                     Number(p.price)) /
                     Number(p.regular_price || p.regularPrice)) *
-                    100
-                )
+                    100,
+                ),
               )
             : 0,
         isNew: !!p.isNew,
@@ -704,7 +696,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     1,
     mappedRelated.length > itemsPerView
       ? mappedRelated.length - itemsPerView + 1
-      : 1
+      : 1,
   );
   const start = slideIdx; // стартове вікно зрушується на 1 елемент
   const visible = mappedRelated.slice(start, start + itemsPerView);
@@ -739,10 +731,10 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
             {(isMobile
               ? product.images.map((_, i) => i)
               : imagesLength > maxVisibleThumbs
-              ? Array.from({ length: maxVisibleThumbs }).map(
-                  (_, i) => (thumbStart + i) % imagesLength
-                )
-              : product.images.map((_, i) => i)
+                ? Array.from({ length: maxVisibleThumbs }).map(
+                    (_, i) => (thumbStart + i) % imagesLength,
+                  )
+                : product.images.map((_, i) => i)
             ).map((globalIndex) => (
               <button
                 key={`thumb-${globalIndex}`}
@@ -804,9 +796,9 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
         <div className={styles.productInfo}>
           <div className={styles.productInfoBlock}>
             <div className={styles.categoryTagBlock}>
-              <div className={styles.categoryTag}>
+              {/* <div className={styles.categoryTag}>
                 {product.categories?.[0]?.name || "Без категорії"}
-              </div>
+              </div> */}
               <div className={styles.titleWithBadges}>
                 <h1 className={styles.productTitle}>{product.name}</h1>
                 <div className={styles.productBadges}>
@@ -1002,16 +994,23 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                       }`}
                       onClick={() => {
                         // Для варіативного продукту додаємо саме вибрану варіацію
-                        if (product?.wcProduct?.type === "variable" && !selectedVariation?.id) {
+                        if (
+                          product?.wcProduct?.type === "variable" &&
+                          !selectedVariation?.id
+                        ) {
                           return;
                         }
                         toggleFav({
                           id: favoriteKey,
                           slug: product?.slug || productSlug,
                           name: product?.name || "",
-                          price: Number(selectedVariation?.price || product?.price || 0),
+                          price: Number(
+                            selectedVariation?.price || product?.price || 0,
+                          ),
                           originalPrice: Number(
-                            selectedVariation?.regular_price || product?.regularPrice || 0
+                            selectedVariation?.regular_price ||
+                              product?.regularPrice ||
+                              0,
                           ),
                           image: product?.image,
                           variationId: selectedVariation?.id || undefined,
@@ -1049,7 +1048,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                           onChange={(e) =>
                             !isControlsDisabled &&
                             setQuantity(
-                              Math.max(1, parseInt(e.target.value) || 1)
+                              Math.max(1, parseInt(e.target.value) || 1),
                             )
                           }
                           min="1"
@@ -1089,16 +1088,23 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                         }`}
                         onClick={() => {
                           if (isControlsDisabled) return;
-                          if (product?.wcProduct?.type === "variable" && !selectedVariation?.id) {
+                          if (
+                            product?.wcProduct?.type === "variable" &&
+                            !selectedVariation?.id
+                          ) {
                             return;
                           }
                           toggleFav({
                             id: favoriteKey,
                             slug: product?.slug || productSlug,
                             name: product?.name || "",
-                            price: Number(selectedVariation?.price || product?.price || 0),
+                            price: Number(
+                              selectedVariation?.price || product?.price || 0,
+                            ),
                             originalPrice: Number(
-                              selectedVariation?.regular_price || product?.regularPrice || 0
+                              selectedVariation?.regular_price ||
+                                product?.regularPrice ||
+                                0,
                             ),
                             image: product?.image,
                             variationId: selectedVariation?.id || undefined,
@@ -1189,63 +1195,6 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
               )}
             </div>
 
-            <div className={styles.section}>
-              <button
-                className={styles.sectionHeader}
-                onClick={() => toggleSection("payment")}
-              >
-                <span className={styles.sectionHeaderText}>Оплата</span>
-                <span
-                  className={`${styles.chevron} ${
-                    expandedSections.payment ? "" : styles.rotated
-                  }`}
-                >
-                  <СhevronIcon />
-                </span>
-              </button>
-              {expandedSections.payment && (
-                <div className={styles.sectionContent}>
-                  <p className={styles.sectionContentText}>
-                    Онлайн-оплата – банківською карткою Visa/MasterCard. <br />{" "}
-                    Оплата при отриманні (накладений платіж) – можливість огляду
-                    перед покупкою. <br /> Оплата через Apple Pay / Google Pay –
-                    швидко та зручно.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.section}>
-              <button
-                className={styles.sectionHeader}
-                onClick={() => toggleSection("return")}
-              >
-                <span className={styles.sectionHeaderText}>
-                  Обмін та повернення
-                </span>
-                <span
-                  className={`${styles.chevron} ${
-                    expandedSections.return ? "" : styles.rotated
-                  }`}
-                >
-                  <СhevronIcon />
-                </span>
-              </button>
-              {expandedSections.return && (
-                <div className={styles.sectionContent}>
-                  <p className={styles.sectionContentText}>
-                    Обмін та повернення можливі протягом 14 днів відповідно до
-                    Закону України «Про захист прав споживачів».
-                  </p>
-                  <p className={styles.sectionContentText}>
-                    Товари без слідів носіння, зі збереженими бирками та в
-                    оригінальній упаковці можна повернути. Доставка повернення -
-                    за рахунок покупця, якщо товар не має браку.
-                  </p>
-                </div>
-              )}
-            </div>
-
             <div className={styles.sectionCharacteristics}>
               <button
                 className={styles.sectionHeader}
@@ -1307,10 +1256,8 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
         </div>
       </div>
 
-      <FAQSection categoryId={faqCategoryId} />
       <div className={styles.relatedProducts}>
         <div className={styles.relatedProductsHeader}>
-          <p className={styles.relatedProductsSubtitle}>Інвентар</p>
           <h2>З цим товаром купують</h2>
         </div>
         <div className={styles.relatedGrid}>

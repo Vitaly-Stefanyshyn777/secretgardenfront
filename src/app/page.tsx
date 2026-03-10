@@ -5,6 +5,7 @@ import HomeFaqSection from "@/components/sections/HomeFaqSection/HomeFaqSection"
 import HomeReviewsSection from "@/components/sections/HomeReviewsSection/HomeReviewsSection";
 
 import PageLoader from "@/components/PageLoader";
+import ProductsShowcase from "@/components/sections/ProductsSection/ProductsShowcase/ProductsShowcase";
 
 type YoastRobots = {
   index?: string;
@@ -136,7 +137,7 @@ export default function Home() {
       <PageLoader />
       <HeroSection />
       <AdvantagesSection />
-
+      <ProductsShowcase />
       <HomeFaqSection />
       <HomeReviewsSection />
     </>

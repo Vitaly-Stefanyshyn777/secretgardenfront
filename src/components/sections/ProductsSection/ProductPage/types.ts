@@ -137,5 +137,6 @@ export interface RelatedProduct {
 
 export interface RelatedProductsProps {
   relatedCategoryProducts: ProductLike[];
+  currentProductSlug?: string;
   isMobile: boolean;
 }

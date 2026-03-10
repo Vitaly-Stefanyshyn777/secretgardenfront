@@ -43,6 +43,20 @@ function findRootCategoryBySlug(
   return null;
 }
 
+function findBySlug(
+  categories: CatalogCategory[],
+  slug: string,
+): CatalogCategory | null {
+  for (const c of categories) {
+    if (c.slug === slug) return c;
+    if (c.children?.length) {
+      const found = findBySlug(c.children, slug);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
 export const CertificationFilter = ({
   value,
   onChange,
@@ -101,6 +115,19 @@ export const CertificationFilter = ({
     [categories],
   );
   const subCategories = activeParent?.children ?? [];
+
+  // Поточна категорія з URL
+  const currentCategory = useMemo(
+    () =>
+      activeCategorySlug ? findBySlug(categories, activeCategorySlug) : null,
+    [categories, activeCategorySlug],
+  );
+  // Якщо категорія (або її батько) має filters — не показуємо children без заголовка.
+  // Фільтри відмальовуються в CategoryFiltersCheckboxes з заголовками.
+  const categoryForFilters = activeParent ?? currentCategory;
+  const hasFilters = (categoryForFilters?.filters?.length ?? 0) > 0;
+  const showSubcategoryCheckboxes =
+    isSubExpanded && subCategories.length > 0 && !hasFilters;
 
   // Якщо немає категорій і не завантажується, не відображаємо фільтр
   if (!showSkeleton && rootCategories.length === 0) {
@@ -172,6 +199,7 @@ export const CertificationFilter = ({
           <div className={styles.error}>Помилка завантаження категорій</div>
         ) : activeParentId ? (
           <>
+            <div className={styles.subHeaderDivider} />
             <div className={styles.subHeader}>
               <button
                 type="button"
@@ -189,33 +217,52 @@ export const CertificationFilter = ({
                 }}
               >
                 <span>Всі категорії</span>
-                <span className={styles.caret} aria-hidden="true" />
+                <span
+                  className={`${styles.caretIcon} ${
+                    isSubExpanded ? styles.caretIconUp : ""
+                  }`}
+                  aria-hidden="true"
+                >
+                  <img src="/icons/icon-13.svg" alt="" width={15} height={9} />
+                </span>
               </button>
             </div>
 
-            {isSubExpanded && (
-              <div className={styles.checkboxGroup}>
-                {subCategories.map((opt) => {
-                  const isSelected = value.includes(opt.slug);
-                  const inputId = `catalog-subcategory-${opt.id}`;
-                  return (
-                    <label
-                      key={opt.id}
-                      htmlFor={inputId}
-                      className={styles.checkboxItem}
-                    >
-                      <input
-                        id={inputId}
-                        type="checkbox"
-                        className={styles.checkboxInput}
-                        checked={isSelected}
-                        onChange={() => handleSubcategoryToggle(opt)}
-                      />
-                      <span className={styles.checkboxBox} aria-hidden="true" />
-                      <span className={styles.radioLabel}>{opt.name}</span>
-                    </label>
-                  );
-                })}
+            <div className={styles.subHeaderDivider} />
+
+            {showSubcategoryCheckboxes && (
+              <div className={styles.filterGroup}>
+                <h3 className={styles.filterGroupTitle}>
+                  {activeParent?.slug === "cbd-oil"
+                    ? "Канобіноїд"
+                    : "Підкатегорії"}
+                </h3>
+                <div className={styles.checkboxGroup}>
+                  {subCategories.map((opt) => {
+                    const isSelected = value.includes(opt.slug);
+                    const inputId = `catalog-subcategory-${opt.id}`;
+                    return (
+                      <label
+                        key={opt.id}
+                        htmlFor={inputId}
+                        className={styles.checkboxItem}
+                      >
+                        <input
+                          id={inputId}
+                          type="checkbox"
+                          className={styles.checkboxInput}
+                          checked={isSelected}
+                          onChange={() => handleSubcategoryToggle(opt)}
+                        />
+                        <span
+                          className={styles.checkboxBox}
+                          aria-hidden="true"
+                        />
+                        <span className={styles.radioLabel}>{opt.name}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
@@ -245,6 +292,8 @@ export const CertificationFilter = ({
               </button>
             </div>
 
+            <div className={styles.subHeaderDivider} />
+
             <button
               type="button"
               className={`${styles.categoryBlockBtn} ${styles.categoryBackBtn}`}
@@ -259,23 +308,55 @@ export const CertificationFilter = ({
             </button>
           </>
         ) : rootCategories.length > 0 ? (
-          <div className={styles.categoryBlocks}>
-            {rootCategories.map((cat) => {
-              const isActive = activeCategorySlug === cat.slug;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  className={`${styles.categoryBlockBtn} ${
-                    isActive ? styles.categoryBlockBtnActive : ""
+          <>
+            <div className={styles.subHeader}>
+              <button
+                type="button"
+                className={`${styles.categoryBlockBtn} ${styles.categoryBlockBtnActive}`}
+                disabled
+              >
+                {activeRoot?.name ?? "Категорії"}
+              </button>
+
+              <button
+                type="button"
+                className={styles.allCategoriesBtn}
+                onClick={() => {
+                  setIsSubExpanded((prev) => !prev);
+                }}
+              >
+                <span>Всі категорії</span>
+                <span
+                  className={`${styles.caretIcon} ${
+                    isSubExpanded ? styles.caretIconUp : ""
                   }`}
-                  onClick={() => handleParentClick(cat)}
+                  aria-hidden="true"
                 >
-                  {cat.name}
-                </button>
-              );
-            })}
-          </div>
+                  <img src="/icons/icon-13.svg" alt="" width={15} height={9} />
+                </span>
+              </button>
+            </div>
+
+            <div className={styles.subHeaderDivider} />
+
+            <div className={styles.categoryBlocks}>
+              {rootCategories.map((cat) => {
+                const isActive = activeCategorySlug === cat.slug;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    className={`${styles.categoryBlockBtn} ${
+                      isActive ? styles.categoryBlockBtnActive : ""
+                    }`}
+                    onClick={() => handleParentClick(cat)}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
+          </>
         ) : (
           <div className={styles.noOptions}>Немає доступних категорій</div>
         )}

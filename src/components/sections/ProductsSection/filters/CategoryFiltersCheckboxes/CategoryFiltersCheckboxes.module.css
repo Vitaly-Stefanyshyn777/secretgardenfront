@@ -1,0 +1,80 @@
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filterTitle {
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 130%;
+  color: var(--black);
+  margin: 0;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.checkboxBox {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1.33px solid var(--temno-sіriy);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.checkboxBox::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--violet);
+  transform: scale(0);
+  transition: transform 0.2s ease;
+}
+
+.checkboxInput:checked + .checkboxBox {
+  border-color: var(--violet);
+}
+
+.checkboxInput:checked + .checkboxBox::after {
+  transform: scale(1);
+}
+
+.radioLabel {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 140%;
+  color: var(--black);
+}

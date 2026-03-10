@@ -107,6 +107,14 @@ export interface WooCommerceProduct {
   _links: unknown;
 }
 
+export interface ProductDescriptionBlock {
+  type: "paragraph" | "list" | "heading";
+  content?: string;
+  items?: string[];
+  order: number;
+  level?: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -163,6 +171,8 @@ export interface Product {
   dateCreated?: string; // Дата створення з WooCommerce v3 API
   /** Характеристики товару з API (name, value, order) */
   characteristics?: Array<{ id?: string; name: string; value: string; order?: number }>;
+  /** Блоки опису (paragraph, list, heading) — пріоритет над description */
+  descriptionBlocks?: ProductDescriptionBlock[];
   isNew?: boolean;
   courseData?: {
     Required_equipment?: string;
@@ -210,116 +220,30 @@ export interface Product {
   };
 }
 
-// Отримати всі товари
+// Отримати всі товари (через catalog API)
 export const getAllProducts = async (): Promise<WooCommerceProduct[]> => {
   try {
-    // Використовуємо WooCommerce v3 API для отримання повних даних з date_created
-    const response = await api.get("/api/wc/v3/products");
-    return response.data;
-  } catch (error) {
-    // Fallback to mock data if API fails
-    return [
-      {
-        id: 1,
-        name: "BFB Balance Board | Original",
-        slug: "bfb-balance-board-original",
-        permalink: "/product/bfb-balance-board-original/",
-        date_created: "2024-01-01T00:00:00",
-        date_created_gmt: "2024-01-01T00:00:00",
-        date_modified: "2024-01-01T00:00:00",
-        date_modified_gmt: "2024-01-01T00:00:00",
-        type: "simple",
-        status: "publish",
-        featured: true,
-        catalog_visibility: "visible",
-        description:
-          "Balance Functional Board (BFB) - це інноваційний тренажер для функціонального тренування",
-        short_description:
-          "Інноваційний тренажер для функціонального тренування",
-        sku: "BFB-001",
-        price: "0",
-        regular_price: "0",
-        sale_price: "0",
-        date_on_sale_from: null,
-        date_on_sale_from_gmt: null,
-        date_on_sale_to: null,
-        date_on_sale_to_gmt: null,
-        on_sale: true,
-        purchasable: true,
-        total_sales: 0,
-        virtual: false,
-        downloadable: false,
-        downloads: [],
-        download_limit: -1,
-        download_expiry: -1,
-        external_url: "",
-        button_text: "",
-        tax_status: "taxable",
-        tax_class: "",
-        manage_stock: false,
-        stock_quantity: null,
-        backorders: "no",
-        backorders_allowed: false,
-        backordered: false,
-        low_stock_amount: null,
-        sold_individually: false,
-        weight: "5.2",
-        dimensions: {
-          length: "125",
-          width: "30",
-          height: "25",
-        },
-        shipping_required: true,
-        shipping_taxable: true,
-        shipping_class: "",
-        shipping_class_id: 0,
-        reviews_allowed: true,
-        average_rating: "4.5",
-        rating_count: 10,
-        related_ids: [],
-        upsell_ids: [],
-        cross_sell_ids: [],
-        parent_id: 0,
-        purchase_note: "",
-        categories: [
-          {
-            id: 1,
-            name: "Тренажери",
-            slug: "trenazhery",
-          },
-        ],
-        brands: [],
-        tags: [],
-        images: [
-          {
-            id: 1,
-            date_created: "2024-01-01T00:00:00",
-            date_created_gmt: "2024-01-01T00:00:00",
-            date_modified: "2024-01-01T00:00:00",
-            date_modified_gmt: "2024-01-01T00:00:00",
-            src: "/placeholder.svg",
-            name: "bfb-balance-board",
-            alt: "BFB Balance Board",
-          },
-        ],
-        attributes: [],
-        default_attributes: [],
-        variations: [],
-        grouped_products: [],
-        menu_order: 0,
-        price_html:
-          '<span class="woocommerce-Price-amount amount"><bdi>5,000&nbsp;<span class="woocommerce-Price-currencySymbol">₴</span></bdi></span>',
-        meta_data: [],
-        stock_status: "instock",
-        has_options: false,
-        post_password: "",
-        global_unique_id: "",
-        _links: {
-          self: [{ href: "/wp-json/wc/v3/products/1" }],
-          collection: [{ href: "/wp-json/wc/v3/products" }],
-        },
-      },
-    ];
+    const { fetchFilteredProducts } = await import("./bfbApi");
+    const items = (await fetchFilteredProducts({})) as Array<{
+      id: string;
+      name: string;
+      slug?: string;
+      price?: string;
+      mainImageUrl?: string;
+    }>;
+    return items.map((p) => ({
+      id: parseInt(p.id, 10) || 0,
+      name: p.name,
+      slug: p.slug ?? "",
+      price: p.price ?? "0",
+      regular_price: p.price ?? "0",
+      sale_price: p.price ?? "0",
+      on_sale: false,
+      catalog_visibility: "visible",
+      images: p.mainImageUrl ? [{ src: p.mainImageUrl }] : [],
+    })) as WooCommerceProduct[];
+  } catch {
+    return [];
   }
 };
 
@@ -327,24 +251,38 @@ export const getProductById = async (
   id: string
 ): Promise<WooCommerceProduct> => {
   try {
-    const response = await api.get(`/api/wc/products/${id}`);
-    return response.data;
-  } catch (error) {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${id}`
+    );
+    if (!res.ok) throw new Error("Product not found");
+    const data = await res.json();
+    const d = data?.data ?? data;
+    return {
+      id: d.id,
+      name: d.name,
+      slug: d.slug,
+      price: d.price ?? "0",
+      regular_price: d.price ?? "0",
+      sale_price: d.price ?? "0",
+      on_sale: false,
+      images: d.mainImageUrl ? [{ src: d.mainImageUrl }] : [],
+    } as WooCommerceProduct;
+  } catch {
     throw new Error("Product not found");
   }
 };
 
 export const fetchProductVariation = async (
-  variationId: number,
+  _variationId: number,
   parentId: number
 ) => {
-  const response = await fetch(
-    `/api/wc/v3/products/${parentId}/variations/${variationId}`
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${parentId}`
   );
-  if (!response.ok) {
-    throw new Error(`Failed to fetch variation: ${response.status}`);
-  }
-  return response.json();
+  if (!res.ok) return null;
+  const data = await res.json();
+  const d = data?.data ?? data;
+  return { price: d?.price, sale_price: d?.price, regular_price: d?.price };
 };
 
 export const mapProductToUi = (wcProduct: WooCommerceProduct): Product => {
@@ -475,21 +413,29 @@ export const mapProductToUi = (wcProduct: WooCommerceProduct): Product => {
   return mapped;
 };
 
-// Отримати товари за категорією
+// Отримати товари за категорією (через catalog)
 export const getProductsByCategory = async (
-  categoryId: string
+  categoryIdOrSlug: string
 ): Promise<WooCommerceProduct[]> => {
   try {
-    const response = await api.get("/api/wc/products", {
-      params: { category: categoryId },
-    });
-    return response.data;
-  } catch (error) {
-    // Fallback to mock data if API fails
-    const allProducts = await getAllProducts();
-    return allProducts.filter((product) =>
-      product.categories.some((cat) => cat.id.toString() === categoryId)
-    );
+    const { fetchFilteredProducts } = await import("./bfbApi");
+    const items = (await fetchFilteredProducts({
+      category: categoryIdOrSlug,
+    })) as Array<{ id: string; name: string; slug?: string; price?: string; mainImageUrl?: }>;
+    return items.map((p) => ({
+      id: parseInt(p.id, 10) || 0,
+      name: p.name,
+      slug: p.slug ?? "",
+      price: p.price ?? "0",
+      regular_price: p.price ?? "0",
+      sale_price: p.price ?? "0",
+      on_sale: false,
+      catalog_visibility: "visible",
+      categories: [],
+      images: p.mainImageUrl ? [{ src: p.mainImageUrl }] : [],
+    })) as WooCommerceProduct[];
+  } catch {
+    return [];
   }
 };
 

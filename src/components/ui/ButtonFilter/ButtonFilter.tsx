@@ -20,7 +20,7 @@ export const ButtonFilter = ({
         {loading ? "Завантаження..." : "Застосувати фільтри"}
       </ApplyFilterButton>
       <ResetFilterButton onClick={onReset} disabled={loading}>
-        Скинути всі налаштування
+        Скинути Фільтрування
       </ResetFilterButton>
     </div>
   );
