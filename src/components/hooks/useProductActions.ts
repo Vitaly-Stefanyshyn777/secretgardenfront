@@ -91,11 +91,14 @@ export function useProductActions(
     });
 
     try {
-      const productIdNum =
-        product?.id != null
-          ? typeof product.id === "number"
-            ? product.id
-            : parseInt(String(product.id), 10)
+      const rawId = product?.id;
+      const productId =
+        rawId != null
+          ? typeof rawId === "number"
+            ? rawId
+            : /^\d+$/.test(String(rawId))
+              ? parseInt(String(rawId), 10)
+              : String(rawId)
           : undefined;
 
       await addItem(
@@ -104,7 +107,7 @@ export function useProductActions(
             selectedVariation?.id.toString() ||
             product.id?.toString() ||
             "unknown",
-          productId: !isNaN(Number(productIdNum)) ? Number(productIdNum) : undefined,
+          productId: productId !== undefined ? productId : undefined,
           name: productName,
           price: normalizedPrices.salePrice || normalizedPrices.price,
           image: previewImage,

@@ -10,10 +10,6 @@ interface CartHeaderProps {
 export default function CartHeader({ onClose }: CartHeaderProps) {
   const syncAndClose = useCartStore((st) => st.syncAndClose);
 
-  const handleClose = () => {
-    onClose();
-  };
-
   return (
     <div className={s.header}>
       <h3 className={s.title}>Кошик</h3>
@@ -22,7 +18,7 @@ export default function CartHeader({ onClose }: CartHeaderProps) {
           type="button"
           className={s.syncClose}
           onClick={() => syncAndClose()}
-          title="Закрити і відправити кошик на бекенд (тест)"
+          title="Закрити і синхронізувати кошик (для відлагодження)"
         >
           Закрити + Sync
         </button>
@@ -30,7 +26,7 @@ export default function CartHeader({ onClose }: CartHeaderProps) {
           type="button"
           className={s.close}
           aria-label="Закрити"
-          onClick={handleClose}
+          onClick={onClose}
         >
           <img src="/icons/prefix-3.svg" alt="Закрити" />
         </button>

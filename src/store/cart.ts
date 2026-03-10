@@ -110,11 +110,8 @@ const saveUserCart = (
 
 export interface CartItem {
   id: string;
-  /**
-   * WooCommerce product_id (parent product). Потрібно, щоб коректно тягнути meta_data
-   * навіть коли в кошику лежить варіація.
-   */
-  productId?: number;
+  /** product_id (number) або CUID з каталогу (string) для sync на NestJS */
+  productId?: number | string;
   /**
    * Актуальна WooCommerce ціна (price) для відображення/розрахунків у кошику.
    * Для варіативних товарів — ціна обраної варіації.
@@ -143,7 +140,7 @@ export interface CartItem {
 
 export interface AddItemData {
   id: string;
-  productId?: number;
+  productId?: number | string;
   wcPrice?: number;
   wcRegularPrice?: number;
   name: string;
@@ -283,69 +280,65 @@ export const useCartStore = create<CartState>()(
         }
       },
       syncAndClose: async () => {
-        const LOG = "[Cart Sync]";
-        console.log(LOG, "syncAndClose викликано");
         const state = get();
         const { token } = useAuthStore.getState();
         if (!token) {
-          console.warn(LOG, "Пропуск: немає токена (не авторизовано)");
           set({ isOpen: false });
           return;
         }
         const items = Object.values(state.items);
-        const syncItems = items
-          .filter((it) => it.quantity > 0 && (it.productId || it.id))
-          .map((it) => {
-            if (it.productId && !isNaN(Number(it.productId))) {
-              return { product_id: Number(it.productId), variation_id: it.variationId ?? 0, quantity: it.quantity };
-            }
-            return { slug: it.id, variation_id: it.variationId ?? 0, quantity: it.quantity };
-          });
-        console.log(LOG, "Стан:", {
-          itemsCount: items.length,
-          syncItemsCount: syncItems.length,
-          items: items.map((i) => ({ id: i.id, productId: i.productId, qty: i.quantity })),
-          syncPayload: syncItems,
-        });
-        if (syncItems.length === 0 && !state.pendingCartSync) {
-          console.warn(LOG, "Пропуск: немає товарів для sync");
+        const hasItemsToSync = items.some((it) => it.quantity > 0 && (it.productId != null || it.id));
+        if (!hasItemsToSync && !state.pendingCartSync) {
           set({ isOpen: false });
           return;
         }
         try {
           await get().syncCartToApi();
-          console.log(LOG, "Успішно відправлено на бекенд");
         } catch (err) {
-          console.error(LOG, "Помилка sync:", err);
+          const msg = err && typeof err === "object" && "response" in err
+            ? (err as { response?: { data?: unknown } }).response?.data
+            : err;
+          console.error("[Cart Sync] Помилка:", msg ?? err);
         } finally {
           set({ isOpen: false });
         }
       },
       toggle: () => set((s) => ({ isOpen: !s.isOpen })),
       syncCartToApi: async () => {
-        const LOG = "[Cart Sync API]";
         const state = get();
         const { token } = useAuthStore.getState();
-        if (!token) {
-          console.warn(LOG, "Пропуск: немає token");
-          return;
-        }
+        if (!token) return;
         const items = Object.values(state.items);
         const syncItems = items.length === 0
           ? []
           : items
-              .filter((it) => it.quantity > 0 && (it.productId || it.id))
+              .filter((it) => it.quantity > 0 && (it.productId != null || it.id))
               .map((it) => {
-                if (it.productId && !isNaN(Number(it.productId))) {
-                  return { product_id: Number(it.productId), variation_id: it.variationId ?? 0, quantity: it.quantity };
+                const rawProductId = it.productId;
+                const idStr = String(it.id ?? "").trim();
+                const isCuid = (idStr.startsWith("cl") && idStr.length > 5) || (typeof rawProductId === "string" && rawProductId.startsWith("cl") && rawProductId.length > 5);
+                const isNumericId = typeof rawProductId === "number" || (typeof rawProductId === "string" && /^\d+$/.test(String(rawProductId)));
+                const toStr = (v: unknown) => (v != null && v !== "" ? String(v).trim() : "");
+                if (isCuid) {
+                  const pid = toStr(rawProductId ?? idStr);
+                  return pid ? { productId: pid, quantity: it.quantity } : { slug: idStr || undefined, quantity: it.quantity };
                 }
-                return { slug: it.id, variation_id: it.variationId ?? 0, quantity: it.quantity };
-              });
-        console.log(LOG, "Відправка", { count: syncItems.length, payload: syncItems });
+                if (isNumericId && rawProductId != null) {
+                  const pid = toStr(rawProductId);
+                  return pid ? { productId: pid, quantity: it.quantity } : { slug: idStr || undefined, quantity: it.quantity };
+                }
+                if (/^\d+$/.test(idStr)) {
+                  return { productId: idStr, quantity: it.quantity };
+                }
+                return { slug: idStr || undefined, quantity: it.quantity };
+              })
+              .filter((i) => i.productId || i.slug);
+        if (process.env.NODE_ENV === "development" && syncItems.length === 0 && items.length > 0) {
+          console.warn("[Cart Sync] items в стейті є, але syncItems порожні:", items.map((i) => ({ id: i.id, productId: i.productId, qty: i.quantity })));
+        }
         try {
           set({ isLoading: true, pendingCartSync: false });
           const cartData = await syncCartApi(syncItems);
-          console.log(LOG, "Відповідь OK", { itemsCount: cartData?.items?.length ?? 0 });
           const currentItems = get().items;
           const itemsMap: Record<string, CartItem> = {};
           await hydrateCartItemImages(cartData.items, currentItems);
@@ -360,11 +353,10 @@ export const useCartStore = create<CartState>()(
           });
           set({ items: itemsMap, isLoading: false });
         } catch (err) {
-          console.error(LOG, "Помилка запиту:", err);
-          if (err && typeof err === "object" && "response" in err) {
-            const res = (err as { response?: { status?: number; data?: unknown } }).response;
-            console.error(LOG, "HTTP статус:", res?.status, "data:", res?.data);
-          }
+          const msg = err && typeof err === "object" && "response" in err
+            ? (err as { response?: { data?: unknown } }).response?.data
+            : err;
+          console.error("[Cart Sync] Помилка:", msg ?? err);
           set({ pendingCartSync: true, isLoading: false });
         }
       },

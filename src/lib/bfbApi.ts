@@ -2440,20 +2440,32 @@ export const clearCart = async (): Promise<{
 };
 
 export interface SyncCartItem {
-  product_id?: number;
+  productId?: string;
   slug?: string;
-  variation_id?: number;
   quantity: number;
+}
+
+function toProductIdString(value: unknown): string | undefined {
+  if (value == null || value === "") return undefined;
+  const s = String(value).trim();
+  return s === "" ? undefined : s;
 }
 
 export const syncCart = async (items: SyncCartItem[]): Promise<CartResponse> => {
   const body = {
-    items: items.map((it) => ({
-      ...(it.product_id ? { productId: it.product_id } : {}),
-      ...(it.slug ? { slug: it.slug } : {}),
-      quantity: it.quantity,
-      variationId: it.variation_id ?? 0,
-    })),
+    items: items
+      .filter((i) => (i.productId != null || i.slug) && (i.quantity ?? 0) > 0)
+      .map((i) => {
+        const productId = toProductIdString(i.productId);
+        const slug = i.slug ? String(i.slug).trim() || undefined : undefined;
+        if (!productId && !slug) return null;
+        return {
+          ...(productId != null ? { productId } : {}),
+          ...(slug ? { slug } : {}),
+          quantity: typeof i.quantity === "number" && i.quantity > 0 ? i.quantity : 1,
+        };
+      })
+      .filter((i): i is NonNullable<typeof i> => i != null && (i.productId != null || i.slug != null)),
   };
   const response = await api.post("/api/cart/sync", body);
   return response.data;

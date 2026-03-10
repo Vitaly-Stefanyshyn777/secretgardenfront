@@ -2,27 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-async function getUserIdFromToken(token: string): Promise<number | null> {
-  try {
-    const response = await fetch(`${API_BASE}/wp-json/wp/v2/users/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
-
-    if (response.ok) {
-      const userData = await response.json();
-      return userData?.id || null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
 function getAuthToken(req: NextRequest): string | null {
   const auth = req.headers.get("authorization") || req.headers.get("Authorization");
   const userCookie = req.cookies.get("bfb_user_jwt")?.value;
@@ -33,12 +12,16 @@ function buildHeaders(token: string | null): Record<string, string> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-
   if (token) {
     headers["Authorization"] = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
   }
-
   return headers;
+}
+
+function buildNestUrl(path: string, searchParams?: URLSearchParams): string {
+  const base = API_BASE?.replace(/\/$/, "") ?? "";
+  const query = searchParams?.toString();
+  return query ? `${base}/api/cart${path}?${query}` : `${base}/api/cart${path}`;
 }
 
 export async function GET(req: NextRequest) {
@@ -55,24 +38,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const headers = buildHeaders(token);
-    const tokenToValidate = token.replace(/^Bearer\s+/i, "");
-    const userId = await getUserIdFromToken(tokenToValidate);
-
-    if (userId) {
-      headers["X-User-ID"] = String(userId);
-    }
-
-    const cartUrl = `${API_BASE}/wp-json/wp/v2/sl_cart${userId ? `?user_id=${userId}` : ""}`;
-
-    const response = await fetch(cartUrl, {
+    const url = buildNestUrl("", new URL(req.url).searchParams);
+    const response = await fetch(url, {
       method: "GET",
-      headers,
+      headers: buildHeaders(token),
       cache: "no-store",
     });
 
     const data = await response.text();
-
     return new NextResponse(data, {
       status: response.status,
       headers: {
@@ -93,9 +66,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
-    const body = await req.json();
     const token = getAuthToken(req);
-
     if (!token) {
       return NextResponse.json(
         { error: "Unauthorized", message: "No user authentication token provided" },
@@ -103,28 +74,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const headers = buildHeaders(token);
-    const tokenToValidate = token.replace(/^Bearer\s+/i, "");
-    const userId = await getUserIdFromToken(tokenToValidate);
-
-    if (userId) {
-      headers["X-User-ID"] = String(userId);
-      if (body && typeof body === "object") {
-        body.user_id = userId;
-      }
-    }
-
-    const cartUrl = `${API_BASE}/wp-json/wp/v2/sl_cart${userId ? `?user_id=${userId}` : ""}`;
-
-    const response = await fetch(cartUrl, {
+    const body = await req.json();
+    const url = buildNestUrl("", new URL(req.url).searchParams);
+    const response = await fetch(url, {
       method: "POST",
-      headers,
+      headers: buildHeaders(token),
       body: JSON.stringify(body),
       cache: "no-store",
     });
 
     const data = await response.text();
-
     return new NextResponse(data, {
       status: response.status,
       headers: {
@@ -145,34 +104,24 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const cartItemKey = searchParams.get("cart_item_key");
-
-    if (!cartItemKey) {
-      return NextResponse.json({ error: "Missing cart_item_key parameter" }, { status: 400 });
+    const token = getAuthToken(req);
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized", message: "No authentication token provided" },
+        { status: 401 }
+      );
     }
 
     const body = await req.json();
-    const token = getAuthToken(req);
-    const headers = buildHeaders(token);
-    const tokenToValidate = token?.replace(/^Bearer\s+/i, "") || "";
-    const userId = tokenToValidate ? await getUserIdFromToken(tokenToValidate) : null;
-
-    if (userId) {
-      headers["X-User-ID"] = String(userId);
-    }
-
-    const cartUrl = `${API_BASE}/wp-json/wp/v2/sl_cart/${cartItemKey}${userId ? `?user_id=${userId}` : ""}`;
-
-    const response = await fetch(cartUrl, {
+    const url = buildNestUrl("", new URL(req.url).searchParams);
+    const response = await fetch(url, {
       method: "PUT",
-      headers,
+      headers: buildHeaders(token),
       body: JSON.stringify(body),
       cache: "no-store",
     });
 
     const data = await response.text();
-
     return new NextResponse(data, {
       status: response.status,
       headers: {
@@ -193,33 +142,22 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const cartItemKey = searchParams.get("cart_item_key");
-    const isClear = searchParams.get("clear") === "true";
-
     const token = getAuthToken(req);
-    const headers = buildHeaders(token);
-    const tokenToValidate = token?.replace(/^Bearer\s+/i, "") || "";
-    const userId = tokenToValidate ? await getUserIdFromToken(tokenToValidate) : null;
-
-    if (userId) {
-      headers["X-User-ID"] = String(userId);
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized", message: "No authentication token provided" },
+        { status: 401 }
+      );
     }
 
-    const endpoint = isClear
-      ? `${API_BASE}/wp-json/wp/v2/sl_cart/clear`
-      : `${API_BASE}/wp-json/wp/v2/sl_cart/${cartItemKey}`;
-
-    const finalUrl = userId ? `${endpoint}${endpoint.includes("?") ? "&" : "?"}user_id=${userId}` : endpoint;
-
-    const response = await fetch(finalUrl, {
+    const url = buildNestUrl("", new URL(req.url).searchParams);
+    const response = await fetch(url, {
       method: "DELETE",
-      headers,
+      headers: buildHeaders(token),
       cache: "no-store",
     });
 
     const data = await response.text();
-
     return new NextResponse(data, {
       status: response.status,
       headers: {
