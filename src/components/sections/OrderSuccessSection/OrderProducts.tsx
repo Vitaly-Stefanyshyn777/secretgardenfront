@@ -27,24 +27,24 @@ export default function OrderProducts({
     {}
   );
 
+  const toKey = (v: string | number) => String(v ?? "");
+
   // Отримуємо товари: спочатку з order, якщо він є, інакше з кошика
   const productsToShow: ProductWithImage[] = React.useMemo(() => {
     if (order?.line_items && order.line_items.length > 0) {
-      // Використовуємо товари з замовлення, але шукаємо зображення в кошику або WooCommerce
       return order.line_items.map((item) => {
-        // Спочатку шукаємо зображення в кошику за product_id
-        const cartItem = cartItems.find((cartItem) => {
-          // Порівнюємо числовий product_id з кошика
-          const cartProductId = extractProductId(cartItem.id);
-          return cartProductId === item.product_id;
-        });
-
+        const itemKey = toKey(item.product_id);
+        const cartItem = cartItems.find(
+          (c) => toKey(c.productId ?? c.id) === itemKey
+        );
         const finalImage =
-          cartItem?.image || productImages[item.product_id.toString()];
+          (item as { image?: string }).image ||
+          cartItem?.image ||
+          productImages[itemKey];
 
         return {
           id: item.product_id,
-          name: item.name,
+          name: item.name || "Товар",
           quantity: item.quantity,
           image: finalImage,
         };
@@ -69,54 +69,42 @@ export default function OrderProducts({
     }
 
     const loadProductImages = async () => {
-      const productsToFetch = order.line_items.filter(
-        (item) => !productImages[item.product_id.toString()]
-      );
+      const productsToFetch = order.line_items.filter((item) => {
+        const key = toKey(item.product_id);
+        return !(item as { image?: string }).image && !productImages[key];
+      });
 
-      if (productsToFetch.length === 0) {
-        return;
-      }
+      if (productsToFetch.length === 0) return;
 
       try {
         const imagesMap: Record<string, string> = {};
 
         await Promise.all(
           productsToFetch.map(async (item) => {
+            const key = toKey(item.product_id);
             try {
-              // Спочатку намагаємося отримати як WooCommerce продукт
-              const wcResponse = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${item.product_id}`
+              const base =
+                process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "";
+              const res = await fetch(
+                `${base}/api/catalog/products/${encodeURIComponent(key)}`
               );
-              if (wcResponse.ok) {
-                const product = await wcResponse.json();
-                if (product.images && product.images.length > 0) {
-                  imagesMap[item.product_id.toString()] = product.images[0].src;
-                  return;
-                }
+              if (res.ok) {
+                const product = await res.json();
+                const img =
+                  product.mainImageUrl ||
+                  product.images?.[0]?.src ||
+                  product.images?.[0]?.url;
+                if (img) imagesMap[key] = img;
               }
-
-              // Якщо не знайшли в WooCommerce, намагаємося отримати як курс
-              const courseResponse = await fetch(
-                `/api/course?id=${item.product_id}`
-              );
-              if (courseResponse.ok) {
-                const course = await courseResponse.json();
-                // Курси можуть мати зображення в різних полях
-                const imageUrl =
-                  course.featured_image_url || course.image || course.thumbnail;
-                if (imageUrl) {
-                  imagesMap[item.product_id.toString()] = imageUrl;
-                }
-              }
-            } catch (error) {
-              // Помилка обробляється мовчки
+            } catch {
+              // ignore
             }
           })
         );
 
         setProductImages((prev) => ({ ...prev, ...imagesMap }));
-      } catch (error) {
-        // Помилка обробляється мовчки
+      } catch {
+        // ignore
       }
     };
 

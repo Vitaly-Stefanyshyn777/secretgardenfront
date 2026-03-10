@@ -1,5 +1,4 @@
 "use client";
-import { calculatePrice, getPriceSellRegistry, normalizePriceParams } from "@/lib/priceUtils";
 import { type CartItem } from "@/store/cart";
 import { FormData } from "@/components/sections/CheckoutSection/types";
 import type { CreateOrderPayload } from "@/lib/bfbApi";

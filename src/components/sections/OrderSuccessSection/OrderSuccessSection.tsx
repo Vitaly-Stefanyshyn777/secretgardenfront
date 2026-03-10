@@ -136,8 +136,9 @@ export default function OrderSuccessSection({
       : `№${orderId}`
     : null;
 
-  const formattedDate = order?.date_created
-    ? new Date(order.date_created).toLocaleDateString("uk-UA", {
+  const dateSource = (order as { createdAt?: string })?.createdAt ?? order?.date_created;
+  const formattedDate = dateSource
+    ? new Date(dateSource).toLocaleDateString("uk-UA", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -149,10 +150,29 @@ export default function OrderSuccessSection({
       });
 
   const orderComputed = React.useMemo(() => {
+    const ord = order as {
+      subtotal?: number;
+      discountAmount?: number;
+      deliveryCost?: number;
+      total?: number;
+    };
+    if (
+      ord?.subtotal != null &&
+      ord?.total != null &&
+      (ord.subtotal > 0 || ord.total > 0)
+    ) {
+      return {
+        finalTotal: Number(ord.total),
+        discount: Number(ord.discountAmount ?? 0),
+        deliveryCost: Number(ord.deliveryCost ?? 0),
+      };
+    }
+
     if (!order?.line_items || order.line_items.length === 0) {
       return {
         finalTotal: safeTotal,
         discount: discount,
+        deliveryCost: 0,
       };
     }
 
@@ -193,53 +213,58 @@ export default function OrderSuccessSection({
     return {
       finalTotal: totalFinal,
       discount: discountAmount,
+      deliveryCost: 0,
     };
-  }, [order?.line_items, productMetaById, effectiveIsLoggedIn, safeTotal, discount]);
+  }, [order?.line_items, order, productMetaById, effectiveIsLoggedIn, safeTotal, discount]);
 
-  // Дані з замовлення
+  const ord = order as {
+    deliveryAddress?: string;
+    paymentLabel?: string;
+    recipient?: string;
+    phoneLabel?: string;
+  };
   const firstNameRaw = order?.billing?.first_name?.trim() || "";
   const lastNameRaw = order?.billing?.last_name?.trim() || "";
   const phoneRaw = order?.billing?.phone?.trim() || "";
-
   const shipping = order?.shipping;
   const cityRaw = shipping?.city?.trim() || "";
   const address1Raw = shipping?.address_1?.trim() || "";
   const address2Raw = shipping?.address_2?.trim() || "";
 
-  const paymentMethodDisplay =
-    order?.payment_method_title?.trim() || "Не вказано";
-
-  // Одержувач з shipping або billing
   const recipientFirstName = shipping?.first_name?.trim() || firstNameRaw;
   const recipientLastName = shipping?.last_name?.trim() || lastNameRaw;
-  const recipientDisplay =
-    recipientFirstName || recipientLastName
-      ? `${recipientFirstName}${
-          recipientFirstName && recipientLastName ? " " : ""
-        }${recipientLastName}`
-      : "Одержувач не вказаний";
-
   const recipientPhone = shipping?.phone?.trim() || phoneRaw;
-  const phoneDisplay = recipientPhone.length
-    ? recipientPhone
-    : "Телефон не вказано";
 
-  // Адреса доставки
-  const deliveryAddressParts: string[] = [];
-  if (cityRaw) deliveryAddressParts.push(cityRaw);
-  if (address1Raw) {
-    // Перевіряємо, чи це відділення Нової Пошти або адреса
-    if (address1Raw.includes("Відділення") || address1Raw.includes("№")) {
-      deliveryAddressParts.push(address1Raw);
-    } else {
-      deliveryAddressParts.push(`вул. ${address1Raw}`);
-    }
-  }
-  if (address2Raw) deliveryAddressParts.push(address2Raw);
+  const deliveryAddress =
+    ord?.deliveryAddress?.trim() ||
+    (() => {
+      const parts: string[] = [];
+      if (cityRaw) parts.push(cityRaw);
+      if (address1Raw) {
+        parts.push(
+          address1Raw.includes("Відділення") || address1Raw.includes("№")
+            ? address1Raw
+            : `вул. ${address1Raw}`
+        );
+      }
+      if (address2Raw) parts.push(address2Raw);
+      return parts.length ? parts.join(", ") : "Відділення не вказано";
+    })();
 
-  const deliveryAddress = deliveryAddressParts.filter(Boolean).length
-    ? deliveryAddressParts.join(", ")
-    : "Відділення не вказано";
+  const paymentMethodDisplay =
+    ord?.paymentLabel?.trim() ||
+    order?.payment_method_title?.trim() ||
+    "Не вказано";
+
+  const recipientDisplay =
+    ord?.recipient?.trim() ||
+    (recipientFirstName || recipientLastName
+      ? `${recipientFirstName}${recipientFirstName && recipientLastName ? " " : ""}${recipientLastName}`
+      : "Одержувач не вказаний");
+
+  const phoneDisplay =
+    ord?.phoneLabel?.trim() ||
+    (recipientPhone.length ? recipientPhone : "Телефон не вказано");
 
   useEffect(() => {
     const timer = setTimeout(() => setIsHeaderSkeleton(false), 300);
@@ -273,9 +298,12 @@ export default function OrderSuccessSection({
               />
 
               <OrderSummary
-                safeTotal={orderComputed.finalTotal}
+                safeTotal={
+                  (order as { subtotal?: number })?.subtotal ??
+                  orderComputed.finalTotal
+                }
                 discount={orderComputed.discount}
-                deliveryCost={0}
+                deliveryCost={orderComputed.deliveryCost ?? 0}
                 finalTotal={orderComputed.finalTotal}
               />
             </div>

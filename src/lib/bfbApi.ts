@@ -2284,24 +2284,30 @@ export interface CreateOrderPayload {
 
 export interface OrderResponse {
   id: string;
-  status: string;
-  total: number;
-  subtotal: number;
+  status?: string;
+  total?: number;
+  subtotal?: number;
   discountAmount?: number;
   deliveryCost?: number;
+  /** NestJS GET /api/orders/:id — готові підстановки для UI */
+  createdAt?: string;
+  deliveryAddress?: string;
+  paymentLabel?: string;
+  recipient?: string;
+  phoneLabel?: string;
   items?: Array<{
     productId: string;
     quantity: number;
-    price: number;
+    price?: number;
     product?: { name?: string; mainImageUrl?: string; [key: string]: unknown };
   }>;
-  /** NestJS може повертати items; WC використовує line_items */
   line_items?: Array<{
     product_id: number | string;
     quantity: number;
     name?: string;
     total?: string;
     subtotal?: string;
+    image?: string;
   }>;
   billing?: { first_name?: string; last_name?: string; phone?: string; email?: string; address_1?: string; city?: string };
   shipping?: { first_name?: string; last_name?: string; phone?: string; address_1?: string; address_2?: string; city?: string };
@@ -2310,21 +2316,52 @@ export interface OrderResponse {
   payment_method_title?: string;
 }
 
-/** Нормалізує NestJS order (items) до WC-подібного формату (line_items) */
-export function normalizeOrderForDisplay(raw: OrderResponse | null): OrderResponse | null {
+/** Нормалізує NestJS order до єдиного формату для відображення */
+export function normalizeOrderForDisplay(raw: OrderResponse | Record<string, unknown> | null): OrderResponse | null {
   if (!raw) return null;
-  if (raw.line_items && raw.line_items.length > 0) return raw;
-  if (!raw.items || raw.items.length === 0) return raw;
+  const r = raw as Record<string, unknown>;
 
-  const line_items = raw.items.map((it) => ({
-    product_id: it.productId ?? (it.product as { id?: string })?.id ?? "",
-    quantity: it.quantity,
-    name: (it.product as { name?: string })?.name ?? "",
-    total: String((it.price ?? 0) * it.quantity),
-    subtotal: String((it.price ?? 0) * it.quantity),
-  }));
+  if (r.line_items && Array.isArray(r.line_items) && r.line_items.length > 0) {
+    return raw as OrderResponse;
+  }
 
-  return { ...raw, line_items };
+  if (r.items && Array.isArray(r.items) && r.items.length > 0) {
+    const items = r.items as Array<{
+      productId?: string;
+      product?: { id?: string; name?: string; mainImageUrl?: string };
+      quantity: number;
+      price?: number;
+    }>;
+    const line_items = items.map((it) => ({
+      product_id: it.productId ?? (it.product as { id?: string })?.id ?? "",
+      quantity: it.quantity,
+      name: (it.product as { name?: string })?.name ?? "",
+      total: String(((it.price ?? 0) * it.quantity)),
+      subtotal: String(((it.price ?? 0) * it.quantity)),
+      image: (it.product as { mainImageUrl?: string })?.mainImageUrl,
+    }));
+    const out = { ...r, line_items } as OrderResponse;
+
+    if (!out.billing && r.firstName) {
+      out.billing = {
+        first_name: String(r.firstName),
+        last_name: String(r.lastName ?? ""),
+        phone: String(r.phone ?? ""),
+        email: String(r.email ?? ""),
+      };
+    }
+    if (!out.shipping && r.deliveryCity) {
+      out.shipping = {
+        first_name: String(r.recipientFirstName ?? ""),
+        last_name: String(r.recipientLastName ?? ""),
+        address_1: String(r.deliveryAddress ?? ""),
+        city: String(r.deliveryCity ?? ""),
+      };
+    }
+    return out;
+  }
+
+  return raw as OrderResponse;
 }
 
 export const createOrder = async (
