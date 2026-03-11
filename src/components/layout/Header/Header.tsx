@@ -183,11 +183,6 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
-  // Не показуємо хедер на сторінках order-success та checkout
-  if (pathname === "/order-success" || pathname === "/checkout") {
-    return null;
-  }
-
   // Перевірка безпосередньо в рендері для надійності
   const shouldHideHeader =
     typeof window !== "undefined" &&

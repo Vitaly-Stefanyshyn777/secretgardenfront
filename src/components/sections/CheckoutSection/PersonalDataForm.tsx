@@ -2,8 +2,8 @@
 import React from "react";
 import { FormData } from "./types";
 import s from "./CheckoutSection.module.css";
-import SecondaryInput from "@/components/ui/FormFields/SecondaryInput";
-import secondaryInputStyles from "@/components/ui/FormFields/SecondaryInput.module.css";
+import InputField from "@/components/ui/FormFields/InputField";
+import { UserIcon, NumberIcon, EmailIcon } from "@/components/Icons/Icons";
 
 interface PersonalDataFormProps {
   formData: FormData;
@@ -33,45 +33,45 @@ export default function PersonalDataForm({
     <div className={s.titleFormBlock}>
       <h2 className={s.sectionTitle}>Особисті дані</h2>
       <div className={s.grid2}>
-        <SecondaryInput
+        <InputField
+          icon={<UserIcon />}
           label="Ваше ім'я"
           id="checkout-form-name-field"
           value={formData.firstName}
           onChange={(e) =>
             setFormData({ ...formData, firstName: e.target.value })
           }
-          inputClassName={secondaryInputStyles.inputWhite}
           hasError={!!errors.firstName}
           supportingText={errors.firstName || ""}
         />
-        <SecondaryInput
+        <InputField
+          icon={<UserIcon />}
           label="Ваше прізвище"
           id="checkout-form-lastname-field"
           value={formData.lastName}
           onChange={(e) =>
             setFormData({ ...formData, lastName: e.target.value })
           }
-          inputClassName={secondaryInputStyles.inputWhite}
           hasError={!!errors.lastName}
           supportingText={errors.lastName || ""}
         />
-        <SecondaryInput
+        <InputField
+          icon={<NumberIcon />}
           label="Ваш номер телефону"
           id="checkout-form-phone-field"
           type="tel"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          inputClassName={secondaryInputStyles.inputWhite}
           hasError={!!errors.phone}
           supportingText={errors.phone || ""}
         />
-        <SecondaryInput
+        <InputField
+          icon={<EmailIcon />}
           label="Ваша пошта"
           id="checkout-form-email-field"
           type="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          inputClassName={secondaryInputStyles.inputWhite}
           hasError={!!errors.email}
           supportingText={errors.email || ""}
         />
@@ -90,8 +90,9 @@ export default function PersonalDataForm({
         <div className={s.titleFormBlock}>
           <h2 className={s.sectionTitle}>Дані отримувача</h2>
           <div className={s.grid2}>
-            <SecondaryInput
-              label="Ваше ім’я"
+            <InputField
+              icon={<UserIcon />}
+              label="Ім'я отримувача"
               id="checkout-recipient-form-name-field"
               value={formData.recipientFirstName}
               onChange={(e) =>
@@ -100,12 +101,12 @@ export default function PersonalDataForm({
                   recipientFirstName: e.target.value,
                 })
               }
-              inputClassName={secondaryInputStyles.inputWhite}
               hasError={!!errors.recipientFirstName}
               supportingText={errors.recipientFirstName || ""}
             />
-            <SecondaryInput
-              label="Ваше прізвище"
+            <InputField
+              icon={<UserIcon />}
+              label="Прізвище отримувача"
               id="checkout-recipient-form-lastname-field"
               value={formData.recipientLastName}
               onChange={(e) =>
@@ -114,12 +115,12 @@ export default function PersonalDataForm({
                   recipientLastName: e.target.value,
                 })
               }
-              inputClassName={secondaryInputStyles.inputWhite}
               hasError={!!errors.recipientLastName}
               supportingText={errors.recipientLastName || ""}
             />
-            <SecondaryInput
-              label="Ваш номер телефону"
+            <InputField
+              icon={<NumberIcon />}
+              label="Номер телефону отримувача"
               id="checkout-recipient-form-phone-field"
               type="tel"
               value={formData.recipientPhone}
@@ -129,7 +130,6 @@ export default function PersonalDataForm({
                   recipientPhone: e.target.value,
                 })
               }
-              inputClassName={secondaryInputStyles.inputWhite}
               hasError={!!errors.recipientPhone}
               supportingText={errors.recipientPhone || ""}
             />

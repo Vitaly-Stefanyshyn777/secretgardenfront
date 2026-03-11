@@ -5,7 +5,6 @@ import RegisterModal from "@/components/auth/RegisterModal/RegisterModal";
 import ResetPasswordModal from "@/components/auth/ResetPasswordModal/ResetPasswordModal";
 import { useAuthStore } from "@/store/auth";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   EmailIcon,
@@ -17,7 +16,6 @@ import {
 import s from "./Footer.module.css";
 
 const Footer = () => {
-  const pathname = usePathname();
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const isLoginModalOpen = useAuthStore((s) => s.isLoginModalOpen);
@@ -29,11 +27,6 @@ const Footer = () => {
     // Невелика затримка щоб уникнути конфлікту з закриттям попередньої модалки
     setTimeout(() => setIsResetPasswordOpen(true), 100);
   };
-
-  // Не показуємо футер на сторінках order-success та checkout
-  if (pathname === "/order-success" || pathname === "/checkout") {
-    return null;
-  }
 
   return (
     <footer className={s.footer}>

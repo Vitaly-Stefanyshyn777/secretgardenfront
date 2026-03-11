@@ -9,8 +9,6 @@ import { useOrderSubmission } from "@/components/hooks/useOrderSubmission";
 import { useCheckoutUI } from "@/components/hooks/useCheckoutUI";
 import { FormData } from "./types";
 import MapPickerModal from "@/components/sections/CheckoutSection/MapPickerModal/MapPickerModal";
-import CheckoutHeader from "@/components/layout/CheckoutHeader/CheckoutHeader";
-import CheckoutFooter from "@/components/layout/CheckoutFooter/CheckoutFooter";
 import CheckoutForm from "./CheckoutForm";
 import OrderSummarySkeleton from "./OrderSummarySkeleton";
 import OrderSummary from "./OrderSummary";
@@ -128,7 +126,6 @@ export default function CheckoutSection() {
 
   return (
     <>
-      <CheckoutHeader />
       <div className={s.page}>
         <div className={s.container}>
           <CheckoutForm
@@ -153,7 +150,6 @@ export default function CheckoutSection() {
           </div>
         </div>
       </div>
-      <CheckoutFooter />
       <MapPickerModal
         isOpen={checkoutState.isMapOpen}
         onClose={() => checkoutState.setIsMapOpen(false)}
