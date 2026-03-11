@@ -9,8 +9,7 @@ import DropdownField, {
 import BranchDropdownField, {
   BranchDropdownOption,
 } from "@/components/ui/FormFields/BranchDropdownField";
-import SecondaryInput from "@/components/ui/FormFields/SecondaryInput";
-import secondaryInputStyles from "@/components/ui/FormFields/SecondaryInput.module.css";
+import InputField from "@/components/ui/FormFields/InputField";
 
 interface Warehouse {
   name: string;
@@ -226,14 +225,13 @@ export default function DeliveryForm({
         <div className={s.deliveryRow}>
           <div className={s.inputWrapBranch}>
             {deliveryType === "courier" ? (
-              <SecondaryInput
+              <InputField
                 label="Адреса доставки"
                 type="text"
                 value={formData.branch}
                 onChange={(e) =>
                   setFormData({ ...formData, branch: e.target.value })
                 }
-                inputClassName={secondaryInputStyles.inputWhite}
                 hasError={!!errors.branch}
                 supportingText={errors.branch || ""}
                 placeholder="Введіть повну адресу доставки"
@@ -271,40 +269,37 @@ export default function DeliveryForm({
           {deliveryType === "courier" && (
             <div className={s.addressFields}>
               <div className={`${s.inputWrap} ${s.inputWrapHouse}`}>
-                <SecondaryInput
+                <InputField
                   label="Будинок"
                   type="text"
                   value={formData.house}
                   onChange={(e) =>
                     setFormData({ ...formData, house: e.target.value })
                   }
-                  inputClassName={secondaryInputStyles.inputWhite}
                   hasError={!!errors.house}
                   supportingText={errors.house || ""}
                 />
               </div>
               <div className={`${s.inputWrap} ${s.inputWrapBuilding}`}>
-                <SecondaryInput
+                <InputField
                   label="Корпус"
                   type="text"
                   value={formData.building}
                   onChange={(e) =>
                     setFormData({ ...formData, building: e.target.value })
                   }
-                  inputClassName={secondaryInputStyles.inputWhite}
                   hasError={!!errors.building}
                   supportingText={errors.building || ""}
                 />
               </div>
               <div className={`${s.inputWrap} ${s.inputWrapApartment}`}>
-                <SecondaryInput
+                <InputField
                   label="Квартира"
                   type="text"
                   value={formData.apartment}
                   onChange={(e) =>
                     setFormData({ ...formData, apartment: e.target.value })
                   }
-                  inputClassName={secondaryInputStyles.inputWhite}
                   hasError={!!errors.apartment}
                   supportingText={errors.apartment || ""}
                 />

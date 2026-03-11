@@ -3,7 +3,6 @@ import React from "react";
 import { FormData } from "./types";
 import s from "./CheckoutSection.module.css";
 import InputField from "@/components/ui/FormFields/InputField";
-import { UserIcon, NumberIcon, EmailIcon } from "@/components/Icons/Icons";
 
 interface PersonalDataFormProps {
   formData: FormData;
@@ -34,7 +33,6 @@ export default function PersonalDataForm({
       <h2 className={s.sectionTitle}>Особисті дані</h2>
       <div className={s.grid2}>
         <InputField
-          icon={<UserIcon />}
           label="Ваше ім'я"
           id="checkout-form-name-field"
           value={formData.firstName}
@@ -45,7 +43,6 @@ export default function PersonalDataForm({
           supportingText={errors.firstName || ""}
         />
         <InputField
-          icon={<UserIcon />}
           label="Ваше прізвище"
           id="checkout-form-lastname-field"
           value={formData.lastName}
@@ -56,7 +53,6 @@ export default function PersonalDataForm({
           supportingText={errors.lastName || ""}
         />
         <InputField
-          icon={<NumberIcon />}
           label="Ваш номер телефону"
           id="checkout-form-phone-field"
           type="tel"
@@ -66,7 +62,6 @@ export default function PersonalDataForm({
           supportingText={errors.phone || ""}
         />
         <InputField
-          icon={<EmailIcon />}
           label="Ваша пошта"
           id="checkout-form-email-field"
           type="email"
@@ -91,7 +86,6 @@ export default function PersonalDataForm({
           <h2 className={s.sectionTitle}>Дані отримувача</h2>
           <div className={s.grid2}>
             <InputField
-              icon={<UserIcon />}
               label="Ім'я отримувача"
               id="checkout-recipient-form-name-field"
               value={formData.recipientFirstName}
@@ -105,7 +99,6 @@ export default function PersonalDataForm({
               supportingText={errors.recipientFirstName || ""}
             />
             <InputField
-              icon={<UserIcon />}
               label="Прізвище отримувача"
               id="checkout-recipient-form-lastname-field"
               value={formData.recipientLastName}
@@ -119,7 +112,6 @@ export default function PersonalDataForm({
               supportingText={errors.recipientLastName || ""}
             />
             <InputField
-              icon={<NumberIcon />}
               label="Номер телефону отримувача"
               id="checkout-recipient-form-phone-field"
               type="tel"

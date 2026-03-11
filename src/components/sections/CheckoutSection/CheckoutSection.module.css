@@ -23,11 +23,11 @@
   gap: 24px;
 }
 .sectionTitle {
-  font-family: var(--second-family);
-  font-weight: 500;
-  font-size: 26px;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
   line-height: 120%;
-  color: var(--black);
+  color: var(--bіliy);
 }
 .grid2 {
   display: grid;
@@ -238,7 +238,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 130%;
-  color: var(--black);
+  color: var(--bіliy);
   opacity: 0.5;
 }
 
@@ -268,22 +268,22 @@
 .checkbox input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--bіliy);
   border-radius: 4px;
-  background: white;
+
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
   position: relative;
-  border: 1px solid #000;
+
   border-radius: 2px;
   width: 16px;
   height: 16px;
 }
 
 .checkbox input[type="checkbox"]:checked {
-  background: var(--violet);
-  border-color: var(--violet);
+  border: 1px solid var(--zoloto);
+  background: var(--fon);
 }
 
 .checkbox input[type="checkbox"]:checked::after {
@@ -358,8 +358,9 @@
   color: rgba(14, 14, 14, 0.4);
 }
 .primary {
-  background: var(--violet);
-  border-radius: 12px;
+  border: 1px solid var(--zoloto);
+
+  border-radius: 4px;
   padding: 20px 24px;
   font-family: var(--third-family);
   font-weight: 600;
@@ -381,7 +382,6 @@
 }
 
 .primary:disabled {
-  background: #e5e7eb;
   color: #9ca3af;
   cursor: not-allowed;
   opacity: 0.6;
@@ -394,7 +394,6 @@
 }
 
 .primaryWide {
-  background: var(--violet);
   color: #fff;
   border: none;
   cursor: pointer;
@@ -402,14 +401,17 @@
   text-decoration: none;
   display: inline-block;
   text-align: center;
-  border-radius: 18px;
+  border-radius: 5px;
   padding: 24px 42px;
   font-family: var(--third-family);
-  font-weight: 800;
+  font-weight: 600;
   font-size: 16px;
   line-height: 135%;
   color: var(--white);
   transition: all 0.2s ease;
+
+  border: 1.33px solid var(--zoloto);
+  padding: 15px 21px;
 }
 
 .primaryWide:hover {
@@ -422,7 +424,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 140%;
-  color: var(--black);
+  color: var(--bіliy);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -435,14 +437,16 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  border: 1.5px solid rgba(14, 14, 14, 0.25);
+  border: 1.5px solid var(--bіliy);
   border-radius: 50%;
   position: relative;
-  background: var(--white);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  background: var(--fon);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 .radioInput:checked {
-  border-color: var(--violet);
+  /* border-color: var(--violet); */
 }
 .radioInput:checked::after {
   content: "";
@@ -453,14 +457,16 @@
   width: 60%;
   height: 60%;
   border-radius: 50%;
-  background-color: var(--violet);
+
+  background-color: var(--zoloto);
 }
 .radioBlock {
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 4px;
+  padding: 15px 15px 15px 24px;
   width: 302px;
-  height: 64px;
-  background: var(--white);
+
+  border: 1px solid var(--bіliy);
+
   display: flex;
   align-items: center;
   gap: 12px;
@@ -534,10 +540,12 @@
   /* flex: 1; */
   width: 461px;
   align-self: flex-start;
-  height: 64px;
-  font-weight: 700;
-  font-size: 16px;
+  padding: 14px 15px 14px 24px;
+  height: auto;
+  font-weight: 400;
+  font-size: 14px;
   line-height: 135%;
+  border: 1px solid var(--bіliy);
 }
 .paymentBlock {
   display: flex;
@@ -595,20 +603,21 @@
   font-weight: 500;
   font-size: 36px;
   line-height: 110%;
-  color: var(--black);
+  color: var(--bіliy);
 }
 .summaryCurrency {
   font-family: var(--second-family);
   font-weight: 500;
   font-size: 30px;
   line-height: 110%;
-  color: var(--black);
+  color: var(--bіliy);
 }
 .summaryCard {
-  background: var(--white);
+  background: var(--fon);
+  border: 1px solid var(--bіliy);
   width: 100%;
 
-  border-radius: 16px;
+  border-radius: 6px;
   padding: 32px;
   display: flex;
   flex-direction: column;
@@ -632,7 +641,7 @@
   font-weight: 500;
   font-size: 36px;
   line-height: 110%;
-  color: var(--black);
+  color: var(--bіliy);
 }
 .summaryDivider {
   height: 1px;
@@ -672,6 +681,7 @@
 }
 .name {
   font-weight: 600;
+  color: var(--bіliy);
 }
 .color {
   color: rgba(14, 14, 14, 0.6);
@@ -715,12 +725,20 @@
   text-align: center;
 }
 .removeBtn {
-  border: none;
-  background: #f2f2f2;
-  border-radius: 8px;
-  padding: 6px;
+  color: var(--chervoniy);
   cursor: pointer;
-  transition: all 0.3s ease;
+  background: none;
+  background-color: var(--bg-light);
+  fill: #f2f2f2;
+  border: none;
+  border: 1px solid var(--chervoniy);
+
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25vw;
+  transition: all 0.2s;
+  display: flex;
 }
 .removeBtn:hover {
   background: var(--violet);
@@ -1009,9 +1027,9 @@
   margin-left: 0px;
 }
 .removeBtn {
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 8px;
-  background: #f2f2f2;
+
   cursor: pointer;
 
   svg {
@@ -1029,7 +1047,6 @@
   text-align: center;
   padding: 40px 20px;
 }
-
 
 /* Skeleton styles - Desktop */
 .skeletonTitle {
@@ -1063,55 +1080,55 @@
 }
 
 .skeletonProductName {
-  width: 80% ;
-  height: 18px ;
-  margin: 0 ;
-  margin-bottom: 8px ;
-  border-radius: 6px ;
-  display: block ;
+  width: 80%;
+  height: 18px;
+  margin: 0;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  display: block;
 }
 
 .skeletonProductDescription {
-  width: 50% ;
-  height: 16px ;
-  margin: 0 ;
-  margin-bottom: 12px ;
-  border-radius: 6px ;
-  display: block ;
+  width: 50%;
+  height: 16px;
+  margin: 0;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  display: block;
 }
 
 .skeletonControls {
-  display: flex ;
-  align-items: center ;
-  gap: 12px ;
-  position: relative ;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
   z-index: 1;
-  margin: 0 ;
-  margin-top: 0 ;
+  margin: 0;
+  margin-top: 0;
 }
 
 .skeletonControlButton {
-  width: 32px ;
-  height: 32px ;
-  border-radius: 8px ;
-  position: relative ;
-  flex-shrink: 0 ;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .skeletonControlIcon {
-  width: 24px ;
-  height: 24px ;
-  border-radius: 4px ;
-  position: relative ;
-  flex-shrink: 0 ;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .skeletonPrice {
-  width: 80px ;
-  height: 24px ;
-  border-radius: 6px ;
-  position: relative ;
-  flex-shrink: 0 ;
+  width: 80px;
+  height: 24px;
+  border-radius: 6px;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .skeletonRowLabel {
@@ -1149,7 +1166,6 @@
   height: 28px;
   border-radius: 8px;
 }
-
 
 @media (max-width: 1000px) {
   .page {
@@ -1341,9 +1357,9 @@
 
   .deliveryRow .primary {
     width: 100%;
-    height: mvw(52);
+    /* height: mvw(52); */
     font-size: mvw(14);
-    font-weight: 600;
+    font-weight: 400;
   }
   .deliveryRowAddress {
     flex-direction: column;
@@ -1659,49 +1675,49 @@
   }
 
   .skeletonProductName {
-    width: 80% ;
-    height: mvw(18) ;
-    margin: 0 ;
-    margin-bottom: mvw(8) ;
-    display: block ;
+    width: 80%;
+    height: mvw(18);
+    margin: 0;
+    margin-bottom: mvw(8);
+    display: block;
   }
 
   .skeletonProductDescription {
-    width: 50% ;
-    height: mvw(16) ;
-    margin: 0 ;
-    margin-bottom: mvw(12) ;
-    display: block ;
+    width: 50%;
+    height: mvw(16);
+    margin: 0;
+    margin-bottom: mvw(12);
+    display: block;
   }
 
   .skeletonControls {
-    display: flex ;
-    align-items: center ;
-    gap: mvw(12) ;
-    position: relative ;
+    display: flex;
+    align-items: center;
+    gap: mvw(12);
+    position: relative;
     z-index: 1;
   }
 
   .skeletonControlButton {
-    width: mvw(32) ;
-    height: mvw(32) ;
-    border-radius: mvw(8) ;
-    position: relative ;
-    flex-shrink: 0 ;
+    width: mvw(32);
+    height: mvw(32);
+    border-radius: mvw(8);
+    position: relative;
+    flex-shrink: 0;
   }
 
   .skeletonControlIcon {
-    width: mvw(24) ;
-    height: mvw(24) ;
-    position: relative ;
-    flex-shrink: 0 ;
+    width: mvw(24);
+    height: mvw(24);
+    position: relative;
+    flex-shrink: 0;
   }
 
   .skeletonPrice {
-    width: mvw(80) ;
-    height: mvw(24) ;
-    position: relative ;
-    flex-shrink: 0 ;
+    width: mvw(80);
+    height: mvw(24);
+    position: relative;
+    flex-shrink: 0;
   }
 
   .skeletonRowLabel {

@@ -195,7 +195,7 @@
   position: absolute;
   top: 25px;
   right: 25px;
-  background: var(--white);
+  background: var(--fon);
   border: none;
   cursor: pointer;
   display: flex;
@@ -205,7 +205,7 @@
   height: 46px;
   z-index: 300; /* Збільшуємо z-index для кнопки закриття */
   border-radius: 10px;
-  color: var(--black);
+  color: var(--bіliy);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: none;
   flex-shrink: 0;
@@ -248,12 +248,14 @@
   width: 420px;
   height: 836px;
   padding: 32px;
-  border-radius: 24px;
+  border-radius: 4px;
   background: var(--white);
   box-shadow: 0 13px 34px 0 rgba(0, 0, 0, 0.07);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background: var(--fon);
+
   z-index: 100; /* Збільшуємо z-index для бічної панелі */
 }
 .panelTitle {
@@ -261,7 +263,7 @@
   font-weight: 500;
   font-size: 20px;
   line-height: 120%;
-  color: var(--black);
+  color: var(--bіliy);
 }
 .panelDivider {
   width: 356px;
@@ -277,7 +279,7 @@
   font-weight: 400;
   font-size: 20px;
   line-height: 100%;
-  color: var(--black);
+  color: var(--bіliy);
   opacity: 0.3;
 }
 
@@ -318,7 +320,7 @@
   font-weight: 500;
   font-size: 20px;
   line-height: 100%;
-  color: #8426d7;
+  color: var(--zoloto);
   opacity: 1;
 }
 .searchAndList {
@@ -362,10 +364,12 @@
   align-items: center;
   gap: 12px;
   border-radius: 12px;
-  background: var(--white);
+  background: var(--fon);
   padding: 10px;
   text-align: left;
   cursor: pointer;
+  color: var(--bіliy);
+  border: 1px solid var(--bіliy);
 
   padding: 12px;
 }
@@ -382,13 +386,13 @@
   font-family: var(--font-family);
   font-weight: 500;
   font-size: 16px;
-  color: var(--black);
+  color: var(--bіliy);
 }
 .itemMeta {
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 14px;
-  color: var(--black);
+  color: var(--bіliy);
   opacity: 0.3;
 }
 
@@ -657,7 +661,7 @@
     border-radius: mvw(12);
     background: var(--white);
     box-shadow: none;
-    border-top: 1px solid #eee;
+    border: 1px solid #eee;
     order: -1;
     overflow-y: auto;
     gap: mvw(16);

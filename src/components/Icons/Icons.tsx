@@ -3387,7 +3387,7 @@ export const Check4Icon = ({ className = "" }: { className?: string }) => (
   >
     <path
       d="M13.3594 1.5L7.739 8.0571C7.53946 8.28991 7.17929 8.28991 6.97975 8.0571L1.35937 1.5"
-      stroke="#0E0E0E"
+      stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
     />

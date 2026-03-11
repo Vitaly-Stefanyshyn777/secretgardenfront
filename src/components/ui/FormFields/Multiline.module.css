@@ -24,7 +24,7 @@
 .textarea {
   width: 100%;
   padding: 20px 20px 20px 22px;
-  border-radius: 24px;
+  border-radius: 4px;
   transition: all 0.2s;
   box-sizing: border-box;
   height: auto;
@@ -34,14 +34,14 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 130%;
-  color: #000;
-  background: #f9f9f9;
-  border: 1px solid #f9f9f9;
+  color: var(--bіliy);
+  background: var(--fon);
+  border: 1px solid var(--bіliy);
 }
 
 .textareaWhite {
-  background: var(--white);
-  border: 1px solid var(--white);
+  background: var(--fon);
+  border: 1px solid var(--bіliy);
 }
 
 .textarea:focus {
@@ -63,7 +63,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 130%;
-  color: rgba(14, 14, 14, 0.4);
+  color: var(--bіliy);
   transition: all 0.15s ease;
 }
 
@@ -101,7 +101,9 @@
   font-weight: 500;
   font-size: 11px;
   color: var(--style);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .fieldWrapper[data-error="true"] .textarea {
