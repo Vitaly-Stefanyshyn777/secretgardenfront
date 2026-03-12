@@ -155,7 +155,9 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
                     >
                       <MinuswIcon />
                     </button>
-                    <span className={s.qty}>{it.quantity}</span>
+                    <div className={s.qtyBlock}>
+                      <span className={s.qty}>{it.quantity}</span>
+                    </div>
                     <button className={s.plus} onClick={() => increment(it.id)}>
                       <PlusIcon />
                     </button>

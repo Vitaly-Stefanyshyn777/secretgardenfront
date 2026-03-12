@@ -140,12 +140,11 @@ export const useFavoriteStore = create<FavoriteState>()(
       open: () => set({ isOpen: true }),
       close: () => {
         const state = get();
-        if (
-          state.pendingFavoritesSync &&
-          state.currentUserId &&
-          useAuthStore.getState().token
-        ) {
-          get().syncFavoritesToApi();
+        const { token } = useAuthStore.getState();
+        const shouldSync =
+          token && state.currentUserId && state.pendingFavoritesSync;
+        if (shouldSync) {
+          get().syncFavoritesToApi(); // тихий запит, не чекаємо відповідь
         }
         set({ isOpen: false });
       },

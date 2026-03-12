@@ -158,8 +158,8 @@
 } */
 
 .favoriteActive {
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--violet);
+  background: var(--black);
+  color: var(--zoloto);
 }
 
 .cardContent {
@@ -171,6 +171,7 @@
   flex: 1 1 auto;
   height: auto;
   gap: 10px;
+  width: 100%;
 }
 
 .category {

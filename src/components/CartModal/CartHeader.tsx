@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useCartStore } from "@/store/cart";
 import s from "./CartModal.module.css";
 
 interface CartHeaderProps {
@@ -8,20 +7,10 @@ interface CartHeaderProps {
 }
 
 export default function CartHeader({ onClose }: CartHeaderProps) {
-  const syncAndClose = useCartStore((st) => st.syncAndClose);
-
   return (
     <div className={s.header}>
       <h3 className={s.title}>Кошик</h3>
       <div className={s.headerActions}>
-        <button
-          type="button"
-          className={s.syncClose}
-          onClick={() => syncAndClose()}
-          title="Закрити і синхронізувати кошик (для відлагодження)"
-        >
-          Закрити + Sync
-        </button>
         <button
           type="button"
           className={s.close}

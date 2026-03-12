@@ -86,7 +86,7 @@ const ProductsShowcase: React.FC = () => {
 
   const list = useMemo(
     () => (Array.isArray(courses) ? courses : []),
-    [courses]
+    [courses],
   );
   // Дані вже відфільтровані на етапі запиту; можна напряму відображати
   const displayedCourses = list.length > 0 ? list : fallbackProducts;
@@ -143,7 +143,7 @@ const ProductsShowcase: React.FC = () => {
       image: normalizeImageUrl(
         (p as { image?: string }).image ??
           ((p as { images?: Array<{ src?: string }> }).images?.[0]?.src ||
-            undefined)
+            undefined),
       ),
       categories: (
         p as {
@@ -161,7 +161,7 @@ const ProductsShowcase: React.FC = () => {
   // Для мобілки показуємо тільки 4 картки
   const mobileDisplayedProducts = useMemo(
     () => (isMobile ? normalizedShowcase.slice(0, 4) : normalizedShowcase),
-    [isMobile, normalizedShowcase]
+    [isMobile, normalizedShowcase],
   );
 
   // Fallback: якщо з якоїсь причини масив порожній, робимо прямий запит до роута WC v3
@@ -171,7 +171,7 @@ const ProductsShowcase: React.FC = () => {
       try {
         const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
         const res = await fetch(
-          `${base}/api/catalog/products?categorySlug=30&limit=20`
+          `${base}/api/catalog/products?categorySlug=30&limit=20`,
         );
         if (!res.ok) return;
         const data = await res.json();
@@ -275,7 +275,6 @@ const ProductsShowcase: React.FC = () => {
         <div className={s.container}>
           <div className={s.header}>
             <div className={s.headerLeft}>
-              <p className={s.eyebrow}>Інвентар навчання</p>
               <Link href="/products" className={s.title}>
                 Товари для спорту{" "}
               </Link>
@@ -292,7 +291,6 @@ const ProductsShowcase: React.FC = () => {
       <div className={s.container}>
         <div className={s.header}>
           <div className={s.headerLeft}>
-            <p className={s.eyebrow}>Інвентар</p>
             <Link href="/products" className={s.title}>
               Товари для спорту
             </Link>

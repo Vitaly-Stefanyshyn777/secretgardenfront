@@ -7,16 +7,13 @@ import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import s from "./Header.module.css";
 import {
-  BasketHeader,
   BurgerMenu,
   FacebookIcon,
   CloseButtonIcon,
-  FavoriteHeader,
   InstagramIcon,
   LogoHeader,
   NumberHeader,
   TelegramIcon,
-  UserHeaderWhite,
   WhatsappIcon,
   LogoHeaderText,
 } from "../../Icons/Icons";
@@ -230,7 +227,13 @@ export default function Header() {
                 }
                 suppressHydrationWarning
               >
-                <UserHeaderWhite />
+                <Image
+                  src="/icons/prefix-2.svg"
+                  alt="Профіль"
+                  width={20}
+                  height={20}
+                  className={s.iconImage}
+                />
               </button>
             </div>
 
@@ -248,7 +251,13 @@ export default function Header() {
                 onClick={toggleFav}
                 title="Обране"
               >
-                <FavoriteHeader />
+                <Image
+                  src="/icons/prefix-Icon.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className={s.iconImage}
+                />
                 {favoriteCount > 0 && (
                   <span className={s.badge}>{favoriteCount}</span>
                 )}
@@ -258,7 +267,13 @@ export default function Header() {
                 onClick={toggleCart}
                 title="Кошик"
               >
-                <BasketHeader />
+                <Image
+                  src="/icons/Prefix-Icon-2.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className={s.iconImage}
+                />
                 {cartCount > 0 && <span className={s.badge}>{cartCount}</span>}
               </button>
             </div>
@@ -391,7 +406,7 @@ export default function Header() {
                     title="Кошик"
                   >
                     <Image
-                      src="/icons/prefix.svg"
+                      src="/icons/Prefix-Icon-2.svg"
                       alt=""
                       width={20}
                       height={20}

@@ -2,7 +2,7 @@
 .notFoundContainer {
   position: relative;
   min-height: 100vh;
-  background-image: url("/Frame41321318676.png");
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -22,7 +22,6 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #9f57ff;
 }
 
 /* Основний контент */

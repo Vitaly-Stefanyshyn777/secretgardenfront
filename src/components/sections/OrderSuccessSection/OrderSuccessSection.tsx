@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useCartStore, selectCartTotal } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
-import CheckoutHeader from "@/components/layout/CheckoutHeader/CheckoutHeader";
-import CheckoutFooter from "@/components/layout/CheckoutFooter/CheckoutFooter";
 import OrderHeader from "./OrderHeader";
 import OrderHeaderSkeleton from "./OrderHeaderSkeleton";
 import OrderProducts from "./OrderProducts";
@@ -274,7 +272,6 @@ export default function OrderSuccessSection({
 
   return (
     <>
-      <CheckoutHeader />
       <div className={s.page}>
         <div className={s.container}>
           <div className={s.card}>
@@ -310,7 +307,6 @@ export default function OrderSuccessSection({
           </div>
         </div>
       </div>
-      <CheckoutFooter />
     </>
   );
 }

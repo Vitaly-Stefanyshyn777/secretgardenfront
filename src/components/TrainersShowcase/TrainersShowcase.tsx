@@ -249,7 +249,6 @@ const TrainersShowcase: React.FC<TrainersShowcaseProps> = ({
                     onPrev={() => mobileSwiperRef.current?.slidePrev()}
                     onNext={() => mobileSwiperRef.current?.slideNext()}
                     onDotClick={(idx) => mobileSwiperRef.current?.slideTo(idx)}
-                    buttonBgColor="var(--white)"
                   />
                 )
               : showPagination &&
@@ -260,7 +259,6 @@ const TrainersShowcase: React.FC<TrainersShowcaseProps> = ({
                     onPrev={goPrev}
                     onNext={goNext}
                     onDotClick={goTo}
-                    buttonBgColor="var(--white)"
                   />
                 )}
           </>

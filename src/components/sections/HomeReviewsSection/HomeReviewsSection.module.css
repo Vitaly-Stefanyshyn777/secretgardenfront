@@ -18,7 +18,6 @@
 }
 
 .sectionTitle {
-  margin: 0;
   font-family: var(--font3);
   font-weight: 400;
   font-size: 53px;
@@ -27,7 +26,7 @@
 }
 
 .reviewsNav {
-  background: rgba(255, 255, 255, 0.08);
+  padding: 0px 120px 0px 0px;
 }
 
 .reviewsSliderWrap {

@@ -289,13 +289,11 @@ export const useCartStore = create<CartState>()(
       close: () => {
         const state = get();
         const { token } = useAuthStore.getState();
-        // Sync тільки якщо є незбережені зміни (add/remove/increment/decrement)
         const shouldSync = token && state.pendingCartSync;
         if (shouldSync) {
-          get().syncAndClose();
-        } else {
-          set({ isOpen: false });
+          get().syncCartToApi(); // тихий запит, не чекаємо відповідь
         }
+        set({ isOpen: false });
       },
       syncAndClose: async () => {
         const state = get();

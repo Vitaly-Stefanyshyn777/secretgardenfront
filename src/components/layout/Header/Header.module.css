@@ -447,7 +447,7 @@
 
 .icons {
   display: flex;
-  gap: 8px;
+  gap: 26px;
   align-items: center;
 }
 
@@ -466,7 +466,8 @@
   height: 58px;
   /* background: rgba(255, 254, 252, 0.15);
   backdrop-filter: blur(20px); */
-  color: var(--white);
+  color: var(--bіliy);
+  fill: var(--bіliy);
 }
 
 .iconBtn.active {
@@ -497,9 +498,20 @@
 }
 
 .iconImage {
-  width: 37px;
-  height: 37px;
+  width: 35px;
+  height: 35px;
   object-fit: contain;
+
+  transition: filter 0.2s ease;
+}
+
+.iconBtn:hover .iconImage {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(89%) saturate(2000%)
+    hue-rotate(260deg);
+}
+
+.iconBtn.active .iconImage {
+  filter: brightness(0) invert(1);
 }
 
 .userBtn {
@@ -543,7 +555,7 @@
   position: absolute;
   top: 33px;
   left: 31px;
-  background: var(--violet);
+  background: var(--zoloto);
   border-radius: 4px;
   min-width: 20px;
   height: 20px;
@@ -556,7 +568,7 @@
   font-weight: 600;
   font-size: 12px;
   line-height: 100%;
-  color: var(--white);
+  color: var(--chorniy);
 }
 
 .register {

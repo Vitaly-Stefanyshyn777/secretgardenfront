@@ -49,7 +49,6 @@ function extractProductSlug(slug?: string): string | null {
 export default function FavoritesModal() {
   const isOpen = useFavoriteStore((st) => st.isOpen);
   const close = useFavoriteStore((st) => st.close);
-  const syncAndClose = useFavoriteStore((st) => st.syncAndClose);
   const remove = useFavoriteStore((st) => st.remove);
   const removeAll = useFavoriteStore((st) => st.removeAll);
   const clear = useFavoriteStore((st) => st.clear);
@@ -71,7 +70,7 @@ export default function FavoritesModal() {
 
   const desktopTotalSlides = Math.max(
     1,
-    items.length > 4 ? items.length - 4 + 1 : 1
+    items.length > 5 ? items.length - 5 + 1 : 1
   );
 
   useEffect(() => {
@@ -247,63 +246,8 @@ export default function FavoritesModal() {
             <div className={s.topbar}>
               <span className={s.topbarTitle}>Обране</span>
               <div className={s.headerActions}>
-                <button
-                  type="button"
-                  className={s.syncClose}
-                  onClick={() => syncAndClose()}
-                  title="Закрити і синхронізувати улюблене (для відлагодження)"
-                >
-                  Закрити + Sync
-                </button>
                 <ModalCloseButton onClose={close} className={s.close} />
               </div>
-            </div>
-            <div style={{ display: "flex", gap: 8, padding: "8px 20px", background: "#1a1a1a" }}>
-              <button
-                type="button"
-                onClick={() => {
-                  console.log("[Тест улюбленого] items:", itemsMap);
-                  console.log("[Тест улюбленого] перший:", items[0]);
-                }}
-                style={{
-                  padding: "6px 12px",
-                  fontSize: 12,
-                  background: "#333",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 4,
-                }}
-              >
-                Тест: log favorites
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const first = items[0];
-                  if (!first) return;
-                  addToCart(
-                    {
-                      id: first.id,
-                      productId: /^c[a-z0-9]{10,}$/i.test(first.id) || /^\d+$/.test(first.id) ? first.id : undefined,
-                      slug: first.slug,
-                      name: first.name,
-                      price: first.price ?? 0,
-                      image: first.image,
-                    },
-                    1
-                  );
-                }}
-                style={{
-                  padding: "6px 12px",
-                  fontSize: 12,
-                  background: "#6b4",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 4,
-                }}
-              >
-                Тест: додати 1-й в кошик
-              </button>
             </div>
 
             {isMobile ? (
@@ -396,7 +340,7 @@ export default function FavoritesModal() {
                       setDesktopActiveIndex(sw.activeIndex)
                     }
                     spaceBetween={20}
-                    slidesPerView={4}
+                    slidesPerView={5}
                     slidesPerGroup={1}
                     centeredSlides={false}
                     observer
@@ -536,7 +480,7 @@ export default function FavoritesModal() {
                           onDotClick={(idx) => swiperRef.current?.slideTo(idx)}
                         />
                       )
-                    : items.length > 4 && (
+                    : items.length > 5 && (
                         <SliderNav
                           activeIndex={desktopActiveIndex}
                           dots={desktopTotalSlides}

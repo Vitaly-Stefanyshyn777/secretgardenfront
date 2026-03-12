@@ -8,7 +8,6 @@ export default function SliderNav({
   onPrev,
   onNext,
   onDotClick,
-  buttonBgColor = "var(--white)",
   containerClassName,
 }: {
   activeIndex: number;
@@ -16,17 +15,14 @@ export default function SliderNav({
   onPrev: () => void;
   onNext: () => void;
   onDotClick: (idx: number) => void;
-  buttonBgColor?: string;
-  containerBgColor?: string;
   containerClassName?: string;
 }) {
   return (
-    <div className={`${s.navContainer} ${containerClassName || ""}`} style={{}}>
+    <div className={`${s.navContainer} ${containerClassName || ""}`}>
       <button
         className={s.leftBtn}
         onClick={onPrev}
         aria-label="Previous slide"
-        style={{ background: buttonBgColor }}
       >
         <ArrowLeftIcon />
       </button>
@@ -45,7 +41,6 @@ export default function SliderNav({
         className={s.rightBtn}
         onClick={onNext}
         aria-label="Next slide"
-        style={{ background: buttonBgColor }}
       >
         <ArrowRightIcon />
       </button>

@@ -39,7 +39,6 @@ const HomeReviewsSection = () => {
             onNext={handleNext}
             onDotClick={handleDotClick}
             containerClassName={s.reviewsNav}
-            buttonBgColor="rgba(255, 255, 255, 0.9)"
           />
         </div>
 

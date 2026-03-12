@@ -148,7 +148,7 @@
 .activeDot {
   width: 8px;
   height: 8px;
-  background: #000;
+  background: var(--zoloto);
   border-radius: 50%;
   cursor: pointer;
 }
@@ -199,9 +199,11 @@
   min-width: 50px;
   min-height: 50px;
   backdrop-filter: blur(20px);
-  background: var(--white);
-  color: var(--black);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  border: 1px solid var(--bіliy);
+  color: var(--bіliy);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,9 +246,12 @@
   min-width: 50px;
   min-height: 50px;
   backdrop-filter: blur(20px);
-  background: var(--white);
-  color: var(--black);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  border: 1px solid var(--bіliy);
+
+  color: var(--bіliy);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
