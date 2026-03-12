@@ -166,14 +166,14 @@
   gap: 12px;
 }
 .secondary {
-  color: var(--white);
-  background: var(--violet);
+  color: var(--chorniy);
+  background: var(--zoloto);
   cursor: pointer;
   font-size: 17px;
-  font-weight: 700;
-  line-height: 135%;
+  font-weight: 500;
+  /* line-height: 135%; */
   border-radius: 16px;
-  padding: 22px 56px;
+  padding: 15px 30px;
   transition: all 0.3s ease;
 }
 .secondary:hover {
@@ -181,14 +181,14 @@
   background: var(--black);
 }
 .remove {
-  color: var(--violet);
+  color: var(--zoloto);
   cursor: pointer;
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 135%;
-  border: 2px solid var(--violet);
+  border: 2px solid var(--zoloto);
   border-radius: 16px;
-  padding: 22px 80px;
+  padding: 15px 30px;
   background: transparent;
   transition: all 0.3s ease;
 }
