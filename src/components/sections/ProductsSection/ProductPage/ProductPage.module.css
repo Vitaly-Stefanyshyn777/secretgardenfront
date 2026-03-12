@@ -1,7 +1,7 @@
 .productPage {
   /* padding: 20px; */
   font-family: var(--font-family);
-  padding: 150px 50px 200px 50px;
+  padding: 200px 50px 200px 50px;
   display: flex;
   flex-direction: column;
   gap: 55px;

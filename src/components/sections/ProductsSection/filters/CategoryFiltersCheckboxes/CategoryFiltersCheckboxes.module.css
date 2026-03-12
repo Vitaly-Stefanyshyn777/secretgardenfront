@@ -1,21 +1,22 @@
 .filterSection {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
 }
 
 .filterGroup {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 25px;
 }
 
 .filterTitle {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 130%;
-  color: var(--black);
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--bіliy);
   margin: 0;
 }
 
@@ -72,9 +73,10 @@
 }
 
 .radioLabel {
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 140%;
-  color: var(--black);
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  text-align: center;
+  color: var(--bіliy);
 }

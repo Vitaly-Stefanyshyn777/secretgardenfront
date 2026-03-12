@@ -14,11 +14,11 @@ export const getLearningFormatsAnchor = (): string => {
 
 export const mainNavigation: NavigationItem[] = [
   {
-    href: "/trainers",
+    href: "/",
     label: "Головна",
   },
   {
-    href: "/#LearningFormats",
+    href: "/products",
     label: "Магазин",
   },
 

@@ -302,24 +302,10 @@ const Breadcrumbs: React.FC = () => {
     return null;
   }
 
-  const isTrainersList = pathname === "/trainers";
-  const isOurCourses = pathname.startsWith("/our-courses");
-  const isCoursesLanding =
-    pathname.startsWith("/courses-landing") ||
-    pathname.startsWith("/our-courses");
-  const isAboutBfb = pathname === "/about-bfb";
-  const isContacts = pathname === "/contacts" || pathname === "/contact";
-
   return (
     <nav
       ref={navRef}
-      className={`${styles.breadcrumbs} ${
-        isTrainersList ? styles.onTrainers : ""
-      } ${isOurCourses ? styles.onOurCourses : ""} ${
-        isCoursesLanding ? styles.onCoursesLanding : ""
-      } ${isContacts ? styles.onContacts : ""} ${
-        isAboutBfb ? styles.onAboutBfb : ""
-      } ${is404Page ? styles.on404 : ""} ${isHidden ? styles.hidden : ""}`}
+      className={`${styles.breadcrumbs} ${isHidden ? styles.hidden : ""}`}
       aria-label="Хлібні крихти"
     >
       <div className={styles.breadcrumbsContainer}>

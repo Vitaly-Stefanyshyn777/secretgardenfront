@@ -3,10 +3,6 @@ import React from "react";
 import styles from "./ProfileSection.module.css";
 import UserProfile from "./UserProfile/UserProfile";
 import NavigationMenu from "./NavigationMenu/NavigationMenu";
-import VideoInstruction from "./VideoInstruction/VideoInstruction";
-import CommunityChats from "./CommunityChats/CommunityChats";
-import PurchasedCourses from "./PurchasedCourses/PurchasedCourses";
-import SectionDivider from "./SectionDivider/SectionDivider";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowIcon } from "@/components/Icons/Icons";
 import { useAuthStore } from "@/store/auth";
@@ -55,17 +51,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ children }) => {
           </button>
         )}
 
-        <div className={styles.mainContent}>
-          {children || (
-            <>
-              <VideoInstruction />
-              <SectionDivider className={styles.hideFirstDividerOnMobile} />
-              <CommunityChats />
-              <SectionDivider />
-              <PurchasedCourses />
-            </>
-          )}
-        </div>
+        <div className={styles.mainContent}>{children}</div>
       </div>
     </div>
   );
