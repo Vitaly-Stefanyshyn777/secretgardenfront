@@ -519,7 +519,7 @@
     padding: mvw(56) mvw(16);
     width: mvw(375);
     height: mvw(auto);
-    background-image: url(/footer.png);
+    background-image: url(/images/footer.png);
     max-width: 100%;
   }
   .logoContainer {

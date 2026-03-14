@@ -10,6 +10,7 @@ import {
   InstagramIcon,
   TelegramIcon,
 } from "@/components/Icons/Icons";
+import TrainerProfileSkeleton from "./TrainerProfileSkeleton";
 
 type ApiUser = {
   firstname?: string;
@@ -39,20 +40,23 @@ const TrainerProfile: React.FC = () => {
       if (typeof window === "undefined") return;
       const token = window.localStorage.getItem("accessToken");
       if (!token) {
-      return;
+        return;
       }
 
       try {
         setIsLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         if (res.status === 401) {
-        return;
-      }
+          return;
+        }
 
         if (!res.ok) {
           throw new Error("Не вдалося завантажити профіль");
@@ -109,14 +113,17 @@ const TrainerProfile: React.FC = () => {
 
     try {
       setIsSaving(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/profile`, {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/profile`,
+        {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(body),
         },
-        body: JSON.stringify(body),
-      });
+      );
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -152,6 +159,10 @@ const TrainerProfile: React.FC = () => {
       telegram: initialUser.telegram || "",
     });
   };
+
+  if (isLoading) {
+    return <TrainerProfileSkeleton />;
+  }
 
   return (
     <div className={styles.trainerProfile}>
@@ -231,7 +242,6 @@ const TrainerProfile: React.FC = () => {
           <button
             type="button"
             className={styles.clearBtn}
-            type="button"
             onClick={handleReset}
             disabled={isSaving || isLoading}
           >

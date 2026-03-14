@@ -506,12 +506,11 @@
 }
 
 .iconBtn:hover .iconImage {
-  filter: brightness(0) saturate(100%) invert(42%) sepia(89%) saturate(2000%)
-    hue-rotate(260deg);
+
 }
 
 .iconBtn.active .iconImage {
-  filter: brightness(0) invert(1);
+
 }
 
 .userBtn {

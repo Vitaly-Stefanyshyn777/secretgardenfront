@@ -318,23 +318,30 @@ export const CertificationFilter = ({
                 {activeRoot?.name ?? "Категорії"}
               </button>
 
-              <button
-                type="button"
-                className={styles.allCategoriesBtn}
-                onClick={() => {
-                  setIsSubExpanded((prev) => !prev);
-                }}
-              >
-                <span>Всі категорії</span>
-                <span
-                  className={`${styles.caretIcon} ${
-                    isSubExpanded ? styles.caretIconUp : ""
-                  }`}
-                  aria-hidden="true"
+              {activeCategorySlug && (
+                <button
+                  type="button"
+                  className={styles.allCategoriesBtn}
+                  onClick={() => {
+                    setIsSubExpanded((prev) => !prev);
+                  }}
                 >
-                  <img src="/icons/icon-13.svg" alt="" width={15} height={9} />
-                </span>
-              </button>
+                  <span>Всі категорії</span>
+                  <span
+                    className={`${styles.caretIcon} ${
+                      isSubExpanded ? styles.caretIconUp : ""
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <img
+                      src="/icons/icon-13.svg"
+                      alt=""
+                      width={15}
+                      height={9}
+                    />
+                  </span>
+                </button>
+              )}
             </div>
 
             <div className={styles.subHeaderDivider} />
