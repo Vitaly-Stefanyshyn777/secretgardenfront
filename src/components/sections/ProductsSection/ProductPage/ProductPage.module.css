@@ -304,7 +304,7 @@
 }
 
 .submitReviewBtn:hover:not(:disabled) {
-  background: var(--zhovtiy);
+  background: #d49e50;
 }
 
 .submitReviewBtnIcon {
@@ -542,7 +542,7 @@
 } */
 
 .reviewsTab:hover {
-  color: var(--black);
+  color: #d49e50;
 }
 
 .reviewsTabActive {
@@ -653,7 +653,7 @@
 }
 
 .thumbnail.active {
-  border-color: var(--violet);
+  border-color: var(--zoloto);
 }
 
 .thumbnailsNoNav {
@@ -673,7 +673,7 @@
 }
 
 .thumbnail.active {
-  border-color: var(--violet);
+  border-color: var(--zoloto);
 }
 
 .thumbNavUp,
@@ -759,6 +759,8 @@
 }
 
 .productInfo {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 50px;
@@ -1254,6 +1256,103 @@
   height: 32px;
 }
 
+.skeletonBreadcrumb {
+  width: 18%;
+  height: 16px;
+}
+
+.skeletonTabShort {
+  width: 120px;
+}
+
+.skeletonTabLong {
+  width: 160px;
+}
+
+.skeletonReviewAuthor {
+  width: 24%;
+  height: 24px;
+}
+
+.skeletonLineWide {
+  width: 92%;
+}
+
+.skeletonLineNarrow {
+  width: 74%;
+}
+
+.skeletonTitleWide {
+  width: 82%;
+}
+
+.skeletonStockShort {
+  width: 18%;
+}
+
+.skeletonRatingShort {
+  width: 26%;
+}
+
+.skeletonLineMedium {
+  width: 72%;
+}
+
+.skeletonLineSmall {
+  width: 58%;
+}
+
+.skeletonPriceShort {
+  width: 28%;
+}
+
+.skeletonQuantityShort {
+  width: 54px;
+  height: 44px;
+}
+
+.skeletonAddToCartShort {
+  width: 34%;
+  height: 44px;
+}
+
+.skeletonFavoriteShort {
+  width: 56px;
+  height: 44px;
+}
+
+.skeletonSectionTitle {
+  width: 42%;
+}
+
+.skeletonSectionTitleSmall {
+  width: 12%;
+}
+
+.skeletonCharacteristicName {
+  width: 36%;
+}
+
+.skeletonCharacteristicValueShort {
+  width: 52%;
+}
+
+.skeletonCharacteristicValue {
+  width: 60%;
+}
+
+.skeletonLineXL {
+  width: 96%;
+}
+
+.skeletonLineLarge {
+  width: 88%;
+}
+
+.skeletonRelatedTitleShort {
+  width: 22%;
+}
+
 /* Additional skeleton styles for remaining elements */
 .skeletonColorSectionTitle {
   width: 80px;
@@ -1438,6 +1537,7 @@
   display: flex;
   gap: 40px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .addToCartBtn {
@@ -1467,7 +1567,7 @@
 }
 
 .addToCartBtn:hover {
-  background: var(--black);
+  background: #d49e50;
 }
 
 .addToCartBtnIcon {
@@ -1504,6 +1604,10 @@
   }
 }
 
+.favoriteBtn:hover {
+  background: rgba(217, 186, 136, 0.25);
+}
+
 .favoriteActive {
   color: var(--zoloto);
 }
@@ -1522,17 +1626,17 @@
 }
 
 .addToCartBtn.addToCartBtnInCart {
-  background: var(--black);
-  color: var(--white);
+  background: #d49e50;
+  color: var(--chorniy);
 }
 
 .addToCartBtn.addToCartBtnInCart:hover {
-  background: var(--violet);
+  background: #d49e50;
 }
 
 .favoriteBtn.favoriteBtnDisabled {
   background: #e6e6e6;
-  color: white;
+  color: var(--chorniy);
   cursor: not-allowed;
 }
 
@@ -2017,6 +2121,14 @@
   color: var(--black);
 }
 
+.currentPrice {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
 .relatedOriginalPrice {
   font-size: 14px;
   color: #999;
@@ -2098,13 +2210,9 @@
   height: 27px;
 }
 
-.quantityControls button svg {
-  color: var(--bіliy);
-}
-
 .quantityControls button:hover {
-  background: var(--violet);
-  color: var(--bіliy);
+  background: var(--zoloto);
+  color: var(--chorniy);
 }
 
 .quantityDisabled {

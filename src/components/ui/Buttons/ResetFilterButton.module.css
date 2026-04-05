@@ -17,9 +17,7 @@
 }
 
 .resetButton:hover {
-  background: var(--black);
-  color: var(--white);
-  border: 2px solid var(--black);
+  background: rgba(217, 186, 136, 0.25);
 }
 
 .resetButton:disabled {

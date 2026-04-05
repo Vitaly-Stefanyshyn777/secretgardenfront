@@ -11,9 +11,7 @@ import {
   normalizePriceParams,
 } from "@/lib/priceUtils";
 import CartHeader from "./CartHeader";
-import CartItemsList from "./CartItemsList";
 import CartSummary from "./CartSummary";
-import CartModalSkeleton from "./CartModalSkeleton";
 
 export default function CartModal() {
   const isOpen = useCartStore((st) => st.isOpen);
@@ -54,7 +52,6 @@ export default function CartModal() {
     }, 0);
   }, [items, effectiveIsLoggedIn]);
 
-  // Розраховуємо суму без знижки для відображення
   const totalWithoutDiscount = useMemo(() => {
     return items.reduce((acc, it) => {
       const regularPrice =
@@ -64,7 +61,6 @@ export default function CartModal() {
   }, [items]);
 
   const discount = useMemo(() => {
-    // Сума знижки = різниця між загальною сумою без знижки та зі знижкою
     return Math.max(0, totalWithoutDiscount - total);
   }, [total, totalWithoutDiscount]);
 
@@ -72,58 +68,39 @@ export default function CartModal() {
   const remainingToFree = Math.max(0, FREE_SHIPPING_LIMIT - total);
   const progressPct = Math.min(
     100,
-    Math.round((total / FREE_SHIPPING_LIMIT) * 100)
+    Math.round((total / FREE_SHIPPING_LIMIT) * 100),
   );
 
   const [isMounted, setIsMounted] = useState(false);
-  const [showSkeleton, setShowSkeleton] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, []);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      if (typeof window === "undefined") return;
-      setIsMobile(window.innerWidth <= 1000);
-    };
-    checkMobile();
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", checkMobile);
-      return () => window.removeEventListener("resize", checkMobile);
-    }
-  }, []);
-
   useScrollLock(isOpen);
 
-  // Синхронізація при закритті сторінки/таба (якщо є незбережені зміни)
   useEffect(() => {
     const trySync = () => {
-      const s = useCartStore.getState();
-      if (s.pendingCartSync && s.currentUserId && token) {
-        s.syncCartToApi();
+      const store = useCartStore.getState();
+      if (store.pendingCartSync && store.currentUserId && token) {
+        store.syncCartToApi();
       }
     };
+
     const onBeforeUnload = () => trySync();
     const onVisibilityChange = () => {
       if (document.visibilityState === "hidden") trySync();
     };
+
     window.addEventListener("beforeunload", onBeforeUnload);
     document.addEventListener("visibilitychange", onVisibilityChange);
+
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, [token]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setShowSkeleton(true);
-    const timer = setTimeout(() => setShowSkeleton(false), 300);
-    return () => clearTimeout(timer);
-  }, [isOpen]);
 
   if (!isOpen || !isMounted) return null;
 
@@ -132,9 +109,7 @@ export default function CartModal() {
     window.location.href = "/checkout";
   };
 
-  const modalContent = showSkeleton ? (
-    <CartModalSkeleton />
-  ) : (
+  const modalContent = (
     <div className={s.backdrop} onClick={close}>
       <div className={s.modal} onClick={(e) => e.stopPropagation()}>
         <div className={s.topbarListBlock}>

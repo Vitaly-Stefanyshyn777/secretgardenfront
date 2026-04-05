@@ -59,13 +59,13 @@
   width: 10px;
   height: 10px;
   border-radius: 2px;
-  background: var(--violet);
+  background: var(--zoloto);
   transform: scale(0);
   transition: transform 0.2s ease;
 }
 
 .checkboxInput:checked + .checkboxBox {
-  border-color: var(--violet);
+  border-color: var(--zoloto);
 }
 
 .checkboxInput:checked + .checkboxBox::after {

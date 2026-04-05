@@ -23,7 +23,7 @@
 .topbarListBlock {
   display: flex;
   flex-direction: column;
-  gap: 130px;
+  gap: 40px;
 }
 .header {
   display: flex;
@@ -93,10 +93,9 @@
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 24px;
   width: 100%;
-
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .freeShipping {
   font-family: var(--font-family);
@@ -222,13 +221,13 @@
 .summaryPromoBlock {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 12px;
 }
 
 .summaryRows {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .promoRow {
@@ -246,7 +245,7 @@
 .summaryButtons {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .freeShippingText {
@@ -261,7 +260,7 @@
 .summaryBlock {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   width: 100%;
   height: auto;
   border-radius: 4px;
@@ -271,12 +270,19 @@
 .summaryRow {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 14px;
+  width: 580px;
+  max-width: 100%;
+  height: 29px;
 }
 .totalRow {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-weight: 600;
+  width: 580px;
+  max-width: 100%;
 }
 .secondary {
   border: 2px solid var(--zoloto);
@@ -288,12 +294,12 @@
   line-height: 135%;
   color: var(--zoloto);
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .secondary:hover {
-  color: var(--white);
-  background: var(--black);
-  border-color: var(--black);
+  background: rgba(217, 186, 136, 0.25);
+  color: var(--zoloto);
 }
 
 .recommendations {
@@ -611,9 +617,9 @@
   color: var(--bіliy);
   backdrop-filter: blur(2.08333vw);
   background: rgba(249, 249, 249, 0.1);
+  color: var(--bіliy);
 
   svg {
-    color: var(--bіliy);
     width: 12px;
     height: 3px;
   }
@@ -631,21 +637,21 @@
   color: var(--bіliy);
   backdrop-filter: blur(2.08333vw);
   background: rgba(249, 249, 249, 0.1);
+  color: var(--bіliy);
   svg {
-    color: var(--bіliy);
     width: 12px;
     height: 12px;
   }
 }
 
 .minus:hover {
-  background: var(--violet);
-  color: var(--white);
+  background: var(--zoloto);
+  color: var(--chorniy);
 }
 
 .plus:hover {
-  background: var(--violet);
-  color: var(--white);
+  background: var(--zoloto);
+  color: var(--chorniy);
 }
 
 .contentCol {
@@ -782,8 +788,8 @@
 }
 
 .removeBtn:hover {
-  color: var(--white);
-  background: var(--violet);
+  color: var(--chorniy);
+  background: var(--zoloto);
 }
 
 .qtyBlock {
@@ -835,7 +841,7 @@
 }
 
 .primary:hover {
-  background: var(--black);
+  background: #d49e50;
 }
 
 .primary:disabled {
@@ -844,7 +850,163 @@
 }
 
 .primary:disabled:hover {
-  background: var(--violet);
+  background: #d49e50;
+}
+
+.skeletonHeaderTitle {
+  width: 220px;
+  height: 32px;
+}
+
+.skeletonCloseButton {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+}
+
+.skeletonItem {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  width: 584px;
+  max-width: 100%;
+  height: 143px;
+}
+
+.skeletonThumb {
+  width: 149px;
+  height: 143px;
+  border-radius: 8px;
+}
+
+.skeletonItemContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.skeletonItemTopRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.skeletonItemName {
+  width: 304px;
+  height: 42px;
+}
+
+.skeletonRemoveButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.skeletonItemMeta {
+  width: 304px;
+  height: 18px;
+}
+
+.skeletonItemBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 349px;
+  height: 36px;
+}
+
+.skeletonControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 203px;
+  height: 36px;
+}
+
+.skeletonControlButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.skeletonQtyInput {
+  width: 99px;
+  height: 36px;
+  border-radius: 4px;
+}
+
+.skeletonPrice {
+  width: 103px;
+  height: 36px;
+}
+
+.skeletonPromoLabel {
+  width: 584px;
+  height: 24px;
+}
+
+.skeletonPromoInput {
+  width: 584px;
+  height: 44px;
+  border-radius: 4px;
+}
+
+.skeletonSummaryLabel {
+  width: 83px;
+  height: 29px;
+}
+
+.skeletonSummaryLabelShort {
+  width: 83px;
+  height: 29px;
+}
+
+.skeletonSummaryLabelMedium {
+  width: 83px;
+  height: 29px;
+}
+
+.skeletonSummaryValue {
+  width: 113px;
+  height: 29px;
+}
+
+.skeletonSummaryValueShort {
+  width: 113px;
+  height: 29px;
+}
+
+.skeletonSummaryNote {
+  width: 113px;
+  height: 29px;
+}
+
+.skeletonTotalLabel {
+  width: 83px;
+  height: 29px;
+}
+
+.skeletonTotalValue {
+  width: 113px;
+  height: 29px;
+}
+
+.skeletonPrimaryButton {
+  width: 585px;
+  height: 44px;
+  border-radius: 4px;
+}
+
+.skeletonSecondaryButton {
+  width: 585px;
+  height: 44px;
+  border-radius: 4px;
 }
 
 @media (max-width: 1000px) {

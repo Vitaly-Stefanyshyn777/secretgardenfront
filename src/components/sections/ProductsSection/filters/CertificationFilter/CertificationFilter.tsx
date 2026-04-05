@@ -13,6 +13,7 @@ interface CertificationFilterProps {
   value: string[];
   onChange: (value: string[]) => void;
   loading?: boolean;
+  hideAllCategoriesButton?: boolean;
 }
 
 function findCategoryById(
@@ -61,6 +62,7 @@ export const CertificationFilter = ({
   value,
   onChange,
   loading,
+  hideAllCategoriesButton = false,
 }: CertificationFilterProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -209,23 +211,30 @@ export const CertificationFilter = ({
                 {activeParent?.name ?? "Категорія"}
               </button>
 
-              <button
-                type="button"
-                className={styles.allCategoriesBtn}
-                onClick={() => {
-                  setIsSubExpanded((prev) => !prev);
-                }}
-              >
-                <span>Всі категорії</span>
-                <span
-                  className={`${styles.caretIcon} ${
-                    isSubExpanded ? styles.caretIconUp : ""
-                  }`}
-                  aria-hidden="true"
+              {!hideAllCategoriesButton && (
+                <button
+                  type="button"
+                  className={styles.allCategoriesBtn}
+                  onClick={() => {
+                    setIsSubExpanded((prev) => !prev);
+                  }}
                 >
-                  <img src="/icons/icon-13.svg" alt="" width={15} height={9} />
-                </span>
-              </button>
+                  <span>Всі категорії</span>
+                  <span
+                    className={`${styles.caretIcon} ${
+                      isSubExpanded ? styles.caretIconUp : ""
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <img
+                      src="/icons/icon-13.svg"
+                      alt=""
+                      width={15}
+                      height={9}
+                    />
+                  </span>
+                </button>
+              )}
             </div>
 
             <div className={styles.subHeaderDivider} />
@@ -318,7 +327,7 @@ export const CertificationFilter = ({
                 {activeRoot?.name ?? "Категорії"}
               </button>
 
-              {activeCategorySlug && (
+              {activeCategorySlug && !hideAllCategoriesButton && (
                 <button
                   type="button"
                   className={styles.allCategoriesBtn}

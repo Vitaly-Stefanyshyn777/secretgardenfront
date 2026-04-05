@@ -21,7 +21,10 @@
 }
 
 .applyButton:hover {
-  background: var(--black);
+  background: #d49e50;
+  color: var(--black);
+  background: #d49e50;
+  border: 1px solid #d49e50;
 }
 
 .applyButton:disabled {

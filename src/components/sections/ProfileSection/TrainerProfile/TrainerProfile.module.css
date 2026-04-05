@@ -485,7 +485,7 @@
 }
 
 .saveBtn:hover {
-  background: var(--black);
+  background: #d49e50;
   /* transform: translateY(-1px); */
 }
 
@@ -1599,9 +1599,8 @@
 }
 
 .clearBtn:hover {
-  background: var(--black);
-  border: 2px solid var(--black);
-  color: white;
+  background: rgba(217, 186, 136, 0.25);
+  /* border: 2px solid var(--black); */
 }
 
 .error {

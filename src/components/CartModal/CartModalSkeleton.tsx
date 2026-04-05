@@ -1,87 +1,88 @@
 "use client";
 import React from "react";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import s from "./CartModal.module.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const CartModalSkeleton: React.FC = () => {
   return (
-    <div className={s.backdrop}>
-      <div className={s.modal}>
-        <div className={s.topbarListBlock}>
-          <div className={s.header}>
-            <Skeleton width={200} height={32} className={s.title} />
-            <Skeleton width={46} height={46} borderRadius={10} className={s.close} />
-          </div>
-
-          <div className={s.bodyTwoCols}>
-            <div className={s.leftList}>
-              {[...Array(3)].map((_, i) => (
-                <div key={i} style={{ display: "flex", gap: 12 }}>
-                  <Skeleton width={72} height={72} borderRadius={8} />
-                  <div style={{ flex: 1 }}>
-                    <Skeleton width="70%" height={18} style={{ marginBottom: 8 }} />
-                    <Skeleton width="40%" height={16} />
-                  </div>
-                </div>
-              ))}
+    <SkeletonTheme
+      baseColor="rgba(255, 255, 255, 0.12)"
+      highlightColor="rgba(255, 255, 255, 0.18)"
+    >
+      <div className={s.backdrop}>
+        <div className={s.modal}>
+          <div className={s.topbarListBlock}>
+            <div className={s.header}>
+              <Skeleton className={s.skeletonHeaderTitle} />
+              <Skeleton className={s.skeletonCloseButton} />
             </div>
 
             <div className={s.rightSummary}>
               <div className={s.summaryBlock}>
-                <Skeleton width="80%" height={20} style={{ marginBottom: 8 }} />
-                <div className={s.progressTrack}>
-                  <Skeleton width="60%" height="100%" />
-                </div>
-              </div>
+                <div className={s.leftList}>
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className={s.skeletonItem}>
+                      <Skeleton className={s.skeletonThumb} />
 
-              <div className={s.summaryRows}>
-                <Skeleton width="60%" height={18} />
-                <Skeleton width="40%" height={18} />
-                <Skeleton width="50%" height={24} />
-              </div>
-
-              <div className={s.summaryButtons}>
-                <Skeleton width="100%" height={56} borderRadius={16} />
-                <Skeleton width="100%" height={56} borderRadius={16} />
-              </div>
-            </div>
-          </div>
-
-          <div className={s.recommendations}>
-            <div className={s.recoHeader}>
-              <Skeleton width={200} height={24} className={s.recoTitle} />
-            </div>
-            <div className={s.recoRow}>
-              <div className={s.recoSwiper} style={{ display: "flex", gap: 8 }}>
-              {[...Array(3)].map((_, i) => (
-                  <div key={i} className={s.recoSlide} style={{ minWidth: "458px" }}>
-                    <div className={s.recoItem}>
-                      <Skeleton width={128} height={116} borderRadius={8} className={s.recoThumb} />
-                      <div className={s.recoContent}>
-                        <div className={s.recoTextBlock}>
-                          <Skeleton width={60} height={14} style={{ marginBottom: 4 }} />
-                          <Skeleton width="80%" height={16} />
+                      <div className={s.skeletonItemContent}>
+                        <div className={s.skeletonItemTopRow}>
+                          <Skeleton className={s.skeletonItemName} />
+                          <Skeleton className={s.skeletonRemoveButton} />
                         </div>
-                        <div className={s.recoPriceButtonBlock}>
-                          <div className={s.recoPriceBlock}>
-                            <Skeleton width={80} height={20} />
+
+                        <Skeleton className={s.skeletonItemMeta} />
+
+                        <div className={s.skeletonItemBottomRow}>
+                          <div className={s.skeletonControls}>
+                            <Skeleton className={s.skeletonControlButton} />
+                            <Skeleton className={s.skeletonQtyInput} />
+                            <Skeleton className={s.skeletonControlButton} />
                           </div>
-                          <Skeleton width={120} height={40} borderRadius={8} />
+                          <Skeleton className={s.skeletonPrice} />
                         </div>
                       </div>
                     </div>
+                  ))}
                 </div>
-              ))}
+
+                <div className={s.summaryPromoBlock}>
+                  <Skeleton className={s.skeletonPromoLabel} />
+                  <Skeleton className={s.skeletonPromoInput} />
+                </div>
+
+                <div className={s.summaryRows}>
+                  <div className={s.summaryRow}>
+                    <Skeleton className={s.skeletonSummaryLabel} />
+                    <Skeleton className={s.skeletonSummaryValue} />
+                  </div>
+                  <div className={s.summaryRow}>
+                    <Skeleton className={s.skeletonSummaryLabelShort} />
+                    <Skeleton className={s.skeletonSummaryValueShort} />
+                  </div>
+                  <div className={s.summaryRow}>
+                    <Skeleton className={s.skeletonSummaryLabelMedium} />
+                    <Skeleton className={s.skeletonSummaryNote} />
+                  </div>
+                </div>
+              </div>
+
+              <div className={s.summaryBlock}>
+                <div className={s.totalRow}>
+                  <Skeleton className={s.skeletonTotalLabel} />
+                  <Skeleton className={s.skeletonTotalValue} />
+                </div>
+
+                <div className={s.summaryButtons}>
+                  <Skeleton className={s.skeletonPrimaryButton} />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </SkeletonTheme>
   );
 };
 
 export default CartModalSkeleton;
-
-

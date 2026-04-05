@@ -81,7 +81,7 @@
   }
 }
 .close:hover {
-  background-color: var(--violet);
+  background: rgba(217, 186, 136, 0.25);
   color: var(--white);
 }
 .desktopSliderWrap {
@@ -177,8 +177,8 @@
   transition: all 0.3s ease;
 }
 .secondary:hover {
-  color: var(--white);
-  background: var(--black);
+  background: #d49e50;
+  color: var(--black);
 }
 .remove {
   color: var(--zoloto);
@@ -193,9 +193,7 @@
   transition: all 0.3s ease;
 }
 .remove:hover {
-  color: var(--white);
-  background: var(--black);
-  border: 2px solid var(--black);
+  background: rgba(217, 186, 136, 0.25);
 }
 .empty {
   padding: 24px;

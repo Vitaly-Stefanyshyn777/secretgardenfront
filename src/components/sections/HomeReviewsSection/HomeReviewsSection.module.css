@@ -82,10 +82,9 @@
 }
 
 .reviewText {
-  margin: 0;
   font-family: var(--second-family);
   font-weight: 500;
-  font-size: 21px;
+  font-size: 16px;
   line-height: 120%;
   color: var(--bіliy);
 }

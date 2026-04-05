@@ -89,6 +89,12 @@
   color: var(--white);
 }
 
+.iconCircle:hover {
+  background: var(--zoloto);
+  color: var(--white);
+  transform: translateY(-2px) scale(1.05);
+}
+
 .iconCircle svg {
   width: 1.5vw;
   height: 1.5vw;

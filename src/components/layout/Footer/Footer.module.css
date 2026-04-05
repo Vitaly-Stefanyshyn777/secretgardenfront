@@ -225,6 +225,10 @@
   color: var(--bіliy);
 }
 
+.findItem:hover {
+  text-decoration: underline;
+}
+
 .findIcon {
   width: 30px;
   height: 30px;
@@ -241,14 +245,19 @@
 }
 
 .mailIcon {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 26px;
   line-height: 1;
   flex-shrink: 0;
+  svg {
+    width: 100%;
+    height: 100%;
+    color: var(--white);
+  }
 }
 
 .sectionTitle {

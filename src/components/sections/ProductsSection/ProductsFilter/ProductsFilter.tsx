@@ -105,6 +105,7 @@ const ProductsFilter = ({
         <CertificationFilter
           value={filters.certification}
           onChange={(value) => handleFilterChange("certification", value)}
+          hideAllCategoriesButton={showFilterActions}
         />
 
         <CategoryFiltersCheckboxes

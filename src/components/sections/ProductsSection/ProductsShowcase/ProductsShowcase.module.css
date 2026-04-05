@@ -113,7 +113,9 @@
 }
 
 .allCoursesBtn:hover {
-  background: var(--black);
+  color: var(--chorniy);
+  border: 1px solid #d49e50;
+  background: #d49e50;
 }
 
 .loading,

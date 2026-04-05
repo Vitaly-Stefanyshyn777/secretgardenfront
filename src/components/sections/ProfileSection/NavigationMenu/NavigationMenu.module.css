@@ -29,7 +29,7 @@
   align-items: center;
   gap: 17px;
   padding: 12px 16px;
-  text-decoration: none;
+
   color: #1a1a1a;
   font-size: 16px;
   font-weight: 500;
@@ -37,22 +37,25 @@
   transition: all 0.2s ease;
   position: relative;
   padding: 20px;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .menuLink:hover:not(.active) .menuIcon {
-  color: #8b5cf6;
+  color: var(--zoloto);
 }
 
 .menuLink:hover:not(.active) .menuLabel {
-  color: #8b5cf6;
+  color: var(--zoloto);
 }
 
 .menuLink.active .menuIcon {
-  color: var(--violet);
+  color: var(--zoloto);
 }
 
 .menuLink.active .menuLabel {
-  color: var(--violet);
+  color: var(--zoloto);
 }
 
 .menuIcon {

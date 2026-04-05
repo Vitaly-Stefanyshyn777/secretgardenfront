@@ -30,8 +30,9 @@
 }
 
 .root:hover {
-  background: var(--black);
-  color: var(--white);
+  background: #d49e50;
+
+  /* border: 1px solid var(--zoloto); */
 }
 
 .root svg {
@@ -41,8 +42,9 @@
 }
 
 .active {
-  background: rgba(0, 0, 0, 0.12);
+  background: var(--sіriy);
   color: var(--black);
+  opacity: 0.5;
 }
 
 .cartIconWrapper {
@@ -66,9 +68,5 @@
   .root svg {
     width: mvw(18);
     height: mvw(18);
-  }
-  .root:hover {
-    background: none;
-    color: var(--white);
   }
 }

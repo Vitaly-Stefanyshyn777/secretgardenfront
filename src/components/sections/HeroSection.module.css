@@ -374,9 +374,8 @@
 }
 
 .navArrow:hover {
-  backdrop-filter: blur(20px);
-  background: var(--white);
-  color: var(--black);
+  border: 1px solid var(--zoloto);
+  background: rgba(217, 186, 136, 0.25);
 }
 
 .navDots {

@@ -58,7 +58,7 @@
 
 .input:focus {
   outline: none;
-  border-color: #000; /* активний стан */
+  border-color: var(--zoloto); /* активний стан */
 }
 
 .inputWrapper:hover .input {

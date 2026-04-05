@@ -36,7 +36,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 100%;
-  color: var(--white);
+  color: var(--zoloto);
 }
 
 .breadcrumbLink:hover {
@@ -48,7 +48,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 140%;
-  color: var(--white);
+  color: var(--zoloto);
 }
 
 .breadcrumbText.active {
@@ -57,7 +57,8 @@
 }
 
 .separator {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--zoloto);
+  opacity: 0.6;
   font-size: 16px;
   font-weight: 500;
   margin: 0 4px;

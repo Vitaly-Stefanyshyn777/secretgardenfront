@@ -12,7 +12,7 @@ const AboutSection = () => {
         <div className={s.block}>
           <div className={`${s.mediaBlock} ${s.mediaBlockWithButton}`}>
             <Image
-              src="/images/Rectangle-12-2.jpg"
+              src="/images/Rectangle-12.png"
               alt="Наша політика"
               width={541}
               height={318}
@@ -24,10 +24,10 @@ const AboutSection = () => {
             <h2 className={s.title}>Наша політика</h2>
             <div className={s.textGroup}>
               <p className={s.text}>
-                Secret Garden — це простір, створений на принципах натуральності,
-                прозорості та відповідального підходу. Ми працюємо виключно з
-                продуктами, що мають зрозуміле походження та відповідають чинним
-                вимогам законодавства.
+                Secret Garden — це простір, створений на принципах
+                натуральності, прозорості та відповідального підходу. Ми
+                працюємо виключно з продуктами, що мають зрозуміле походження та
+                відповідають чинним вимогам законодавства.
               </p>
               <p className={s.text}>
                 У нашому магазині не представлені продукти, що містять THC, а
@@ -63,7 +63,7 @@ const AboutSection = () => {
           </div>
           <div className={s.mediaBlock}>
             <Image
-              src="/images/Rectangle-14.jpg"
+              src="/images/Rectangle-13.png"
               alt="Ціль"
               width={541}
               height={318}
@@ -75,7 +75,7 @@ const AboutSection = () => {
         <div className={s.block}>
           <div className={s.mediaBlock}>
             <Image
-              src="/images/Rectangle-15.jpg"
+              src="/images/Rectangle-15.png"
               alt="Інші послуги"
               width={541}
               height={318}
@@ -96,9 +96,7 @@ const AboutSection = () => {
                 <br />
                 Відвідати чайні церемонії, які проходять за попереднім записом.
               </p>
-              <p className={s.text}>
-                Записатися на церемонію ви можете нижче:
-              </p>
+              <p className={s.text}>Записатися на церемонію ви можете нижче:</p>
             </div>
             <div className={s.socialButtons}>
               <Link
@@ -128,9 +126,9 @@ const AboutSection = () => {
             <h2 className={s.title}>Підтримка та вдячність</h2>
             <div className={s.textGroup}>
               <p className={s.text}>
-                Ми працюємо в Україні й усвідомлюємо відповідальність перед нашою
-                спільнотою. Для військовослужбовців діє знижка 10% — її можна
-                отримати у фізичному закладі у вигляді промокоду.
+                Ми працюємо в Україні й усвідомлюємо відповідальність перед
+                нашою спільнотою. Для військовослужбовців діє знижка 10% — її
+                можна отримати у фізичному закладі у вигляді промокоду.
               </p>
               <p className={s.text}>
                 Окрім цього, ми регулярно долучаємось до зборів на дрони для
@@ -146,7 +144,7 @@ const AboutSection = () => {
           </div>
           <div className={s.mediaBlock}>
             <Image
-              src="/images/Rectangle-13.jpg"
+              src="/images/Rectangle-15.png"
               alt="Підтримка та вдячність"
               width={541}
               height={318}

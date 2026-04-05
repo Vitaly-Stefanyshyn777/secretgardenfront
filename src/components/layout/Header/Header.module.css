@@ -15,6 +15,11 @@
   background: rgba(3, 7, 18, 0.4);
 }
 
+.iconBtn:hover {
+  border: 1px solid var(--zoloto);
+  background: rgba(217, 186, 136, 0.25);
+}
+
 /* Клас для різних секцій, зміна стилів під тесну або світлу тему */
 .headerLight {
   color: #333;
@@ -65,7 +70,7 @@
   }
 }
 
-.headerTrainerProfile .iconBtn svg,
+/* .headerTrainerProfile .iconBtn svg,
 .headerTrainerProfile .phone svg,
 .headerTrainerProfile .burger svg,
 .headerTrainerProfile .nav svg,
@@ -73,7 +78,7 @@
 .headerTrainerProfile .nav a:hover svg {
   stroke: var(--black);
   color: var(--black);
-}
+} */
 
 .headerTrainerProfile .register {
   color: var(--white);
@@ -86,17 +91,17 @@
   color: var(--white);
 }
 
-.headerTrainerProfile .nav,
+/* .headerTrainerProfile .nav,
 .headerTrainerProfile .iconBtn,
 .headerTrainerProfile .burger {
   backdrop-filter: none;
   background: transparent;
-}
+} */
 
 /* Додаткові класи для білого фону */
 @media (min-width: 1001px) {
   /* Спільні стилі для Shop, Instructing, Product сторінок */
-  .headerShop .nav,
+  /* .headerShop .nav,
   .headerInstructing .nav,
   .headerProduct .nav,
   .headerShop .iconBtn,
@@ -107,17 +112,17 @@
   .headerProduct .burger {
     backdrop-filter: none;
     background: transparent;
-  }
+  } */
 
-  .headerShop .iconBtn,
+  /* .headerShop .iconBtn,
   .headerInstructing .iconBtn,
   .headerProduct .iconBtn,
   .headerShop .burger,
   .headerInstructing .burger,
   .headerProduct .burger {
     color: var(--white);
-  }
-
+  } */
+  /* 
   .headerShop .iconBtn svg *,
   .headerInstructing .iconBtn svg *,
   .headerProduct .iconBtn svg *,
@@ -135,7 +140,7 @@
   .headerInstructing .burger:hover,
   .headerProduct .burger:hover {
     background: var(--violet);
-  }
+  } */
 
   /* Спеціальні стилі тільки для Trainers сторінки */
   .headerTrainers .nav {
@@ -153,19 +158,19 @@
     top: 0;
   }
 
-  .headerTrainers .iconBtn,
+  /* .headerTrainers .iconBtn,
   .headerTrainers .burger {
     -webkit-backdrop-filter: blur(1.04167vw);
     backdrop-filter: blur(1.04167vw);
     background: rgba(255, 254, 252, 0.15);
     color: var(--white);
-  }
-
+  } */
+  /* 
   .headerTrainers .iconBtn svg *,
   .headerTrainers .burger svg {
-    /* stroke: var(--white); */
+
     color: var(--white);
-  }
+  } */
 
   .headerTrainers .iconBtn:hover {
     background: var(--white);
@@ -176,13 +181,13 @@
   }
 
   /* Hover SVG ефекти тільки для desktop */
-  .iconBtn:hover svg,
+  /* .iconBtn:hover svg,
   .iconBtn:hover svg * {
     stroke: var(--violet);
     fill: var(--violet);
-  }
+  } */
 
-  .iconBtn.transparent:hover svg,
+  /* .iconBtn.transparent:hover svg,
   .iconBtn.transparent:hover svg * {
     stroke: var(--violet);
     fill: var(--violet);
@@ -214,23 +219,17 @@
     stroke: var(--white);
     fill: var(--white);
     color: var(--white);
-  }
+  } */
 
   /* Hover ефекти тільки для desktop */
-  .iconBtn:hover {
-    border-radius: 16px;
-    background: var(--white);
-    backdrop-filter: blur(20px);
-    color: var(--white);
-  }
 
-  .headerTrainerProfile .iconBtn:hover {
+  /* .headerTrainerProfile .iconBtn:hover {
     background: var(--violet);
   }
 
   .headerTrainerProfile .burger:hover {
     background: var(--violet);
-  }
+  } */
 }
 
 .left {
@@ -305,6 +304,7 @@
 .nav a {
   font-family: var(--third-family);
   font-weight: 500;
+  border-radius: 6px;
   font-size: 18px;
   line-height: 143%;
   color: var(--zoloto);
@@ -313,11 +313,12 @@
   text-decoration: none;
   position: relative;
   padding: 10px 16px;
+  border: 1px solid transparent;
 }
 
 .nav a:hover {
-  text-decoration: underline;
-  text-decoration-skip-ink: none;
+  background: rgba(217, 186, 136, 0.25);
+  border: 1px solid var(--zoloto);
 }
 
 .logo {
@@ -468,17 +469,14 @@
   backdrop-filter: blur(20px); */
   color: var(--bіliy);
   fill: var(--bіliy);
+  border: 1px solid transparent;
 }
 
 .iconBtn.active {
-  border-radius: 16px;
-  background: var(--violet);
-  color: var(--white);
+  border: 1px solid var(--zoloto);
 }
 .iconBtn.transparent:hover {
-  border-radius: 16px;
-  background: var(--white);
-  backdrop-filter: blur(20px);
+  border: 1px solid var(--zoloto);
 }
 
 .iconBtn.white:hover {
@@ -506,11 +504,9 @@
 }
 
 .iconBtn:hover .iconImage {
-
 }
 
 .iconBtn.active .iconImage {
-
 }
 
 .userBtn {
