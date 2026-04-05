@@ -15,8 +15,8 @@ const ProductsShowcaseSkeleton = () => {
             <Skeleton
               width={100}
               height={18}
-              baseColor="rgba(132, 38, 215, 0.1)"
-              highlightColor="rgba(132, 38, 215, 0.2)"
+              baseColor="rgba(217, 186, 136, 0.1)"
+              highlightColor="rgba(217, 186, 136, 0.2)"
             />
             <Skeleton
               width={300}
@@ -42,8 +42,16 @@ const ProductsShowcaseSkeleton = () => {
                     width={8}
                     height={8}
                     borderRadius="50%"
-                    baseColor={i === 1 ? "rgba(14, 14, 14, 0.3)" : "rgba(14, 14, 14, 0.1)"}
-                    highlightColor={i === 1 ? "rgba(14, 14, 14, 0.5)" : "rgba(14, 14, 14, 0.2)"}
+                    baseColor={
+                      i === 1
+                        ? "rgba(14, 14, 14, 0.3)"
+                        : "rgba(14, 14, 14, 0.1)"
+                    }
+                    highlightColor={
+                      i === 1
+                        ? "rgba(14, 14, 14, 0.5)"
+                        : "rgba(14, 14, 14, 0.2)"
+                    }
                   />
                 ))}
               </div>
@@ -61,8 +69,15 @@ const ProductsShowcaseSkeleton = () => {
         {/* Skeleton для карток */}
         <div className={s.coursesSlider}>
           <div className={s.grid}>
-{[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className={i === 6 ? `${s.slide} ${s.slideDesktopOnly}` : s.slide}>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className={
+                  i === 6
+                    ? `${s.slide} ${s.slideDesktopOnly} ${s.skeletonCardWrapper}`
+                    : `${s.slide} ${s.skeletonCardWrapper}`
+                }
+              >
                 <CardSkeleton />
               </div>
             ))}
@@ -75,8 +90,8 @@ const ProductsShowcaseSkeleton = () => {
             width={200}
             height={64}
             borderRadius={20}
-            baseColor="rgba(132, 38, 215, 0.2)"
-            highlightColor="rgba(132, 38, 215, 0.4)"
+            baseColor="rgba(217, 186, 136, 0.2)"
+            highlightColor="rgba(217, 186, 136, 0.4)"
           />
         </div>
       </div>
@@ -85,4 +100,3 @@ const ProductsShowcaseSkeleton = () => {
 };
 
 export default ProductsShowcaseSkeleton;
-

@@ -38,6 +38,10 @@
   }
 }
 
+.priceOrderButton:hover {
+  /* transform: scale(1.1); */
+}
+
 /* Кнопки для "Показувати по" */
 .itemsPerPageButton {
   display: flex;

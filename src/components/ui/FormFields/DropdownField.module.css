@@ -48,11 +48,11 @@
 }
 
 .selectButtonActive {
-  border-color: #000;
+  border-color: var(--zoloto);
 }
 
 .selectButton:hover {
-  border-color: rgba(0, 0, 0, 0.3);
+  border-color: var(--zoloto);
 }
 
 .selectButtonDisabled {
@@ -132,7 +132,7 @@
 }
 
 .dropdownItem:hover {
-  background: #f5f5f5;
+  /* border: 1px solid var(--zoloto); */
 }
 
 .itemIcon {

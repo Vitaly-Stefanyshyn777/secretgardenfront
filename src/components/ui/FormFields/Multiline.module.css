@@ -40,13 +40,14 @@
 }
 
 .textareaWhite {
-  background: var(--fon);
-  border: 1px solid var(--bіliy);
+  background: rgba(217, 186, 136, 0.25);
+  border: 1px solid var(--zoloto);
 }
 
 .textarea:focus {
   outline: none;
-  border-color: #000;
+  background: rgba(217, 186, 136, 0.25);
+  border: 1px solid var(--zoloto);
 }
 
 .textarea::placeholder {
@@ -72,6 +73,7 @@
   top: 10px;
   transform: translateY(0);
   font-size: 11px;
+  color: var(--zoloto);
 }
 
 /* Заповнений стан без фокусу */

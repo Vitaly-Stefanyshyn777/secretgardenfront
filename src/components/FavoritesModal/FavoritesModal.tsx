@@ -30,8 +30,8 @@ function toNumber(value: unknown): number | undefined {
     typeof value === "number"
       ? value
       : typeof value === "string"
-      ? parseFloat(value)
-      : parseFloat(String(value));
+        ? parseFloat(value)
+        : parseFloat(String(value));
   return Number.isFinite(n) ? n : undefined;
 }
 
@@ -70,7 +70,7 @@ export default function FavoritesModal() {
 
   const desktopTotalSlides = Math.max(
     1,
-    items.length > 5 ? items.length - 5 + 1 : 1
+    items.length > 5 ? items.length - 5 + 1 : 1,
   );
 
   useEffect(() => {
@@ -120,7 +120,13 @@ export default function FavoritesModal() {
     const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
     const run = async () => {
-      const productCache = new Map<string, { price?: string; characteristics?: Array<{ name: string; value: string }> }>();
+      const productCache = new Map<
+        string,
+        {
+          price?: string;
+          characteristics?: Array<{ name: string; value: string }>;
+        }
+      >();
 
       const tasks = items.map(async (it) => {
         if (it.id.startsWith("course-")) return;
@@ -137,7 +143,7 @@ export default function FavoritesModal() {
           let cached = productCache.get(slug);
           if (!cached) {
             const res = await fetch(
-              `${base}/api/catalog/products/${encodeURIComponent(slug)}`
+              `${base}/api/catalog/products/${encodeURIComponent(slug)}`,
             );
             const raw = res.ok ? await res.json() : null;
             const d = raw?.data ?? raw;
@@ -149,11 +155,12 @@ export default function FavoritesModal() {
           }
           if (!cached || cancelled) return;
 
-          const metaData: Array<{ key: string; value: string }> =
-            (cached.characteristics ?? []).map((c: { name: string; value: string }) => ({
-              key: c.name,
-              value: String(c.value ?? ""),
-            }));
+          const metaData: Array<{ key: string; value: string }> = (
+            cached.characteristics ?? []
+          ).map((c: { name: string; value: string }) => ({
+            key: c.name,
+            value: String(c.value ?? ""),
+          }));
 
           const price = toNumber(cached.price);
           const originalPrice = price;
@@ -260,7 +267,9 @@ export default function FavoritesModal() {
                   <Swiper
                     modules={[Navigation, Pagination, A11y]}
                     onSwiper={(sw: SwiperType) => (swiperRef.current = sw)}
-                    onSlideChange={(sw: SwiperType) => setActiveIndex(sw.activeIndex)}
+                    onSlideChange={(sw: SwiperType) =>
+                      setActiveIndex(sw.activeIndex)
+                    }
                     spaceBetween={0}
                     slidesPerView={1}
                     centeredSlides={false}
@@ -335,7 +344,9 @@ export default function FavoritesModal() {
                 ) : (
                   <Swiper
                     modules={[Navigation, Pagination, A11y]}
-                    onSwiper={(sw: SwiperType) => (desktopSwiperRef.current = sw)}
+                    onSwiper={(sw: SwiperType) =>
+                      (desktopSwiperRef.current = sw)
+                    }
                     onSlideChange={(sw: SwiperType) =>
                       setDesktopActiveIndex(sw.activeIndex)
                     }
@@ -401,8 +412,6 @@ export default function FavoritesModal() {
           {items.length > 0 && (
             <div className={s.actionsRow}>
               <div className={s.buttonsWrap}>
-                
-
                 <button
                   className={s.secondary}
                   onClick={async () => {
@@ -416,8 +425,7 @@ export default function FavoritesModal() {
                         const itemId = it.id;
                         itemIds.push(itemId);
                         const enriched = enrichedByKey[it.id];
-                        const effectivePrice =
-                          enriched?.price ?? it.price ?? 0;
+                        const effectivePrice = enriched?.price ?? it.price ?? 0;
                         const effectiveOriginalPrice =
                           enriched?.originalPrice ?? it.originalPrice;
                         const effectiveMetaData =
@@ -445,15 +453,13 @@ export default function FavoritesModal() {
                     for (const cartItem of cartItemsToAdd) {
                       try {
                         await addToCart(cartItem, 1);
-                      } catch (error) {
-                      }
+                      } catch (error) {}
                     }
 
                     if (itemIds.length > 0) {
                       try {
                         await removeAll(itemIds);
-                      } catch (error) {
-                      }
+                      } catch (error) {}
                     }
                   }}
                 >
@@ -470,28 +476,28 @@ export default function FavoritesModal() {
                 </button>
               </div>
               <div className={s.navWrap}>
-                  {isMobile
-                    ? items.length > 4 && (
-                        <SliderNav
-                          activeIndex={activeIndex}
-                          dots={mobilePages.length}
-                          onPrev={() => swiperRef.current?.slidePrev()}
-                          onNext={() => swiperRef.current?.slideNext()}
-                          onDotClick={(idx) => swiperRef.current?.slideTo(idx)}
-                        />
-                      )
-                    : items.length > 5 && (
-                        <SliderNav
-                          activeIndex={desktopActiveIndex}
-                          dots={desktopTotalSlides}
-                          onPrev={() => desktopSwiperRef.current?.slidePrev()}
-                          onNext={() => desktopSwiperRef.current?.slideNext()}
-                          onDotClick={(idx) =>
-                            desktopSwiperRef.current?.slideTo(idx)
-                          }
-                        />
-                      )}
-                </div>
+                {isMobile
+                  ? items.length > 4 && (
+                      <SliderNav
+                        activeIndex={activeIndex}
+                        dots={mobilePages.length}
+                        onPrev={() => swiperRef.current?.slidePrev()}
+                        onNext={() => swiperRef.current?.slideNext()}
+                        onDotClick={(idx) => swiperRef.current?.slideTo(idx)}
+                      />
+                    )
+                  : items.length > 5 && (
+                      <SliderNav
+                        activeIndex={desktopActiveIndex}
+                        dots={desktopTotalSlides}
+                        onPrev={() => desktopSwiperRef.current?.slidePrev()}
+                        onNext={() => desktopSwiperRef.current?.slideNext()}
+                        onDotClick={(idx) =>
+                          desktopSwiperRef.current?.slideTo(idx)
+                        }
+                      />
+                    )}
+              </div>
             </div>
           )}
         </div>
@@ -500,4 +506,3 @@ export default function FavoritesModal() {
 
   return createPortal(content, document.body);
 }
-

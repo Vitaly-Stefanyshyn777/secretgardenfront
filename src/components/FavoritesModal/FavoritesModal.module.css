@@ -24,7 +24,7 @@
   flex-direction: column;
   border-radius: 20px;
   padding: 52px;
-  width: 1500px;
+  width: 1600px;
   min-height: 700px;
 }
 .topbarListBlock {
@@ -111,7 +111,7 @@
 .list {
   overflow: auto;
   display: grid;
-  grid-template-columns: repeat(4, 332px);
+  grid-template-columns: repeat(5, 280px);
   justify-content: center;
   gap: 16px;
 }
@@ -233,6 +233,11 @@
 
 .dotActive {
   background: #6c3bd7;
+}
+
+.skeletonCardWrapper {
+  width: 280px;
+  height: 460px;
 }
 
 @media (max-width: 1000px) {

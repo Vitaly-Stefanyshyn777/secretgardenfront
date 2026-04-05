@@ -158,7 +158,7 @@
 } */
 
 .favoriteActive {
-  background: var(--black);
+  /* background: #d49e50; */
   color: var(--zoloto);
 }
 

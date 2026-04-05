@@ -63,7 +63,6 @@ export default function PaginationNav({
         onClick={onPrev}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        style={{ background: buttonBgColor }}
       >
         <ArrowLeftIcon />
       </button>
@@ -87,7 +86,6 @@ export default function PaginationNav({
         onClick={onNext}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        style={{ background: buttonBgColor }}
       >
         <ArrowRightIcon />
       </button>

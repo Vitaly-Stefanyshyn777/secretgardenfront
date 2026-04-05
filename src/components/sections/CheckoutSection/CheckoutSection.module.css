@@ -367,7 +367,7 @@
   font-size: 14px;
   line-height: 135%;
   color: var(--white);
-  border: none;
+
   cursor: pointer;
   width: auto;
   display: inline-block;
@@ -376,9 +376,9 @@
 }
 
 .primary:hover {
-  background: var(--black);
-  color: var(--white);
-  border-color: var(--black);
+  background: rgba(217, 186, 136, 0.25);
+  color: var(--zoloto);
+  border: 1px solid var(--zoloto) !important;
 }
 
 .primary:disabled {
@@ -415,9 +415,8 @@
 }
 
 .primaryWide:hover {
-  background: var(--black);
-  color: var(--white);
-  border-color: var(--black);
+  background: rgba(217, 186, 136, 0.25);
+  color: var(--zoloto);
 }
 .radio {
   font-family: var(--font-family);
@@ -712,9 +711,9 @@
   color: var(--bіliy);
   backdrop-filter: blur(2.08333vw);
   background: rgba(249, 249, 249, 0.1);
+  color: var(--bіliy);
 
   svg {
-    color: var(--bіliy);
     width: 12px;
     height: 3px;
   }
@@ -731,21 +730,20 @@
   color: var(--bіliy);
   backdrop-filter: blur(2.08333vw);
   background: rgba(249, 249, 249, 0.1);
-
+  color: var(--bіliy);
   svg {
-    color: var(--bіliy);
     width: 12px;
     height: 12px;
   }
 }
 
 .minus:hover {
-  background: var(--violet);
-  color: var(--white);
+  background: #d49e50;
+  color: var(--black);
 }
 .plus:hover {
-  background: var(--violet);
-  color: var(--white);
+  background: #d49e50;
+  color: var(--black);
 }
 .qtyBlock {
   border: 1px solid var(--bіliy);
@@ -786,8 +784,8 @@
   display: flex;
 }
 .removeBtn:hover {
-  background: var(--violet);
-  color: var(--white);
+  background: #363533;
+  /* color: var(--zoloto); */
 }
 .priceWrap {
   margin-left: auto;
@@ -991,7 +989,7 @@
   gap: 4px;
 }
 .colorCode {
-  color: rgba(14, 14, 14, 0.4);
+  color: var(--bіliy);
   font-size: 12px;
 }
 .name {

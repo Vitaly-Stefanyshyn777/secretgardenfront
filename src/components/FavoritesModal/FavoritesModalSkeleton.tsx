@@ -11,13 +11,24 @@ const FavoritesModalSkeleton: React.FC = () => {
       <div className={s.modal}>
         <div className={s.topbarListBlock}>
           <div className={s.topbar}>
-            <Skeleton width={180} height={32} />
-            <Skeleton width={46} height={46} borderRadius={10} />
+            <Skeleton
+              width={180}
+              height={32}
+              baseColor="rgba(217, 186, 136, 0.1)"
+              highlightColor="rgba(217, 186, 136, 0.2)"
+            />
+            <Skeleton
+              width={46}
+              height={46}
+              borderRadius={10}
+              baseColor="rgba(217, 186, 136, 0.1)"
+              highlightColor="rgba(217, 186, 136, 0.2)"
+            />
           </div>
 
           <div className={s.list}>
-            {[...Array(4)].map((_, i) => (
-              <div key={i}>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className={s.skeletonCardWrapper}>
                 <CardSkeleton />
               </div>
             ))}
@@ -29,4 +40,3 @@ const FavoritesModalSkeleton: React.FC = () => {
 };
 
 export default FavoritesModalSkeleton;
-

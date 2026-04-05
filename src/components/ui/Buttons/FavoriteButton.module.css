@@ -4,7 +4,7 @@
   right: 20px;
   width: 48px;
   height: 48px;
-  background: rgba(255, 255, 255, 0.9);
+
   border: none;
   border-radius: 16px;
   display: flex;
@@ -15,6 +15,12 @@
   z-index: 2;
   backdrop-filter: blur(4px);
   color: var(--zoloto);
+  border: 1px solid var(--zoloto);
+}
+
+.root:hover {
+  transform: scale(1.1);
+  background: rgba(217, 186, 136, 0.25);
 }
 
 .root svg {

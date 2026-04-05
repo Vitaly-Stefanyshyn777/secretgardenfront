@@ -197,6 +197,11 @@
   gap: 8px;
 }
 
+.skeletonCardWrapper {
+  width: 280px;
+  height: 490px;
+}
+
 @media (max-width: 1000px) {
   .skeletonHeaderRight {
     gap: mvw(12);

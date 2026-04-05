@@ -158,7 +158,7 @@ export default function CartSummary({
               className={s.emptyCartButton}
               onClick={() => {
                 if (typeof window !== "undefined") {
-                  window.location.href = "/catalog";
+                  window.location.href = "/products";
                 }
               }}
             >

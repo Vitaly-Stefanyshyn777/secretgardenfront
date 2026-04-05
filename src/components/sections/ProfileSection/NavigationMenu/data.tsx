@@ -8,6 +8,10 @@ import {
   LockIcon2,
   EntranceIcon,
   QuestionBorderIcon,
+  Icon1,
+  Icon2,
+  Icon3,
+  Icon4,
 } from "@/components/Icons/Icons";
 import type { NavigationItem } from "./types";
 
@@ -16,27 +20,27 @@ export const navigationItems: NavigationItem[] = [
     id: "trainer-profile",
     label: "Ваш кабінет",
     href: "/profile/trainer-profile",
-    icon: "/icons/icon-6.svg",
+    icon: Icon1,
     badge: 0,
   },
   {
     id: "courses",
     label: "Мова",
     href: "/profile/courses",
-    icon: "/icons/icon-11.svg",
+    icon: Icon2,
   },
   {
     id: "orders",
     label: "Ваші замовлення",
     href: "/profile/orders",
 
-    icon: "/icons/icon-7.svg",
+    icon: Icon3,
   },
   {
     id: "personal-data",
     label: "Зв'язатися з нами",
     href: "/profile/personal-data",
-    icon: "/icons/icon-8.svg",
+    icon: Icon4,
   },
   {
     id: "change-password",

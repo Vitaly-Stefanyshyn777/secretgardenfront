@@ -38,6 +38,12 @@
   white-space: nowrap;
 }
 
+.tab:hover:not(.activeTab) {
+  background: rgba(255, 254, 252, 0.05);
+  color: rgba(255, 254, 252, 0.9);
+  border-color: rgba(255, 254, 252, 0.3);
+}
+
 .activeTab {
   background: rgba(255, 254, 252, 0.1);
   color: var(--white);
@@ -95,6 +101,15 @@
   display: flex;
   gap: 43px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.productItem:hover .productName {
+  color: var(--zoloto);
+}
+
+.productItem:hover .productImage {
+  transform: scale(1.02);
 }
 
 .productImage {
@@ -103,6 +118,7 @@
   border-radius: 5px;
   overflow: hidden;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
 .productImage img {
@@ -233,25 +249,51 @@
 .repeatBtn,
 .reviewBtn {
   flex: 1;
-  padding: 14px;
-  border-radius: 8px;
+  padding: 16px 24px;
+  border-radius: 12px;
   font-family: var(--font-family);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .repeatBtn {
-  background: #d4b483;
-  border: none;
+  background: var(--zoloto);
+  border: 1px solid var(--zoloto);
   color: #1a1a1a;
+}
+
+.repeatBtn:hover {
+  background: transparent;
+  color: var(--zoloto);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(212, 180, 131, 0.2);
+}
+
+.repeatBtn:active {
+  transform: translateY(0);
 }
 
 .reviewBtn {
   background: transparent;
-  border: 1px solid var(--zoloto);
+  border: 1px solid rgba(255, 254, 252, 0.2);
   color: var(--white);
+}
+
+.reviewBtn:hover {
+  background: rgba(255, 254, 252, 0.05);
+  border-color: var(--zoloto);
+  color: var(--zoloto);
+  transform: translateY(-2px);
+}
+
+.reviewBtn:active {
+  transform: translateY(0);
 }
 
 .empty {

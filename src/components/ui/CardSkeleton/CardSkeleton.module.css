@@ -17,8 +17,8 @@
 .imageSkeleton {
   height: 100%;
   width: 100%;
-  --base-color: rgba(132, 38, 215, 0.1);
-  --highlight-color: rgba(132, 38, 215, 0.2);
+  --base-color: rgba(217, 186, 136, 0.1);
+  --highlight-color: rgba(217, 186, 136, 0.2);
 }
 
 .badgesContainer {
@@ -34,8 +34,8 @@
   width: 42px;
   height: 36px;
   border-radius: 10px;
-  --base-color: rgba(132, 38, 215, 0.3);
-  --highlight-color: rgba(132, 38, 215, 0.5);
+  --base-color: rgba(217, 186, 136, 0.3);
+  --highlight-color: rgba(217, 186, 136, 0.5);
 }
 
 .favoriteContainer {
@@ -93,8 +93,8 @@
   width: 200px;
   height: 24px;
   border-radius: 12px;
-  --base-color: rgba(132, 38, 215, 0.1);
-  --highlight-color: rgba(132, 38, 215, 0.2);
+  --base-color: rgba(217, 186, 136, 0.1);
+  --highlight-color: rgba(217, 186, 136, 0.2);
 }
 
 .footer {
@@ -129,8 +129,8 @@
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  --base-color: rgba(132, 38, 215, 0.2);
-  --highlight-color: rgba(132, 38, 215, 0.4);
+  --base-color: rgba(217, 186, 136, 0.2);
+  --highlight-color: rgba(217, 186, 136, 0.4);
 }
 
 @media (max-width: 1000px) {
