@@ -3,8 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./CertificationFilter.module.css";
 import { MinuswIcon, PlusIcon } from "@/components/Icons/Icons";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useCatalogCategoriesQuery } from "@/components/hooks/useCatalogQueries";
 import type { CatalogCategory } from "@/lib/bfbApi";
 
@@ -194,7 +192,11 @@ export const CertificationFilter = ({
         {showSkeleton ? (
           <div className={styles.categoryBlocks}>
             {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} height={42} borderRadius={6} />
+              <span
+                key={i}
+                className={styles.categoryBlockSkeleton}
+                aria-hidden="true"
+              />
             ))}
           </div>
         ) : isError ? (

@@ -8,6 +8,8 @@ import ProductsGridSkeleton from "../ProductsGrid/ProductsGridSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { productsWithFiltersQuery } from "@/lib/productsQueries";
 
+const FORCE_PRODUCTS_SKELETON = true;
+
 interface Props {
   block: {
     subtitle: string;
@@ -31,9 +33,13 @@ const ProductsCatalogContainer = ({
     isLoading: localIsLoading,
     isError,
   } = useQuery(productsWithFiltersQuery({ category: "tovary-dlya-sportu" }));
-  
+
   // Використовуємо isLoading з батьківського компонента, якщо передано, інакше локальний
-  const isLoading = parentIsLoading !== undefined ? parentIsLoading : localIsLoading;
+  const isLoading = FORCE_PRODUCTS_SKELETON
+    ? true
+    : parentIsLoading !== undefined
+      ? parentIsLoading
+      : localIsLoading;
 
   // debug logs removed
 
@@ -65,7 +71,7 @@ const ProductsCatalogContainer = ({
   const sortedProducts: ProductLike[] = useMemo(() => {
     const base: ProductLike[] = (filteredProducts ?? products) as ProductLike[];
     const copy = [...base];
-    
+
     // Функція для визначення чи товар новий (30 днів – як у ProductCard)
     const isNewProduct = (product: ProductLike): boolean => {
       if (!product.dateCreated) return false;
@@ -77,38 +83,40 @@ const ProductsCatalogContainer = ({
         return false;
       }
     };
-    
+
     // Сортуємо: спочатку нові товари, потім решта
     copy.sort((a, b) => {
       const aIsNew = isNewProduct(a);
       const bIsNew = isNewProduct(b);
-      
+
       // Якщо один новий, а інший ні - новий першим
       if (aIsNew && !bIsNew) return -1;
       if (!aIsNew && bIsNew) return 1;
-      
+
       // Якщо обидва нові або обидва старі - сортуємо за поточним sortBy
       if (sortBy === "name")
         return String(a.name).localeCompare(String(b.name));
       if (sortBy === "price")
         return parseFloat(String(a.price)) - parseFloat(String(b.price));
-      
+
       // За замовчуванням - за датою створення (новіші першими)
       if (a.dateCreated && b.dateCreated) {
-        return new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime();
+        return (
+          new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+        );
       }
       if (a.dateCreated) return -1;
       if (b.dateCreated) return 1;
-      
+
       return 0;
     });
-    
+
     return copy;
   }, [filteredProducts, products, sortBy]);
 
   const totalPages = Math.max(
     1,
-    Math.ceil(sortedProducts.length / itemsPerPage)
+    Math.ceil(sortedProducts.length / itemsPerPage),
   );
   const start = (currentPage - 1) * itemsPerPage;
   const pageData = sortedProducts.slice(start, start + itemsPerPage);
@@ -149,17 +157,14 @@ const ProductsCatalogContainer = ({
       | undefined;
 
     const ratingAverage =
-      (product as any).ratingAverage ??
-      (product as any).averageRating ??
-      0;
+      (product as any).ratingAverage ?? (product as any).averageRating ?? 0;
     const ratingCount =
-      (product as any).ratingCount ??
-      (product as any).ratingCount ??
-      0;
+      (product as any).ratingCount ?? (product as any).reviewCount ?? 0;
 
     return {
       // CUID (clx...) зберігаємо як string; числовий id теж через String()
-      id: typeof product.id === "string" ? product.id : String(product.id ?? ""),
+      id:
+        typeof product.id === "string" ? product.id : String(product.id ?? ""),
       slug: (product as any).slug, // Додаємо slug з продукту
       name: product.name,
       type: wc?.type,
@@ -243,7 +248,7 @@ const ProductsCatalogContainer = ({
                     }`}
                     onClick={() => handlePageChange(page)}
                   />
-                )
+                ),
               )}
             </div>
 

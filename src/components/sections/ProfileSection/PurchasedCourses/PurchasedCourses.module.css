@@ -254,13 +254,15 @@
 }
 
 .langButtonActive:hover {
-  background: #d49e50;
+  background: var(--zoloto);
   color: var(--black);
-  border-color: #d49e50;
+  border-color: var(--zoloto);
+  opacity: 0.9;
 }
 
-.langButton:hover{
+.langButton:hover:not(.langButtonActive) {
   background: rgba(217, 186, 136, 0.25);
+  color: var(--zoloto);
 }
 
 /* Skeleton loading styles - Desktop */

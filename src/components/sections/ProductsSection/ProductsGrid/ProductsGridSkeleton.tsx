@@ -20,17 +20,24 @@ const ProductsGridSkeleton: React.FC = () => {
         />
       </div>
       <div className={productCardStyles.cardContent}>
-        <Skeleton
-          className={`${productCardStyles.productName} ${styles.skeletonProductName} ${styles.skeletonProductNameSize}`}
-        />
+        <div className={productCardStyles.ratingRow}>
+          <Skeleton className={styles.skeletonRatingRow} />
+        </div>
+        <div className={productCardStyles.namePricingBlock}>
+          <Skeleton
+            className={`${productCardStyles.productName} ${styles.skeletonProductName} ${styles.skeletonProductNameSize}`}
+          />
+          <div className={productCardStyles.pricing}>
+            <Skeleton className={styles.skeletonPricingFirst} />
+            <Skeleton className={styles.skeletonPricingSecond} />
+          </div>
+        </div>
         <div className={productCardStyles.subscriptionBlock}>
-          <div className={productCardStyles.subscriptionPrice}>
-            <div className={productCardStyles.subscriptionDiscount}>
-              <Skeleton className={styles.skeletonSubscriptionDiscount} />
-            </div>
-            <div className={productCardStyles.pricing}>
-              <Skeleton className={styles.skeletonPricingFirst} />
-              <Skeleton className={styles.skeletonPricingSecond} />
+          <div className={productCardStyles.ratingPriceBlock}>
+            <div className={productCardStyles.subscriptionPrice}>
+              <div className={productCardStyles.subscriptionDiscount}>
+                <Skeleton className={styles.skeletonSubscriptionDiscount} />
+              </div>
             </div>
           </div>
           <Skeleton

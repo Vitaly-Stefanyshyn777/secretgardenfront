@@ -120,6 +120,7 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
                   className={s.thumb}
                   width={144}
                   height={115}
+                  unoptimized={it.image.startsWith("http")}
                 />
               )}
               <div className={s.contentCol}>

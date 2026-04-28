@@ -120,6 +120,7 @@
   font-weight: 500;
   font-size: 21px;
   line-height: 120%;
+  transition: all 0.2s ease;
 }
 
 .socialButton svg {
@@ -143,6 +144,7 @@
   font-size: 21px;
   line-height: 120%;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .supportButton:hover {

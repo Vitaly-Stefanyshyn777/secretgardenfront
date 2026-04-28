@@ -129,7 +129,8 @@ export async function syncWithServer(): Promise<void> {
 
   try {
     await syncViewedProducts(items.map((x) => x.id));
-    clearStorage();
+    // Не очищаємо localStorage після sync:
+    // бекенд може не повертати mainImageUrl, а локальний список потрібен як кеш для картинок.
     localStorage.setItem(SYNCED_KEY, "1");
   } catch {
     // Якщо помилка - не очищаємо, спробуємо пізніше
@@ -182,14 +183,24 @@ export function useRecentlyViewed(currentProductSlug?: string) {
   });
 
   useEffect(() => {
-    if (!hasValidAuth) {
-      setLocalItems(loadFromStorage());
-    }
+    // Тримаємо localStorage як кеш завжди (для картинок/категорій), навіть коли є токен.
+    setLocalItems(loadFromStorage());
   }, [hasValidAuth]);
 
-  const items: Array<ReturnType<typeof toDisplayItem>> = hasValidAuth
-    ? (apiQuery.data ?? []).map(toDisplayItem)
-    : localItems.map(toDisplayItem);
+  const items: Array<ReturnType<typeof toDisplayItem>> = (() => {
+    if (!hasValidAuth) return localItems.map(toDisplayItem);
+
+    const localById = new Map(localItems.map((x) => [String(x.id), x]));
+    return (apiQuery.data ?? []).map((apiItem) => {
+      const fallback = localById.get(String(apiItem.id));
+      const merged: ViewedProductItem = {
+        ...apiItem,
+        mainImageUrl: apiItem.mainImageUrl || fallback?.mainImageUrl,
+        categories: apiItem.categories?.length ? apiItem.categories : fallback?.categories,
+      };
+      return toDisplayItem(merged as any);
+    });
+  })();
 
   const filtered = items.filter(
     (x) =>
@@ -204,7 +215,7 @@ export function useRecentlyViewed(currentProductSlug?: string) {
 
   const invalidate = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["viewed", "products"] });
-    if (!hasValidAuth) setLocalItems(loadFromStorage());
+    setLocalItems(loadFromStorage());
   }, [hasValidAuth, queryClient]);
 
   return {

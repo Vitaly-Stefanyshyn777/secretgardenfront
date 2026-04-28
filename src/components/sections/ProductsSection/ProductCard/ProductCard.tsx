@@ -328,6 +328,7 @@ const ProductCard = ({
           width={280}
           height={280}
           className={styles.productImage}
+          unoptimized={!imageError && imageUrl.startsWith("http")}
           onError={handleImageError}
         />
 

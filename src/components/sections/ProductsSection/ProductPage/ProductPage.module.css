@@ -636,8 +636,8 @@
   display: flex;
   gap: 40px;
   width: 100%;
-  max-width: 540px;
-  max-height: 400px;
+  /* max-width: 540px; */
+  /* max-height: 400px; */
   /* position: sticky;
   top: 150px; */
   align-self: flex-start;
@@ -715,7 +715,8 @@
   border-radius: 12px;
   overflow: hidden;
   background: #f7f7f7;
-  width: 1012px;
+  width: 700px;
+  height: 700px;
   position: relative;
 }
 

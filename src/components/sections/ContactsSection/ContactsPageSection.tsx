@@ -43,7 +43,7 @@ const ContactsPageSection = () => {
 
             <div className={s.photoWrapper}>
               <Image
-                src="/images/image-2.png"
+                src="/фото.png"
                 alt="Secret Garden, Дніпро"
                 width={540}
                 height={657}

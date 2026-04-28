@@ -249,30 +249,21 @@
 .repeatBtn,
 .reviewBtn {
   flex: 1;
-  padding: 16px 24px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--zoloto);
+
   font-family: var(--font-family);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.repeatBtn {
-  background: var(--zoloto);
-  border: 1px solid var(--zoloto);
-  color: #1a1a1a;
+  transition: all 0.3s ease;
 }
 
 .repeatBtn:hover {
-  background: transparent;
-  color: var(--zoloto);
+  background: #c5a372;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(212, 180, 131, 0.2);
+  box-shadow: 0 4px 12px rgba(212, 180, 131, 0.2);
 }
 
 .repeatBtn:active {
@@ -281,14 +272,13 @@
 
 .reviewBtn {
   background: transparent;
-  border: 1px solid rgba(255, 254, 252, 0.2);
+  border: 1px solid var(--zoloto);
   color: var(--white);
 }
 
 .reviewBtn:hover {
-  background: rgba(255, 254, 252, 0.05);
-  border-color: var(--zoloto);
-  color: var(--zoloto);
+  background: rgba(217, 186, 136, 0.1);
+  border-color: var(--white);
   transform: translateY(-2px);
 }
 

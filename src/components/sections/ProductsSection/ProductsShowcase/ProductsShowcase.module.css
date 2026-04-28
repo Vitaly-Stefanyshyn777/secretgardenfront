@@ -192,6 +192,128 @@
   gap: 16px;
 }
 
+.skeletonTitle,
+.skeletonNavBtn,
+.skeletonDot,
+.skeletonAllCoursesBtn {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.12) 40%,
+    rgba(255, 255, 255, 0.06) 80%
+  );
+  background-size: 200% 100%;
+  animation: showcaseSkeletonShimmer 1.3s ease-in-out infinite;
+}
+
+.skeletonTitle {
+  width: 300px;
+  height: 48px;
+  border-radius: 10px;
+}
+
+.skeletonNavBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.skeletonDotNavigation {
+  display: flex;
+  gap: 8px;
+}
+
+.skeletonDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  opacity: 0.7;
+}
+
+.skeletonDotActive {
+  opacity: 1;
+}
+
+.skeletonAllCoursesBtn {
+  /* Під розмір реальної кнопки .allCoursesBtn */
+  width: 200px;
+  height: 42px;
+  border-radius: 5px;
+  border: 1px solid rgba(217, 186, 136, 0.35);
+}
+
+/* ProductCard skeleton in showcase (must match ProductCard layout) */
+.skeletonCardWrapper {
+  width: 100%;
+}
+
+.skeletonCardImage {
+  width: 100%;
+  height: 251px;
+  border-radius: 0;
+}
+
+.skeletonBadgesItem {
+  width: 70px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.skeletonFavoriteBtn {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+}
+
+.skeletonRatingRow {
+  width: 266px;
+  height: 20px;
+  border-radius: 6px;
+}
+
+.skeletonProductName {
+  width: 240px;
+  height: 25px;
+  border-radius: 6px;
+}
+
+.skeletonPricingFirst {
+  width: 126px;
+  height: 45px;
+  border-radius: 6px;
+}
+
+.skeletonPricingSecond {
+  width: 60px;
+  height: 16px;
+  border-radius: 6px;
+}
+
+.skeletonSubscriptionDiscount {
+  width: 140px;
+  height: 24px;
+  border-radius: 6px;
+}
+
+.skeletonCartBtn {
+  width: 266px;
+  height: 50px;
+  border-radius: 12px;
+}
+
+@keyframes showcaseSkeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 .skeletonDotNavigation {
   display: flex;
   gap: 8px;
@@ -209,5 +331,34 @@
 
   .skeletonDotNavigation {
     gap: mvw(6);
+  }
+
+  .skeletonEyebrow {
+    width: mvw(90);
+    height: mvw(14);
+    border-radius: mvw(6);
+  }
+
+  .skeletonTitle {
+    width: mvw(240);
+    height: mvw(32);
+    border-radius: mvw(10);
+  }
+
+  .skeletonNavBtn {
+    width: mvw(40);
+    height: mvw(40);
+    border-radius: mvw(8);
+  }
+
+  .skeletonDot {
+    width: mvw(8);
+    height: mvw(8);
+  }
+
+  .skeletonAllCoursesBtn {
+    width: mvw(200);
+    height: mvw(46);
+    border-radius: mvw(16);
   }
 }

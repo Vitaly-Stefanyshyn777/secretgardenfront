@@ -17,6 +17,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+const FORCE_SHOWCASE_SKELETON = true;
+
 const ProductsShowcase: React.FC = () => {
   const [inventoryCategories, setInventoryCategories] = useState<
     Array<{ id: number; name: string; slug: string; image?: { src?: string } }>
@@ -217,7 +219,8 @@ const ProductsShowcase: React.FC = () => {
   // Показуємо скелетон якщо завантажується або дані ще не завантажені
   // Перевіряємо всі можливі стани завантаження та наявність даних
   const hasData = Array.isArray(courses) && courses.length > 0;
-  const shouldShowSkeleton = isPending || isLoading || (!hasData && isFetching);
+  const shouldShowSkeleton =
+    FORCE_SHOWCASE_SKELETON || isPending || isLoading || (!hasData && isFetching);
 
   if (shouldShowSkeleton) {
     return <ProductsShowcaseSkeleton />;

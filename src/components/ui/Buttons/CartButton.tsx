@@ -176,8 +176,27 @@ export default function CartButton({
       aria-label={inCart ? "Видалити з кошика" : "Додати в кошик"}
     >
       <div className={s.cartIconWrapper}>
-        <span className={s.cartIconText}>Додати в кошик</span>
-        <Image src="/icons/icon-18.svg" alt="Cart" width={18} height={18} />
+        <span className={s.cartIconText}>{inCart ? "У кошику" : "Додати в кошик"}</span>
+        {inCart ? (
+          <span className={s.checkIcon} aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16.6667 5.83398L8.33333 14.1673L3.33333 9.16732"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+        ) : (
+          <Image
+            src="/icons/icon-18.svg"
+            alt="Cart"
+            width={18}
+            height={18}
+          />
+        )}
       </div>
     </button>
   );

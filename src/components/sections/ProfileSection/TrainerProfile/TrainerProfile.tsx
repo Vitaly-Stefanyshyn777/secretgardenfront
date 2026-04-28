@@ -7,6 +7,7 @@ import {
   UserIcon,
   NumberIcon,
   EmailIcon,
+  EmailTwoIcon,
   InstagramIcon,
   TelegramIcon,
 } from "@/components/Icons/Icons";
@@ -201,7 +202,7 @@ const TrainerProfile: React.FC = () => {
               onChange={(e) => handleChange("phone", e.target.value)}
             />
             <InputField
-              icon={<EmailIcon />}
+              icon={<EmailTwoIcon />}
               label="Email"
               type="email"
               id="trainer-email"

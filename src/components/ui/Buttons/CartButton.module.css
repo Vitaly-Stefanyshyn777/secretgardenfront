@@ -42,9 +42,13 @@
 }
 
 .active {
-  background: var(--sіriy);
+  background: #3a8f5c;
   color: var(--black);
-  opacity: 0.5;
+  /* opacity: 0.5; */
+}
+
+.active .cartIconText {
+  color: var(--bіliy);
 }
 
 .cartIconWrapper {
@@ -53,6 +57,23 @@
   justify-content: center;
   flex-direction: row;
   gap: 8px;
+  img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.checkIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bіliy);
+}
+
+.checkIcon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 @media (max-width: 1000px) {
@@ -66,6 +87,11 @@
     background: none;
   }
   .root svg {
+    width: mvw(18);
+    height: mvw(18);
+  }
+
+  .checkIcon svg {
     width: mvw(18);
     height: mvw(18);
   }

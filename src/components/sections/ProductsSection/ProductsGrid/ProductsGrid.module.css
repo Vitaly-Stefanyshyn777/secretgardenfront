@@ -71,6 +71,12 @@
   height: 24px;
 }
 
+.skeletonRatingRow {
+  width: 266px;
+  height: 20px;
+  border-radius: 6px;
+}
+
 
 @media (max-width: 1000px) {
   .productsGrid {
@@ -141,5 +147,11 @@
   .skeletonProductNameSize {
     width: 90%;
     height: mvw(20);
+  }
+
+  .skeletonRatingRow {
+    width: mvw(266);
+    height: mvw(20);
+    border-radius: mvw(6);
   }
 }

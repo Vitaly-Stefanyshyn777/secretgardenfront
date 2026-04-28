@@ -90,16 +90,22 @@ export default function ProductsGrid({
             categories={p.categories}
             stockStatus={p.stock_status}
             dateCreated={p.date_created}
-            wcProduct={storeProduct ? {
-              id: typeof p.id === "number" ? p.id : (/^\d+$/.test(String(p.id)) ? parseInt(String(p.id), 10) : 0),
+            wcProduct={{
+              // Для CUID-ід (clx/...) залишаємо 0 — для рейтингу/відгуків це не критично
+              id:
+                typeof p.id === "number"
+                  ? p.id
+                  : /^\d+$/.test(String(p.id))
+                    ? parseInt(String(p.id), 10)
+                    : 0,
               name: p.name,
-              type: storeProduct.type || "simple",
-              variations: storeProduct.variations || [],
+              type: p.type ?? storeProduct?.type ?? "simple",
+              variations: p.variations ?? storeProduct?.variations ?? [],
               average_rating: p.average_rating || "0",
               rating_count: p.review_count || 0,
               total_sales: 0,
               featured: p.featured || false,
-              on_sale: storeProduct.on_sale || false,
+              on_sale: p.on_sale ?? storeProduct?.on_sale ?? false,
               price: p.price,
               regular_price: p.regular_price || p.price,
               sale_price: p.sale_price || "",
@@ -109,8 +115,8 @@ export default function ProductsGrid({
                 (storeProduct as any)?.meta_data ??
                 (p as any)?.meta_data ??
                 (p as any)?.metaData ??
-                []
-            } : undefined}
+                [],
+            }}
             allProducts={products.map((prod) => ({
               id: prod.id,
               name: prod.name,

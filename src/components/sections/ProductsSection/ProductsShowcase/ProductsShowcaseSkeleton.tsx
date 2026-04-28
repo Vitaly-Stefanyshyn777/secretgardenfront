@@ -1,67 +1,75 @@
 "use client";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
-import { CardSkeleton } from "@/components/ui/CardSkeleton/CardSkeleton";
-import s from "./ProductsShowcase.module.css";
 import "react-loading-skeleton/dist/skeleton.css";
+import productCardStyles from "../ProductCard/ProductCard.module.css";
+import s from "./ProductsShowcase.module.css";
 
 const ProductsShowcaseSkeleton = () => {
+  const renderProductCardSkeleton = (key: number) => (
+    <div key={key} className={`${s.slide} ${s.skeletonCardWrapper}`}>
+      <div className={productCardStyles.productCard}>
+        <div className={productCardStyles.cardImage}>
+          <Skeleton className={s.skeletonCardImage} />
+          <div className={productCardStyles.badges}>
+            <Skeleton className={s.skeletonBadgesItem} />
+          </div>
+          <Skeleton
+            className={`${productCardStyles.favoriteBtn} ${s.skeletonFavoriteBtn}`}
+          />
+        </div>
+        <div className={productCardStyles.cardContent}>
+          <div className={productCardStyles.ratingRow}>
+            <Skeleton className={s.skeletonRatingRow} />
+          </div>
+          <div className={productCardStyles.namePricingBlock}>
+            <Skeleton
+              className={`${productCardStyles.productName} ${s.skeletonProductName}`}
+            />
+            <div className={productCardStyles.pricing}>
+              <Skeleton className={s.skeletonPricingFirst} />
+              <Skeleton className={s.skeletonPricingSecond} />
+            </div>
+          </div>
+          <div className={productCardStyles.subscriptionBlock}>
+            <div className={productCardStyles.ratingPriceBlock}>
+              <div className={productCardStyles.subscriptionPrice}>
+                <div className={productCardStyles.subscriptionDiscount}>
+                  <Skeleton className={s.skeletonSubscriptionDiscount} />
+                </div>
+              </div>
+            </div>
+            <Skeleton className={`${productCardStyles.cartBtn} ${s.skeletonCartBtn}`} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <section className={s.section}>
       <div className={s.container}>
         {/* Skeleton для заголовка */}
         <div className={s.header}>
           <div className={s.headerLeft}>
-            <Skeleton
-              width={100}
-              height={18}
-              baseColor="rgba(217, 186, 136, 0.1)"
-              highlightColor="rgba(217, 186, 136, 0.2)"
-            />
-            <Skeleton
-              width={300}
-              height={48}
-              baseColor="rgba(14, 14, 14, 0.1)"
-              highlightColor="rgba(14, 14, 14, 0.2)"
-            />
+            <span className={s.skeletonTitle} aria-hidden="true" />
           </div>
           <div className={s.headerRight}>
             {/* Skeleton для навігації */}
             <div className={s.skeletonHeaderRight}>
-              <Skeleton
-                width={40}
-                height={40}
-                borderRadius={8}
-                baseColor="rgba(14, 14, 14, 0.1)"
-                highlightColor="rgba(14, 14, 14, 0.2)"
-              />
+              <span className={s.skeletonNavBtn} aria-hidden="true" />
               <div className={s.skeletonDotNavigation}>
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <Skeleton
+                  <span
                     key={i}
-                    width={8}
-                    height={8}
-                    borderRadius="50%"
-                    baseColor={
-                      i === 1
-                        ? "rgba(14, 14, 14, 0.3)"
-                        : "rgba(14, 14, 14, 0.1)"
-                    }
-                    highlightColor={
-                      i === 1
-                        ? "rgba(14, 14, 14, 0.5)"
-                        : "rgba(14, 14, 14, 0.2)"
-                    }
+                    className={`${s.skeletonDot} ${
+                      i === 1 ? s.skeletonDotActive : ""
+                    }`}
+                    aria-hidden="true"
                   />
                 ))}
               </div>
-              <Skeleton
-                width={40}
-                height={40}
-                borderRadius={8}
-                baseColor="rgba(14, 14, 14, 0.1)"
-                highlightColor="rgba(14, 14, 14, 0.2)"
-              />
+              <span className={s.skeletonNavBtn} aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -69,30 +77,21 @@ const ProductsShowcaseSkeleton = () => {
         {/* Skeleton для карток */}
         <div className={s.coursesSlider}>
           <div className={s.grid}>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div
-                key={i}
-                className={
-                  i === 6
-                    ? `${s.slide} ${s.slideDesktopOnly} ${s.skeletonCardWrapper}`
-                    : `${s.slide} ${s.skeletonCardWrapper}`
-                }
-              >
-                <CardSkeleton />
-              </div>
-            ))}
+            {[1, 2, 3, 4, 5, 6].map((i) =>
+              i === 6 ? (
+                <div key={i} className={s.slideDesktopOnly}>
+                  {renderProductCardSkeleton(i)}
+                </div>
+              ) : (
+                renderProductCardSkeleton(i)
+              ),
+            )}
           </div>
         </div>
 
         {/* Skeleton для футера */}
         <div className={s.footer}>
-          <Skeleton
-            width={200}
-            height={64}
-            borderRadius={20}
-            baseColor="rgba(217, 186, 136, 0.2)"
-            highlightColor="rgba(217, 186, 136, 0.4)"
-          />
+          <span className={s.skeletonAllCoursesBtn} aria-hidden="true" />
         </div>
       </div>
     </section>
