@@ -13,12 +13,11 @@ interface RecentlyViewedProps {
 
 const RecentlyViewed = memo(function RecentlyViewed({
   currentProductSlug,
-  isMobile = false,
 }: RecentlyViewedProps) {
   const { items, isLoading } = useRecentlyViewed(currentProductSlug);
   const baseItemsPerView = 6;
   const [slideIdx, setSlideIdx] = useState(0);
-  const itemsPerView = isMobile ? 4 : baseItemsPerView;
+  const itemsPerView = baseItemsPerView;
 
   const totalSlides = useMemo(
     () =>
@@ -72,12 +71,12 @@ const RecentlyViewed = memo(function RecentlyViewed({
                 image={item.image}
                 category={item.category}
                 wcProduct={
-                  item.ratingAverage != null || (item.ratingCount ?? 0) > 0
+                  (item.ratingAverage != null || (item.ratingCount ?? 0) > 0
                     ? {
                         average_rating: String(item.ratingAverage ?? 0),
                         rating_count: Number(item.ratingCount) || 0,
                       }
-                    : undefined
+                    : undefined) as any
                 }
                 isFluid
               />

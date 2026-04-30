@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import CheckoutSection from "@/components/sections/CheckoutSection/CheckoutSection";
 
 export const metadata: Metadata = {
-  title: "Оформлення замовлення - BFB",
-  description: "Завершіть оформлення замовлення на BFB. Безпечна оплата та швидка доставка.",
+  title: "Оформлення замовлення ",
+  description: "Завершіть оформлення замовлення ",
   robots: {
     index: false,
     follow: true,

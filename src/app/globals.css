@@ -109,13 +109,13 @@ header {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--black);
+  background: var(--zoloto);
   border-radius: 2px;
   width: 4px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--black);
+  background: #caa86a;
 }
 
 /* Кастомні стилі для react-loading-skeleton */

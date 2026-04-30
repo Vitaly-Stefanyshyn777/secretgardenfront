@@ -87,7 +87,8 @@
 
 .headerTrainerProfile .register:hover {
   backdrop-filter: blur(11.7px);
-  background: #8426d7;
+  background: none;
+  border: 1px solid var(--zoloto);
   color: var(--white);
 }
 
@@ -587,11 +588,13 @@
   transition: all 0.3s;
   align-items: center;
   padding: 10px 16px;
+  border: 1px solid transparent;
 }
 
 .register:hover {
-  backdrop-filter: blur(11.699999809265137px);
-  background: var(--violet);
+  backdrop-filter: blur(11.7px);
+  background: none;
+  border: 1px solid var(--zoloto);
   color: var(--white);
   /* transform: translateY(-1px); */
 }
@@ -628,7 +631,8 @@
 
 .headerProduct .register:hover {
   backdrop-filter: blur(11.7px);
-  background: #8426d7;
+  background: none;
+  border: 1px solid var(--zoloto);
   color: var(--white);
 }
 
@@ -872,7 +876,8 @@
 
 .headerScrolled .register:hover {
   backdrop-filter: blur(11.7px);
-  background: #8426d7;
+  background: none;
+  border: 1px solid var(--zoloto);
   color: var(--white);
 }
 

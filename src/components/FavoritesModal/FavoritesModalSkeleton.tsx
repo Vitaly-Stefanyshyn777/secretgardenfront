@@ -3,9 +3,49 @@ import React from "react";
 import Skeleton from "react-loading-skeleton";
 import s from "./FavoritesModal.module.css";
 import "react-loading-skeleton/dist/skeleton.css";
-import { CardSkeleton } from "@/components/ui/CardSkeleton/CardSkeleton";
+import productCardStyles from "@/components/sections/ProductsSection/ProductCard/ProductCard.module.css";
 
 const FavoritesModalSkeleton: React.FC = () => {
+  const renderProductCardSkeleton = (key: number) => (
+    <div key={key} className={s.skeletonCardWrapper}>
+      <div className={productCardStyles.productCard}>
+        <div className={productCardStyles.cardImage}>
+          <Skeleton className={s.skeletonCardImage} />
+          <div className={productCardStyles.badges}>
+            <Skeleton className={s.skeletonBadgesItem} />
+          </div>
+          <Skeleton
+            className={`${productCardStyles.favoriteBtn} ${s.skeletonFavoriteBtn}`}
+          />
+        </div>
+        <div className={productCardStyles.cardContent}>
+          <div className={productCardStyles.ratingRow}>
+            <Skeleton className={s.skeletonRatingRow} />
+          </div>
+          <div className={productCardStyles.namePricingBlock}>
+            <Skeleton
+              className={`${productCardStyles.productName} ${s.skeletonProductName}`}
+            />
+            <div className={productCardStyles.pricing}>
+              <Skeleton className={s.skeletonPricingFirst} />
+              <Skeleton className={s.skeletonPricingSecond} />
+            </div>
+          </div>
+          <div className={productCardStyles.subscriptionBlock}>
+            <div className={productCardStyles.ratingPriceBlock}>
+              <div className={productCardStyles.subscriptionPrice}>
+                <div className={productCardStyles.subscriptionDiscount}>
+                  <Skeleton className={s.skeletonSubscriptionDiscount} />
+                </div>
+              </div>
+            </div>
+            <Skeleton className={`${productCardStyles.cartBtn} ${s.skeletonCartBtn}`} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={s.backdrop}>
       <div className={s.modal}>
@@ -27,11 +67,7 @@ const FavoritesModalSkeleton: React.FC = () => {
           </div>
 
           <div className={s.list}>
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className={s.skeletonCardWrapper}>
-                <CardSkeleton />
-              </div>
-            ))}
+            {[1, 2, 3, 4, 5].map((i) => renderProductCardSkeleton(i))}
           </div>
         </div>
       </div>

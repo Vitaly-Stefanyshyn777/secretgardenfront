@@ -43,15 +43,12 @@ async function fetchHomeSeo(): Promise<YoastHeadJson | null> {
     let freshToken: string | undefined;
     if (username && password) {
       try {
-        const tokenRes = await fetch(
-          `${API_BASE}/api/auth/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-            next: { revalidate: 3600 }, // Кешуємо токен на 1 годину
-          },
-        );
+        const tokenRes = await fetch(`${API_BASE}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+          next: { revalidate: 3600 }, // Кешуємо токен на 1 годину
+        });
 
         if (tokenRes.ok) {
           const tokenData = await tokenRes.json();
@@ -98,22 +95,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
     if (!yoast) {
       return {
-        title: "B.F.B Fitness",
-        description: "Навчання, інвентар та тренування",
+        // description: "Навчання, інвентар та тренування",
       };
     }
 
     const robots = yoast.robots ?? {};
 
     return {
-      title: yoast.title ?? "B.F.B Fitness",
       description: "Навчання, інвентар та тренування", // Додаємо description
       robots: {
         index: robots.index !== "noindex",
         follow: robots.follow !== "nofollow",
       },
       openGraph: {
-        title: yoast.og_title ?? yoast.title ?? "B.F.B Fitness",
+        title: yoast.og_title ?? yoast.title ?? "BFB",
         url: yoast.og_url,
         siteName: yoast.og_site_name ?? "BFB",
         locale: yoast.og_locale ?? "uk_UA",
@@ -125,7 +120,7 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   } catch (error) {
     return {
-      title: "B.F.B Fitness",
+      title: "BFB",
       description: "Навчання, інвентар та тренування",
     };
   }

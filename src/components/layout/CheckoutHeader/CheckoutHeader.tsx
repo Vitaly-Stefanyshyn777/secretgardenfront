@@ -44,7 +44,7 @@ export default function CheckoutHeader() {
     return isLightTheme ? (
       <Image
         src={LIGHT_LOGO_SRC}
-        alt="B.F.B Fitness Logo"
+        alt="Logo"
         width={48}
         height={48}
         priority
@@ -72,7 +72,7 @@ export default function CheckoutHeader() {
                 <div className={s.LogoIcon}>
                   <Image
                     src={mobileLogoSrc}
-                    alt="B.F.B Fitness Logo"
+                    alt="Logo"
                     width={isScrolled ? 48 : 34}
                     height={isScrolled ? 48 : 43}
                     priority

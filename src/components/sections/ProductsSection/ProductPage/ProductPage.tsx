@@ -58,7 +58,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     );
   };
 
-  const baseItemsPerView = 5;
+  const baseItemsPerView = 6;
   const [slideIdx, setSlideIdx] = useState(0);
 
   const [selectedSize, setSelectedSize] = useState<string>("");
@@ -104,7 +104,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
   const maxVisibleThumbs = 7;
   const [thumbStart, setThumbStart] = useState(0);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
-  const itemsPerView = isMobile ? 4 : baseItemsPerView;
+  const itemsPerView = baseItemsPerView;
   const thumbNavThreshold = (isMobile ?? false) ? 4 : maxVisibleThumbs;
   const shouldShowThumbNav = imagesLength > thumbNavThreshold;
 
@@ -697,7 +697,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
       }))
     : [];
 
-  // Показуємо 5 карток, але перелистуємо по 1
+  // Показуємо 6 карток, але перелистуємо по 1
   const totalSlides = Math.max(
     1,
     mappedRelated.length > itemsPerView

@@ -10,11 +10,10 @@ import styles from "./ProductPage.module.css";
 const RelatedProducts = memo(function RelatedProducts({
   relatedCategoryProducts,
   currentProductSlug,
-  isMobile,
 }: RelatedProductsProps) {
   const baseItemsPerView = 6;
   const [slideIdx, setSlideIdx] = useState(0);
-  const itemsPerView = isMobile ? 4 : baseItemsPerView;
+  const itemsPerView = baseItemsPerView;
 
   // Мапимо пов'язані продукти
   const mappedRelated: RelatedProduct[] = useMemo(() => {
@@ -66,7 +65,7 @@ const RelatedProducts = memo(function RelatedProducts({
     return mapped;
   }, [relatedCategoryProducts, currentProductSlug]);
 
-  // Показуємо 5 карток, але перелистуємо по 1
+  // Показуємо 6 карток, але перелистуємо по 1
   const totalSlides = useMemo(() => {
     return Math.max(
       1,

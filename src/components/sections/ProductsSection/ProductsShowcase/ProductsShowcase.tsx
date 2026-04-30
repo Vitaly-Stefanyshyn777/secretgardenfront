@@ -17,7 +17,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const FORCE_SHOWCASE_SKELETON = true;
+const FORCE_SHOWCASE_SKELETON = false;
 
 const ProductsShowcase: React.FC = () => {
   const [inventoryCategories, setInventoryCategories] = useState<

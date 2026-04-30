@@ -17,13 +17,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
-  title: "B.F.B Fitness",
   description: "Навчання, інвентар та тренування",
-  icons: {
-    icon: "/favicon.svg", 
-    shortcut: "/favicon.svg",
-    apple: "/apple-icon.svg", 
-  },
+  // icons: {
+  //   icon: "/favicon.svg",
+  //   shortcut: "/favicon.svg",
+  //   apple: "/apple-icon.svg",
+  // },
 };
 
 const golosText = Golos_Text({

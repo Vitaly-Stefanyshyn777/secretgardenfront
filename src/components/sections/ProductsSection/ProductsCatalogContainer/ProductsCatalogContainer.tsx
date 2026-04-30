@@ -8,7 +8,7 @@ import ProductsGridSkeleton from "../ProductsGrid/ProductsGridSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { productsWithFiltersQuery } from "@/lib/productsQueries";
 
-const FORCE_PRODUCTS_SKELETON = true;
+const FORCE_PRODUCTS_SKELETON = false;
 
 interface Props {
   block: {

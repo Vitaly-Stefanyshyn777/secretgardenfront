@@ -61,13 +61,27 @@
   border-color: var(--zoloto); /* активний стан */
 }
 
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  -webkit-text-fill-color: var(--bіliy);
+  caret-color: var(--bіliy);
+  transition: background-color 9999s ease-out 0s;
+}
+
+.input:-webkit-autofill + .label {
+  color: var(--zoloto);
+}
+
 .inputWrapper:hover .input {
   border-color: var(--zoloto); /* hover */
 }
 
 /* Заповнений стан без фокусу */
 .input:not(:focus):not(:placeholder-shown) {
-  border-color: var(--bg-color);
+  border-color: var(--zoloto);
 }
 
 .input::placeholder {

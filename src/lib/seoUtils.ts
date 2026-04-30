@@ -33,7 +33,7 @@ export type YoastHeadJson = {
 export function yoastToMetadata(yoast: YoastHeadJson | null | undefined): Metadata {
   if (!yoast) {
     return {
-      title: "B.F.B Fitness",
+      title: "BFB",
       description: "Навчання, інвентар та тренування",
     };
   }
@@ -57,7 +57,7 @@ export function yoastToMetadata(yoast: YoastHeadJson | null | undefined): Metada
   }
 
   const openGraphBase: any = {
-    title: yoast.og_title ?? yoast.title ?? "B.F.B Fitness",
+    title: yoast.og_title ?? yoast.title ?? "BFB",
     description: yoast.og_description ?? yoast.description,
     url: yoast.og_url,
     siteName: yoast.og_site_name ?? "BFB",
@@ -76,7 +76,7 @@ export function yoastToMetadata(yoast: YoastHeadJson | null | undefined): Metada
   }
 
   return {
-    title: yoast.title ?? "B.F.B Fitness",
+    title: yoast.title ?? "BFB",
     description: yoast.description ?? yoast.og_description ?? "Навчання, інвентар та тренування",
     robots: {
       index: robots.index !== "noindex",
