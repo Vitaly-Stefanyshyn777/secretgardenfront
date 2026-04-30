@@ -18,6 +18,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import s from "./FavoritesModal.module.css";
 import FavoritesModalSkeleton from "./FavoritesModalSkeleton";
 
+const FORCE_FAVORITES_SKELETON = false;
+
 type FavoriteEnrichedData = {
   price?: number;
   originalPrice?: number;
@@ -101,15 +103,6 @@ export default function FavoritesModal() {
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
-
-  const [showSkeleton, setShowSkeleton] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setShowSkeleton(true);
-    const timer = setTimeout(() => setShowSkeleton(false), 300);
-    return () => clearTimeout(timer);
-  }, [isOpen]);
 
   // Підтягуємо meta та ціни з catalog API
   useEffect(() => {
@@ -244,7 +237,7 @@ export default function FavoritesModal() {
   if (!isOpen || !isMounted) return null;
 
   const content =
-    showSkeleton || isMobile === null ? (
+    FORCE_FAVORITES_SKELETON || isMobile === null ? (
       <FavoritesModalSkeleton />
     ) : (
       <div className={s.backdrop} onClick={close}>

@@ -1,9 +1,12 @@
 "use client";
 import React from "react";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import s from "./FavoritesModal.module.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import productCardStyles from "@/components/sections/ProductsSection/ProductCard/ProductCard.module.css";
+
+const skeletonBaseColor = "rgba(255, 255, 255, 0.82)";
+const skeletonHighlightColor = "rgba(255, 255, 255, 0.96)";
 
 const FavoritesModalSkeleton: React.FC = () => {
   const renderProductCardSkeleton = (key: number) => (
@@ -18,28 +21,59 @@ const FavoritesModalSkeleton: React.FC = () => {
             className={`${productCardStyles.favoriteBtn} ${s.skeletonFavoriteBtn}`}
           />
         </div>
-        <div className={productCardStyles.cardContent}>
+        <div
+          className={`${productCardStyles.cardContent} ${s.skeletonCardContent}`}
+        >
           <div className={productCardStyles.ratingRow}>
-            <Skeleton className={s.skeletonRatingRow} />
+            <Skeleton
+              className={s.skeletonRatingRow}
+              width={160}
+              height={20}
+              baseColor={skeletonBaseColor}
+              highlightColor={skeletonHighlightColor}
+            />
           </div>
-          <div className={productCardStyles.namePricingBlock}>
+          <div
+            className={`${productCardStyles.namePricingBlock} ${s.skeletonNamePricingBlock}`}
+          >
             <Skeleton
               className={`${productCardStyles.productName} ${s.skeletonProductName}`}
+              width={210}
+              height={25}
+              baseColor={skeletonBaseColor}
+              highlightColor={skeletonHighlightColor}
             />
-            <div className={productCardStyles.pricing}>
-              <Skeleton className={s.skeletonPricingFirst} />
-              <Skeleton className={s.skeletonPricingSecond} />
+            <div
+              className={`${productCardStyles.pricing} ${s.skeletonPricingRow}`}
+            >
+              <Skeleton
+                className={s.skeletonPricingFirst}
+                width={96}
+                height={35}
+                baseColor={skeletonBaseColor}
+                highlightColor={skeletonHighlightColor}
+              />
+              <Skeleton
+                className={s.skeletonPricingSecond}
+                width={96}
+                height={35}
+                baseColor={skeletonBaseColor}
+                highlightColor={skeletonHighlightColor}
+              />
             </div>
           </div>
-          <div className={productCardStyles.subscriptionBlock}>
+          <div
+            className={`${productCardStyles.subscriptionBlock} ${s.skeletonSubscriptionBlock}`}
+          >
             <div className={productCardStyles.ratingPriceBlock}>
-              <div className={productCardStyles.subscriptionPrice}>
-                <div className={productCardStyles.subscriptionDiscount}>
-                  <Skeleton className={s.skeletonSubscriptionDiscount} />
-                </div>
-              </div>
+              <div className={productCardStyles.subscriptionPrice}></div>
             </div>
-            <Skeleton className={`${productCardStyles.cartBtn} ${s.skeletonCartBtn}`} />
+            <Skeleton
+              className={`${productCardStyles.cartBtn} ${s.skeletonCartBtn}`}
+              height={50}
+              baseColor={skeletonBaseColor}
+              highlightColor={skeletonHighlightColor}
+            />
           </div>
         </div>
       </div>
@@ -47,31 +81,25 @@ const FavoritesModalSkeleton: React.FC = () => {
   );
 
   return (
-    <div className={s.backdrop}>
-      <div className={s.modal}>
-        <div className={s.topbarListBlock}>
-          <div className={s.topbar}>
-            <Skeleton
-              width={180}
-              height={32}
-              baseColor="rgba(217, 186, 136, 0.1)"
-              highlightColor="rgba(217, 186, 136, 0.2)"
-            />
-            <Skeleton
-              width={46}
-              height={46}
-              borderRadius={10}
-              baseColor="rgba(217, 186, 136, 0.1)"
-              highlightColor="rgba(217, 186, 136, 0.2)"
-            />
-          </div>
+    <SkeletonTheme
+      baseColor={skeletonBaseColor}
+      highlightColor={skeletonHighlightColor}
+    >
+      <div className={s.backdrop}>
+        <div className={s.modal}>
+          <div className={s.topbarListBlock}>
+            <div className={s.topbar}>
+              <Skeleton width={180} height={32} />
+              <Skeleton width={46} height={46} borderRadius={10} />
+            </div>
 
-          <div className={s.list}>
-            {[1, 2, 3, 4, 5].map((i) => renderProductCardSkeleton(i))}
+            <div className={s.list}>
+              {[1, 2, 3, 4, 5].map((i) => renderProductCardSkeleton(i))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </SkeletonTheme>
   );
 };
 

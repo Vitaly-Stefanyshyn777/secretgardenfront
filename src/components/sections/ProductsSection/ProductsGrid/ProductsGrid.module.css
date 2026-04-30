@@ -32,7 +32,6 @@
 }
 
 .skeletonProductName {
-  margin-bottom: 16px;
 }
 
 .skeletonSubscriptionDiscount {
@@ -109,7 +108,6 @@
   }
 
   .skeletonProductName {
-    margin-bottom: mvw(12);
   }
 
   .skeletonSubscriptionDiscount {
