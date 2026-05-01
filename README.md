@@ -1,4 +1,4 @@
-## BFB — Next.js App Router
+## Next.js App Router
 
 Проєкт на базі Next.js 15 (App Router) та React 19 із Tailwind CSS v4.
 
