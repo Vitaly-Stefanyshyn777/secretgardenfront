@@ -33,7 +33,7 @@ export type YoastHeadJson = {
 export function yoastToMetadata(yoast: YoastHeadJson | null | undefined): Metadata {
   if (!yoast) {
     return {
-      title: "BFB",
+      title: "",
       description: "Навчання, інвентар та тренування",
     };
   }
@@ -57,10 +57,10 @@ export function yoastToMetadata(yoast: YoastHeadJson | null | undefined): Metada
   }
 
   const openGraphBase: any = {
-    title: yoast.og_title ?? yoast.title ?? "BFB",
+    title: yoast.og_title ?? yoast.title ?? "",
     description: yoast.og_description ?? yoast.description,
     url: yoast.og_url,
-    siteName: yoast.og_site_name ?? "BFB",
+    siteName: yoast.og_site_name ?? "",
     locale: yoast.og_locale ?? "uk_UA",
     type: (yoast.og_type as any) || "website",
   };
@@ -76,7 +76,7 @@ export function yoastToMetadata(yoast: YoastHeadJson | null | undefined): Metada
   }
 
   return {
-    title: yoast.title ?? "BFB",
+    title: yoast.title ?? "",
     description: yoast.description ?? yoast.og_description ?? "Навчання, інвентар та тренування",
     robots: {
       index: robots.index !== "noindex",

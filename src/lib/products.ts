@@ -433,7 +433,7 @@ export const getProductsByCategory = async (
       catalog_visibility: "visible",
       categories: [],
       images: p.mainImageUrl ? [{ src: p.mainImageUrl }] : [],
-    })) as WooCommerceProduct[];
+    })) as unknown as WooCommerceProduct[];
   } catch {
     return [];
   }

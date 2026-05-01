@@ -3,17 +3,17 @@ import AboutBFBSection from "@/components/sections/AboutBFBSection/AboutBFBSecti
 
 export const metadata: Metadata = {
   title: "Про BFB - BFB",
-  description: "Дізнайтеся більше про BFB - методику тренувань, історію та наш підхід до навчання.",
+  description:
+    "Дізнайтеся більше про BFB - методику тренувань, історію та наш підхід до навчання.",
   openGraph: {
     title: "Про BFB - BFB",
     description: "Дізнайтеся більше про BFB - методику тренувань та навчання",
     type: "website",
     locale: "uk_UA",
-    siteName: "BFB",
+    siteName: "",
   },
 };
 
 export default function AboutBFBPage() {
   return <AboutBFBSection />;
 }
-

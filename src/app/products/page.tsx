@@ -3,18 +3,20 @@ import type { Metadata } from "next";
 import ProductsCatalog from "@/components/sections/ProductsSection/ProductsCatalog/ProductsCatalog";
 
 export const metadata: Metadata = {
-  title: "Каталог товарів - BFB",
-  description: "Широкий вибір товарів для спорту та інвентарю. Купуйте якісні товари для тренувань у BFB.",
+  title: "Каталог товарів",
+  description:
+    "Широкий вибір товарів для спорту та інвентарю. Купуйте якісні товари для тренувань у BFB.",
   openGraph: {
-    title: "Каталог товарів - BFB",
-    description: "Широкий вибір товарів для спорту та інвентарю. Купуйте якісні товари для тренувань у BFB.",
+    title: "Каталог товарів",
+    description:
+      "Широкий вибір товарів для спорту та інвентарю. Купуйте якісні товари для тренувань у BFB.",
     type: "website",
     locale: "uk_UA",
-    siteName: "BFB",
+    siteName: "",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Каталог товарів - BFB",
+    title: "Каталог товарів",
     description: "Широкий вибір товарів для спорту та інвентарю",
   },
 };

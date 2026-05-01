@@ -36,7 +36,7 @@ export function useOrderSubmission({
   parseWcValidationErrors,
 }: UseOrderSubmissionProps) {
   const cartStore = useCartStore();
-  const { user } = useAuthStore();
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const { createOrderPayload } = useOrderData();
   const { handleWayForPayPayment } = useWayForPay({ safeTotal, setErrors });
   const isSubmittingRef = React.useRef(false);
@@ -56,6 +56,7 @@ export function useOrderSubmission({
         hasDifferentRecipient,
         deliveryType,
         items,
+        isLoggedIn,
         subtotal,
         discountAmount,
         deliveryCost,

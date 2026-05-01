@@ -82,6 +82,15 @@ export const useProductPrices = (
               wcProduct.id
             );
 
+            if (!variation) {
+              setPrices({
+                currentPrice: parseFloat(wcProduct.price || "0"),
+                originalPrice: undefined,
+                isLoading: false,
+              });
+              return;
+            }
+
             const currentPrice = parseFloat(
               variation.price ||
                 variation.sale_price ||

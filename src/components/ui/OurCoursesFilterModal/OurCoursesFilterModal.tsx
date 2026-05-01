@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import styles from "./OurCoursesFilterModal.module.css";
-import OurCoursesFilter from "@/components/sections/CoursesSection/OurCoursesSection/filters/OurCoursesFilter/OurCoursesFilter";
 import { CloseButtonIcon } from "@/components/Icons/Icons";
 import { useScrollLock } from "@/components/hooks/useScrollLock";
 import { ApplyFilterButton } from "@/components/ui/Buttons/ApplyFilterButton";
@@ -96,16 +95,9 @@ const OurCoursesFilterModal: React.FC<OurCoursesFilterModalProps> = ({
         </div>
         <div className={styles.content}>
           <div className={styles.filterContent}>
-            <OurCoursesFilter
-              filters={filters}
-              onFiltersChange={onFiltersChange}
-              onReset={handleReset}
-              products={products}
-              searchTerm={searchTerm}
-              onApplyCategories={onApplyCategories}
-              variant="modal"
-              onApplyRef={applyRef}
-            />
+            {/* NOTE: OurCoursesFilter був видалений/перенесений.
+                Модалка лишилась для сумісності, але зараз не використовується. */}
+            <div />
           </div>
         </div>
         <div className={styles.footer}>

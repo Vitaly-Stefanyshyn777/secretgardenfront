@@ -4,8 +4,7 @@
  * Аноніми: localStorage (ключ recently_viewed).
  */
 
-const BASE =
-  `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api`;
+const BASE = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api`;
 // Маршрути: /api/viewed, /api/viewed/sync
 const VIEWED_BASE = `${BASE}/viewed`;
 

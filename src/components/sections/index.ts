@@ -1,4 +1,3 @@
-export { default as BoardSection } from "./BoardSection/BoardSection";
-export { default as CoursesShowcase } from "./CoursesSection/CoursesShowcase/CoursesShowcase";
-export { default as EventsSection } from "./EventsSection/EventsSection";
-export { default as InstructorAdvantages } from "./InstructorAdvantages/InstructorAdvantages";
+// Barrel exports (kept minimal).
+// NOTE: previously this file exported sections that were removed/renamed,
+// which breaks `next build` during type-checking.

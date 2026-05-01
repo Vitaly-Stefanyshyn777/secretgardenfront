@@ -54,9 +54,9 @@ const ProductsFilter = ({
   loading = false,
   showFilterActions = false,
 }: ProductsFilterProps) => {
-  const handleFilterChange = (
-    key: keyof FilterState,
-    value: string | string[] | number,
+  const handleFilterChange = <K extends keyof FilterState>(
+    key: K,
+    value: FilterState[K],
   ) => {
     const newFilters = { ...filters, [key]: value };
     onFiltersChange(newFilters);

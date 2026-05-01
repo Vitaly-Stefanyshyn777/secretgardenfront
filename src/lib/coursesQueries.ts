@@ -366,7 +366,7 @@ export const fetchCourses = async (filters: CourseFilters = {}) => {
     })) as unknown[];
 
     const mappedCourses = Array.isArray(wcCourses)
-      ? wcCourses.map(mapWcCourseToCourse)
+      ? wcCourses.map((c) => mapWcCourseToCourse(c as Record<string, unknown>))
       : [];
 
     return mappedCourses;

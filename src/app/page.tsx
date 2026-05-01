@@ -120,7 +120,7 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   } catch (error) {
     return {
-      title: "BFB",
+      title: "",
       description: "Навчання, інвентар та тренування",
     };
   }

@@ -47,7 +47,7 @@ const TrainerProfile: React.FC = () => {
       try {
         setIsLoading(true);
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/me`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/user/me`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -115,7 +115,7 @@ const TrainerProfile: React.FC = () => {
     try {
       setIsSaving(true);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/profile`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/user/profile`,
         {
           method: "PATCH",
           headers: {

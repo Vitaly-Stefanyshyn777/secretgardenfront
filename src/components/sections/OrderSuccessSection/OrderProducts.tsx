@@ -64,12 +64,11 @@ export default function OrderProducts({
 
   // Отримуємо зображення для товарів з замовлення
   useEffect(() => {
-    if (!order?.line_items) {
-      return;
-    }
+    const lineItems = order?.line_items ?? [];
+    if (lineItems.length === 0) return;
 
     const loadProductImages = async () => {
-      const productsToFetch = order.line_items.filter((item) => {
+      const productsToFetch = lineItems.filter((item) => {
         const key = toKey(item.product_id);
         return !(item as { image?: string }).image && !productImages[key];
       });
@@ -109,7 +108,7 @@ export default function OrderProducts({
     };
 
     loadProductImages();
-  }, [order?.line_items]);
+  }, [order?.line_items, productImages]);
 
   return (
     <div className={s.CartItemsBlock}>

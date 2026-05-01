@@ -257,6 +257,7 @@
 
   width: 100%;
   color: var(--zoloto);
+  display: none;
 }
 
 .submitTwo {

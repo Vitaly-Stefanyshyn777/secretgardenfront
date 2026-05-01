@@ -10,7 +10,7 @@ interface CreateOrderDataProps {
   hasDifferentRecipient: boolean;
   deliveryType: string;
   items: CartItem[];
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
   /** Сума замовлення з урахуванням знижки (без доставки) */
   subtotal: number;
   /** Сума знижки в грн */

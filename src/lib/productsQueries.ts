@@ -1,4 +1,5 @@
 import { fetchFilteredProducts, fetchProductReviews } from "./bfbApi";
+import { getAllProducts, getProductsByCategory, mapProductToUi } from "./products";
 import type { Product } from "./products";
 
 export const productReviewsQuery = (productSlug: string) => ({
@@ -29,7 +30,7 @@ export const productQuery = (slugOrId: string) => ({
 
     // Нова логіка: отримуємо товар через REST /catalog/products/:slug
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/catalog/products/${encodeURIComponent(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${encodeURIComponent(
         slugOrId,
       )}`,
       { cache: "no-store" },
@@ -119,7 +120,6 @@ export const productQuery = (slugOrId: string) => ({
       attributes: [],
       metaData: [],
       isNew: false,
-      isHit: false,
       dateCreated: "",
       averageRating: String(data.ratingAverage ?? 0),
       ratingCount: data.ratingCount ?? 0,

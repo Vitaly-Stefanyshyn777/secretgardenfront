@@ -3,8 +3,7 @@ import api from "./api";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 // Новий Node бекенд для REST /auth, /user, /catalog (з глобальним префіксом /api)
-const NODE_API_BASE_URL =
-  `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api`;
+const NODE_API_BASE_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api`;
 
 // Динамічні фільтри категорії (Виробник, Тип, Матеріал тощо)
 export interface CatalogFilterValue {
@@ -301,7 +300,7 @@ export async function fetchCourse(
     // Next.js автоматично декодує slug з URL, тому courseIdOrSlug приходить декодованим
     const normalizedSlug = normalizeSlug(String(courseIdOrSlug));
 
-    const course = allCourses.find((c: { slug?: string; id: number }) => {
+    const course = allCourses.find((c) => {
       if (!c.slug) return false;
 
       // Нормалізуємо slug з API

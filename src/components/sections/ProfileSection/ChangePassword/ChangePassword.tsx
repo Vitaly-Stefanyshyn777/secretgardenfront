@@ -75,7 +75,7 @@ const ChangePassword: React.FC = () => {
 
     try {
       setSubmitting(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000"}/api/user/password`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/user/password`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
