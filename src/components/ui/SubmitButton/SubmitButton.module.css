@@ -23,7 +23,7 @@
 }
 
 .submit:hover:not(:disabled) {
-  background: var(--black);
+  background: #d49e50;
 }
 
 .submit:disabled {

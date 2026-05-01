@@ -105,8 +105,10 @@
 }
 
 .close:hover {
-  background: var(--violet);
-  color: var(--white);
+  color: var(--zoloto);
+  background: rgba(217, 186, 136, 0.25);
+  box-shadow: 0 0 12px 2px rgba(217, 186, 136, 0.25);
+  backdrop-filter: blur(12px);
 }
 
 .form {
@@ -271,6 +273,9 @@
   transition: all 0.2s;
 }
 
+.submitTwo:hover {
+  background: #d49e50;
+}
 .submitTwo {
   background: var(--zoloto);
   border: none;
@@ -291,9 +296,8 @@
 }
 
 .submit:hover {
-  background: var(--black);
-  color: var(--white);
-  border-color: var(--black);
+  color: var(--zoloto);
+  background: rgba(217, 186, 136, 0.25);
 }
 
 .submit:disabled {

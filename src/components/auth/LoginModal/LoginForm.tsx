@@ -3,7 +3,7 @@ import {
   FieldErrors,
   UseFormHandleSubmit,
 } from "react-hook-form";
-import { EmailIcon, PasswordsIcon } from "@/components/Icons/Icons";
+import { EmailTwoIcon, PasswordsIcon } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
 import PasswordField from "@/components/ui/FormFields/PasswordField";
 import s from "./LoginModal.module.css";
@@ -40,7 +40,7 @@ export default function LoginForm({
     <form className={s.form} onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className={s.inputGroup}>
         <InputField
-          icon={<EmailIcon />}
+          icon={<EmailTwoIcon />}
           label="Ваш email або username"
           type="text"
           hasError={!!errors.username}
@@ -71,8 +71,9 @@ export default function LoginForm({
         <div className={s.submitBlock}>
           <button
             className={s.submit}
-            type="submit"
+            type="button"
             disabled={isSubmitting || isPending}
+            onClick={onSwitchToRegister}
           >
             {isPending ? "Вхід..." : "Я не маю акаунт"}
           </button>

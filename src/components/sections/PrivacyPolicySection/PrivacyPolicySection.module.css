@@ -1,7 +1,7 @@
 .contract {
   min-height: 100vh;
   padding: 180px 0 200px;
-  background: var(--white);
+  background: none;
   display: flex;
   flex-direction: column;
   gap: 60px;
@@ -23,7 +23,7 @@
   line-height: 110%;
   letter-spacing: -0.01em;
   text-align: center;
-  color: var(--black);
+  color: var(--white);
 }
 
 .content {
@@ -44,7 +44,7 @@
   font-size: 32px;
   line-height: 125%;
   letter-spacing: -0.03em;
-  color: var(--black);
+  color: var(--white);
 }
 
 .sectionContent {
@@ -59,7 +59,7 @@
   font-size: 16px;
   line-height: 140%;
   letter-spacing: -0.01em;
-  color: var(--black);
+  color: var(--white);
 }
 
 .link {
@@ -68,7 +68,7 @@
   font-size: 16px;
   line-height: 140%;
   letter-spacing: -0.01em;
-  color: var(--black);
+  color: var(--white);
 }
 
 .link:hover {
@@ -89,7 +89,7 @@
   font-size: 16px;
   line-height: 140%;
   letter-spacing: -0.02em;
-  color: var(--black);
+  color: var(--white);
 }
 
 .boldText {
@@ -98,7 +98,7 @@
   font-size: 16px;
   line-height: 140%;
   letter-spacing: -0.01em;
-  color: var(--black);
+  color: var(--white);
 }
 
 /* Мобільні стилі */

@@ -2,7 +2,7 @@
 .notFoundContainer {
   position: relative;
   min-height: 100vh;
-
+  background-image: url("/images/Rectangle-16.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -10,13 +10,12 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 40px;
   width: 100%;
-  max-width: 1896px;
+
   height: auto;
   display: flex;
   padding: 90px 60px;
-  margin: 110px auto 150px auto;
+
   align-content: space-between;
   flex-direction: column;
   background-size: cover;
@@ -98,10 +97,11 @@
 /* Кнопка повернення на головну */
 .homeButton {
   display: inline-block;
-  border-radius: 20px;
-  padding: 24px 42px;
+  border-radius: 5px;
+
+  padding: 18px 12px;
   width: 150px;
-  height: 64px;
+
   background: var(--white);
   font-family: var(--third-family);
   font-weight: 800;
@@ -116,8 +116,8 @@
 }
 
 .homeButton:hover {
-  background: var(--black);
-  color: var(--white);
+  background: var(--zoloto);
+  color: var(--black);
 }
 
 /* Мобільні стилі */
@@ -126,7 +126,7 @@
     max-width: 100%;
     border-radius: mvw(16);
     margin: mvw(80) auto mvw(80) auto;
-    background-image: url("/Frame13213181244.png");
+    /* background-image: url("/Frame13213181244.png"); */
   }
 
   .notFoundContent {

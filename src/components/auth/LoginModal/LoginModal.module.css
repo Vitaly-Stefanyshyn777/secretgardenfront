@@ -97,7 +97,10 @@
 }
 
 .close:hover {
-  background: var(--violet);
+  color: var(--zoloto);
+  background: rgba(217, 186, 136, 0.25);
+  box-shadow: 0 0 12px 2px rgba(217, 186, 136, 0.25);
+  backdrop-filter: blur(12px);
   color: var(--white);
 }
 
@@ -259,9 +262,12 @@
 }
 
 .submit:hover {
-  background: var(--black);
-  color: var(--white);
-  border-color: var(--black);
+  color: var(--zoloto);
+  background: rgba(217, 186, 136, 0.25);
+}
+
+.submitTwo:hover {
+  background: #d49e50;
 }
 
 .submit:disabled {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EyeIcon, NoEyesIcon } from "@/components/Icons/Icons";
+import { EyeIconTwo, NoEyesIcon } from "@/components/Icons/Icons";
 import styles from "./PasswordField.module.css";
 
 interface PasswordFieldProps
@@ -68,7 +68,7 @@ export const PasswordField: React.FC<PasswordFieldProps> = ({
           onClick={() => setVisible((v) => !v)}
           aria-label={visible ? "Сховати пароль" : "Показати пароль"}
         >
-          {visible ? <NoEyesIcon /> : <EyeIcon />}
+          {visible ? <NoEyesIcon /> : <EyeIconTwo />}
         </button>
         {hasError && (
           <img

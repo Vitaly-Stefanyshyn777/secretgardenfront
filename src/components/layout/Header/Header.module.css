@@ -504,11 +504,15 @@
   transition: filter 0.2s ease;
 }
 
-.iconBtn:hover .iconImage {
+/* .iconBtn:hover .iconImage {
+  filter: brightness(0) saturate(100%) invert(20%) sepia(65%) saturate(3500%)
+    hue-rotate(255deg) brightness(95%) contrast(95%);
 }
 
 .iconBtn.active .iconImage {
-}
+  filter: brightness(0) saturate(100%) invert(20%) sepia(65%) saturate(3500%)
+    hue-rotate(255deg) brightness(95%) contrast(95%);
+} */
 
 .userBtn {
   position: relative;
@@ -579,15 +583,14 @@
   line-height: 143%;
 
   border-radius: 15px;
-  padding: 10px 16px;
   min-width: 136px;
   min-height: 48px;
-  padding: 1.04167vw 1.25vw;
+  padding: 0.52083vw 0.83333vw;
+  /* padding: 1.04167vw 1.25vw; */
 
   display: flex;
   transition: all 0.3s;
   align-items: center;
-  padding: 10px 16px;
   border: 1px solid transparent;
 }
 

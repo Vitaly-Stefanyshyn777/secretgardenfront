@@ -5,7 +5,7 @@ import {
   UseFormGetValues,
 } from "react-hook-form";
 import {
-  EmailIcon,
+  EmailTwoIcon,
   NumberIcon,
   UserIcon,
   PasswordsIcon,
@@ -75,7 +75,7 @@ export default function RegisterForm({
       <div className={s.row}>
         <div className={s.rowSingle}>
           <InputField
-            icon={<EmailIcon />}
+            icon={<EmailTwoIcon />}
             label="Ваша пошта"
             type="email"
             id="register-form-email-field"
