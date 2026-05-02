@@ -19,7 +19,9 @@ const REVIEWS = Array.from({ length: 12 }).map((_, idx) => ({
 const HomeReviewsSection = () => {
   const swiperRef = useRef<SwiperRef>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const dotsCount = Math.max(1, REVIEWS.length - 3);
+  /** Лише для кількості крапок (при `slidesPerView: auto` видима кількість залежить від vw у CSS) */
+  const ASSUMED_VISIBLE_DESKTOP = 5;
+  const dotsCount = Math.max(1, REVIEWS.length - ASSUMED_VISIBLE_DESKTOP);
   const activeDotIndex = activeIndex % dotsCount;
 
   const handlePrev = () => swiperRef.current?.swiper.slidePrev();
@@ -46,25 +48,18 @@ const HomeReviewsSection = () => {
           <Swiper
             ref={swiperRef}
             modules={[A11y]}
-            slidesPerView={"auto"}
+            slidesPerView="auto"
             slidesPerGroup={1}
             loop={true}
-            spaceBetween={40}
-            onSlideChange={(swiper: SwiperType) => setActiveIndex(swiper.realIndex)}
+            spaceBetween={30}
+            onSlideChange={(swiper: SwiperType) =>
+              setActiveIndex(swiper.realIndex)
+            }
             className={s.reviewsSwiper}
             breakpoints={{
-              0: {
-                slidesPerView: 1.1,
-                spaceBetween: 16,
-              },
-              768: {
-                slidesPerView: 2.2,
-                spaceBetween: 20,
-              },
-              1200: {
-                slidesPerView: "auto",
-                spaceBetween: 40,
-              },
+              0: { spaceBetween: 16 },
+              768: { spaceBetween: 20 },
+              1200: { spaceBetween: 30 },
             }}
           >
             {REVIEWS.map((review) => (

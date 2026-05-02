@@ -40,8 +40,11 @@
 }
 
 .reviewSlide {
-  width: 392px;
+  width: 20.4167vw;
+  max-width: 392px;
   height: auto;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .reviewCard {
@@ -108,6 +111,7 @@
 
   .reviewSlide {
     width: 340px;
+    max-width: none;
   }
 }
 
