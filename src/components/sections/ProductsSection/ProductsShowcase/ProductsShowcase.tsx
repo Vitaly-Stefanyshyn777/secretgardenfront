@@ -19,6 +19,97 @@ import "swiper/css/pagination";
 
 const FORCE_SHOWCASE_SKELETON = false;
 
+type ShowcaseItem = {
+  id: number | string;
+  slug?: string;
+  name: string;
+  productType?: string;
+  variations?: number[];
+  price?: number | string;
+  regularPrice?: number | string;
+  image?: string;
+  categories?: Array<{ id: number; name: string; slug: string }>;
+  stockStatus?: string;
+  stockQuantity?: number | null;
+  dateCreated?: string;
+  wcProduct?: {
+    prices?: {
+      price: string;
+      regular_price: string;
+      sale_price: string;
+    };
+    on_sale?: boolean;
+    average_rating?: string;
+    rating_count?: number;
+    total_sales?: number;
+    featured?: boolean;
+    images?: Array<{ src: string; alt: string }>;
+    sku?: string;
+  };
+};
+
+const mapShowcaseWcProduct = (product: ShowcaseItem) => {
+  const wc = product.wcProduct;
+  const priceStr = String(product.price ?? wc?.prices?.price ?? "0");
+  const regularStr = String(
+    product.regularPrice ?? wc?.prices?.regular_price ?? "0",
+  );
+  const productId =
+    typeof product.id === "number"
+      ? product.id
+      : parseInt(String(product.id), 10) || 0;
+
+  return {
+    id: productId,
+    name: product.name,
+    type: product.productType ?? "simple",
+    variations: product.variations ?? [],
+    average_rating: wc?.average_rating ?? "0",
+    rating_count: wc?.rating_count ?? 0,
+    total_sales: wc?.total_sales ?? 0,
+    featured: wc?.featured ?? false,
+    on_sale: wc?.on_sale ?? false,
+    price: priceStr,
+    regular_price: regularStr,
+    sale_price: wc?.prices?.sale_price ?? priceStr,
+    images:
+      wc?.images ??
+      (product.image ? [{ src: product.image, alt: product.name }] : []),
+    sku: wc?.sku,
+  };
+};
+
+const renderShowcaseProductCard = (
+  product: ShowcaseItem,
+  isMobile: boolean,
+) => (
+  <ProductCard
+    id={String(product.id)}
+    slug={product.slug}
+    name={product.name}
+    productType={product.productType}
+    variations={product.variations}
+    price={
+      typeof product.price === "string"
+        ? parseFloat(product.price)
+        : product.price || 0
+    }
+    originalPrice={
+      typeof product.regularPrice === "string"
+        ? parseFloat(product.regularPrice)
+        : product.regularPrice || undefined
+    }
+    image={product.image}
+    categories={product.categories}
+    stockStatus={product.stockStatus}
+    stockQuantity={product.stockQuantity}
+    dateCreated={product.dateCreated}
+    wcProduct={mapShowcaseWcProduct(product)}
+    isFluid={isMobile}
+    showcaseDark={isMobile}
+  />
+);
+
 const ProductsShowcase: React.FC = () => {
   const [inventoryCategories, setInventoryCategories] = useState<
     Array<{ id: number; name: string; slug: string; image?: { src?: string } }>
@@ -95,37 +186,6 @@ const ProductsShowcase: React.FC = () => {
 
   const hasSlider = displayedCourses.length > 6;
 
-  const useSlider = hasSlider && !isMobile;
-
-  type ShowcaseItem = {
-    id: number | string;
-    slug?: string;
-    name: string;
-    productType?: string;
-    variations?: number[];
-    price?: number | string;
-    regularPrice?: number | string;
-    image?: string;
-    categories?: Array<{ id: number; name: string; slug: string }>;
-    stockStatus?: string;
-    stockQuantity?: number | null;
-    dateCreated?: string;
-    wcProduct?: {
-      prices?: {
-        price: string;
-        regular_price: string;
-        sale_price: string;
-      };
-      on_sale?: boolean;
-      average_rating?: string;
-      rating_count?: number;
-      total_sales?: number;
-      featured?: boolean;
-      images?: Array<{ src: string; alt: string }>;
-      sku?: string;
-    };
-  };
-
   const normalizedShowcase: ShowcaseItem[] = useMemo(() => {
     return (displayedCourses as Array<Record<string, unknown>>).map((p) => ({
       id: (p as { id: number | string }).id,
@@ -160,11 +220,9 @@ const ProductsShowcase: React.FC = () => {
     }));
   }, [displayedCourses]);
 
-  // Для мобілки показуємо тільки 4 картки
-  const mobileDisplayedProducts = useMemo(
-    () => (isMobile ? normalizedShowcase.slice(0, 4) : normalizedShowcase),
-    [isMobile, normalizedShowcase],
-  );
+  const useDesktopSlider = hasSlider && !isMobile;
+  const useMobileSlider = isMobile && normalizedShowcase.length > 0;
+  const useSlider = useDesktopSlider || useMobileSlider;
 
   // Fallback: якщо з якоїсь причини масив порожній, робимо прямий запит до роута WC v3
   useEffect(() => {
@@ -208,9 +266,6 @@ const ProductsShowcase: React.FC = () => {
     };
     fetchFallback();
   }, [list.length]);
-
-  // Логи отриманих товарів
-  // minimal debug only if needed
 
   useEffect(() => {
     // debug removed
@@ -272,14 +327,16 @@ const ProductsShowcase: React.FC = () => {
     }
   };
 
+  const sectionTitle = isMobile ? "Популярні товари" : "Товари для спорту";
+
   if (isError) {
     return (
-      <section className={s.section}>
+      <section className={`${s.section} ${isMobile ? s.sectionMobile : ""}`}>
         <div className={s.container}>
           <div className={s.header}>
             <div className={s.headerLeft}>
               <Link href="/products" className={s.title}>
-                Товари для спорту{" "}
+                {sectionTitle}
               </Link>
             </div>
           </div>
@@ -290,16 +347,16 @@ const ProductsShowcase: React.FC = () => {
   }
 
   return (
-    <section className={s.section}>
+    <section className={`${s.section} ${isMobile ? s.sectionMobile : ""}`}>
       <div className={s.container}>
         <div className={s.header}>
           <div className={s.headerLeft}>
             <Link href="/products" className={s.title}>
-              Товари для спорту
+              {sectionTitle}
             </Link>
           </div>
           <div className={s.headerRight}>
-            {useSlider && (
+            {useDesktopSlider && (
               <SliderNav
                 activeIndex={activeIndex}
                 dots={displayedCourses.length}
@@ -316,10 +373,10 @@ const ProductsShowcase: React.FC = () => {
             <Swiper
               ref={swiperRef}
               modules={[Navigation, Pagination]}
-              spaceBetween={16}
-              slidesPerView={6}
+              spaceBetween={isMobile ? 16 : 16}
+              slidesPerView={isMobile ? "auto" : 6}
               slidesPerGroup={1}
-              loop={true}
+              loop={!isMobile}
               allowSlideNext={true}
               allowSlidePrev={true}
               onSlideChange={(sw: SwiperType) => {
@@ -327,73 +384,33 @@ const ProductsShowcase: React.FC = () => {
                 setActiveIndex(realIndex);
               }}
               onSwiper={() => {}}
-              breakpoints={{
-                768: {
-                  slidesPerView: 3,
-                  spaceBetween: 16,
-                },
-                1024: {
-                  slidesPerView: 6,
-                  spaceBetween: 16,
-                },
-              }}
-              className={s.swiper}
+              breakpoints={
+                isMobile
+                  ? undefined
+                  : {
+                      768: {
+                        slidesPerView: 3,
+                        spaceBetween: 16,
+                      },
+                      1024: {
+                        slidesPerView: 6,
+                        spaceBetween: 16,
+                      },
+                    }
+              }
+              className={`${s.swiper} ${isMobile ? s.swiperMobile : ""}`}
             >
               {normalizedShowcase.map((product) => (
                 <SwiperSlide key={String(product.id)} className={s.slide}>
-                  <ProductCard
-                    id={String(product.id)}
-                    slug={product.slug}
-                    name={product.name}
-                    productType={product.productType}
-                    variations={product.variations}
-                    price={
-                      typeof product.price === "string"
-                        ? parseFloat(product.price)
-                        : product.price || 0
-                    }
-                    originalPrice={
-                      typeof product.regularPrice === "string"
-                        ? parseFloat(product.regularPrice)
-                        : product.regularPrice || undefined
-                    }
-                    image={product.image}
-                    categories={product.categories}
-                    stockStatus={product.stockStatus}
-                    stockQuantity={product.stockQuantity}
-                    dateCreated={product.dateCreated}
-                    // wcProduct={product.wcProduct}
-                  />
+                  {renderShowcaseProductCard(product, isMobile)}
                 </SwiperSlide>
               ))}
             </Swiper>
           ) : (
             <div className={s.grid}>
-              {mobileDisplayedProducts.map((product) => (
+              {normalizedShowcase.map((product) => (
                 <div key={String(product.id)} className={s.slide}>
-                  <ProductCard
-                    id={String(product.id)}
-                    slug={product.slug}
-                    name={product.name}
-                    productType={product.productType}
-                    variations={product.variations}
-                    price={
-                      typeof product.price === "string"
-                        ? parseFloat(product.price)
-                        : product.price || 0
-                    }
-                    originalPrice={
-                      typeof product.regularPrice === "string"
-                        ? parseFloat(product.regularPrice)
-                        : product.regularPrice || undefined
-                    }
-                    image={product.image}
-                    categories={product.categories}
-                    stockStatus={product.stockStatus}
-                    stockQuantity={product.stockQuantity}
-                    dateCreated={product.dateCreated}
-                    // wcProduct={product.wcProduct}
-                  />
+                  {renderShowcaseProductCard(product, false)}
                 </div>
               ))}
             </div>

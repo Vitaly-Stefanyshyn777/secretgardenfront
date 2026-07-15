@@ -5,23 +5,43 @@ import styles from "./ProductsGrid.module.css";
 import productCardStyles from "../ProductCard/ProductCard.module.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const ProductsGridSkeleton: React.FC = () => {
+interface ProductsGridSkeletonProps {
+  catalogDarkCards?: boolean;
+}
+
+const ProductsGridSkeleton: React.FC<ProductsGridSkeletonProps> = ({
+  catalogDarkCards = false,
+}) => {
   const renderProductCardSkeleton = () => (
-    <div className={productCardStyles.productCard}>
+    <div
+      className={`${productCardStyles.productCard} ${
+        catalogDarkCards
+          ? `${productCardStyles.productCardShowcaseDark} ${productCardStyles.productCardFluid}`
+          : ""
+      }`}
+    >
       <div className={productCardStyles.cardImage}>
         <Skeleton className={styles.skeletonCardImage} />
-        <div
-          className={`${productCardStyles.badges} ${styles.skeletonBadgesContainer}`}
-        >
-          <Skeleton className={styles.skeletonBadgesItem} />
-        </div>
-        <Skeleton
-          className={`${productCardStyles.favoriteBtn} ${styles.skeletonFavoriteBtn} ${styles.skeletonFavoriteBtnSize}`}
-        />
+        {!catalogDarkCards && (
+          <>
+            <div
+              className={`${productCardStyles.badges} ${styles.skeletonBadgesContainer}`}
+            >
+              <Skeleton className={styles.skeletonBadgesItem} />
+            </div>
+            <Skeleton
+              className={`${productCardStyles.favoriteBtn} ${styles.skeletonFavoriteBtn} ${styles.skeletonFavoriteBtnSize}`}
+            />
+          </>
+        )}
       </div>
       <div className={productCardStyles.cardContent}>
         <div className={productCardStyles.ratingRow}>
-          <Skeleton className={styles.skeletonRatingRow} />
+          <Skeleton
+            className={`${styles.skeletonRatingRow} ${
+              catalogDarkCards ? styles.skeletonRatingRowDark : ""
+            }`}
+          />
         </div>
         <div className={productCardStyles.namePricingBlock}>
           <Skeleton
@@ -29,19 +49,25 @@ const ProductsGridSkeleton: React.FC = () => {
           />
           <div className={productCardStyles.pricing}>
             <Skeleton className={styles.skeletonPricingFirst} />
-            <Skeleton className={styles.skeletonPricingSecond} />
+            {!catalogDarkCards && (
+              <Skeleton className={styles.skeletonPricingSecond} />
+            )}
           </div>
         </div>
         <div className={productCardStyles.subscriptionBlock}>
-          <div className={productCardStyles.ratingPriceBlock}>
-            <div className={productCardStyles.subscriptionPrice}>
-              <div className={productCardStyles.subscriptionDiscount}>
-                <Skeleton className={styles.skeletonSubscriptionDiscount} />
+          {!catalogDarkCards && (
+            <div className={productCardStyles.ratingPriceBlock}>
+              <div className={productCardStyles.subscriptionPrice}>
+                <div className={productCardStyles.subscriptionDiscount}>
+                  <Skeleton className={styles.skeletonSubscriptionDiscount} />
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <Skeleton
-            className={`${productCardStyles.cartBtn} ${styles.skeletonCartBtn}`}
+            className={`${productCardStyles.cartBtn} ${styles.skeletonCartBtn} ${
+              catalogDarkCards ? styles.skeletonCartBtnDark : ""
+            }`}
           />
         </div>
       </div>
@@ -49,8 +75,12 @@ const ProductsGridSkeleton: React.FC = () => {
   );
 
   return (
-    <div className={styles.productsGrid}>
-      {[...Array(16)].map((_, i) => (
+    <div
+      className={`${styles.productsGrid} ${
+        catalogDarkCards ? styles.productsGridDark : ""
+      }`}
+    >
+      {[...Array(8)].map((_, i) => (
         <React.Fragment key={i}>{renderProductCardSkeleton()}</React.Fragment>
       ))}
     </div>

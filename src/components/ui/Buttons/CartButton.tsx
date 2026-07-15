@@ -36,6 +36,7 @@ type Props = {
   removeFromFavoritesOnAddToCart?: boolean;
   requireAuth?: boolean;
   metaData?: Array<{ key: string; value: string }>;
+  showcaseCart?: boolean;
 };
 
 export default function CartButton({
@@ -56,6 +57,7 @@ export default function CartButton({
   removeFromFavoritesOnAddToCart = false,
   requireAuth = true,
   metaData,
+  showcaseCart = false,
 }: Props) {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
@@ -168,14 +170,18 @@ export default function CartButton({
 
   return (
     <button
-      className={`${s.root} ${className} ${
+      className={`${s.root} ${showcaseCart ? s.showcaseRoot : ""} ${className} ${
         inCart ? `${s.active} ${activeClassName}` : ""
       }`}
       onClick={handleClick}
       aria-pressed={inCart}
       aria-label={inCart ? "Видалити з кошика" : "Додати в кошик"}
     >
-      <div className={s.cartIconWrapper}>
+      <div
+        className={`${s.cartIconWrapper} ${
+          showcaseCart ? s.showcaseWrapper : ""
+        }`}
+      >
         <span className={s.cartIconText}>{inCart ? "У кошику" : "Додати в кошик"}</span>
         {inCart ? (
           <span className={s.checkIcon} aria-hidden="true">
@@ -189,6 +195,14 @@ export default function CartButton({
               />
             </svg>
           </span>
+        ) : showcaseCart ? (
+          <Image
+            src="/icons/icon-18.svg"
+            alt="Cart"
+            width={18}
+            height={18}
+            className={s.showcaseIcon}
+          />
         ) : (
           <Image
             src="/icons/icon-18.svg"

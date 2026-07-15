@@ -28,64 +28,98 @@ const ProductGallery = memo(function ProductGallery({
     selectImage,
   } = useProductGallery(images, isMobile);
 
+  const hasMultipleImages = images.length > 1;
+  const hasImages = images.length > 0;
+
   return (
     <div className={styles.imageSection}>
-      <div
-        className={`${styles.thumbnails} ${
-          !shouldShowThumbNav ? styles.thumbnailsNoNav : ""
-        }`}
-        ref={thumbsRef}
-      >
-        {shouldShowThumbNav && (
-          <button
-            type="button"
-            className={styles.thumbNavUp}
-            onClick={onThumbPrev}
-            aria-label="Попереднє зображення"
-          >
-            <СhevronIcon />
-          </button>
-        )}
-        {visibleThumbs.map((globalIndex) => (
-          <button
-            key={`thumb-${globalIndex}`}
-            className={`${styles.thumbnail} ${
-              selectedImageIndex === globalIndex ? styles.active : ""
-            }`}
-            onClick={() => selectImage(globalIndex)}
-          >
-            <Image
-              src={normalizeImageUrl(images[globalIndex]?.src)}
-              alt={images[globalIndex]?.alt || productName}
-              width={80}
-              height={80}
-              className={styles.thumbnailImage}
-            />
-          </button>
-        ))}
-        {shouldShowThumbNav && (
-          <button
-            type="button"
-            className={styles.thumbNavDown}
-            onClick={onThumbNext}
-            aria-label="Наступне зображення"
-          >
-            <span className={styles.downRotate}>
+      {hasImages && (
+        <div
+          className={`${styles.thumbnails} ${
+            !shouldShowThumbNav ? styles.thumbnailsNoNav : ""
+          }`}
+          ref={thumbsRef}
+        >
+          {shouldShowThumbNav && !isMobile && (
+            <button
+              type="button"
+              className={styles.thumbNavUp}
+              onClick={onThumbPrev}
+              aria-label="Попереднє зображення"
+            >
               <СhevronIcon />
-            </span>
-          </button>
-        )}
-      </div>
+            </button>
+          )}
+          {visibleThumbs.map((globalIndex) => (
+            <button
+              key={`thumb-${globalIndex}`}
+              type="button"
+              className={`${styles.thumbnail} ${
+                selectedImageIndex === globalIndex ? styles.active : ""
+              }`}
+              onClick={() => selectImage(globalIndex)}
+            >
+              <Image
+                src={normalizeImageUrl(images[globalIndex]?.src)}
+                alt={images[globalIndex]?.alt || productName}
+                width={80}
+                height={80}
+                className={styles.thumbnailImage}
+              />
+            </button>
+          ))}
+          {shouldShowThumbNav && !isMobile && (
+            <button
+              type="button"
+              className={styles.thumbNavDown}
+              onClick={onThumbNext}
+              aria-label="Наступне зображення"
+            >
+              <span className={styles.downRotate}>
+                <СhevronIcon />
+              </span>
+            </button>
+          )}
+        </div>
+      )}
 
       <div className={styles.mainImage}>
+        {isMobile && hasMultipleImages && (
+          <>
+            <button
+              type="button"
+              className={styles.mainImageNavPrev}
+              onClick={() =>
+                selectImage(
+                  (selectedImageIndex - 1 + images.length) % images.length,
+                )
+              }
+              aria-label="Попереднє фото"
+            >
+              <СhevronIcon />
+            </button>
+            <button
+              type="button"
+              className={styles.mainImageNavNext}
+              onClick={() =>
+                selectImage((selectedImageIndex + 1) % images.length)
+              }
+              aria-label="Наступне фото"
+            >
+              <span className={styles.mainImageNavNextIcon}>
+                <СhevronIcon />
+              </span>
+            </button>
+          </>
+        )}
         <Image
           src={normalizeImageUrl(images[selectedImageIndex]?.src)}
           alt={productName}
           width={500}
           height={500}
           className={styles.productImage}
+          priority
         />
-        {/* Маркери на зображенні */}
         <BadgeContainer className={styles.imageBadges}>
           {isActuallyNew && (
             <Badge variant="new" className={styles.imageBadge} />

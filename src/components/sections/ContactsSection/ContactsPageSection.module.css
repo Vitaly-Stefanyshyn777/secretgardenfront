@@ -100,6 +100,7 @@
 }
 
 .photoWrapper {
+  position: relative;
   width: 540px;
   height: 657px;
   border: 1.33px solid var(--chorniy);
@@ -109,8 +110,6 @@
 }
 
 .photo {
-  width: 540px;
-  height: 657px;
   object-fit: cover;
   display: block;
 }
@@ -157,6 +156,12 @@
   text-decoration: underline;
 }
 
+.telegramLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 @media (max-width: 1400px) {
   .section {
     padding: 140px 20px 60px;
@@ -181,45 +186,155 @@
 
 @media (max-width: 1000px) {
   .section {
-    padding: 120px 16px 40px;
+    padding: mvw(108) mvw(16) mvw(48);
+    background: #121212;
   }
 
   .container {
-    gap: 36px;
+    gap: mvw(40);
+    max-width: 100%;
+  }
+
+  .topMainBlock {
+    gap: mvw(40);
+    width: 100%;
+  }
+
+  .topInnerBlock {
+    gap: mvw(16);
+    width: 100%;
   }
 
   .mainTitle {
-    font-size: 34px;
+    font-family: var(--font3);
+    font-size: mvw(28);
+    line-height: 120%;
+    color: var(--zoloto);
+    text-align: center;
   }
 
-  .topText,
-  .scheduleHint {
-    font-size: 16px;
+  .topText {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: #d1d1d1;
+    text-align: center;
+  }
+
+  .mainTitleTwo {
+    font-family: var(--font3);
+    font-size: mvw(24);
+    line-height: 120%;
+    color: var(--bіliy);
+    text-align: center;
   }
 
   .scheduleTime {
-    font-size: 30px;
+    font-family: var(--font3);
+    font-size: mvw(28);
+    line-height: 120%;
+    color: var(--zoloto);
+    text-align: center;
+  }
+
+  .scheduleText {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: var(--bіliy);
+    text-align: center;
+  }
+
+  .scheduleHint {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(12);
+    line-height: 150%;
+    color: rgba(244, 244, 244, 0.45);
+    text-align: center;
+    max-width: mvw(280);
+  }
+
+  .bottomMainBlock {
+    gap: mvw(32);
+    width: 100%;
+  }
+
+  .mediaRow {
+    flex-direction: column;
+    gap: mvw(16);
+    width: 100%;
   }
 
   .mapWrapper {
-    height: 340px;
+    width: 100%;
+    max-width: 100%;
+    height: mvw(200);
+    border-radius: mvw(12);
+  }
+
+  .photoWrapper {
+    width: 100%;
+    max-width: 100%;
+    height: mvw(200);
+    border: none;
+    border-radius: mvw(12);
+  }
+
+  .photo {
+    border-radius: mvw(12);
   }
 
   .contactsRow {
     flex-direction: column;
-    gap: 28px;
+    align-items: flex-start;
+    gap: mvw(28);
+    width: 100%;
   }
 
   .contactsColumn {
-    gap: 24px;
+    gap: mvw(28);
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .infoBlock {
+    gap: mvw(6);
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
   }
 
   .infoTitle {
-    font-size: 32px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: mvw(16);
+    line-height: 140%;
+    color: var(--zoloto);
+    text-align: left;
   }
 
   .infoValue,
   .infoLink {
-    font-size: 21px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: var(--bіliy);
+    text-align: left;
+    word-break: break-word;
+  }
+
+  .telegramLinks {
+    gap: mvw(4);
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .infoLink:hover {
+    text-decoration: none;
+    color: var(--zoloto);
   }
 }

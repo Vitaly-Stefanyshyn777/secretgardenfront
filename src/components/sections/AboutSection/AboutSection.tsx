@@ -9,8 +9,8 @@ const AboutSection = () => {
   return (
     <section className={s.section}>
       <div className={s.container}>
-        <div className={s.block}>
-          <div className={`${s.mediaBlock} ${s.mediaBlockWithButton}`}>
+        <div className={`${s.block} ${s.blockPolicy}`}>
+          <div className={s.mediaBlock}>
             <Image
               src="/images/Rectangle-12.png"
               alt="Наша політика"
@@ -18,7 +18,6 @@ const AboutSection = () => {
               height={318}
               className={s.image}
             />
-            <button className={s.actionButton}>Переглянути сертифікати</button>
           </div>
           <div className={s.contentBlock}>
             <h2 className={s.title}>Наша політика</h2>
@@ -42,6 +41,9 @@ const AboutSection = () => {
               </p>
             </div>
           </div>
+          <button type="button" className={s.actionButton}>
+            Переглянути сертифікати
+          </button>
         </div>
 
         <div className={s.block}>
@@ -121,7 +123,7 @@ const AboutSection = () => {
           </div>
         </div>
 
-        <div className={s.block}>
+        <div className={`${s.block} ${s.blockSupport}`}>
           <div className={s.contentBlock}>
             <h2 className={s.title}>Підтримка та вдячність</h2>
             <div className={s.textGroup}>
@@ -136,15 +138,15 @@ const AboutSection = () => {
                 можливість прокидатися кожного дня.
               </p>
             </div>
-            <button className={s.supportButton}>
-              <span>+</span>
+            <button type="button" className={s.supportButton}>
+              <span className={s.supportButtonExtra}>+</span>
               <span>Підтримати збір</span>
-              <span>+</span>
+              <span className={s.supportButtonExtra}>+</span>
             </button>
           </div>
           <div className={s.mediaBlock}>
             <Image
-              src="/images/Rectangle-15.png"
+              src="/images/Rectangle-16.png"
               alt="Підтримка та вдячність"
               width={541}
               height={318}

@@ -17,19 +17,36 @@
   align-items: flex-start;
 }
 
-.blockReverse {
+.blockPolicy {
+  display: grid;
+  grid-template-columns: 541px 1fr;
+  column-gap: 43px;
+  row-gap: 43px;
+  align-items: start;
+}
+
+.blockPolicy .mediaBlock {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.blockPolicy .actionButton {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.blockPolicy .contentBlock {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.blockSupport {
   flex-direction: row-reverse;
 }
 
 .mediaBlock {
   width: 541px;
   flex-shrink: 0;
-}
-
-.mediaBlockWithButton {
-  display: flex;
-  flex-direction: column;
-  gap: 43px;
 }
 
 .image {
@@ -85,6 +102,7 @@
 }
 
 .text {
+  margin: 0;
   font-family: var(--second-family);
   font-weight: 500;
   font-size: 21px;
@@ -155,41 +173,132 @@
 
 @media (max-width: 1000px) {
   .section {
-    padding: 120px 16px 40px;
+    padding: mvw(108) mvw(16) mvw(48);
+    background: #121212;
   }
 
   .container {
-    gap: 36px;
+    gap: mvw(40);
+    max-width: 100%;
   }
 
-  .block,
-  .blockReverse {
+  .block {
     flex-direction: column;
-    gap: 20px;
+    gap: mvw(20);
   }
 
-  .mediaBlock,
+  .blockSupport {
+    flex-direction: column;
+  }
+
+  .blockPolicy {
+    display: flex;
+    flex-direction: column;
+    gap: mvw(20);
+  }
+
+  .mediaBlock {
+    order: 1;
+    width: 100%;
+    flex-shrink: unset;
+  }
+
+  .contentBlock {
+    order: 2;
+    gap: mvw(16);
+    width: 100%;
+  }
+
+  .blockPolicy .actionButton {
+    order: 3;
+  }
+
   .image {
     width: 100%;
-    height: auto;
-  }
-
-  .mediaBlockWithButton {
-    gap: 20px;
+    height: mvw(200);
+    border-radius: mvw(11);
   }
 
   .title {
-    font-size: 34px;
+    font-family: var(--font3);
+    font-size: mvw(28);
+    line-height: 120%;
+    text-align: center;
+    color: var(--zoloto);
+  }
+
+  .textGroup {
+    gap: mvw(16);
   }
 
   .text {
-    font-size: 18px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: #d1d1d1;
   }
 
-  .actionButton,
-  .socialButton,
+  .actionButton {
+    width: 100%;
+    min-height: mvw(48);
+    padding: mvw(12) mvw(18);
+    border-radius: mvw(8);
+    border-width: 1px;
+    font-family: var(--font-family);
+    font-size: mvw(14);
+    font-weight: 500;
+    line-height: 140%;
+  }
+
+  .socialButtons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: mvw(12);
+    width: 100%;
+  }
+
+  .socialButton {
+    min-width: 0;
+    width: 100%;
+    min-height: mvw(48);
+    padding: mvw(12) mvw(18);
+    border-radius: mvw(8);
+    border-width: 1px;
+    font-family: var(--font-family);
+    font-size: mvw(14);
+    font-weight: 500;
+    line-height: 140%;
+    gap: mvw(8);
+  }
+
+  .socialButton svg {
+    display: none;
+  }
+
   .supportButton {
-    font-size: 16px;
-    min-height: 44px;
+    width: 100%;
+    min-height: mvw(48);
+    padding: mvw(12) mvw(18);
+    border-radius: mvw(8);
+    border: none;
+    justify-content: center;
+    background: #e2c69f;
+    color: var(--chorniy);
+    font-family: var(--font-family);
+    font-size: mvw(14);
+    font-weight: 500;
+    line-height: 140%;
+    gap: 0;
+  }
+
+  .supportButton:hover {
+    background: #d4b88a;
+    color: var(--chorniy);
+    border: none;
+  }
+
+  .supportButtonExtra {
+    display: none;
   }
 }

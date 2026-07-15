@@ -6,9 +6,6 @@ import {
   CartPrefixIcon,
   MinuswIcon,
   PlusIcon,
-  CheckMarkIcon,
-  CloseButtonIcon,
-  GiftIcon,
 } from "@/components/Icons/Icons";
 import { useProductActions } from "@/components/hooks/useProductActions";
 import styles from "./ProductPage.module.css";
@@ -44,16 +41,6 @@ export default function ProductActions({
       {/* Мобільні дії */}
       {isMobile && (
         <div className={styles.mobileActionsWrapper}>
-          <div className={styles.subscriptionOffer}>
-            <span className={styles.subscriptionIcon}>
-              <GiftIcon />
-            </span>
-            <span>
-              Оформіть підписку — отримайте знижки та доступ до ексклюзивних
-              функцій!
-            </span>
-          </div>
-
           {isBoardProduct && !isLoggedIn ? (
             <div className={styles.registerCallout}>
               <div className={styles.registerBlock} onClick={onRegisterOpen}>

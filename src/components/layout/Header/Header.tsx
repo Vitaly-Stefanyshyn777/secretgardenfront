@@ -1,13 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useState, useMemo } from "react";
+import { Fragment, useEffect, useState, useMemo, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import s from "./Header.module.css";
 import {
-  BurgerMenu,
   FacebookIcon,
   CloseButtonIcon,
   InstagramIcon,
@@ -28,8 +27,30 @@ import { mainNavigation, burgerMenuNavigation } from "@/lib/navigation";
 import { useThemeSettings } from "@/components/providers/ThemeSettingsProvider";
 import { getContactData } from "@/lib/themeSettingsUtils";
 
+function MobileSearchIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <circle cx="6" cy="6" r="4.25" stroke="currentColor" strokeWidth="1.2" />
+      <path
+        d="M9.25 9.25L12 12"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const headerClass = ""; // статичний хедер, без зміни кольорів/станів
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,6 +59,7 @@ export default function Header() {
   const [isEventsModalOpen, setIsEventsModalOpen] = useState(false);
   const [isTrenersModalOpen, setIsTrenersModalOpen] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
+  const [mobileSearch, setMobileSearch] = useState("");
 
   const { isLoggedIn } = useAuthStore();
   const isHydrated = useAuthStore((s) => s.isHydrated);
@@ -90,6 +112,16 @@ export default function Header() {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleMobileSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = mobileSearch.trim();
+    router.push(
+      query
+        ? `/products?search=${encodeURIComponent(query)}`
+        : "/products",
+    );
   };
 
   const closeMenu = () => {
@@ -211,72 +243,32 @@ export default function Header() {
       <div className={s.headerTrainerProfileBlock}>
         {isMobile ? (
           <>
-            <div className={s.mobileLeft}>
-              <button className={s.burger} onClick={toggleMenu}>
-                <BurgerMenu />
-              </button>
-              <button
-                className={s.iconBtn}
-                onClick={handleUserIconClick}
-                title={
-                  isHydrated
-                    ? isLoggedIn
-                      ? "Особистий кабінет"
-                      : "Увійти"
-                    : "Профіль"
-                }
-                suppressHydrationWarning
-              >
-                <Image
-                  src="/icons/prefix-2.svg"
-                  alt="Профіль"
-                  width={20}
-                  height={20}
-                  className={s.iconImage}
-                />
-              </button>
-            </div>
+            <Link href="/" className={s.mobileBrand} aria-label="Secret Garden">
+              <span className={s.mobileBrandIcon}>
+                <LogoHeader />
+              </span>
+              <span className={s.mobileBrandText}>
+                <LogoHeaderText />
+              </span>
+            </Link>
 
-            <div className={s.mobileLogo}>
-              <Link href="/">
-                <div className={s.LogoIcon}>
-                  <LogoHeaderText />
-                </div>
-              </Link>
-            </div>
-
-            <div className={s.mobileRight}>
-              <button
-                className={`${s.iconBtn} ${isFavOpen ? s.active : ""}`}
-                onClick={toggleFav}
-                title="Обране"
-              >
-                <Image
-                  src="/icons/prefix-Icon.svg"
-                  alt=""
-                  width={20}
-                  height={20}
-                  className={s.iconImage}
-                />
-                {favoriteCount > 0 && (
-                  <span className={s.badge}>{favoriteCount}</span>
-                )}
-              </button>
-              <button
-                className={`${s.iconBtn} ${isCartOpen ? s.active : ""}`}
-                onClick={toggleCart}
-                title="Кошик"
-              >
-                <Image
-                  src="/icons/Prefix-Icon-2.svg"
-                  alt=""
-                  width={20}
-                  height={20}
-                  className={s.iconImage}
-                />
-                {cartCount > 0 && <span className={s.badge}>{cartCount}</span>}
-              </button>
-            </div>
+            <form
+              className={s.mobileSearch}
+              onSubmit={handleMobileSearchSubmit}
+              role="search"
+            >
+              <span className={s.mobileSearchIcon}>
+                <MobileSearchIcon />
+              </span>
+              <input
+                type="search"
+                className={s.mobileSearchInput}
+                placeholder="Пошук..."
+                value={mobileSearch}
+                onChange={(e) => setMobileSearch(e.target.value)}
+                aria-label="Пошук товарів"
+              />
+            </form>
           </>
         ) : (
           <>

@@ -199,6 +199,10 @@
   color: var(--bіliy);
 }
 
+.emptyState {
+  display: none;
+}
+
 .footer {
   display: flex;
   align-items: center;
@@ -333,16 +337,21 @@
 @media (max-width: 1000px) {
   .backdrop {
     padding: 0;
-    /* На мобільному центруємо модалку по вертикалі */
-    align-items: center;
+    align-items: stretch;
     z-index: 1000;
+    background: #121212;
+    backdrop-filter: none;
   }
 
   .modal {
     width: 100%;
     max-width: 100%;
-
-    padding: mvw(20) mvw(16);
+    min-height: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    background: #121212;
+    padding: mvw(108) mvw(16) mvw(32);
     gap: mvw(24);
     max-height: 100%;
     display: flex;
@@ -350,7 +359,7 @@
   }
 
   .topbarListBlock {
-    gap: mvw(20);
+    gap: mvw(24);
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
@@ -366,18 +375,36 @@
   }
 
   .topbar {
-    gap: mvw(12);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 0;
+    width: 100%;
+  }
+
+  .headerActions {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .topbarTitle {
-    font-size: mvw(24);
-    line-height: 110%;
+    font-family: var(--font3);
+    font-weight: 400;
+    font-size: mvw(28);
+    line-height: 120%;
+    color: var(--bіliy);
+    text-align: center;
+    width: 100%;
   }
 
   .close {
     width: mvw(40);
     height: mvw(40);
     border-radius: mvw(10);
+    border-color: rgba(217, 186, 136, 0.5);
   }
 
   .close svg {
@@ -387,85 +414,94 @@
 
   .mobileSliderWrap {
     width: 100%;
-    overflow: auto;
+    overflow: visible;
     flex: 1;
     min-height: 0;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .mobileSliderWrap::-webkit-scrollbar {
-    display: none;
-  }
-
-  .mobileSliderWrap :global(.swiper) {
-    width: 100%;
-    overflow: visible;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  .mobileSliderWrap :global(.swiper-wrapper) {
-    display: flex;
-    width: 100%;
-  }
-
-  .mobileSlide {
-    width: 100% !important;
-    flex-shrink: 0;
-    box-sizing: border-box;
   }
 
   .mobileSlideGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: mvw(12);
+    width: 100%;
   }
 
   .mobileCardWrapper {
     width: 100%;
   }
 
-  .list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: mvw(12);
-    padding: 0;
-  }
-
-  .actionsRow {
+  .emptyState {
+    display: flex;
     flex-direction: column;
-    gap: mvw(16);
     align-items: center;
-  }
-
-  .buttonsWrap {
-    flex-direction: column;
-    gap: mvw(12);
+    justify-content: center;
+    gap: mvw(24);
     width: 100%;
-    align-items: center;
-  }
-
-  .secondary {
-    width: 100%;
-    padding: mvw(16) mvw(24);
-    border-radius: mvw(16);
-    font-size: mvw(16);
+    flex: 1;
+    padding: mvw(40) 0;
     text-align: center;
   }
 
-  .remove {
-    width: 100%;
-    padding: mvw(16) mvw(24);
-    border-radius: mvw(16);
-    font-size: mvw(16);
-    text-align: center;
-    border: mvw(2) solid var(--violet);
+  .emptyIconWrap {
+    width: mvw(200);
+    height: mvw(200);
+    border-radius: 50%;
+    background: rgba(115, 168, 113, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
-  .navWrap {
+  .emptyIconWrap svg {
+    width: mvw(140);
+    height: mvw(140);
+  }
+
+  .emptyTextCol {
+    display: flex;
+    flex-direction: column;
+    gap: mvw(8);
+    align-items: center;
+    max-width: mvw(280);
+  }
+
+  .emptyTitle {
+    margin: 0;
+    font-family: var(--font3);
+    font-weight: 400;
+    font-size: mvw(20);
+    line-height: 120%;
+    color: var(--bіliy);
+  }
+
+  .emptySubtitle {
+    margin: 0;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: rgba(244, 244, 244, 0.55);
+  }
+
+  .emptyButton {
+    margin-top: mvw(8);
     width: 100%;
-    /* justify-content: center; */
+    border: none;
+    border-radius: mvw(8);
+    padding: mvw(14) mvw(24);
+    background: var(--zoloto);
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: mvw(16);
+    line-height: 140%;
+    color: var(--chorniy);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .emptyButton:hover {
+    background: #d49e50;
   }
 
   .empty {

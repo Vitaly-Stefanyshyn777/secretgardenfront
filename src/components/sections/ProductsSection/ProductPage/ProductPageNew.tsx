@@ -263,7 +263,6 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
 
       <div className={styles.productContainer}>
         <div className={styles.productLeftColumn}>
-          {/* Галерея зображень */}
           <ProductGallery
             images={product?.images || []}
             productName={product?.name || ""}
@@ -273,10 +272,14 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
             totalDiscount={totalDiscount}
             isActuallyHit={isActuallyHit}
           />
-          <ProductReviews productSlug={product.slug} />
+          <div className={styles.productReviewsWrap}>
+            <ProductReviews
+              productSlug={product.slug}
+              isMobile={isMobile || false}
+            />
+          </div>
         </div>
 
-        {/* Інформація про товар */}
         <ProductInfo
           product={product}
           variationsData={variationsData}

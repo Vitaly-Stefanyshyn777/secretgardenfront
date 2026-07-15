@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useState, useMemo, memo } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { A11y } from "swiper/modules";
 import ProductCard from "@/components/sections/ProductsSection/ProductCard/ProductCard";
 import SliderNav from "@/components/ui/SliderNav/SliderNavActions";
 import { useRecentlyViewed } from "@/components/hooks/useRecentlyViewed";
 import styles from "./ProductPage.module.css";
+import "swiper/css";
 
 interface RecentlyViewedProps {
   currentProductSlug?: string;
@@ -13,9 +16,10 @@ interface RecentlyViewedProps {
 
 const RecentlyViewed = memo(function RecentlyViewed({
   currentProductSlug,
+  isMobile = false,
 }: RecentlyViewedProps) {
   const { items, isLoading } = useRecentlyViewed(currentProductSlug);
-  const baseItemsPerView = 6;
+  const baseItemsPerView = isMobile ? 2 : 6;
   const [slideIdx, setSlideIdx] = useState(0);
   const itemsPerView = baseItemsPerView;
 
@@ -34,8 +38,34 @@ const RecentlyViewed = memo(function RecentlyViewed({
     setSlideIdx((idx) => (idx - 1 + totalSlides) % totalSlides);
   const onNext = () => setSlideIdx((idx) => (idx + 1) % totalSlides);
 
+  const renderCard = (item: (typeof items)[number]) => (
+    <ProductCard
+      key={item.id}
+      id={item.id}
+      slug={item.slug}
+      name={item.name}
+      price={item.price}
+      image={item.image}
+      category={item.category}
+      wcProduct={
+        (item.ratingAverage != null || (item.ratingCount ?? 0) > 0
+          ? {
+              average_rating: String(item.ratingAverage ?? 0),
+              rating_count: Number(item.ratingCount) || 0,
+            }
+          : undefined) as any
+      }
+      isFluid
+      showcaseDark={isMobile}
+    />
+  );
+
   return (
-    <div className={styles.relatedProducts}>
+    <div
+      className={`${styles.relatedProducts} ${
+        isMobile ? styles.relatedProductsMobile : ""
+      }`}
+    >
       <div className={styles.relatedProductsHeader}>
         <h2>Переглянуті</h2>
       </div>
@@ -58,29 +88,26 @@ const RecentlyViewed = memo(function RecentlyViewed({
         <p className={styles.reviewsEmpty} style={{ padding: "24px 0" }}>
           Перегляньте інші товари — вони з’являться тут.
         </p>
+      ) : isMobile ? (
+        <div className={styles.relatedSliderWrap}>
+          <Swiper
+            modules={[A11y]}
+            slidesPerView="auto"
+            slidesPerGroup={1}
+            spaceBetween={16}
+            className={styles.relatedSwiper}
+          >
+            {items.map((item) => (
+              <SwiperSlide key={item.id} className={styles.relatedSlide}>
+                {renderCard(item)}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       ) : (
         <>
           <div className={styles.relatedGrid}>
-            {visible.map((item) => (
-              <ProductCard
-                key={item.id}
-                id={item.id}
-                slug={item.slug}
-                name={item.name}
-                price={item.price}
-                image={item.image}
-                category={item.category}
-                wcProduct={
-                  (item.ratingAverage != null || (item.ratingCount ?? 0) > 0
-                    ? {
-                        average_rating: String(item.ratingAverage ?? 0),
-                        rating_count: Number(item.ratingCount) || 0,
-                      }
-                    : undefined) as any
-                }
-                isFluid
-              />
-            ))}
+            {visible.map((item) => renderCard(item))}
           </div>
           {items.length > 6 && (
             <SliderNav

@@ -349,20 +349,44 @@
 
 @media (max-width: 1000px) {
   .purchasedCourses {
-    border-radius: mvw(12);
-    gap: mvw(20);
+    gap: mvw(24);
     max-height: none;
-    background: var(--bg-color);
+    background: transparent;
   }
 
   .title {
-    font-size: mvw(20);
+    font-family: var(--font3);
+    font-size: mvw(28);
     line-height: 120%;
+    color: var(--bіliy);
+    text-align: center;
+    width: 100%;
   }
 
-  .divider {
-    height: 1px;
-    display: none;
+  .langActions {
+    width: 100%;
+    gap: mvw(12);
+    align-items: stretch;
+  }
+
+  .langButton {
+    width: 100%;
+    min-width: unset;
+    padding: mvw(14) mvw(24);
+    border-radius: mvw(8);
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: mvw(16);
+    line-height: 140%;
+    border: 1px solid var(--zoloto);
+    background: transparent;
+    color: var(--zoloto);
+  }
+
+  .langButtonActive {
+    background: var(--zoloto);
+    color: var(--chorniy);
+    border-color: var(--zoloto);
   }
 
   .coursesList {

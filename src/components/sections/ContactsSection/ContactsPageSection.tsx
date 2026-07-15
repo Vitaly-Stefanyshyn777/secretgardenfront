@@ -45,8 +45,8 @@ const ContactsPageSection = () => {
               <Image
                 src="/фото.png"
                 alt="Secret Garden, Дніпро"
-                width={540}
-                height={657}
+                fill
+                sizes="100vw"
                 className={s.photo}
               />
             </div>
@@ -87,22 +87,24 @@ const ContactsPageSection = () => {
 
               <div className={s.infoBlock}>
                 <h3 className={s.infoTitle}>Telegram:</h3>
-                <Link
-                  href="https://t.me/secret_Garden_shop420"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={s.infoLink}
-                >
-                  secret_Garden_shop420
-                </Link>
-                <Link
-                  href="https://t.me/secret_garden_manager"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={s.infoLink}
-                >
-                  secret_garden_manager
-                </Link>
+                <div className={s.telegramLinks}>
+                  <Link
+                    href="https://t.me/secret_Garden_shop420"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={s.infoLink}
+                  >
+                    secret_Garden_shop420
+                  </Link>
+                  <Link
+                    href="https://t.me/secret_garden_manager"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={s.infoLink}
+                  >
+                    secret_garden_manager
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

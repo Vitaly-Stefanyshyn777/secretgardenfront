@@ -434,18 +434,93 @@
 
 @media (max-width: 1000px) {
   .personalData {
-    border-radius: mvw(12);
-    gap: mvw(24);
+    border-radius: 0;
+    gap: mvw(32);
     overflow: visible;
   }
 
   .header {
-    gap: mvw(8);
-    border-radius: mvw(12);
-    padding: mvw(16);
-    height: mvw(160);
-    background: var(--bg-color);
-    display: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: mvw(16);
+    border-radius: 0;
+    padding: 0;
+    height: auto;
+    background: transparent;
+  }
+
+  .title {
+    font-family: var(--font3);
+    font-size: mvw(28);
+    line-height: 120%;
+    color: var(--bіliy);
+    text-align: center;
+    width: 100%;
+  }
+
+  .subtitleBlock {
+    align-items: center;
+    gap: mvw(12);
+    max-width: mvw(320);
+  }
+
+  .subtitleTitle {
+    font-size: mvw(20);
+    line-height: 120%;
+    color: var(--bіliy);
+  }
+
+  .subtitleText {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: rgba(244, 244, 244, 0.55);
+  }
+
+  .contactBlocksRow {
+    flex-direction: column;
+    gap: mvw(32);
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .contactBlock {
+    width: 100%;
+    gap: mvw(32);
+    align-items: center;
+  }
+
+  .contactItem {
+    gap: mvw(16);
+    width: 100%;
+    max-width: mvw(320);
+  }
+
+  .iconCircle {
+    width: mvw(58);
+    height: mvw(58);
+    border-radius: mvw(10);
+    border: mvw(2) solid var(--zoloto);
+    color: var(--white);
+    background: transparent;
+    flex-shrink: 0;
+  }
+
+  .iconCircle svg {
+    width: mvw(28);
+    height: mvw(28);
+  }
+
+  .contactText {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    text-align: center;
+    color: var(--bіliy);
+    word-break: break-word;
   }
 
   .backBtn {
@@ -461,11 +536,6 @@
   .backBtn svg {
     width: mvw(16);
     height: mvw(16);
-  }
-
-  .title {
-    font-size: mvw(20);
-    line-height: 120%;
   }
 
   .description {

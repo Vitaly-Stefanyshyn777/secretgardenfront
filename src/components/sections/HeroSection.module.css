@@ -495,20 +495,29 @@
 
 @media (max-width: 1000px) {
   .hero {
-    flex-direction: column;
-    background: #f5f5f5;
-    padding: mvw(60) 0 0 0;
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-top: mvw(52);
+    min-height: calc(100dvh - mvw(52));
+    height: calc(100dvh - mvw(52));
+    padding: 0;
+    background: var(--chorniy);
+    overflow: hidden;
   }
 
-  /* Банер стає звичайним блоком зверху, а не absolute */
   .heroBanner {
-    position: relative;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
-    height: mvw(256);
-    border-radius: 0 0 mvw(16) mvw(16);
+    height: 100%;
+    border-radius: 0;
     overflow: hidden;
-    pointer-events: auto; /* Дозволяємо взаємодію з Swiper на мобільній */
-    position: static !important;
+    pointer-events: auto;
+    z-index: 0;
   }
 
   .heroBanner :global(.swiper),
@@ -517,26 +526,42 @@
     height: 100%;
   }
 
-  /* .heroBanner :global(.swiper-slide) > div {
-    border-radius: 0 0 mvw(16) mvw(16);
+  .heroOverlay {
+    position: absolute;
+    inset: 0;
     height: 100%;
-  } */
+    background: linear-gradient(
+      180deg,
+      rgba(3, 7, 18, 0.1) 0%,
+      rgba(3, 7, 18, 0.35) 42%,
+      rgba(3, 7, 18, 0.82) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
 
   .heroContainer {
-    flex-direction: column;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: mvw(52);
+    top: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
     width: 100%;
     max-width: 100%;
-    padding: 0;
     height: auto;
+    margin: 0;
+    padding: 0 mvw(16);
     gap: 0;
-    padding: mvw(20) mvw(16) mvw(100) mvw(16);
-    border-radius: 0 0 mvw(20) mvw(20);
+    z-index: 2;
   }
 
   .heroContent {
     width: 100%;
-    gap: mvw(24);
     max-width: 100%;
+    gap: mvw(16);
   }
 
   .heroContentBlock {
@@ -544,48 +569,23 @@
   }
 
   .roiBanner {
-    width: auto;
-    height: auto;
-    padding: mvw(10);
-    gap: mvw(9);
-
-    backdrop-filter: none;
-
-    border-radius: mvw(10);
-    color: var(--violet);
-
-    backdrop-filter: blur(20px);
-    background: rgba(132, 38, 215, 0.16);
-  }
-
-  .roiBanner svg {
-    width: mvw(20);
-    height: mvw(20);
-  }
-
-  .roiText {
-    font-family: var(--font-family);
-    font-weight: 600;
-    font-size: mvw(10);
-    line-height: 140%;
-    text-transform: uppercase;
-    color: var(--violet);
+    display: none;
   }
 
   .heroTitle {
-    font-family: var(--second-family);
-    font-weight: 800;
-    font-size: mvw(28);
+    font-family: var(--font3);
+    font-weight: 400;
+    font-size: mvw(34);
     line-height: 120%;
-    text-transform: uppercase;
-    color: var(--black);
+    text-transform: none;
+    color: var(--zoloto);
   }
 
   .heroDescription {
+    font-family: var(--second-family);
     font-size: mvw(14);
     line-height: 140%;
-    color: var(--black);
-    font-family: var(--font-family);
+    color: var(--bіliy);
     font-weight: 500;
   }
 
@@ -594,18 +594,6 @@
     width: 100%;
     gap: mvw(12);
     margin-top: 0;
-  }
-
-  .heroOverlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: mvw(200);
-
-    pointer-events: none;
-    z-index: 2;
-    display: block;
   }
 
   .heroButtonPrimary,
@@ -620,12 +608,10 @@
   .heroButtonPrimary {
     background: var(--violet);
     color: var(--white);
-
     font-family: var(--third-family);
     font-weight: 700;
     font-size: mvw(14);
     line-height: 100%;
-    color: #fff;
   }
 
   .heroButtonSecondary {
@@ -636,19 +622,12 @@
     font-weight: 500;
     font-size: mvw(14);
     line-height: 100%;
-
     border: mvw(2) solid var(--violet);
   }
 
-  /* Приховуємо відео на мобільній версії */
-  /* .heroVideo {
-    display: none;
-  } */
   .heroVideo {
     width: mvw(343);
-    height: mvw(
-      193
-    ); /* 343 * 300 / 520 ≈ 197.88 ≈ 198 для пропорційного масштабування */
+    height: mvw(193);
     border-radius: mvw(30);
     overflow: hidden;
     background: #000;
@@ -660,7 +639,6 @@
     right: 0;
   }
 
-  /* Мобільні стилі для відео плеєра в хіро */
   .heroVideo :global(.closeButton) {
     left: mvw(16) !important;
     top: mvw(16) !important;
@@ -704,53 +682,61 @@
   .heroVideo :global(.playPauseButton.noBlur .playTriangle img) {
     fill: var(--black);
   }
-  /* Приховуємо навігацію на мобільній версії або змінюємо позиціювання */
-  .heroNavigation {
-    display: flex;
-    position: absolute;
-    left: 50%;
-    top: mvw(20);
-    transform: translateX(-50%);
-    gap: mvw(8);
-    z-index: 5;
-    bottom: auto; /* скидаємо desktop-значення */
-    align-items: center;
-    justify-content: center;
-  }
 
-  /* Стрілки не показуємо на мобільній версії */
   .heroArrows {
     display: none;
   }
 
-  /* Показуємо тільки контейнер з лініями */
+  .heroNavigation {
+    position: absolute;
+    left: 50%;
+    bottom: mvw(20);
+    top: auto;
+    transform: translateX(-50%);
+    height: auto;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .heroNavigation .navDots {
     display: flex;
-    gap: mvw(8);
-    padding: mvw(68) 0 0 0;
+    gap: mvw(10);
+    padding: 0;
   }
 
-  /* Лінії навігації (мобільна версія) */
-  .navDot {
-    border-radius: 60px;
-    width: mvw(81);
-    height: mvw(2);
-    background: var(--white);
-    opacity: 0.1;
-  }
-
-  .navDotActive {
-    width: mvw(57);
-    height: mvw(2);
-    background: var(--white);
+  .paginationDot {
+    width: mvw(10);
+    height: mvw(10);
+    border-radius: 50%;
+    border: 1px solid var(--white);
+    background: transparent;
     opacity: 1;
-    transform: none;
   }
 
-  /* Контейнер для двох блоків контенту */
-  .heroContent {
-    display: flex;
-    flex-direction: column;
-    gap: mvw(20);
+  .paginationDot:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .paginationActive,
+  .paginationActiveManual {
+    width: mvw(10);
+    height: mvw(10);
+    border-radius: 50%;
+    border: none;
+    background: var(--zoloto);
+    overflow: hidden;
+  }
+
+  .paginationActive .progressTrack,
+  .paginationActive .progressFill,
+  .paginationActiveManual .progressTrack,
+  .paginationActiveManual .progressFill {
+    display: none;
+  }
+
+  .paginationActiveManual::after {
+    display: none;
   }
 }

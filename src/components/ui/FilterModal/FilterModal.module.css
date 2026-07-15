@@ -103,6 +103,68 @@
   flex-shrink: 0;
 }
 
+.overlayCatalog {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  background: #121212;
+}
+
+.modalCatalog {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #121212;
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+.headerCatalog {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: mvw(16);
+  border-bottom: 1px solid rgba(212, 175, 96, 0.25);
+}
+
+.titleCatalog {
+  margin: 0;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: mvw(16);
+  line-height: 140%;
+  color: var(--zoloto);
+}
+
+.closeButtonCatalog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: mvw(40);
+  height: mvw(40);
+  padding: 0;
+  border: 1px solid rgba(244, 244, 244, 0.35);
+  border-radius: mvw(8);
+  background: transparent;
+  color: var(--bіliy);
+  cursor: pointer;
+}
+
+.contentCatalog {
+  flex: 1;
+  overflow-y: auto;
+  padding: mvw(16);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.contentCatalog::-webkit-scrollbar {
+  display: none;
+}
+
 @media (max-width: 1000px) {
   .modal {
     border-radius: 0;

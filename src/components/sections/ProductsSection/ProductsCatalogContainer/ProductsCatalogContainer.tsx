@@ -210,12 +210,13 @@ const ProductsCatalogContainer = ({
           <div className={styles.error}>Не вдалося завантажити товари</div>
         )}
         {isLoading ? (
-          <ProductsGridSkeleton />
+          <ProductsGridSkeleton catalogDarkCards />
         ) : (
           <ProductsGrid
             products={productsForGrid}
             isNoCertificationFilter={isNoCertificationFilter}
             selectedCertificationFilter={selectedCertificationFilter}
+            catalogDarkCards
           />
         )}
         {sortedProducts.length > 16 && (

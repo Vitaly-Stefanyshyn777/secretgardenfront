@@ -102,6 +102,57 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
     };
   }, []);
 
+  if (embeddedInCatalog && isMobile) {
+    return (
+      <>
+        <div className={styles.catalogMobileFilterBar}>
+          <button
+            type="button"
+            className={styles.catalogCategoriesButton}
+            onClick={() => setIsFilterModalOpen(true)}
+          >
+            <span className={styles.catalogCategoriesLabel}>
+              Категорії та фільтри
+            </span>
+            <svg
+              className={styles.catalogCategoriesChevron}
+              viewBox="0 0 15 9"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M7.14844 8.27878C6.82015 8.27878 6.52834 8.16935 6.30948 7.95049L0.473227 2.11424C-0.000968739 1.67652 -0.000968739 0.910515 0.473227 0.472797C0.910945 -0.00139878 1.67695 -0.00139878 2.11467 0.472797L7.14844 5.47009L12.1457 0.472797C12.5834 -0.00139878 13.3495 -0.00139878 13.7872 0.472797C14.2614 0.910515 14.2614 1.67652 13.7872 2.11424L7.95092 7.95049C7.73206 8.16935 7.44025 8.27878 7.14844 8.27878Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+          <SortDropdown
+            label="Сортування"
+            value={sortBy}
+            options={SORT_OPTIONS}
+            onChange={(value) => onSortChange(value as SortType)}
+            className={styles.catalogSortIconBtn}
+            iconVariant="catalog"
+          />
+        </div>
+        <FilterModal
+          variant="catalog"
+          isOpen={isFilterModalOpen}
+          onClose={() => setIsFilterModalOpen(false)}
+          filters={filters}
+          onFiltersChange={onFiltersChange}
+          onReset={onReset}
+          products={products}
+          onApply={() => {
+            onApply();
+            setIsFilterModalOpen(false);
+          }}
+        />
+      </>
+    );
+  }
+
   if (embeddedInCatalog && !isMobile) {
     return (
       <div className={styles.sortSection}>

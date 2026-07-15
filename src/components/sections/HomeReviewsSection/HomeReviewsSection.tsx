@@ -59,7 +59,7 @@ const HomeReviewsSection = () => {
             breakpoints={{
               0: { spaceBetween: 16 },
               768: { spaceBetween: 20 },
-              1200: { spaceBetween: 30 },
+              1001: { spaceBetween: 30 },
             }}
           >
             {REVIEWS.map((review) => (

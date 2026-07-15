@@ -1,4 +1,5 @@
 "use client";
+import { BoxIcons } from "@/components/Icons/Icons";
 import { useScrollLock } from "@/components/hooks/useScrollLock";
 import ProductCard from "@/components/sections/ProductsSection/ProductCard/ProductCard";
 import ModalCloseButton from "@/components/ui/ModalCloseButton";
@@ -244,7 +245,9 @@ export default function FavoritesModal() {
         <div className={s.modal} onClick={(e) => e.stopPropagation()}>
           <div className={s.topbarListBlock}>
             <div className={s.topbar}>
-              <span className={s.topbarTitle}>Обране</span>
+              <span className={s.topbarTitle}>
+                {isMobile ? "Обрані товари" : "Обране"}
+              </span>
               <div className={s.headerActions}>
                 <ModalCloseButton onClose={close} className={s.close} />
               </div>
@@ -253,81 +256,78 @@ export default function FavoritesModal() {
             {isMobile ? (
               <div className={s.mobileSliderWrap}>
                 {items.length === 0 ? (
-                  <div className={s.empty}>Список порожній</div>
-                ) : mobilePages.length === 0 ? (
-                  <div className={s.empty}>Список порожній</div>
+                  <div className={s.emptyState}>
+                    <div className={s.emptyIconWrap}>
+                      <BoxIcons />
+                    </div>
+                    <div className={s.emptyTextCol}>
+                      <p className={s.emptyTitle}>Відсутні обрані товари</p>
+                      <p className={s.emptySubtitle}>
+                        Тут будуть позиції, які вам сподобались
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className={s.emptyButton}
+                      onClick={() => {
+                        close();
+                        window.location.href = "/products";
+                      }}
+                    >
+                      До каталогу
+                    </button>
+                  </div>
                 ) : (
-                  <Swiper
-                    modules={[Navigation, Pagination, A11y]}
-                    onSwiper={(sw: SwiperType) => (swiperRef.current = sw)}
-                    onSlideChange={(sw: SwiperType) =>
-                      setActiveIndex(sw.activeIndex)
-                    }
-                    spaceBetween={0}
-                    slidesPerView={1}
-                    centeredSlides={false}
-                    observer
-                    observeParents
-                    updateOnWindowResize
-                  >
-                    {mobilePages.map((group, idx) => (
-                      <SwiperSlide
-                        key={group.map((it) => it.id).join("-") || idx}
-                        className={s.mobileSlide}
-                      >
-                        <div className={s.mobileSlideGrid}>
-                          {group.map((it) => {
-                            const isCourse = it.id.startsWith("course-");
-                            const courseId = isCourse
-                              ? it.id.replace("course-", "")
-                              : undefined;
-                            const normalizedImage = normalizeImageUrl(it.image);
-                            const enriched = enrichedByKey[it.id];
-                            const effectivePrice =
-                              enriched?.price ?? it.price ?? 0;
-                            const effectiveOriginalPrice =
-                              enriched?.originalPrice ?? it.originalPrice;
-                            const effectiveMetaData =
-                              (enriched?.metaData &&
-                                enriched.metaData.length > 0 &&
-                                enriched.metaData) ||
-                              it.metaData;
-                            return (
-                              <div
-                                key={it.id}
-                                className={s.mobileCardWrapper}
-                                onClick={() => close()}
-                              >
-                                <ProductCard
-                                  id={it.id}
-                                  name={it.name}
-                                  price={effectivePrice}
-                                  originalPrice={effectiveOriginalPrice}
-                                  color={it.color}
-                                  size={it.size}
-                                  image={normalizedImage}
-                                  slug={
-                                    isCourse && courseId
-                                      ? `/courses/${courseId}`
-                                      : it.slug
-                                  }
-                                  discount={it.discount}
-                                  isNew={it.isNew}
-                                  isHit={it.isHit}
-                                  stockStatus={undefined}
-                                  useRedGreenIconOnMobile={true}
-                                  removeFromFavoritesOnAddToCart={true}
-                                  productType={it.productType}
-                                  variations={it.variations}
-                                  metaData={effectiveMetaData}
-                                />
-                              </div>
-                            );
-                          })}
+                  <div className={s.mobileSlideGrid}>
+                    {items.map((it) => {
+                      const isCourse = it.id.startsWith("course-");
+                      const courseId = isCourse
+                        ? it.id.replace("course-", "")
+                        : undefined;
+                      const normalizedImage = normalizeImageUrl(it.image);
+                      const enriched = enrichedByKey[it.id];
+                      const effectivePrice = enriched?.price ?? it.price ?? 0;
+                      const effectiveOriginalPrice =
+                        enriched?.originalPrice ?? it.originalPrice;
+                      const effectiveMetaData =
+                        (enriched?.metaData &&
+                          enriched.metaData.length > 0 &&
+                          enriched.metaData) ||
+                        it.metaData;
+                      return (
+                        <div
+                          key={it.id}
+                          className={s.mobileCardWrapper}
+                          onClick={() => close()}
+                        >
+                          <ProductCard
+                            id={it.id}
+                            name={it.name}
+                            price={effectivePrice}
+                            originalPrice={effectiveOriginalPrice}
+                            color={it.color}
+                            size={it.size}
+                            image={normalizedImage}
+                            slug={
+                              isCourse && courseId
+                                ? `/courses/${courseId}`
+                                : it.slug
+                            }
+                            discount={it.discount}
+                            isNew={it.isNew}
+                            isHit={it.isHit}
+                            stockStatus={undefined}
+                            useRedGreenIconOnMobile={true}
+                            removeFromFavoritesOnAddToCart={true}
+                            productType={it.productType}
+                            variations={it.variations}
+                            metaData={effectiveMetaData}
+                            showcaseDark
+                          />
                         </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
             ) : (
@@ -402,7 +402,7 @@ export default function FavoritesModal() {
             )}
           </div>
 
-          {items.length > 0 && (
+          {items.length > 0 && !isMobile && (
             <div className={s.actionsRow}>
               <div className={s.buttonsWrap}>
                 <button

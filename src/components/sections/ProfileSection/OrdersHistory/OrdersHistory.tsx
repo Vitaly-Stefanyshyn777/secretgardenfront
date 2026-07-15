@@ -241,7 +241,15 @@ const OrdersHistory: React.FC = () => {
             .map((order) => (
               <React.Fragment key={order.id}>
                 <div className={styles.orderCard}>
-                  {/* Товари */}
+                  <div className={styles.orderCardHeader}>
+                    <span
+                      className={`${styles.orderStatusText} ${getStatusClass(order.status)}`}
+                    >
+                      {getStatusText(order.status)}
+                    </span>
+                    <span className={styles.orderDate}>{order.orderDate}</span>
+                  </div>
+
                   <div className={styles.cardProducts}>
                     {order.items.map((item, idx) => (
                       <div
@@ -280,7 +288,7 @@ const OrdersHistory: React.FC = () => {
                   <div className={styles.cardInfo}>
                     <div className={styles.infoContent}>
                       <div className={styles.infoRows}>
-                        <div className={styles.infoRow}>
+                        <div className={`${styles.infoRow} ${styles.infoRowDesktop}`}>
                           <span className={styles.infoLabel}>Дата</span>
                           <span className={styles.infoValue}>
                             {order.orderDate}
@@ -302,7 +310,7 @@ const OrdersHistory: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className={styles.statusSection}>
+                      <div className={`${styles.statusSection} ${styles.statusSectionDesktop}`}>
                         <span className={styles.statusLabel}>Статус:</span>
                         <div
                           className={`${styles.statusBadge} ${getStatusClass(order.status)}`}

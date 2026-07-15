@@ -117,6 +117,7 @@ export default function CartModal() {
           <div className={s.bodyTwoCols}>
             <CartSummary
               total={total}
+              totalWithoutDiscount={totalWithoutDiscount}
               discount={discount}
               remainingToFree={remainingToFree}
               progressPct={progressPct}

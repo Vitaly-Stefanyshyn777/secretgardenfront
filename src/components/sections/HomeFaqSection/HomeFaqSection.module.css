@@ -84,31 +84,57 @@
 
 @media (max-width: 1000px) {
   .section {
-    padding: 40px 16px 24px;
+    background: #121212;
+    padding: mvw(40) mvw(16) mvw(48);
   }
 
   .container {
-    gap: 28px;
+    gap: mvw(24);
   }
 
   .sectionTitle {
-    font-size: 34px;
+    font-size: mvw(28);
+    font-family: var(--font3);
+    line-height: 120%;
   }
 
   .faqGrid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: mvw(16);
   }
 
   .faqCard {
-    padding: 14px 16px;
+    background: #37412e;
+    border-radius: mvw(12);
+    padding: mvw(20);
+    box-shadow: none;
+  }
+
+  .faqCardInner {
+    gap: mvw(12);
   }
 
   .faqTitle {
-    font-size: 26px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: mvw(18);
+    line-height: 140%;
+    color: var(--bіliy);
+  }
+
+  .faqTextWrap {
+    gap: mvw(12);
+  }
+
+  .faqTextSplit {
+    gap: mvw(16);
   }
 
   .faqText {
-    font-size: 16px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: #d1d1d1;
   }
 }

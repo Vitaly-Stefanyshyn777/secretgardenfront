@@ -121,6 +121,12 @@ function CartItemRow({ item }: CartItemRowProps) {
                 {extractedSize && `Розмір: ${extractedSize}`}
               </div>
             )}
+
+            <div className={s.availability}>
+              {item.stockQuantity != null && item.stockQuantity <= 0
+                ? "Немає в наявності"
+                : `В наявності - ${item.stockQuantity ?? item.quantity}`}
+            </div>
           </div>
 
           <div className={s.controlsBlock}>
@@ -142,7 +148,7 @@ function CartItemRow({ item }: CartItemRowProps) {
                   <span className={s.currentPriceValue}>
                     {finalPrice.toLocaleString()}
                   </span>
-                  <span className={s.priceCurrency}>₴</span>
+                  <span className={s.priceCurrency}>грн</span>
                 </span>
                 {shouldDisplayOldPrice && originalPrice > finalPrice && (
                   <span className={s.oldPrice}>

@@ -15,6 +15,7 @@ interface SortDropdownProps {
   onChange: (value: string) => void;
   className?: string;
   variant?: "itemsPerPage" | "sort";
+  iconVariant?: "default" | "catalog";
 }
 
 const SortDropdown: React.FC<SortDropdownProps> = ({
@@ -24,6 +25,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
   onChange,
   className = "",
   variant = "sort",
+  iconVariant = "default",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,6 +47,10 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+
+  const sortIconSrc =
+    iconVariant === "catalog" ? "/icons/Dropdown-2.svg" : "/icons/Dropdown.svg";
+  const sortIconSize = 48;
 
   return (
     <div
@@ -72,17 +78,21 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
             variant === "itemsPerPage"
               ? styles.itemsPerPageIconWrapper
               : styles.sortIconWrapper
-          } ${isOpen ? styles.iconRotated : ""}`}
+          } ${isOpen && iconVariant !== "catalog" ? styles.iconRotated : ""}`}
         >
           <Image
-            src={variant === "itemsPerPage" ? "/icons/Dropdown.svg" : "/icons/Dropdown.svg"}
+            src={
+              variant === "itemsPerPage" ? "/icons/Dropdown.svg" : sortIconSrc
+            }
             alt=""
-            width={variant === "itemsPerPage" ? 14 : 48}
-            height={variant === "itemsPerPage" ? 8 : 48}
+            width={variant === "itemsPerPage" ? 14 : sortIconSize}
+            height={variant === "itemsPerPage" ? 8 : sortIconSize}
             className={
               variant === "itemsPerPage"
                 ? styles.itemsPerPageDropdownIcon
-                : styles.sortDropdownIcon
+                : iconVariant === "catalog"
+                  ? styles.catalogSortDropdownIcon
+                  : styles.sortDropdownIcon
             }
           />
         </div>

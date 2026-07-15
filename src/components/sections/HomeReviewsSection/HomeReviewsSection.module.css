@@ -117,47 +117,93 @@
 
 @media (max-width: 1000px) {
   .section {
-    padding: 24px 16px 56px;
+    background: #121212;
+    padding: mvw(40) mvw(16) mvw(48);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .container {
-    gap: 28px;
+    gap: mvw(24);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .header {
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    justify-content: center;
+    gap: 0;
   }
 
   .sectionTitle {
-    font-size: 34px;
+    font-size: mvw(28);
+    font-family: var(--font3);
     text-align: center;
+    width: 100%;
   }
 
   .reviewsNav {
-    transform: scale(0.92);
-    transform-origin: center;
+    display: none;
   }
 
   .reviewsSliderWrap {
-    overflow: visible;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .reviewsSwiper {
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
   }
 
   .reviewSlide {
-    width: 82vw;
+    width: calc(100vw - mvw(80));
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  .reviewCard {
+    border: 1px solid rgba(244, 244, 244, 0.45);
+    border-radius: mvw(12);
+    padding: mvw(20);
+    background: rgba(255, 255, 255, 0.03);
+    gap: mvw(16);
+    max-width: none;
+  }
+
+  .reviewHeader {
+    gap: mvw(12);
+    align-items: flex-start;
   }
 
   .reviewName {
-    font-size: 20px;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: mvw(16);
+    line-height: 140%;
+    color: var(--bіliy);
   }
 
   .reviewStars {
-    font-size: 16px;
-    letter-spacing: 2px;
+    font-size: mvw(14);
+    letter-spacing: mvw(2);
+    color: #f0d026;
+    flex-shrink: 0;
   }
 
   .reviewText {
-    font-size: 16px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 150%;
+    color: var(--bіliy);
   }
 }

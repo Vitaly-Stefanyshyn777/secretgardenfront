@@ -61,6 +61,7 @@ interface ProductCardProps {
   isFluid?: boolean;
   useRedGreenIconOnMobile?: boolean;
   removeFromFavoritesOnAddToCart?: boolean;
+  showcaseDark?: boolean;
 }
 
 const ProductCard = ({
@@ -89,6 +90,7 @@ const ProductCard = ({
   isFluid = false,
   useRedGreenIconOnMobile = false,
   removeFromFavoritesOnAddToCart = false,
+  showcaseDark = false,
 }: ProductCardProps) => {
   const favorite = useFavoriteStore(selectIsFavorite(id));
 
@@ -317,7 +319,9 @@ const ProductCard = ({
       href={getHref()}
       className={`${styles.productCard} ${
         isFluid ? styles.productCardFluid : ""
-      } ${isOutOfStock ? styles.productCardOutOfStock : ""}`}
+      } ${showcaseDark ? styles.productCardShowcaseDark : ""} ${
+        isOutOfStock ? styles.productCardOutOfStock : ""
+      }`}
       data-category={hasNoCertification ? "78" : undefined}
       data-outofstock={isOutOfStock ? "true" : undefined}
     >
@@ -378,36 +382,43 @@ const ProductCard = ({
       </div>
 
       <div className={styles.cardContent}>
-        {Number.isFinite(ratingValue) && ratingCount >= 0 && (
+        {(showcaseDark ||
+          (Number.isFinite(ratingValue) && ratingCount >= 0 && wcProduct)) && (
           <div className={styles.ratingRow}>
-            <div className={styles.stars}>
-              {Array.from({ length: 5 }).map((_, i) => {
-                const filled = i < filledStars;
-                return (
-                  <svg
-                    key={i}
-                    viewBox="0 0 20 20"
-                    className={
-                      [
-                        styles.starIcon,
-                        filled ? styles.starFilled : styles.starEmpty,
-                      ]
-                        .filter(Boolean)
-                        .join(" ") || undefined
-                    }
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10 1.66699L12.4722 6.67699L18 7.50033L14 11.3337L14.9444 16.8337L10 14.3337L5.05556 16.8337L6 11.3337L2 7.50033L7.52778 6.67699L10 1.66699Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                );
-              })}
-            </div>
-            <span className={styles.ratingText}>
-              {ratingCount} {getReviewsLabel(ratingCount)}
-            </span>
+            {showcaseDark && ratingCount === 0 ? (
+              <span className={styles.ratingText}>Немає відгуків</span>
+            ) : (
+              <>
+                <div className={styles.stars}>
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const filled = i < filledStars;
+                    return (
+                      <svg
+                        key={i}
+                        viewBox="0 0 20 20"
+                        className={
+                          [
+                            styles.starIcon,
+                            filled ? styles.starFilled : styles.starEmpty,
+                          ]
+                            .filter(Boolean)
+                            .join(" ") || undefined
+                        }
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10 1.66699L12.4722 6.67699L18 7.50033L14 11.3337L14.9444 16.8337L10 14.3337L5.05556 16.8337L6 11.3337L2 7.50033L7.52778 6.67699L10 1.66699Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    );
+                  })}
+                </div>
+                <span className={styles.ratingText}>
+                  {ratingCount} {getReviewsLabel(ratingCount)}
+                </span>
+              </>
+            )}
           </div>
         )}
         {variantInfo ? (
@@ -506,6 +517,7 @@ const ProductCard = ({
             metaData={metaData}
             removeFromFavoritesOnAddToCart={removeFromFavoritesOnAddToCart}
             requireAuth={false}
+            showcaseCart={showcaseDark}
             className={`${styles.cartBtn} ${
               isNoCertificationProduct ? styles.cartBtnNoCert : ""
             }`}

@@ -41,6 +41,7 @@ interface FilterModalProps {
   onReset: () => void;
   products: Product[];
   onApply: () => void;
+  variant?: "default" | "catalog";
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({
@@ -49,9 +50,10 @@ const FilterModal: React.FC<FilterModalProps> = ({
   filters,
   onFiltersChange,
   onReset,
-  products,
   onApply,
+  variant = "default",
 }) => {
+  const isCatalog = variant === "catalog";
   useScrollLock(isOpen);
 
   useEffect(() => {
@@ -69,10 +71,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
   const handleFilterChange = (
     key: keyof FilterState,
-    value: string | string[] | number
+    value: string | string[] | number,
   ) => {
-    const newFilters = { ...filters, [key]: value };
-    onFiltersChange(newFilters);
+    onFiltersChange({ ...filters, [key]: value });
   };
 
   const handlePriceChange = (values: { min: number; max: number }) => {
@@ -80,20 +81,43 @@ const FilterModal: React.FC<FilterModalProps> = ({
     handleFilterChange("priceMax", values.max);
   };
 
-  const handleApply = () => {
-    onApply();
-  };
-
-  const handleReset = () => {
-    onReset();
-  };
+  if (isCatalog) {
+    return (
+      <div className={styles.overlayCatalog} onClick={onClose}>
+        <div
+          className={styles.modalCatalog}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className={styles.headerCatalog}>
+            <h2 className={styles.titleCatalog}>Категорії та фільтри</h2>
+            <button
+              type="button"
+              className={styles.closeButtonCatalog}
+              onClick={onClose}
+              aria-label="Закрити"
+            >
+              <CloseButtonIcon />
+            </button>
+          </div>
+          <div className={styles.contentCatalog}>
+            <CertificationFilter
+              value={filters.certification}
+              onChange={(value) => handleFilterChange("certification", value)}
+              variant="catalogDropdown"
+              onCategorySelect={onClose}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2 className={styles.title}>Фільтр</h2>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button type="button" className={styles.closeButton} onClick={onClose}>
             <CloseButtonIcon />
           </button>
         </div>
@@ -117,8 +141,8 @@ const FilterModal: React.FC<FilterModalProps> = ({
           </div>
         </div>
         <div className={styles.footer}>
-          <ApplyFilterButton onClick={handleApply} />
-          <ResetFilterButton onClick={handleReset} />
+          <ApplyFilterButton onClick={onApply} />
+          <ResetFilterButton onClick={onReset} />
         </div>
       </div>
     </div>

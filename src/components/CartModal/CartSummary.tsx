@@ -8,6 +8,7 @@ import { BasketIcons } from "@/components/Icons/Icons";
 
 interface CartSummaryProps {
   total: number;
+  totalWithoutDiscount: number;
   discount: number;
   remainingToFree: number;
   progressPct: number;
@@ -19,6 +20,7 @@ interface CartSummaryProps {
 
 export default function CartSummary({
   total,
+  totalWithoutDiscount,
   discount,
   remainingToFree,
   progressPct,
@@ -28,6 +30,10 @@ export default function CartSummary({
   items,
 }: CartSummaryProps) {
   const hasItems = itemsCount > 0;
+  const discountPercent =
+    totalWithoutDiscount > 0
+      ? Math.round((discount / totalWithoutDiscount) * 100)
+      : 0;
 
   const handleCheckoutClick = () => {
     if (hasItems) {
@@ -80,32 +86,37 @@ export default function CartSummary({
                   label="Промокод"
                   wrapperClassName={s.promoWrapper}
                   inputClassName={s.promoInput}
+                  labelClassName={s.promoLabel}
                 />
               </div>
 
               <div className={s.summaryRows}>
                 <div className={s.summaryRow}>
-                  <span className={s.summaryLabelPrimary}>Сума замовлення</span>
+                  <span className={s.summaryLabelPrimary}>Разом:</span>
                   <span className={s.value}>
                     <span className={s.summaryAmountPrimary}>
+                      {totalWithoutDiscount.toLocaleString()}
+                    </span>{" "}
+                    <span className={s.summaryCurrencyPrimary}>грн</span>
+                  </span>
+                </div>
+                {discount > 0 && (
+                  <div className={s.summaryRow}>
+                    <span className={s.label}>Знижка:</span>
+                    <span className={s.value}>
+                      <span className={s.amountDiscount}>
+                        {discountPercent}%
+                      </span>
+                    </span>
+                  </div>
+                )}
+                <div className={s.summaryRow}>
+                  <span className={s.labelStrong}>До сплати:</span>
+                  <span className={s.totalValue}>
+                    <span className={s.amountTogether}>
                       {total.toLocaleString()}
                     </span>{" "}
-                    <span className={s.summaryCurrencyPrimary}>₴</span>
-                  </span>
-                </div>
-                <div className={s.summaryRow}>
-                  <span className={s.label}>Сума знижки</span>
-                  <span className={s.value}>
-                    <span className={s.amountDiscount}>
-                      {discount.toLocaleString()}
-                    </span>{" "}
-                    <span className={s.currencyDiscount}>₴</span>
-                  </span>
-                </div>
-                <div className={s.summaryRow}>
-                  <span className={s.label}>Вартість доставки</span>
-                  <span className={s.valueNote}>
-                    За тарифами &quot;Нової Пошти&quot;
+                    <span className={s.currencyTogether}>грн</span>
                   </span>
                 </div>
               </div>
@@ -128,29 +139,18 @@ export default function CartSummary({
 
       <div className={s.summaryBlock}>
         {hasItems ? (
-          <>
-            <div className={s.totalRow}>
-              <span className={s.labelStrong}>Разом</span>
-              <span className={s.totalValue}>
-                <span className={s.amountTogether}>
-                  {total.toLocaleString()}
-                </span>{" "}
-                <span className={s.currencyTogether}>₴</span>
-              </span>
-            </div>
-            <div className={s.summaryButtons}>
-              <button
-                className={s.primary}
-                onClick={handleCheckoutClick}
-                disabled={!hasItems}
-              >
-                Оформити замовлення
-              </button>
-              <button className={s.secondary} onClick={onContinue}>
-                Продовжити покупки
-              </button>
-            </div>
-          </>
+          <div className={s.summaryButtons}>
+            <button
+              className={s.primary}
+              onClick={handleCheckoutClick}
+              disabled={!hasItems}
+            >
+              Оформити замовлення
+            </button>
+            <button className={s.secondary} onClick={onContinue}>
+              Додати інші товари
+            </button>
+          </div>
         ) : (
           <div className={s.summaryButtons}>
             <button

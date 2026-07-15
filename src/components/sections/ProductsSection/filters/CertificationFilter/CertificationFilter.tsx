@@ -12,6 +12,8 @@ interface CertificationFilterProps {
   onChange: (value: string[]) => void;
   loading?: boolean;
   hideAllCategoriesButton?: boolean;
+  variant?: "default" | "catalogDropdown";
+  onCategorySelect?: () => void;
 }
 
 function findCategoryById(
@@ -61,7 +63,10 @@ export const CertificationFilter = ({
   onChange,
   loading,
   hideAllCategoriesButton = false,
+  variant = "default",
+  onCategorySelect,
 }: CertificationFilterProps) => {
+  const isCatalogDropdown = variant === "catalogDropdown";
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -152,17 +157,15 @@ export const CertificationFilter = ({
   const handleParentClick = (cat: CatalogCategory) => {
     if (cat.children && cat.children.length > 0) {
       setActiveParentId(cat.id);
-      // Батьківська категорія застосовується моментально через URL,
-      // а підкатегорії (чекбокси) накопичуються і застосовуються через кнопку "Застосувати".
       onChange([]);
       pushCategoryToUrl(cat.slug);
+      onCategorySelect?.();
       return;
     }
 
-    // Якщо у категорії немає children — фільтруємо по її slug
-    // (категорія без children поводиться як звичайна категорія)
     pushCategoryToUrl(cat.slug);
     onChange([]);
+    onCategorySelect?.();
   };
 
   const handleSubcategoryToggle = (cat: CatalogCategory) => {
@@ -178,7 +181,7 @@ export const CertificationFilter = ({
     <div
       className={`${styles.filterSection} ${
         !isExpanded ? styles.collapsedSection : ""
-      }`}
+      } ${isCatalogDropdown ? styles.catalogDropdownSection : ""}`}
     >
       {/* <div className={styles.sectionTitleContainer} onClick={toggleSection}>
         <h3 className={styles.sectionTitle}>Категорії</h3>
@@ -190,6 +193,17 @@ export const CertificationFilter = ({
         }`}
       >
         {showSkeleton ? (
+          isCatalogDropdown ? (
+            <div className={styles.catalogDropdownList}>
+              {[...Array(8)].map((_, i) => (
+                <span
+                  key={i}
+                  className={`${styles.categoryBlockSkeleton} ${styles.catalogDropdownItem}`}
+                  aria-hidden="true"
+                />
+              ))}
+            </div>
+          ) : (
           <div className={styles.categoryBlocks}>
             {[...Array(6)].map((_, i) => (
               <span
@@ -199,8 +213,27 @@ export const CertificationFilter = ({
               />
             ))}
           </div>
+          )
         ) : isError ? (
           <div className={styles.error}>Помилка завантаження категорій</div>
+        ) : isCatalogDropdown && rootCategories.length > 0 ? (
+          <div className={styles.catalogDropdownList}>
+            {rootCategories.map((cat) => {
+              const isActive = activeCategorySlug === cat.slug;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`${styles.categoryBlockBtn} ${
+                    styles.catalogDropdownItem
+                  } ${isActive ? styles.categoryBlockBtnActive : ""}`}
+                  onClick={() => handleParentClick(cat)}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
+          </div>
         ) : activeParentId ? (
           <>
             <div className={styles.subHeaderDivider} />

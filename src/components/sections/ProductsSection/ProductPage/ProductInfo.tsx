@@ -7,7 +7,6 @@ import ProductActions from "./ProductActions";
 import styles from "./ProductPage.module.css";
 import type { Product } from "@/lib/products";
 import type { ProductInfoProps } from "./types";
-import { СhevronIcon } from "@/components/Icons/Icons";
 
 const ProductInfo = memo(function ProductInfo({
   product,
@@ -173,9 +172,26 @@ const ProductInfo = memo(function ProductInfo({
           />
         </div>
 
-        {/* Характеристика та особливості + Опис (статичні блоки) + Доставка/Оплата/Повернення (розгортані) */}
+        {/* Характеристика та особливості + Опис */}
         <div className={styles.expandableSections}>
-          {/* Характеристика та особливості - статичний блок, двоколонкова таблиця */}
+          {isMobile && (
+            <button
+              type="button"
+              className={styles.characteristicsToggleBtn}
+              onClick={() => onToggleSection("characteristics")}
+              aria-expanded={expandedSections.characteristics}
+            >
+              Характеристика та особливості
+            </button>
+          )}
+
+          <div
+            className={`${styles.mobileExpandableContent} ${
+              isMobile && !expandedSections.characteristics
+                ? styles.mobileExpandableContentHidden
+                : ""
+            }`}
+          >
           {(product.characteristics?.length ?? 0) > 0 && (() => {
             const chars = product.characteristics!;
             const startIdx = chars.findIndex(
@@ -279,6 +295,7 @@ const ProductInfo = memo(function ProductInfo({
                 <p>Опис товару відсутній</p>
               )}
             </div>
+          </div>
           </div>
         </div>
       </div>

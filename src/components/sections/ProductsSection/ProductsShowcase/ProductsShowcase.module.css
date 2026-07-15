@@ -132,6 +132,50 @@
 }
 
 @media (max-width: 1000px) {
+  .sectionMobile {
+    background: #222;
+    padding: mvw(40) 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .sectionMobile .container {
+    padding: 0 mvw(16);
+    gap: mvw(24);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sectionMobile .headerRight {
+    display: none;
+  }
+
+  .sectionMobile .title:hover {
+    color: var(--bіliy);
+  }
+
+  .sectionMobile .coursesSlider {
+    overflow: visible;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sectionMobile .swiperMobile {
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  .sectionMobile .slide {
+    width: mvw(172);
+    height: auto;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
   .container {
     padding: 0 mvw(16);
     gap: mvw(32);
@@ -141,6 +185,8 @@
   }
   .title {
     font-size: mvw(28);
+    font-family: var(--font3);
+    text-align: center;
   }
   .grid {
     grid-template-columns: repeat(2, 1fr);
@@ -153,34 +199,38 @@
   .swiper {
     padding: 0;
   }
-  .allCoursesBtn {
-    width: 100%;
-    height: mvw(50);
-    border-radius: mvw(16);
-    padding: 0;
-    font-size: mvw(16);
-  }
 
-  .allCoursesBtn {
-    border-radius: mvw(16);
-    padding: mvw(16) mvw(24);
-    width: auto;
-    height: mvw(46);
+  .sectionMobile .allCoursesBtn {
+    width: 100%;
+    height: mvw(48);
+    border-radius: mvw(24);
+    padding: 0;
+    background: var(--chorniy);
+    border: 1px solid var(--bіliy);
+    color: var(--bіliy);
     font-family: var(--third-family);
     font-weight: 700;
     font-size: mvw(14);
     line-height: 100%;
-    color: #fff;
   }
+
+  .sectionMobile .allCoursesBtn:hover {
+    background: var(--chorniy);
+    border-color: var(--bіliy);
+    color: var(--bіliy);
+  }
+
   .headerLeft {
     align-items: center;
     justify-content: center;
+    width: 100%;
   }
 
   .header {
     justify-content: center;
   }
-  .section {
+
+  .section:not(.sectionMobile) {
     padding: mvw(70) 0;
   }
 }
@@ -252,6 +302,72 @@
   width: 100%;
   height: 251px;
   border-radius: 0;
+  line-height: 1;
+}
+
+.skeletonRatingRow {
+  width: mvw(72);
+  height: mvw(10);
+  border-radius: mvw(4);
+}
+
+.skeletonProductName {
+  width: 100%;
+  height: mvw(14);
+  border-radius: mvw(4);
+}
+
+.skeletonPricingFirst {
+  width: mvw(64);
+  height: mvw(18);
+  border-radius: mvw(4);
+}
+
+.skeletonCartBtn {
+  width: 100%;
+  height: mvw(40);
+  border-radius: mvw(8);
+}
+
+.skeletonRatingRow,
+.skeletonProductName,
+.skeletonPricingFirst,
+.skeletonCartBtn {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.14) 40%,
+    rgba(255, 255, 255, 0.06) 80%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: showcaseSkeletonShimmer 1.3s ease-in-out infinite;
+}
+
+.skeletonCartBtn {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 198, 159, 0.35) 0%,
+    rgba(226, 198, 159, 0.55) 40%,
+    rgba(226, 198, 159, 0.35) 80%
+  ) !important;
+  background-size: 200% 100% !important;
+}
+
+.skeletonCardImage span {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: mvw(8) !important;
+  line-height: 1 !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.14) 40%,
+    rgba(255, 255, 255, 0.06) 80%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: showcaseSkeletonShimmer 1.3s ease-in-out infinite;
 }
 
 .skeletonBadgesItem {
@@ -269,24 +385,6 @@
   border-radius: 999px;
 }
 
-.skeletonRatingRow {
-  width: 250px;
-  height: 20px;
-  border-radius: 6px;
-}
-
-.skeletonProductName {
-  width: 240px;
-  height: 25px;
-  border-radius: 6px;
-}
-
-.skeletonPricingFirst {
-  width: 122px;
-  height: 35px;
-  border-radius: 6px;
-}
-
 .skeletonPricingSecond {
   width: 122px;
   height: 35px;
@@ -297,12 +395,6 @@
   width: 140px;
   height: 24px;
   border-radius: 6px;
-}
-
-.skeletonCartBtn {
-  width: 100%;
-  height: 50px;
-  border-radius: 12px;
 }
 
 @keyframes showcaseSkeletonShimmer {
@@ -324,6 +416,10 @@
   height: 490px;
 }
 
+.skeletonSlider {
+  display: none;
+}
+
 @media (max-width: 1000px) {
   .skeletonHeaderRight {
     gap: mvw(12);
@@ -340,9 +436,10 @@
   }
 
   .skeletonTitle {
-    width: mvw(240);
-    height: mvw(32);
-    border-radius: mvw(10);
+    width: mvw(200);
+    height: mvw(28);
+    border-radius: mvw(6);
+    margin: 0 auto;
   }
 
   .skeletonNavBtn {
@@ -357,8 +454,43 @@
   }
 
   .skeletonAllCoursesBtn {
-    width: mvw(200);
-    height: mvw(46);
-    border-radius: mvw(16);
+    width: 100%;
+    height: mvw(48);
+    border-radius: mvw(24);
+    border: 1px solid rgba(244, 244, 244, 0.25);
+  }
+
+  .skeletonCardWrapper {
+    width: mvw(172);
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  .skeletonSlider {
+    display: flex;
+    gap: mvw(16);
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .skeletonGridDesktop {
+    display: none;
+  }
+
+  .skeletonHeaderRight {
+    display: none;
+  }
+
+  .sectionMobile .headerLeft {
+    width: 100%;
+  }
+
+  .skeletonCard .cardImage {
+    height: mvw(108);
+  }
+
+  .skeletonCardImage {
+    height: 100%;
+    border-radius: mvw(8);
   }
 }

@@ -524,262 +524,136 @@
 
 @media (max-width: 1000px) {
   .footer {
-    border-radius: mvw(16);
-    padding: mvw(56) mvw(16);
-    width: mvw(375);
-    height: mvw(auto);
-    background-image: url(/images/footer.png);
+    width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
+    border-radius: 0;
+    padding: mvw(40) mvw(16) mvw(32);
+    background-image: url(/futer.png);
+    background-color: #121212;
+    background-size: cover;
+    background-position: center top;
+    overflow-x: hidden;
   }
-  .logoContainer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: mvw(23);
-  }
-  .logo {
-    font-size: mvw(20);
-    gap: mvw(8);
-  }
-  .logoIcon {
-    width: mvw(70);
-    height: mvw(70);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .logoIcon svg {
-    width: mvw(55);
-    height: mvw(55);
-  }
-  .brandLinkContainer {
-    width: 100%;
-    height: 100%;
-    gap: mvw(20);
-  }
-  .brandNameContainer {
-    display: flex;
-    gap: mvw(10);
-    align-items: center;
-    width: mvw(176);
-    height: mvw(22);
-  }
-  .brandNameContainer img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-  .brandNameLineOne {
-    font-size: mvw(20);
-    font-weight: 700;
-    color: var(--white);
-  }
-  .brandNameLineTwo {
-    font-size: mvw(20);
-    font-weight: 700;
-    color: var(--white);
-  }
-  .authButtons {
-    width: 100%;
-    gap: mvw(12);
-    height: auto;
-    height: mvw(54);
-  }
-  .loginButton,
-  .registerButton {
-    flex: none;
-    padding: mvw(12) mvw(16);
 
-    font-size: mvw(14);
-    font-weight: 500;
-    width: mvw(75);
-    border-radius: mvw(16);
-  }
-  .loginButton {
-    /* background: var(--violet); */
-    color: var(--white);
-    border-radius: mvw(16);
-  }
-  .registerButton {
-    background: var(--white);
-    color: var(--black);
-    width: mvw(130);
-  }
-  .footerTop {
-    /* margin-top: mvw(24); */
-  }
-  .divider {
-    width: 100%;
-    margin: mvw(40) 0;
-  }
   .footerMain {
-    flex-direction: column;
-    gap: mvw(24);
+    display: grid;
+    grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+    grid-template-areas:
+      "logo logo"
+      "contacts nav"
+      "copyright copyright";
+    gap: mvw(24) mvw(12);
+    align-items: start;
   }
+
+  .footerLeft {
+    display: contents;
+  }
+
   .footerLeftMain {
-    flex-direction: column;
-    gap: mvw(24);
+    display: contents;
   }
+
   .logoRightsBlock {
-    gap: mvw(16);
+    display: contents;
   }
+
   .logoIconLarge {
-    width: mvw(160);
-    height: mvw(160);
+    grid-area: logo;
+    justify-self: center;
+    width: mvw(120);
+    height: mvw(120);
   }
+
   .logoIconLarge svg {
-    width: mvw(160);
-    height: mvw(160);
+    width: mvw(120);
+    height: mvw(120);
   }
+
   .copyrightText {
-    font-size: mvw(18);
+    grid-area: copyright;
+    justify-self: center;
+    text-align: center;
+    width: 100%;
+    margin: mvw(8) 0 0;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(12);
+    line-height: 140%;
+    color: #a0a0a0;
   }
+
   .quickLinks {
-    padding-top: 0;
-    gap: mvw(12);
+    grid-area: nav;
+    gap: mvw(26);
+    align-self: start;
+    padding-top: mvw(34);
   }
+
   .quickLink {
-    font-size: mvw(18);
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(14);
+    line-height: 140%;
+    color: var(--bіliy);
+    padding: 0;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 0;
   }
+
+  .quickLink:hover {
+    text-decoration: none;
+    opacity: 0.85;
+  }
+
   .footerRight {
-    max-width: 100%;
-    gap: mvw(16);
+    grid-area: contacts;
+    max-width: none;
+    gap: mvw(12);
     padding-top: 0;
   }
+
   .findTitle {
-    font-size: mvw(28);
+    font-family: var(--font3);
+    font-weight: 400;
+    font-size: mvw(18);
+    line-height: 120%;
+    color: var(--bіliy);
+    margin: 0;
   }
+
   .findList {
-    gap: mvw(12);
-  }
-  .findItem {
-    font-size: mvw(16);
     gap: mvw(10);
   }
+
+  .findItem {
+    align-items: flex-start;
+    gap: mvw(8);
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: mvw(12);
+    line-height: 140%;
+    color: var(--bіliy);
+    text-decoration: none;
+  }
+
+  .findItem:hover {
+    text-decoration: none;
+    opacity: 0.85;
+  }
+
   .findIcon,
   .mailIcon {
-    width: mvw(20);
-    height: mvw(20);
-  }
-  .findIcon svg {
-    width: mvw(20);
-    height: mvw(20);
-  }
-  .mailIcon {
-    font-size: mvw(16);
-  }
-  .contactsContainer {
-    flex-direction: column;
-    gap: mvw(24);
-  }
-  .contactsSection {
-    width: 100%;
-    height: auto;
-  }
-  .sectionTitle {
-    font-size: mvw(14);
-    margin-bottom: mvw(20);
-    color: rgba(255, 254, 252, 0.56);
-  }
-  .contactInfo {
-    margin-bottom: mvw(20);
-  }
-  .phoneLink {
-    font-size: mvw(24);
-    margin-bottom: mvw(16);
-  }
-  .mailLink {
-    font-size: mvw(16);
-  }
-  .socialIcons {
-    gap: mvw(12);
-  }
-  .iconButton {
-    width: mvw(58);
-    height: mvw(58);
-    border-radius: mvw(16);
-    border: mvw(2) solid rgba(255, 254, 252, 0.3);
-    color: var(--white);
-  }
-  .iconButton svg {
-    width: mvw(24);
-    height: mvw(24);
-    color: var(--white);
-  }
-  .addressSection {
-    width: 100%;
-  }
-  .addressText {
-    font-size: mvw(18);
-    margin-bottom: mvw(8);
-  }
-  .scheduleItem {
-    font-size: mvw(14);
-    margin-bottom: mvw(12);
-    opacity: 0.6;
-  }
-  .navigationSections {
-    flex-direction: column;
-    gap: mvw(24);
-    width: 100%;
-  }
-  .navSection {
-    width: 100%;
-    height: auto;
-  }
-  .navItem {
-    margin-bottom: mvw(12);
-  }
-  .navLink {
-    font-size: mvw(14);
-    /* opacity: 0.6; */
-    color: var(--white);
+    width: mvw(18);
+    height: mvw(18);
+    margin-top: mvw(1);
   }
 
-  .navLink:hover,
-  .navLink:focus-visible {
-    opacity: 1;
-    text-decoration: underline;
-    text-decoration-skip-ink: none;
-  }
-  .footerBottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: mvw(16);
-    padding: mvw(24) 0 0;
-  }
-  .copyright {
-    font-size: mvw(14);
-    color: var(--white);
-    opacity: 1;
-    color: rgba(255, 254, 252, 0.4);
-  }
-  .paymentMethods {
-    width: 100%;
-    flex-wrap: wrap;
-    gap: mvw(12);
-    margin-bottom: 0;
-  }
-  .paymentMethod svg {
-    height: mvw(20);
-    width: mvw(45);
-    color: var(--white);
-    opacity: 0.8;
-  }
-  .credits {
-    font-size: mvw(14);
-    color: var(--white);
-    opacity: 1;
-
-    font-family: var(--font-family);
-    font-weight: 500;
-
-    line-height: 120%;
-    color: rgba(255, 254, 252, 0.4);
-  }
-  .creditsLink {
-    text-decoration: underline;
-    text-decoration-skip-ink: none;
-    color: rgba(255, 254, 252, 0.8);
+  .findIcon svg,
+  .mailIcon svg {
+    width: mvw(18);
+    height: mvw(18);
   }
 }

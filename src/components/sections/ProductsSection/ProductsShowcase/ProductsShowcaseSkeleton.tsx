@@ -7,39 +7,28 @@ import s from "./ProductsShowcase.module.css";
 
 const ProductsShowcaseSkeleton = () => {
   const renderProductCardSkeleton = (key: number) => (
-    <div key={key} className={`${s.slide} ${s.skeletonCardWrapper}`}>
-      <div className={productCardStyles.productCard}>
+    <div
+      key={key}
+      className={`${s.slide} ${s.skeletonCardWrapper} ${s.skeletonCard}`}
+    >
+      <div
+        className={`${productCardStyles.productCard} ${productCardStyles.productCardShowcaseDark} ${productCardStyles.productCardFluid}`}
+      >
         <div className={productCardStyles.cardImage}>
           <Skeleton className={s.skeletonCardImage} />
-          <div className={productCardStyles.badges}>
-            <Skeleton className={s.skeletonBadgesItem} />
-          </div>
-          <Skeleton
-            className={`${productCardStyles.favoriteBtn} ${s.skeletonFavoriteBtn}`}
-          />
         </div>
         <div className={productCardStyles.cardContent}>
           <div className={productCardStyles.ratingRow}>
             <Skeleton className={s.skeletonRatingRow} />
           </div>
           <div className={productCardStyles.namePricingBlock}>
-            <Skeleton
-              className={`${productCardStyles.productName} ${s.skeletonProductName}`}
-            />
+            <Skeleton className={s.skeletonProductName} />
             <div className={productCardStyles.pricing}>
               <Skeleton className={s.skeletonPricingFirst} />
-              <Skeleton className={s.skeletonPricingSecond} />
             </div>
           </div>
           <div className={productCardStyles.subscriptionBlock}>
-            <div className={productCardStyles.ratingPriceBlock}>
-              <div className={productCardStyles.subscriptionPrice}>
-                <div className={productCardStyles.subscriptionDiscount}>
-                  <Skeleton className={s.skeletonSubscriptionDiscount} />
-                </div>
-              </div>
-            </div>
-            <Skeleton className={`${productCardStyles.cartBtn} ${s.skeletonCartBtn}`} />
+            <Skeleton className={s.skeletonCartBtn} />
           </div>
         </div>
       </div>
@@ -47,36 +36,19 @@ const ProductsShowcaseSkeleton = () => {
   );
 
   return (
-    <section className={s.section}>
+    <section className={`${s.section} ${s.sectionMobile}`}>
       <div className={s.container}>
-        {/* Skeleton для заголовка */}
         <div className={s.header}>
           <div className={s.headerLeft}>
             <span className={s.skeletonTitle} aria-hidden="true" />
           </div>
-          <div className={s.headerRight}>
-            {/* Skeleton для навігації */}
-            <div className={s.skeletonHeaderRight}>
-              <span className={s.skeletonNavBtn} aria-hidden="true" />
-              <div className={s.skeletonDotNavigation}>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <span
-                    key={i}
-                    className={`${s.skeletonDot} ${
-                      i === 1 ? s.skeletonDotActive : ""
-                    }`}
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-              <span className={s.skeletonNavBtn} aria-hidden="true" />
-            </div>
-          </div>
         </div>
 
-        {/* Skeleton для карток */}
         <div className={s.coursesSlider}>
-          <div className={s.grid}>
+          <div className={s.skeletonSlider}>
+            {[1, 2, 3].map((i) => renderProductCardSkeleton(i))}
+          </div>
+          <div className={`${s.grid} ${s.skeletonGridDesktop}`}>
             {[1, 2, 3, 4, 5, 6].map((i) =>
               i === 6 ? (
                 <div key={i} className={s.slideDesktopOnly}>
@@ -89,7 +61,6 @@ const ProductsShowcaseSkeleton = () => {
           </div>
         </div>
 
-        {/* Skeleton для футера */}
         <div className={s.footer}>
           <span className={s.skeletonAllCoursesBtn} aria-hidden="true" />
         </div>

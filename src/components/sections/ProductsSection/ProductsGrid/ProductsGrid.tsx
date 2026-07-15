@@ -1,29 +1,28 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./ProductsGrid.module.css";
 import ProductCard from "../ProductCard/ProductCard";
 import { normalizeImageUrl } from "@/lib/imageUtils";
 import EmptyState from "@/components/ui/EmptyState";
-// Видалено fetchProductCategoriesFromWp - використовуємо категорії з продуктів
 
 interface Product {
   id: string | number;
-  slug?: string; // Slug продукту
+  slug?: string;
   name: string;
   type?: string;
   variations?: number[];
   price: string;
   regular_price?: string;
   sale_price?: string;
-  sku?: string; // Код товару (SKU)
+  sku?: string;
   images: Array<{ src: string; alt: string }>;
   categories: Array<{ id: number; name: string; slug: string }>;
   attributes: Array<{ name: string; options: string[] }>;
   on_sale?: boolean;
   featured?: boolean;
   stock_status?: string;
-  date?: string; // Дата створення з WordPress API
-  date_created?: string; // Дата створення з WooCommerce v3 API
+  date?: string;
+  date_created?: string;
   average_rating?: string;
   review_count?: number;
   is_purchasable?: boolean;
@@ -37,42 +36,49 @@ interface Product {
 
 interface ProductsGridProps {
   products: Product[];
-  isNoCertificationFilter?: boolean; // Чи застосований фільтр "Немає сертифікації"
-  selectedCertificationFilter?: string; // Вибраний фільтр сертифікації (78, 79, або undefined)
+  isNoCertificationFilter?: boolean;
+  selectedCertificationFilter?: string;
+  catalogDarkCards?: boolean;
 }
 
 export default function ProductsGrid({
   products,
   isNoCertificationFilter = false,
   selectedCertificationFilter,
+  catalogDarkCards = false,
 }: ProductsGridProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 1000px)");
+    const update = () => setIsMobile(mql.matches);
+    update();
+    if (mql.addEventListener) mql.addEventListener("change", update);
+    else mql.addListener(update);
+    return () => {
+      if (mql.removeEventListener) mql.removeEventListener("change", update);
+      else mql.removeListener(update);
+    };
+  }, []);
+
+  const useDarkCards = catalogDarkCards && isMobile;
+
   if (products.length === 0) {
     return <EmptyState variant="products" />;
   }
 
   return (
-    <div className={styles.productsGrid}>
+    <div
+      className={`${styles.productsGrid} ${
+        useDarkCards ? styles.productsGridDark : ""
+      }`}
+    >
       {products.map((p, index) => {
         const id = String(p.id);
         const priceNum = Number(p.price) || 0;
         const original = p.regular_price ? Number(p.regular_price) : undefined;
-
-        // Нормалізуємо image: обробляємо випадок, коли src може бути рядком-масивом
         const image = normalizeImageUrl(p.images?.[0]?.src);
-
         const storeProduct = p.wcProduct;
-
-        // тихий режим — без логів
-
-        // Лог для перевірки новинок
-        if (p.date_created) {
-          const createdDate = new Date(p.date_created);
-          const today = new Date();
-          const daysDiff = Math.floor(
-            (today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
-          );
-          // без додаткових логів та без використання isNew
-        }
 
         return (
           <ProductCard
@@ -90,8 +96,9 @@ export default function ProductsGrid({
             categories={p.categories}
             stockStatus={p.stock_status}
             dateCreated={p.date_created}
+            isFluid={useDarkCards}
+            showcaseDark={useDarkCards}
             wcProduct={{
-              // Для CUID-ід (clx/...) залишаємо 0 — для рейтингу/відгуків це не критично
               id:
                 typeof p.id === "number"
                   ? p.id
@@ -132,7 +139,7 @@ export default function ProductsGrid({
               sale_price: prod.sale_price || "",
               images: prod.images,
               sku: prod.sku,
-              meta_data: []
+              meta_data: [],
             }))}
             isNoCertificationFilter={isNoCertificationFilter}
           />

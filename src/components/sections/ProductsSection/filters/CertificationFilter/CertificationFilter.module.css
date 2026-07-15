@@ -125,6 +125,31 @@
   border: 1.33px solid var(--zoloto);
 }
 
+.catalogDropdownSection {
+  gap: 0;
+}
+
+.catalogDropdownList {
+  display: flex;
+  flex-direction: column;
+  gap: mvw(8);
+}
+
+.catalogDropdownItem {
+  border-radius: mvw(6);
+  padding: mvw(12) mvw(14);
+  font-family: var(--font-family);
+  font-size: mvw(14);
+  font-weight: 500;
+  line-height: 140%;
+  background: #37412e;
+  border: 1px solid transparent;
+}
+
+.catalogDropdownItem.categoryBlockBtnActive {
+  border-color: var(--zoloto);
+}
+
 .categoryBackBtn {
   margin-top: 16px;
 }
