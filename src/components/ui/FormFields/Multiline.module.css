@@ -135,13 +135,14 @@
   .textarea {
     min-height: mvw(120);
     padding: mvw(28) mvw(20) mvw(8) mvw(22);
-    border-radius: mvw(12);
+    border-radius: mvw(4);
+    border: mvw(1) solid var(--bіliy);
     font-size: mvw(14);
     line-height: 140%;
   }
 
   .textarea::placeholder {
-    color: rgba(14, 14, 14, 0.4);
+    color: transparent;
     font-size: mvw(14);
     font-family: var(--font-family);
     font-weight: 400;
@@ -155,7 +156,7 @@
     transform: translateY(-50%);
     font-size: mvw(14);
     line-height: 140%;
-    color: rgba(14, 14, 14, 0.4);
+    color: var(--bіliy);
     font-weight: 400;
     margin-bottom: 0;
   }

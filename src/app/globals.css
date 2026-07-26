@@ -17,12 +17,12 @@
   --fon: #222;
   --temno-zeleniy: #2e3b2e;
 
-  /* Шрифти (Montserrat і Inter підвантажуються в layout.tsx через next/font) */
-  --font-family: "Font Awesome 6 Free", sans-serif;
-  --second-family: var(--font-montserrat), sans-serif;
-  --third-family: var(--font-inter), sans-serif;
+  /* Шрифти (Montserrat, Inter, Roboto — layout.tsx через next/font) */
+  --font-family: var(--font-montserrat), "Montserrat", sans-serif;
+  --second-family: "Font Awesome 6 Free", sans-serif;
+  --third-family: var(--font-inter), "Inter", sans-serif;
   --font3: "Vinnytsia Serif", sans-serif;
-  --font4: "Font Awesome 5 Brands", sans-serif;
+  --font4: var(--font-roboto), "Roboto", sans-serif;
 
   /* Аліаси для сумісності з існуючим кодом */
   --black: var(--chorniy);

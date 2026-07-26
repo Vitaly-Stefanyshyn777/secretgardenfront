@@ -184,6 +184,12 @@ const ProductCard = ({
       ? formatPriceUtil(normalizedPrices.price)
       : null;
 
+  const formatShowcasePrice = (value: string | null | undefined) => {
+    if (!value) return showcaseDark ? "0 грн" : "0";
+    if (!showcaseDark) return value;
+    return value.replace(/₴/g, "").trim() + " грн";
+  };
+
   const showDiscount = totalDiscount > 0;
 
   const actualDiscountPercent = priceSellRegistry
@@ -382,43 +388,40 @@ const ProductCard = ({
       </div>
 
       <div className={styles.cardContent}>
-        {(showcaseDark ||
-          (Number.isFinite(ratingValue) && ratingCount >= 0 && wcProduct)) && (
+        {((showcaseDark && ratingCount > 0) ||
+          (!showcaseDark &&
+            Number.isFinite(ratingValue) &&
+            ratingCount >= 0 &&
+            wcProduct)) && (
           <div className={styles.ratingRow}>
-            {showcaseDark && ratingCount === 0 ? (
-              <span className={styles.ratingText}>Немає відгуків</span>
-            ) : (
-              <>
-                <div className={styles.stars}>
-                  {Array.from({ length: 5 }).map((_, i) => {
-                    const filled = i < filledStars;
-                    return (
-                      <svg
-                        key={i}
-                        viewBox="0 0 20 20"
-                        className={
-                          [
-                            styles.starIcon,
-                            filled ? styles.starFilled : styles.starEmpty,
-                          ]
-                            .filter(Boolean)
-                            .join(" ") || undefined
-                        }
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M10 1.66699L12.4722 6.67699L18 7.50033L14 11.3337L14.9444 16.8337L10 14.3337L5.05556 16.8337L6 11.3337L2 7.50033L7.52778 6.67699L10 1.66699Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    );
-                  })}
-                </div>
-                <span className={styles.ratingText}>
-                  {ratingCount} {getReviewsLabel(ratingCount)}
-                </span>
-              </>
-            )}
+            <div className={styles.stars}>
+              {Array.from({ length: 5 }).map((_, i) => {
+                const filled = i < filledStars;
+                return (
+                  <svg
+                    key={i}
+                    viewBox="0 0 20 20"
+                    className={
+                      [
+                        styles.starIcon,
+                        filled ? styles.starFilled : styles.starEmpty,
+                      ]
+                        .filter(Boolean)
+                        .join(" ") || undefined
+                    }
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 1.66699L12.4722 6.67699L18 7.50033L14 11.3337L14.9444 16.8337L10 14.3337L5.05556 16.8337L6 11.3337L2 7.50033L7.52778 6.67699L10 1.66699Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                );
+              })}
+            </div>
+            <span className={styles.ratingText}>
+              {ratingCount} {getReviewsLabel(ratingCount)}
+            </span>
           </div>
         )}
         {variantInfo ? (
@@ -442,13 +445,13 @@ const ProductCard = ({
               <>
                 <span className={styles.currentPrice}>
                   <span className={styles.currentPriceValue}>
-                    {formattedFinalPrice}
+                    {formatShowcasePrice(formattedFinalPrice)}
                   </span>
                 </span>
                 {shouldShowOldPrice && formattedRegularPrice && (
                   <span className={styles.originalPrice}>
                     <span className={styles.originalPriceValue}>
-                      {formattedRegularPrice}
+                      {formatShowcasePrice(formattedRegularPrice)}
                     </span>
                   </span>
                 )}
@@ -457,7 +460,9 @@ const ProductCard = ({
               <>
                 <span className={styles.currentPrice}>
                   <span className={styles.currentPriceValue}>
-                    {formattedCurrentPrice || formattedFinalPrice}
+                    {formatShowcasePrice(
+                      formattedCurrentPrice || formattedFinalPrice,
+                    )}
                   </span>
                 </span>
                 {formattedRegularPrice &&
@@ -465,7 +470,7 @@ const ProductCard = ({
                   formattedCurrentPrice !== formattedRegularPrice && (
                     <span className={styles.originalPrice}>
                       <span className={styles.originalPriceValue}>
-                        {formattedRegularPrice}
+                        {formatShowcasePrice(formattedRegularPrice)}
                       </span>
                     </span>
                   )}
@@ -485,47 +490,59 @@ const ProductCard = ({
               )}
             </div>
           </div>
-          <CartButton
-            id={id}
-            name={name}
-            slug={slug}
-            productType={effectiveProductType}
-            variations={effectiveVariations}
-            price={
-              normalizedPrices.salePrice ||
-              normalizedPrices.price ||
-              normalizedPrices.regularPrice ||
-              price ||
-              0
-            }
-            originalPrice={
-              normalizedPrices.regularPrice && normalizedPrices.regularPrice > 0
-                ? normalizedPrices.regularPrice
-                : originalPrice
-            }
-            regularPrice={
-              normalizedPrices.regularPrice && normalizedPrices.regularPrice > 0
-                ? normalizedPrices.regularPrice
-                : undefined
-            }
-            salePrice={
-              normalizedPrices.salePrice && normalizedPrices.salePrice > 0
-                ? normalizedPrices.salePrice
-                : undefined
-            }
-            image={imageUrl}
-            metaData={metaData}
-            removeFromFavoritesOnAddToCart={removeFromFavoritesOnAddToCart}
-            requireAuth={false}
-            showcaseCart={showcaseDark}
-            className={`${styles.cartBtn} ${
-              isNoCertificationProduct ? styles.cartBtnNoCert : ""
-            }`}
-            activeClassName={styles.cartBtnActive}
-          />
+          {showcaseDark && isOutOfStock ? (
+            <button
+              type="button"
+              className={styles.showcaseOutOfStockBtn}
+              disabled
+            >
+              Немає в наявності
+            </button>
+          ) : (
+            <CartButton
+              id={id}
+              name={name}
+              slug={slug}
+              productType={effectiveProductType}
+              variations={effectiveVariations}
+              price={
+                normalizedPrices.salePrice ||
+                normalizedPrices.price ||
+                normalizedPrices.regularPrice ||
+                price ||
+                0
+              }
+              originalPrice={
+                normalizedPrices.regularPrice &&
+                normalizedPrices.regularPrice > 0
+                  ? normalizedPrices.regularPrice
+                  : originalPrice
+              }
+              regularPrice={
+                normalizedPrices.regularPrice &&
+                normalizedPrices.regularPrice > 0
+                  ? normalizedPrices.regularPrice
+                  : undefined
+              }
+              salePrice={
+                normalizedPrices.salePrice && normalizedPrices.salePrice > 0
+                  ? normalizedPrices.salePrice
+                  : undefined
+              }
+              image={imageUrl}
+              metaData={metaData}
+              removeFromFavoritesOnAddToCart={removeFromFavoritesOnAddToCart}
+              requireAuth={false}
+              showcaseCart={showcaseDark}
+              className={`${styles.cartBtn} ${
+                isNoCertificationProduct ? styles.cartBtnNoCert : ""
+              }`}
+              activeClassName={styles.cartBtnActive}
+            />
+          )}
         </div>
 
-        {isOutOfStock && (
+        {isOutOfStock && !showcaseDark && (
           <div className={styles.outOfStockOverlay}>Немає в наявності</div>
         )}
       </div>

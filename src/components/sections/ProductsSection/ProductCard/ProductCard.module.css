@@ -545,30 +545,47 @@
   }
 
   .productCardShowcaseDark {
-    background: var(--chorniy);
-    border: 1px solid rgba(244, 244, 244, 0.35);
+    background: #121212;
+    border: 1px solid rgba(244, 244, 244, 0.55);
     border-radius: mvw(12);
     padding: mvw(8);
     min-height: auto;
     overflow: hidden;
+    gap: 0;
   }
 
   .productCardShowcaseDark .favoriteBtn {
-    display: none;
+    display: flex;
+    top: mvw(8);
+    right: mvw(8);
+    width: mvw(28);
+    height: mvw(28);
+    border-radius: 999px;
+    z-index: 3;
+  }
+
+  .productCardShowcaseDark .favoriteBtn svg {
+    width: mvw(14);
+    height: mvw(12);
   }
 
   .productCardShowcaseDark .cardImage {
     border-radius: mvw(8);
-    height: mvw(108);
+    height: mvw(139);
+    overflow: hidden;
+  }
+
+  .productCardShowcaseDark .productImage {
+    border-radius: mvw(8);
   }
 
   .productCardShowcaseDark .cardContent {
     padding: mvw(8) 0 0;
-    gap: mvw(6);
+    gap: mvw(8);
   }
 
   .productCardShowcaseDark .namePricingBlock {
-    gap: mvw(2);
+    gap: mvw(4);
   }
 
   .productCardShowcaseDark .productName {
@@ -581,10 +598,16 @@
 
   .productCardShowcaseDark .currentPrice {
     color: var(--bіliy);
-    font-family: var(--font3);
-    font-weight: 400;
-    font-size: mvw(18);
-    line-height: 120%;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(14);
+    line-height: 140%;
+  }
+
+  .productCardShowcaseDark .currentPriceValue {
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
   }
 
   .productCardShowcaseDark .ratingRow {
@@ -596,16 +619,20 @@
   }
 
   .productCardShowcaseDark .ratingText {
-    color: rgba(244, 244, 244, 0.7);
     font-family: var(--font-family);
-    font-weight: 400;
-    font-size: mvw(10);
-    line-height: 140%;
+    font-weight: 500;
+    font-size: mvw(11);
+    line-height: 120%;
+    color: var(--bіliy);
   }
 
   .productCardShowcaseDark .starIcon {
-    width: mvw(10);
-    height: mvw(10);
+    width: mvw(12);
+    height: mvw(12);
+  }
+
+  .productCardShowcaseDark .starFilled {
+    color: #f5c518;
   }
 
   .productCardShowcaseDark .starEmpty {
@@ -615,11 +642,46 @@
   .productCardShowcaseDark .subscriptionBlock {
     align-items: stretch;
     width: 100%;
-    gap: mvw(8);
-    margin-top: mvw(4);
+    gap: 0;
+    margin-top: 0;
+  }
+
+  .productCardShowcaseDark .subscriptionDiscount {
+    display: none;
   }
 
   .productCardShowcaseDark .pricing {
     margin-top: 0;
+  }
+
+  .productCardShowcaseDark.productCardOutOfStock .cardImage,
+  .productCardShowcaseDark.productCardOutOfStock .productImage {
+    filter: grayscale(1);
+    opacity: 1;
+  }
+
+  .productCardShowcaseDark.productCardOutOfStock .productName,
+  .productCardShowcaseDark.productCardOutOfStock .currentPrice {
+    opacity: 1;
+  }
+
+  .productCardShowcaseDark.productCardOutOfStock .cartBtn {
+    opacity: 1;
+  }
+
+  .showcaseOutOfStockBtn {
+    width: 100%;
+    min-height: mvw(40);
+    padding: mvw(8) mvw(12);
+    border: none;
+    border-radius: mvw(4);
+    background: rgba(244, 244, 244, 0.18);
+    font-family: var(--third-family);
+    font-weight: 500;
+    font-size: mvw(12);
+    line-height: 133%;
+    color: rgba(244, 244, 244, 0.45);
+    cursor: not-allowed;
+    text-align: center;
   }
 }

@@ -9,6 +9,7 @@ import { Inter_Tight } from "next/font/google";
 import { Manrope } from "next/font/google";
 import { Montserrat } from "next/font/google";
 import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import QueryProvider from "@/components/providers/QueryProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
 import { ThemeSettingsProvider } from "@/components/providers/ThemeSettingsProvider";
@@ -52,6 +53,12 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
 });
+const roboto = Roboto({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-roboto",
+  display: "swap",
+  weight: ["400", "500", "700"],
+});
 
 export default function RootLayout({
   children,
@@ -61,7 +68,7 @@ export default function RootLayout({
   return (
     <html
       lang="uk"
-      className={`${golosText.className} ${interTight.className} ${manrope.className} ${montserrat.variable} ${inter.variable}`}
+      className={`${golosText.className} ${interTight.className} ${manrope.className} ${montserrat.variable} ${inter.variable} ${roboto.variable}`}
     >
       <body>
         <QueryProvider>

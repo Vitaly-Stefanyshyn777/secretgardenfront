@@ -9,9 +9,9 @@ const ContactsPageSection = () => {
     <section className={s.section}>
       <div className={s.container}>
         <div className={s.topMainBlock}>
-          <div className={s.topInnerBlock}>
-            <h2 className={s.mainTitle}>Ми завжди на зв&apos;язку</h2>
-            <p className={s.topText}>
+          <div className={s.introBlock}>
+            <h2 className={s.introTitle}>Ми завжди на зв&apos;язку</h2>
+            <p className={s.introText}>
               підкажемо, допоможемо з вибором і зорієнтуємо в асортименті.
               <br />
               Також будемо раді бачити вас у нашому просторі за чашкою кави та в
@@ -19,13 +19,17 @@ const ContactsPageSection = () => {
             </p>
           </div>
 
-          <div className={s.topInnerBlock}>
-            <h2 className={s.mainTitleTwo}>Графік роботи</h2>
-            <p className={s.scheduleTime}>12:00 - 21:00</p>
-            <p className={s.scheduleText}>Без вихідних</p>
-            <p className={s.scheduleHint}>
-              В святкові дні години роботи можуть змінюватися
-            </p>
+          <div className={s.scheduleBlock}>
+            <div className={s.hoursGroup}>
+              <h2 className={s.scheduleTitle}>Графік роботи</h2>
+              <p className={s.hoursTime}>12:00 - 21:00</p>
+            </div>
+            <div className={s.daysGroup}>
+              <p className={s.daysOff}>Без вихідних</p>
+              <p className={s.holidayNote}>
+                В святкові дні години роботи можуть змінюватися
+              </p>
+            </div>
           </div>
         </div>
 

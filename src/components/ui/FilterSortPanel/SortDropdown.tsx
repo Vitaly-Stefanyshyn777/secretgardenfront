@@ -48,9 +48,27 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
     };
   }, [isOpen]);
 
-  const sortIconSrc =
-    iconVariant === "catalog" ? "/icons/Dropdown-2.svg" : "/icons/Dropdown.svg";
   const sortIconSize = 48;
+
+  const catalogSortIcon = (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={styles.catalogSortDropdownIcon}
+      aria-hidden
+    >
+      <path
+        d="M3.32143 12.75V5.25M5.89286 10.5L3.32143 12.75L0.75 10.5M10.1786 0.75V8.25M7.60714 3L10.1786 0.75L12.75 3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 
   return (
     <div
@@ -66,7 +84,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         className={
           variant === "itemsPerPage"
             ? styles.itemsPerPageButton
-            : `${styles.sortButton} ${styles.priceOrderButton}`
+            : styles.sortButton
         }
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -80,21 +98,21 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
               : styles.sortIconWrapper
           } ${isOpen && iconVariant !== "catalog" ? styles.iconRotated : ""}`}
         >
-          <Image
-            src={
-              variant === "itemsPerPage" ? "/icons/Dropdown.svg" : sortIconSrc
-            }
-            alt=""
-            width={variant === "itemsPerPage" ? 14 : sortIconSize}
-            height={variant === "itemsPerPage" ? 8 : sortIconSize}
-            className={
-              variant === "itemsPerPage"
-                ? styles.itemsPerPageDropdownIcon
-                : iconVariant === "catalog"
-                  ? styles.catalogSortDropdownIcon
+          {variant !== "itemsPerPage" && iconVariant === "catalog" ? (
+            catalogSortIcon
+          ) : (
+            <Image
+              src="/icons/Dropdown.svg"
+              alt=""
+              width={variant === "itemsPerPage" ? 14 : sortIconSize}
+              height={variant === "itemsPerPage" ? 8 : sortIconSize}
+              className={
+                variant === "itemsPerPage"
+                  ? styles.itemsPerPageDropdownIcon
                   : styles.sortDropdownIcon
-            }
-          />
+              }
+            />
+          )}
         </div>
       </button>
       {isOpen && (

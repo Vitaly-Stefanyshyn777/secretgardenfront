@@ -82,7 +82,7 @@
   .breadcrumbs {
     position: absolute;
     top: 0;
-    padding: mvw(95) mvw(26) mvw(15);
+    padding: mvw(58) mvw(16);
     z-index: 10;
     display: flex;
   }

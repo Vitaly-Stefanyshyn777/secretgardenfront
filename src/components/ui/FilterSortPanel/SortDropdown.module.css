@@ -17,6 +17,7 @@
   width: auto;
   height: auto;
   flex-shrink: 0; /* іконка не стискається при нестачі місця */
+  display: none; /* desktop: приховано */
 }
 
 .priceOrderButton {
@@ -29,12 +30,13 @@
   flex-shrink: 0;
   min-width: 48px;
   min-height: 48px;
+  color: var(--bіliy);
 
-  img {
-    width: 48px;
-    height: 48px;
+  img,
+  svg {
+    width: 14px;
+    height: 14px;
     flex-shrink: 0;
-    object-fit: contain;
   }
 }
 
@@ -140,7 +142,14 @@
 .itemsPerPageIconWrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   transition: transform 0.2s ease;
+}
+
+.sortIconWrapper:has(.sortDropdownIcon) {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
 }
 
 /* Спільний клас для обох іконок 48x48 (SortDropdown sort + PriceOrderDropdown) */
@@ -152,10 +161,10 @@
 }
 
 .catalogSortDropdownIcon {
-  width: 100%;
-  height: 100%;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
-  object-fit: contain;
+  color: var(--bіliy);
 }
 
 .itemsPerPageDropdownIcon {
@@ -215,6 +224,10 @@
 }
 
 @media (max-width: 1000px) {
+  .priceOrderContainer {
+    display: none;
+  }
+
   .itemsPerPageButton,
   .sortButton {
     gap: mvw(12);
@@ -229,6 +242,32 @@
   .sortIcon {
     width: mvw(14);
     height: mvw(8);
+  }
+
+  .sortDropdownIcon {
+    width: mvw(36);
+    height: mvw(36);
+  }
+
+  .sortIconWrapper:has(.sortDropdownIcon) {
+    width: mvw(36);
+    height: mvw(36);
+  }
+
+  .catalogSortDropdownIcon {
+    width: mvw(14);
+    height: mvw(14);
+  }
+
+  .priceOrderButton {
+    min-width: mvw(32);
+    min-height: mvw(32);
+
+    img,
+    svg {
+      width: mvw(14);
+      height: mvw(14);
+    }
   }
 
   .itemsPerPageDropdown {

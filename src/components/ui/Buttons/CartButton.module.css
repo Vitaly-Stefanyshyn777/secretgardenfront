@@ -107,8 +107,8 @@
   .showcaseRoot {
     width: 100% !important;
     min-height: mvw(40);
-    padding: mvw(10) mvw(12);
-    border-radius: mvw(8);
+    padding: mvw(8) mvw(12);
+    border-radius: mvw(4);
     background: #e2c69f !important;
     justify-content: center;
   }
@@ -132,10 +132,10 @@
   }
 
   .showcaseRoot .cartIconText {
-    font-family: var(--font-family);
+    font-family: var(--third-family);
     font-weight: 500;
     font-size: mvw(12);
-    line-height: 140%;
+    line-height: 133%;
     color: var(--chorniy);
   }
 

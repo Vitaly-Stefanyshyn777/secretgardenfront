@@ -42,7 +42,7 @@
   .submit {
     width: 100%;
     padding: mvw(16) mvw(24);
-    border-radius: mvw(16);
+    border-radius: mvw(8);
     font-size: mvw(16);
     background: var(--violet);
     color: var(--white);

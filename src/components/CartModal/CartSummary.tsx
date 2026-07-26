@@ -42,51 +42,25 @@ export default function CartSummary({
   };
   return (
     <div className={s.rightSummary}>
-      <div className={s.summaryBlock}>
-        {/* <div className={s.freeShipping}>
-          <span className={s.badgeIcon}>
-            <Image
-              src="/images/fi_2630085.png"
-              alt="Free shipping badge"
-              width={24}
-              height={24}
-            />
-          </span>
-          <span className={s.freeShippingText}>
-            {remainingToFree <= 0 ? (
-              "Доставка безкоштовна"
-            ) : (
-              <>
-            До безкоштовної доставки залишилось
-            <span className={s.amount}>
-              {" "}
-              {remainingToFree.toLocaleString()}
-            </span>
-            <span className={s.currency}> грн.</span>
-              </>
-            )}
-          </span>
-        </div> */}
-        {/* <div className={s.progressWrap}>
-          <div className={s.progressTrack}>
-            <div
-              className={s.progressBar}
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-        </div> */}
-
-        {hasItems ? (
-          <>
+      {hasItems ? (
+        <>
+          <div className={s.itemsScroll}>
             <CartItemsList items={items} />
+          </div>
 
+          <div className={s.summaryFooter}>
             <div className={s.summaryPromoBlock}>
               <div className={s.promoRow}>
+                <span className={s.promoLabel}>Промокод</span>
                 <InputField
-                  label="Промокод"
+                  id="cart-promo-code"
                   wrapperClassName={s.promoWrapper}
                   inputClassName={s.promoInput}
-                  labelClassName={s.promoLabel}
+                  icon={
+                    <span className={s.promoHelpIcon} aria-hidden="true">
+                      ?
+                    </span>
+                  }
                 />
               </div>
 
@@ -100,16 +74,12 @@ export default function CartSummary({
                     <span className={s.summaryCurrencyPrimary}>грн</span>
                   </span>
                 </div>
-                {discount > 0 && (
-                  <div className={s.summaryRow}>
-                    <span className={s.label}>Знижка:</span>
-                    <span className={s.value}>
-                      <span className={s.amountDiscount}>
-                        {discountPercent}%
-                      </span>
-                    </span>
-                  </div>
-                )}
+                <div className={s.summaryRow}>
+                  <span className={s.label}>Знижка:</span>
+                  <span className={s.value}>
+                    <span className={s.amountDiscount}>{discountPercent}%</span>
+                  </span>
+                </div>
                 <div className={s.summaryRow}>
                   <span className={s.labelStrong}>До сплати:</span>
                   <span className={s.totalValue}>
@@ -121,52 +91,54 @@ export default function CartSummary({
                 </div>
               </div>
             </div>
-          </>
-        ) : (
-          <div className={s.emptyCart}>
-            <div className={s.emptyCartIcon}>
-              <BasketIcons />
-            </div>
-            <div className={s.emptyCartTextCol}>
-              <p className={s.emptyCartTitle}>Ваш кошик порожній</p>
-              <p className={s.emptyCartSubtitle}>
-                Сподіваємось, ви знайдете те, що вам до душі
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
 
-      <div className={s.summaryBlock}>
-        {hasItems ? (
-          <div className={s.summaryButtons}>
-            <button
-              className={s.primary}
-              onClick={handleCheckoutClick}
-              disabled={!hasItems}
-            >
-              Оформити замовлення
-            </button>
-            <button className={s.secondary} onClick={onContinue}>
-              Додати інші товари
-            </button>
+            <div className={s.summaryButtons}>
+              <button
+                className={s.primary}
+                onClick={handleCheckoutClick}
+                disabled={!hasItems}
+              >
+                Оформити замовлення
+              </button>
+              <button className={s.secondary} onClick={onContinue}>
+                Додати інші товари
+              </button>
+            </div>
           </div>
-        ) : (
-          <div className={s.summaryButtons}>
-            <button
-              type="button"
-              className={s.emptyCartButton}
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  window.location.href = "/products";
-                }
-              }}
-            >
-              До каталогу
-            </button>
+        </>
+      ) : (
+        <>
+          <div className={s.summaryBlock}>
+            <div className={s.emptyCart}>
+              <div className={s.emptyCartIcon}>
+                <BasketIcons />
+              </div>
+              <div className={s.emptyCartTextCol}>
+                <p className={s.emptyCartTitle}>Ваш кошик порожній</p>
+                <p className={s.emptyCartSubtitle}>
+                  Сподіваємось, ви знайдете те, що вам до душі
+                </p>
+              </div>
+            </div>
           </div>
-        )}
-      </div>
+
+          <div className={s.summaryBlock}>
+            <div className={s.summaryButtons}>
+              <button
+                type="button"
+                className={s.emptyCartButton}
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.location.href = "/products";
+                  }
+                }}
+              >
+                До каталогу
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

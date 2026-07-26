@@ -194,7 +194,7 @@
   .blockPolicy {
     display: flex;
     flex-direction: column;
-    gap: mvw(20);
+    gap: mvw(12);
   }
 
   .mediaBlock {
@@ -205,7 +205,7 @@
 
   .contentBlock {
     order: 2;
-    gap: mvw(16);
+    gap: mvw(8);
     width: 100%;
   }
 
@@ -215,13 +215,14 @@
 
   .image {
     width: 100%;
-    height: mvw(200);
-    border-radius: mvw(11);
+    height: mvw(150);
+    border-radius: mvw(8);
   }
 
   .title {
     font-family: var(--font3);
-    font-size: mvw(28);
+    font-weight: 400;
+    font-size: mvw(24);
     line-height: 120%;
     text-align: center;
     color: var(--zoloto);
@@ -233,22 +234,27 @@
 
   .text {
     font-family: var(--font-family);
-    font-weight: 400;
-    font-size: mvw(14);
-    line-height: 150%;
-    color: #d1d1d1;
+    font-weight: 500;
+    font-size: mvw(13);
+    line-height: 120%;
+    color: var(--bіliy);
   }
 
   .actionButton {
     width: 100%;
-    min-height: mvw(48);
-    padding: mvw(12) mvw(18);
-    border-radius: mvw(8);
-    border-width: 1px;
-    font-family: var(--font-family);
-    font-size: mvw(14);
+
+    font-family: var(--third-family);
     font-weight: 500;
-    line-height: 140%;
+    font-size: mvw(14);
+    line-height: 143%;
+    color: var(--zoloto);
+
+    border: mvw(1) solid var(--zoloto);
+    border-radius: mvw(4);
+    padding: mvw(8) mvw(12);
+
+    min-width: mvw(36);
+    min-height: mvw(36);
   }
 
   .socialButtons {
@@ -262,14 +268,19 @@
     min-width: 0;
     width: 100%;
     min-height: mvw(48);
-    padding: mvw(12) mvw(18);
-    border-radius: mvw(8);
-    border-width: 1px;
-    font-family: var(--font-family);
-    font-size: mvw(14);
+
+    font-family: var(--third-family);
     font-weight: 500;
-    line-height: 140%;
-    gap: mvw(8);
+    font-size: mvw(14);
+    line-height: 143%;
+    color: var(--zoloto);
+
+    border: 1px solid var(--zoloto);
+    border-radius: mvw(4);
+    padding: mvw(8) mvw(12);
+
+    min-width: mvw(36);
+    min-height: mvw(36);
   }
 
   .socialButton svg {
@@ -279,17 +290,20 @@
   .supportButton {
     width: 100%;
     min-height: mvw(48);
-    padding: mvw(12) mvw(18);
-    border-radius: mvw(8);
+
     border: none;
     justify-content: center;
-    background: #e2c69f;
-    color: var(--chorniy);
-    font-family: var(--font-family);
-    font-size: mvw(14);
+    background: var(--zoloto);
+    font-family: var(--third-family);
     font-weight: 500;
-    line-height: 140%;
-    gap: 0;
+    font-size: mvw(14);
+    line-height: 143%;
+    color: var(--chorniy);
+
+    border-radius: mvw(4);
+    padding: mvw(8) mvw(12);
+
+    min-height: mvw(36);
   }
 
   .supportButton:hover {

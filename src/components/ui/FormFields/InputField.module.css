@@ -40,7 +40,7 @@
 
 .input {
   width: 100%;
-  padding: 15px;
+  padding: 15px 48px 15px 15px;
   border-radius: 12px;
   transition: all 0.2s;
   box-sizing: border-box;
@@ -167,10 +167,12 @@
   }
 
   .inputIcon {
-    left: mvw(16);
+    left: auto;
+    right: mvw(16);
     width: mvw(20);
     height: mvw(20);
     top: 50%;
+    transform: translateY(-50%);
   }
 
   .inputIcon svg {
@@ -179,41 +181,40 @@
   }
 
   .input {
-    padding: mvw(20) mvw(16) mvw(8) mvw(48);
-    border-radius: mvw(12);
     font-size: mvw(14);
     line-height: 140%;
     font-weight: 400;
+    border: mvw(1) solid var(--bіliy);
+    border-radius: mvw(4);
+    padding: mvw(22) mvw(48) mvw(8) mvw(16);
+    min-height: mvw(52);
   }
 
   .input::placeholder {
-    color: rgba(14, 14, 14, 0.4);
-    font-size: mvw(14);
-    font-family: var(--font-family);
-    font-weight: 400;
-    line-height: 140%;
+    color: transparent;
   }
 
   .label {
     position: absolute;
-    left: mvw(48);
+    left: mvw(16);
     top: 50%;
     transform: translateY(-50%);
     font-size: mvw(14);
     line-height: 140%;
-    color: rgba(14, 14, 14, 0.4);
     font-weight: 400;
   }
 
   .input:focus + .label,
   .input:not(:placeholder-shown) + .label {
-    top: mvw(8);
+    top: mvw(6);
     transform: translateY(0);
     font-size: mvw(11);
+    line-height: 120%;
   }
 
   .inputBlock {
     display: block;
+    position: relative;
   }
 
   .errorIcon {

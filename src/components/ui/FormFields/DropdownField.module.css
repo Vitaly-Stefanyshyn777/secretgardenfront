@@ -185,12 +185,14 @@
   }
 
   .selectButton {
-    padding: mvw(18) mvw(16);
-    border-radius: mvw(12);
+    padding: mvw(22) mvw(48) mvw(8) mvw(16);
+    border: mvw(1) solid var(--bіliy);
+    border-radius: mvw(4);
     font-size: mvw(14);
     line-height: 140%;
     height: auto;
-    min-height: mvw(44);
+    min-height: mvw(52);
+    box-sizing: border-box;
   }
 
   .selectText {
@@ -204,7 +206,7 @@
 
   .dropdown {
     margin-top: mvw(4);
-    border-radius: mvw(12);
+    border-radius: mvw(4);
     max-height: mvw(220);
   }
 

@@ -11,6 +11,29 @@
   align-items: center;
 }
 
+.desktopOnly {
+  display: flex;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+.filterBarDesktop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+.filterBarMobile {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .filterSection {
   display: flex;
   align-items: center;
@@ -118,9 +141,9 @@
 }
 
 .catalogMobileFilterBar {
-  display: flex;
+  display: none;
   align-items: stretch;
-  gap: mvw(10);
+  gap: mvw(13);
   width: 100%;
 }
 
@@ -147,11 +170,16 @@
 .catalogCategoriesLabel {
   flex: 1;
   text-align: center;
+  font-family: var(--third-family);
+  font-weight: 500;
+  font-size: mvw(12);
+  line-height: 133%;
+  color: var(--zoloto);
 }
 
 .catalogCategoriesChevron {
   position: absolute;
-  right: mvw(14);
+  right: mvw(70);
   top: 50%;
   transform: translateY(-50%);
   width: mvw(12);
@@ -165,6 +193,26 @@
 }
 
 @media (max-width: 1000px) {
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: flex;
+  }
+
+  .filterBarDesktop {
+    display: none;
+  }
+
+  .filterBarMobile {
+    display: flex;
+  }
+
+  .catalogMobileFilterBar {
+    display: flex;
+  }
+
   .catalogSortIconBtn button {
     border: 1px solid var(--bіliy);
     border-radius: mvw(6);
@@ -200,9 +248,6 @@
     padding: mvw(24) 0;
     gap: 0;
     justify-content: space-between;
-  }
-  .filterSection {
-    /* display: none; */
   }
   .sortSection {
     gap: 0;

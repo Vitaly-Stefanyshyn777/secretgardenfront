@@ -762,10 +762,14 @@
   font-family: var(--third-family);
   font-weight: 400;
   font-size: 16px;
-  line-height: 150%;
+  line-height: 1;
   color: var(--bіliy);
   min-width: 20px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 .removeBtn {
   color: var(--chervoniy);
@@ -1290,19 +1294,20 @@
   .textarea {
     min-height: mvw(140);
     padding: mvw(16) mvw(16) mvw(16) mvw(20);
-    border-radius: mvw(12);
+    border-radius: mvw(4);
     font-size: mvw(14);
   }
 
   .primary {
     padding: mvw(14) mvw(20);
-    border-radius: mvw(16);
+    border-radius: mvw(4);
+    border: mvw(1) solid var(--zoloto);
     font-size: mvw(14);
   }
 
   .primaryWide {
     padding: mvw(18) mvw(24);
-    border-radius: mvw(18);
+    border-radius: mvw(4);
     font-size: mvw(14);
     font-weight: 600;
   }
@@ -1311,7 +1316,7 @@
     width: 100%;
     height: mvw(48);
     padding: mvw(14) mvw(16);
-    border-radius: mvw(12);
+    border-radius: mvw(4);
   }
 
   .radio {
@@ -1518,10 +1523,34 @@
     height: mvw(12);
   }
 
+  .qtyBlock {
+    border: 1px solid rgba(244, 244, 244, 0.55);
+    border-radius: mvw(4);
+    padding: 0 mvw(10);
+    width: auto;
+    min-width: mvw(36);
+    height: mvw(28);
+    min-height: mvw(28);
+    max-height: mvw(28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
   .qty {
+    font-family: var(--font-family);
+    font-weight: 500;
     font-size: mvw(14);
-    min-width: mvw(24);
+    line-height: 1;
+    min-width: mvw(16);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    color: var(--bіliy);
   }
 
   .removeBtn {

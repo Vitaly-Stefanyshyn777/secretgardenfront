@@ -83,88 +83,13 @@
   display: flex;
   flex-direction: row;
   gap: 40px;
-  align-items: flex-start;
+  align-items: start;
 }
 
 .productLeftColumn {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%;
-  max-width: 540px;
-  flex-shrink: 0;
-}
-
-.productReviewsWrap {
-  width: 100%;
-}
-
-.priceSection {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-}
-
-.originalPrice {
-  font-family: var(--second-family);
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 120%;
-  color: var(--temno-sіriy);
-  text-decoration: line-through;
-}
-
-.productPageOutOfStock {
-  position: relative;
-}
-
-.productPageOutOfStock .productContainer,
-.productPageOutOfStock .productContainer * {
-  opacity: 0.6;
-}
-
-.outOfStockOverlay {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 68, 68, 0.9);
-  z-index: 1000;
-  pointer-events: none;
-  border-radius: 12px;
-  padding: 24px 48px;
-  white-space: nowrap;
-  text-align: center;
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 140%;
-  color: var(--white);
-}
-
-.mainImageNavPrev,
-.mainImageNavNext {
-  display: none;
-}
-
-.characteristicsToggleBtn {
-  display: none;
-}
-
-.mobileExpandableContentHidden {
-  display: none;
-}
-
-.leaveReviewBtn,
-.leaveReviewBackBtn {
-  display: none;
-}
-
-.leaveReviewHeader,
-.leaveReviewBackArrow,
-.leaveReviewHeaderTitle,
-.leaveReviewHeaderSpacer {
-  display: none;
 }
 
 .stockInfo {
@@ -709,9 +634,12 @@
 
 .imageSection {
   display: flex;
-  flex-direction: row;
   gap: 40px;
   width: 100%;
+  /* max-width: 540px; */
+  /* max-height: 400px; */
+  /* position: sticky;
+  top: 150px; */
   align-self: flex-start;
 }
 
@@ -784,11 +712,12 @@
 
 .mainImage {
   flex: 1;
-  min-width: 0;
   border-radius: 12px;
   overflow: hidden;
+
+  width: 700px;
+  height: 700px;
   position: relative;
-  aspect-ratio: 1 / 1;
 }
 
 .productImage {
@@ -796,7 +725,9 @@
   height: 100%;
   object-fit: cover;
   border-radius: 24px;
-  display: block;
+  position: sticky;
+  top: 0;
+  height: 800px;
 }
 .productDescriptionBlock {
   width: 100%;
@@ -1469,50 +1400,6 @@
   display: none;
 }
 
-@media (max-width: 1000px) {
-  .skeletonPositionRelative {
-    position: relative;
-  }
-
-  .skeletonMainImage {
-    max-width: 100%;
-    min-height: mvw(300);
-  }
-
-  .skeletonBadgesAbsolute {
-    top: mvw(8);
-    left: mvw(8);
-    gap: mvw(4);
-    z-index: 2;
-  }
-
-  .skeletonMarginBottom16 {
-    margin-bottom: mvw(12);
-  }
-
-  .skeletonMarginBottom24 {
-    margin-bottom: mvw(16);
-
-    height: mvw(56);
-  }
-
-  .skeletonMarginBottom12 {
-    margin-bottom: mvw(8);
-  }
-
-  .skeletonMarginBottom8 {
-    margin-bottom: mvw(6);
-  }
-
-  .skeletonMarginRight8 {
-    margin-right: mvw(6);
-  }
-
-  .skeletonFlexColumn {
-    display: flex;
-    flex-direction: column;
-  }
-}
 
 .subscriptionOffer {
   display: flex;
@@ -2373,6 +2260,81 @@
   color: white;
 }
 
+/* Mobile-only hooks (hidden on desktop; enabled in @media) */
+.productReviewsWrap {
+  width: 100%;
+}
+
+.mainImageNavPrev,
+.mainImageNavNext {
+  display: none;
+}
+
+.characteristicsToggleBtn {
+  display: none;
+}
+
+.mobileExpandableContentHidden {
+  display: none;
+}
+
+.leaveReviewBtn,
+.leaveReviewBackBtn {
+  display: none;
+}
+
+.leaveReviewHeader,
+.leaveReviewBackArrow,
+.leaveReviewHeaderTitle,
+.leaveReviewHeaderSpacer {
+  display: none;
+}
+
+
+@media (max-width: 1000px) {
+  .skeletonPositionRelative {
+    position: relative;
+  }
+
+  .skeletonMainImage {
+    max-width: 100%;
+    min-height: mvw(300);
+  }
+
+  .skeletonBadgesAbsolute {
+    top: mvw(8);
+    left: mvw(8);
+    gap: mvw(4);
+    z-index: 2;
+  }
+
+  .skeletonMarginBottom16 {
+    margin-bottom: mvw(12);
+  }
+
+  .skeletonMarginBottom24 {
+    margin-bottom: mvw(16);
+
+    height: mvw(56);
+  }
+
+  .skeletonMarginBottom12 {
+    margin-bottom: mvw(8);
+  }
+
+  .skeletonMarginBottom8 {
+    margin-bottom: mvw(6);
+  }
+
+  .skeletonMarginRight8 {
+    margin-right: mvw(6);
+  }
+
+  .skeletonFlexColumn {
+    display: flex;
+    flex-direction: column;
+  }
+}
 @media (max-width: 1000px) {
   .productPage {
     padding: mvw(108) mvw(16) mvw(48);

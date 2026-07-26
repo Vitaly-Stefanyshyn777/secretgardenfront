@@ -10,11 +10,21 @@ import { A11y, Autoplay } from "swiper/modules";
 import type { Swiper as SwiperClass } from "swiper";
 import "swiper/css";
 
+const MOBILE_BREAKPOINT = 1000;
+
+const getSlideImage = (slide: HeroSlideItem, isMobile: boolean) => {
+  if (isMobile && slide.mobileImage) {
+    return slide.mobileImage;
+  }
+  return slide.image;
+};
+
 const HeroSection = () => {
   const slides: HeroSlideItem[] = HERO_SLIDES;
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [isManualPagination, setIsManualPagination] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const isManualChangeRef = React.useRef(false);
   const manualAnimationTimerRef = React.useRef<number | null>(null);
 
@@ -29,7 +39,13 @@ const HeroSection = () => {
   };
 
   React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
     return () => {
+      window.removeEventListener("resize", checkMobile);
       if (manualAnimationTimerRef.current) {
         window.clearTimeout(manualAnimationTimerRef.current);
       }
@@ -72,7 +88,9 @@ const HeroSection = () => {
             <SwiperSlide key={slide.id}>
               <div
                 className={s.heroBannerSlide}
-                style={{ backgroundImage: `url(${slide.image})` }}
+                style={{
+                  backgroundImage: `url("${getSlideImage(slide, isMobile)}")`,
+                }}
               />
             </SwiperSlide>
           ))}

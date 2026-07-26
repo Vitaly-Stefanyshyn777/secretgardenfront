@@ -1034,7 +1034,7 @@
 
 .skeletonInputInner {
   position: absolute;
-  left: 48px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   width: 100px;
@@ -1044,7 +1044,7 @@
 
 .skeletonInputIcon {
   position: absolute;
-  left: 16px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
   width: 20px;
@@ -1721,7 +1721,8 @@
   }
 
   .inputIconWrapper {
-    left: mvw(16);
+    left: auto;
+    right: mvw(16);
     width: mvw(20);
     height: mvw(20);
     top: 50%;
@@ -1734,7 +1735,7 @@
   }
 
   .input {
-    padding: mvw(20) mvw(16) mvw(8) mvw(48);
+    padding: mvw(20) mvw(48) mvw(8) mvw(16);
     border-radius: mvw(12);
     font-size: mvw(14);
     line-height: 140%;
@@ -1742,7 +1743,7 @@
   }
 
   .select {
-    padding: mvw(20) mvw(16) mvw(8) mvw(48);
+    padding: mvw(20) mvw(48) mvw(8) mvw(16);
     border-radius: mvw(12);
     font-size: mvw(14);
     line-height: 140%;
@@ -1752,7 +1753,7 @@
   }
 
   .customSelectButton {
-    padding: mvw(20) mvw(16) mvw(8) mvw(48);
+    padding: mvw(20) mvw(48) mvw(8) mvw(16);
     border-radius: mvw(12);
     font-size: mvw(14);
     line-height: 140%;
@@ -1929,7 +1930,7 @@
     align-items: center;
     justify-content: center;
 
-    border: mvw(2) solid var(--violet);
+    border: mvw(2) solid var(--zoloto);
   }
 
   .bottomActions {
@@ -2394,5 +2395,47 @@
     border-radius: mvw(12);
     font-size: mvw(14);
     height: auto;
+  }
+
+  .skeletonTitle {
+    width: mvw(220);
+    height: mvw(34);
+  }
+
+  .skeletonInput {
+    height: mvw(52);
+    border-radius: mvw(4);
+  }
+
+  .skeletonInputInner {
+    left: mvw(16);
+    right: auto;
+    width: mvw(100);
+    height: mvw(14);
+  }
+
+  .skeletonInputIcon {
+    left: auto;
+    right: mvw(16);
+    width: mvw(20);
+    height: mvw(20);
+  }
+
+  .skeletonButton {
+    width: 100%;
+    height: mvw(48);
+    border-radius: mvw(4);
+  }
+
+  .skeletonClearButton {
+    width: 100%;
+    height: mvw(48);
+    border-radius: mvw(4);
+  }
+
+  .bottomActions {
+    flex-direction: column;
+    gap: mvw(12);
+    width: 100%;
   }
 }

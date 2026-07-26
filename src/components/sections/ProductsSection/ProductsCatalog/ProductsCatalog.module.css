@@ -89,7 +89,7 @@
   }
 
   .catalogContentBlock {
-    padding: mvw(108) mvw(16) mvw(80);
+    padding: mvw(70) mvw(16) mvw(80);
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -112,7 +112,7 @@
   }
 
   .catalogRightColumn {
-    gap: mvw(16);
+    gap: mvw(24);
     width: 100%;
     max-width: 100%;
   }
@@ -127,7 +127,8 @@
 
   .catalogTitle {
     font-family: var(--font3);
-    font-size: mvw(28);
+    font-weight: 400;
+    font-size: mvw(24);
     line-height: 120%;
     color: var(--bіliy);
     text-align: right;

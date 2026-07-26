@@ -146,8 +146,8 @@ function CartItemRow({ item }: CartItemRowProps) {
               <div className={s.prices}>
                 <span className={s.currentPrice}>
                   <span className={s.currentPriceValue}>
-                    {finalPrice.toLocaleString()}
-                  </span>
+                    {(finalPrice * item.quantity).toLocaleString()}
+                  </span>{" "}
                   <span className={s.priceCurrency}>грн</span>
                 </span>
                 {shouldDisplayOldPrice && originalPrice > finalPrice && (

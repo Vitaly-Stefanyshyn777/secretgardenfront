@@ -5,63 +5,91 @@ import styles from "./PersonalData.module.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const PersonalDataSkeleton: React.FC = () => {
+  const renderInputSkeleton = () => (
+    <div className={styles.skeletonInput}>
+      <Skeleton
+        className={styles.skeletonInputField}
+        borderRadius={4}
+        height="100%"
+        width="100%"
+      />
+      <div className={styles.skeletonInputIcon}>
+        <Skeleton circle width="100%" height="100%" />
+      </div>
+    </div>
+  );
+
   return (
     <div className={styles.personalData}>
-      {/* Header Skeleton */}
       <div className={styles.header}>
-        <Skeleton width={300} height={38} className={styles.title} />
-        <Skeleton width="80%" height={22} count={2} className={styles.description} />
+        <Skeleton className={styles.skeletonTitle} borderRadius={8} />
+        <Skeleton className={styles.skeletonDescription} borderRadius={6} />
+        <Skeleton className={styles.skeletonDescription} borderRadius={6} />
       </div>
 
       <div className={styles.divider}></div>
 
       <div className={styles.form}>
-        {/* Profile Photo Section Skeleton */}
         <div className={styles.section}>
           <div className={styles.profilePhotoSection}>
             <div className={styles.profilePhotoBlock}>
-              <Skeleton circle width={80} height={80} className={styles.profilePhoto} />
+              <Skeleton
+                circle
+                className={styles.skeletonAvatar}
+                width="100%"
+                height="100%"
+              />
               <div className={styles.sectionHeader}>
-                <Skeleton width={150} height={24} className={styles.sectionTitle} />
-                <Skeleton width={120} height={20} className={styles.fileInfo} />
+                <Skeleton
+                  className={styles.skeletonSectionTitle}
+                  borderRadius={6}
+                />
+                <Skeleton className={styles.skeletonFileInfo} borderRadius={6} />
               </div>
             </div>
             <div className={styles.photoActions}>
-              <Skeleton width={150} height={48} borderRadius={15} />
-              <Skeleton width={140} height={48} borderRadius={15} />
+              <Skeleton className={styles.skeletonPhotoBtn} borderRadius={15} />
+              <Skeleton className={styles.skeletonPhotoBtn} borderRadius={15} />
             </div>
           </div>
         </div>
 
         <div className={styles.divider}></div>
 
-        {/* Username Section Skeleton */}
         <div className={styles.section}>
-          <Skeleton width={200} height={24} style={{ marginBottom: "12px" }} className={styles.sectionTitle} />
+          <Skeleton
+            className={styles.skeletonSectionTitle}
+            borderRadius={6}
+            style={{ marginBottom: "12px" }}
+          />
           <div className={styles.inputGroup}>
-            <Skeleton width="100%" height={48} borderRadius={8} />
-            <Skeleton width="100%" height={48} borderRadius={8} />
+            {renderInputSkeleton()}
+            {renderInputSkeleton()}
           </div>
         </div>
 
         <div className={styles.divider}></div>
 
-        {/* Contacts Section Skeleton */}
         <div className={styles.section}>
-          <Skeleton width={200} height={24} style={{ marginBottom: "12px" }} className={styles.sectionTitle} />
+          <Skeleton
+            className={styles.skeletonSectionTitle}
+            borderRadius={6}
+            style={{ marginBottom: "12px" }}
+          />
           <div className={styles.inputGroup}>
-            <Skeleton width="100%" height={48} borderRadius={8} />
-            <Skeleton width="100%" height={48} borderRadius={8} />
-          </div>
-          <div className={styles.inputGroup} style={{ marginTop: "12px" }}>
-            <Skeleton width="100%" height={48} borderRadius={8} />
-            <Skeleton width="100%" height={48} borderRadius={8} />
+            <div className={styles.wrapperBlock}>
+              {renderInputSkeleton()}
+              {renderInputSkeleton()}
+            </div>
+            <div className={styles.wrapperBlock}>
+              {renderInputSkeleton()}
+              {renderInputSkeleton()}
+            </div>
           </div>
         </div>
 
-        {/* Save Button Skeleton */}
         <div className={styles.saveSection}>
-          <Skeleton width={200} height={48} borderRadius={8} className={styles.saveBtn} />
+          <Skeleton className={styles.skeletonSaveBtn} borderRadius={8} />
         </div>
       </div>
     </div>
@@ -69,4 +97,3 @@ const PersonalDataSkeleton: React.FC = () => {
 };
 
 export default PersonalDataSkeleton;
-

@@ -575,18 +575,17 @@
   .heroTitle {
     font-family: var(--font3);
     font-weight: 400;
-    font-size: mvw(34);
+    font-size: mvw(24);
     line-height: 120%;
-    text-transform: none;
     color: var(--zoloto);
   }
 
   .heroDescription {
-    font-family: var(--second-family);
-    font-size: mvw(14);
-    line-height: 140%;
-    color: var(--bіliy);
+    font-family: var(--font-family);
     font-weight: 500;
+    font-size: mvw(11);
+    line-height: 120%;
+    color: var(--bіliy);
   }
 
   .heroActions {
@@ -690,7 +689,7 @@
   .heroNavigation {
     position: absolute;
     left: 50%;
-    bottom: mvw(20);
+    bottom: mvw(12);
     top: auto;
     transform: translateX(-50%);
     height: auto;
@@ -702,7 +701,7 @@
 
   .heroNavigation .navDots {
     display: flex;
-    gap: mvw(10);
+    gap: mvw(8);
     padding: 0;
   }
 

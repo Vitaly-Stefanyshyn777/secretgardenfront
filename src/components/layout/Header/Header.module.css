@@ -917,18 +917,18 @@
   }
 
   .mobileHeader {
-    padding: mvw(8) mvw(16);
+    padding: mvw(10) mvw(16);
     background: var(--chorniy);
   }
 
   .headerTrainerProfileBlock {
-    justify-content: flex-start;
     align-items: center;
     gap: mvw(10);
     position: relative;
     border-radius: 0;
     width: 100%;
     max-width: 100%;
+    justify-content: space-between;
   }
 
   .mobileBrand {
@@ -945,8 +945,8 @@
   .mobileBrandIcon {
     display: inline-flex;
     flex-shrink: 0;
-    width: mvw(28);
-    height: mvw(28);
+    width: mvw(25);
+    height: mvw(25);
   }
 
   .mobileBrandIcon svg {
@@ -960,6 +960,7 @@
     flex: 0 1 auto;
     width: mvw(108);
     max-width: mvw(108);
+    height: mvw(20);
   }
 
   .mobileBrandText svg {
@@ -970,21 +971,29 @@
   .mobileSearch {
     display: flex;
     align-items: center;
-    gap: mvw(6);
-    flex: 0 0 mvw(110);
-    width: mvw(110);
-    height: mvw(36);
-    margin-left: auto;
-    padding: 0 mvw(10);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: mvw(6);
+    gap: mvw(8);
+    width: 100%;
+    max-width: mvw(163);
+    height: mvw(28);
+
     background: transparent;
+
+    border: mvw(1) solid var(--bіliy);
+    border-radius: mvw(4);
+    padding: mvw(8);
   }
 
   .mobileSearchIcon {
     display: inline-flex;
     flex-shrink: 0;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--bіliy);
+    fill: var(--bіliy);
+    width: mvw(12);
+    height: mvw(12);
+    svg {
+      width: mvw(12);
+      height: mvw(12);
+    }
   }
 
   .mobileSearchInput {
@@ -995,11 +1004,11 @@
     background: transparent;
     padding: 0;
     margin: 0;
-    font-family: var(--third-family);
-    font-weight: 400;
-    font-size: mvw(12);
-    line-height: 1;
-    color: var(--bіliy);
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(13);
+    line-height: 120%;
+    color: rgba(244, 244, 244, 0.4);
   }
 
   .mobileSearchInput::placeholder {

@@ -16,16 +16,36 @@
   border: 1px solid var(--zoloto);
   background: var(--fon);
   gap: 40px;
-  width: auto;
-  flex: 0 0 auto;
   height: auto;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   border-radius: 20px;
   padding: 52px;
-  width: 1600px;
+  box-sizing: border-box;
+  transition:
+    width 0.25s ease,
+    min-width 0.25s ease,
+    max-width 0.25s ease,
+    min-height 0.25s ease;
+}
+
+/* Порожній стан — компактний min */
+.modalEmpty {
+  width: 704px;
+  min-width: 560px;
+  max-width: 842px;
+  min-height: 520px;
+  max-height: 90vh;
+}
+
+/* З товарами — розтягується до max */
+.modalFilled {
+  width: min(1600px, 83.333vw);
+  min-width: 900px;
+  max-width: 1600px;
   min-height: 700px;
+  max-height: 90vh;
 }
 .topbarListBlock {
   display: flex;
@@ -87,6 +107,9 @@
   overflow: hidden;
   flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .desktopSliderWrap :global(.swiper) {
@@ -193,14 +216,80 @@
 .remove:hover {
   background: rgba(217, 186, 136, 0.25);
 }
-.empty {
-  padding: 24px;
+.emptyCart {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
   text-align: center;
+  flex: 1;
+}
+
+.emptyCartIcon {
+  width: 350px;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.emptyCartIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.emptyCartTextCol {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  align-items: center;
+  max-width: 420px;
+}
+
+.emptyCartTitle {
+  margin: 0;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 120%;
   color: var(--bіliy);
 }
 
-.emptyState {
-  display: none;
+.emptyCartSubtitle {
+  margin: 0;
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 120%;
+  color: var(--bіliy);
+}
+
+.emptyCartButton {
+  display: block;
+  margin: 0 auto;
+  border-radius: 4px;
+  padding: 12px 24px;
+  min-width: 180px;
+  border: none;
+  background: var(--zoloto);
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 140%;
+  color: var(--chorniy);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 100%;
+}
+
+.emptyCartButton:hover {
+  background: #d49e50;
 }
 
 .footer {
@@ -345,6 +434,7 @@
 
   .modal {
     width: 100%;
+    min-width: 0;
     max-width: 100%;
     min-height: 100%;
     height: 100%;
@@ -356,6 +446,20 @@
     max-height: 100%;
     display: flex;
     flex-direction: column;
+  }
+
+  .modalEmpty,
+  .modalFilled {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+  }
+
+  .modalEmpty {
+    gap: 0;
+    padding: mvw(72) mvw(16) mvw(32);
   }
 
   .topbarListBlock {
@@ -370,6 +474,11 @@
     scrollbar-width: none;
   }
 
+  .topbarListBlockEmpty {
+    gap: 0;
+    overflow: hidden;
+  }
+
   .topbarListBlock::-webkit-scrollbar {
     display: none;
   }
@@ -381,6 +490,7 @@
     position: relative;
     gap: 0;
     width: 100%;
+    flex-shrink: 0;
   }
 
   .headerActions {
@@ -393,11 +503,9 @@
   .topbarTitle {
     font-family: var(--font3);
     font-weight: 400;
-    font-size: mvw(28);
+    font-size: mvw(24);
     line-height: 120%;
     color: var(--bіliy);
-    text-align: center;
-    width: 100%;
   }
 
   .close {
@@ -417,6 +525,14 @@
     overflow: visible;
     flex: 1;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobileSliderWrapEmpty {
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
 
   .mobileSlideGrid {
@@ -424,83 +540,96 @@
     grid-template-columns: repeat(2, 1fr);
     gap: mvw(12);
     width: 100%;
+    align-items: stretch;
   }
 
   .mobileCardWrapper {
     width: 100%;
+    min-width: 0;
   }
 
-  .emptyState {
+  .mobileCardWrapper :global(a) {
+    height: 100%;
+  }
+
+  .emptyCart {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: mvw(24);
+    gap: mvw(40);
     width: 100%;
-    flex: 1;
-    padding: mvw(40) 0;
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 0;
     text-align: center;
   }
 
-  .emptyIconWrap {
-    width: mvw(200);
-    height: mvw(200);
-    border-radius: 50%;
-    background: rgba(115, 168, 113, 0.6);
+  .emptyCartIcon {
+    width: mvw(207);
+    height: mvw(207);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
 
-  .emptyIconWrap svg {
-    width: mvw(140);
-    height: mvw(140);
+  .desktopSliderWrap {
+    gap: mvw(0);
   }
 
-  .emptyTextCol {
+  .emptyCartIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .emptyCartTextCol {
     display: flex;
     flex-direction: column;
     gap: mvw(8);
     align-items: center;
-    max-width: mvw(280);
+    max-width: mvw(300);
   }
 
-  .emptyTitle {
+  .emptyCartTitle {
     margin: 0;
     font-family: var(--font3);
     font-weight: 400;
-    font-size: mvw(20);
+    font-size: mvw(16);
     line-height: 120%;
     color: var(--bіliy);
   }
 
-  .emptySubtitle {
+  .emptyCartSubtitle {
     margin: 0;
     font-family: var(--font-family);
-    font-weight: 400;
-    font-size: mvw(14);
-    line-height: 150%;
-    color: rgba(244, 244, 244, 0.55);
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(13);
+    line-height: 120%;
+    color: var(--bіliy);
   }
 
-  .emptyButton {
-    margin-top: mvw(8);
+  .emptyCartButton {
+    display: block;
     width: 100%;
+    flex-shrink: 0;
+    margin-top: auto;
     border: none;
-    border-radius: mvw(8);
-    padding: mvw(14) mvw(24);
+    border-radius: mvw(4);
+    padding: mvw(8) mvw(12);
     background: var(--zoloto);
-    font-family: var(--font-family);
-    font-weight: 600;
-    font-size: mvw(16);
-    line-height: 140%;
+    font-family: var(--third-family);
+    font-weight: 500;
+    font-size: mvw(18);
+    line-height: 156%;
     color: var(--chorniy);
     cursor: pointer;
     transition: background 0.2s ease;
   }
 
-  .emptyButton:hover {
+  .emptyCartButton:hover {
     background: #d49e50;
   }
 

@@ -5,6 +5,7 @@ import s from "./CartModal.module.css";
 import { useCartStore } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
 import { useScrollLock } from "@/components/hooks/useScrollLock";
+import { BasketIcons } from "@/components/Icons/Icons";
 import {
   calculatePrice,
   getPriceSellRegistry,
@@ -72,10 +73,20 @@ export default function CartModal() {
   );
 
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
+  }, []);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 1000);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useScrollLock(isOpen);
@@ -104,30 +115,73 @@ export default function CartModal() {
 
   if (!isOpen || !isMounted) return null;
 
+  const isEmpty = items.length === 0;
+
   const handleCheckout = () => {
     close();
     window.location.href = "/checkout";
   };
 
+  const goToCatalog = () => {
+    close();
+    window.location.href = "/products";
+  };
+
+  const emptyCartContent = (
+    <div className={s.emptyCart}>
+      <div className={s.emptyCartIcon}>
+        <BasketIcons />
+      </div>
+      <div className={s.emptyCartTextCol}>
+        <p className={s.emptyCartTitle}>Ваш кошик порожній</p>
+        <p className={s.emptyCartSubtitle}>
+          Сподіваємось, ви знайдете те, що вам до душі
+        </p>
+      </div>
+    </div>
+  );
+
   const modalContent = (
     <div className={s.backdrop} onClick={close}>
-      <div className={s.modal} onClick={(e) => e.stopPropagation()}>
-        <div className={s.topbarListBlock}>
-          <CartHeader onClose={close} />
-          <div className={s.bodyTwoCols}>
-            <CartSummary
-              total={total}
-              totalWithoutDiscount={totalWithoutDiscount}
-              discount={discount}
-              remainingToFree={remainingToFree}
-              progressPct={progressPct}
-              onCheckout={handleCheckout}
-              onContinue={close}
-              itemsCount={items.length}
-              items={items}
-            />
-          </div>
+      <div
+        className={`${s.modal} ${isEmpty ? s.modalEmpty : s.modalFilled}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          className={`${s.topbarListBlock} ${
+            isEmpty ? s.topbarListBlockEmpty : ""
+          }`}
+        >
+          <CartHeader onClose={close} showClose={!isMobile} />
+
+          {isEmpty && isMobile ? (
+            <div className={s.emptyCartWrap}>{emptyCartContent}</div>
+          ) : (
+            <div className={s.bodyTwoCols}>
+              <CartSummary
+                total={total}
+                totalWithoutDiscount={totalWithoutDiscount}
+                discount={discount}
+                remainingToFree={remainingToFree}
+                progressPct={progressPct}
+                onCheckout={handleCheckout}
+                onContinue={close}
+                itemsCount={items.length}
+                items={items}
+              />
+            </div>
+          )}
         </div>
+
+        {isEmpty && isMobile && (
+          <button
+            type="button"
+            className={s.emptyCartButton}
+            onClick={goToCatalog}
+          >
+            До каталогу
+          </button>
+        )}
       </div>
     </div>
   );

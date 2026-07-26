@@ -6,6 +6,8 @@ export type HeroSlideItem = {
   id: string | number;
   /** Шлях до зображення (з public, напр. /images/BanerHyro1.png) */
   image: string;
+  /** Мобільне зображення (≤1000px) */
+  mobileImage?: string;
   /** Головний заголовок */
   title: string;
   /** Підназголовок (бейдж над заголовком) */
@@ -18,6 +20,7 @@ export const HERO_SLIDES: HeroSlideItem[] = [
   {
     id: "hero-1",
     image: "/images/BanerHyro1.png",
+    mobileImage: "/images/Rectangle 1-5.png",
     title: "Перший кофешоп у Дніпрі",
     description:
       "Ми створили простір для тих, хто цінує якість, атмосферу та правильний сервіс. Сучасний підхід і перевірений продукт — усе в одному місці",
@@ -25,6 +28,7 @@ export const HERO_SLIDES: HeroSlideItem[] = [
   {
     id: "hero-2",
     image: "/images/BanerHyro2.png",
+    mobileImage: "/images/Rectangle 1-6.png",
     title: "Якість, якій довіряють",
     description:
       "Ми ретельно відбираємо продукцію та співпрацюємо лише з перевіреними постачальниками, щоб ви отримували стабільний результат і впевненість у кожному замовленні",
@@ -32,6 +36,7 @@ export const HERO_SLIDES: HeroSlideItem[] = [
   {
     id: "hero-3",
     image: "/images/BanerHyro3.png",
+    mobileImage: "/images/Rectangle 2.png",
     title: "Швидко та зручно",
     description:
       "Оформлюйте замовлення онлайн за кілька хвилин. Зрозумілий процес, швидке підтвердження та оперативна доставка — без зайвих кроків.",

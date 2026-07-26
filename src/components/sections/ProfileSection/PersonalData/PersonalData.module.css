@@ -432,6 +432,67 @@
   transform: translateY(0);
 }
 
+.skeletonTitle {
+  width: 300px;
+  height: 38px;
+}
+
+.skeletonDescription {
+  width: 80%;
+  height: 22px;
+  margin-top: 8px;
+}
+
+.skeletonAvatar {
+  width: 80px !important;
+  height: 80px !important;
+}
+
+.skeletonSectionTitle {
+  width: 200px;
+  height: 24px;
+}
+
+.skeletonFileInfo {
+  width: 120px;
+  height: 20px;
+}
+
+.skeletonPhotoBtn {
+  width: 150px;
+  height: 48px;
+}
+
+.skeletonInput {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.skeletonInputField {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.skeletonInputIcon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.skeletonSaveBtn {
+  width: 200px;
+  height: 48px;
+}
+
 @media (max-width: 1000px) {
   .personalData {
     border-radius: 0;
@@ -472,11 +533,7 @@
   }
 
   .subtitleText {
-    font-family: var(--font-family);
-    font-weight: 400;
-    font-size: mvw(14);
-    line-height: 150%;
-    color: rgba(244, 244, 244, 0.55);
+    display: none;
   }
 
   .contactBlocksRow {
@@ -499,9 +556,9 @@
   }
 
   .iconCircle {
-    width: mvw(58);
-    height: mvw(58);
-    border-radius: mvw(10);
+    width: mvw(75);
+    height: mvw(75);
+    border-radius: mvw(14);
     border: mvw(2) solid var(--zoloto);
     color: var(--white);
     background: transparent;
@@ -509,8 +566,8 @@
   }
 
   .iconCircle svg {
-    width: mvw(28);
-    height: mvw(28);
+    width: mvw(40);
+    height: mvw(40);
   }
 
   .contactText {
@@ -654,18 +711,19 @@
   }
 
   .inputIconWrapper {
-    left: mvw(12);
-    width: mvw(18);
-    height: mvw(18);
+    left: auto;
+    right: mvw(16);
+    width: mvw(20);
+    height: mvw(20);
   }
 
   .inputIcon {
-    width: mvw(18);
-    height: mvw(18);
+    width: mvw(20);
+    height: mvw(20);
   }
 
   .input {
-    padding: mvw(16) mvw(16) mvw(16) mvw(40);
+    padding: mvw(16) mvw(40) mvw(16) mvw(16);
     border-radius: mvw(12);
     font-size: mvw(14);
     max-width: 100%;
@@ -690,5 +748,53 @@
 
   .wrapperBlockSingle {
     max-width: 100%;
+  }
+
+  .skeletonTitle {
+    width: mvw(220);
+    height: mvw(34);
+  }
+
+  .skeletonDescription {
+    width: 100%;
+    height: mvw(18);
+    margin-top: mvw(8);
+  }
+
+  .skeletonAvatar {
+    width: mvw(80) !important;
+    height: mvw(80) !important;
+  }
+
+  .skeletonSectionTitle {
+    width: mvw(160);
+    height: mvw(20);
+  }
+
+  .skeletonFileInfo {
+    width: mvw(100);
+    height: mvw(16);
+  }
+
+  .skeletonPhotoBtn {
+    width: 100%;
+    height: mvw(48);
+  }
+
+  .skeletonInput {
+    height: mvw(52);
+    border-radius: mvw(4);
+  }
+
+  .skeletonInputIcon {
+    right: mvw(16);
+    left: auto;
+    width: mvw(20);
+    height: mvw(20);
+  }
+
+  .skeletonSaveBtn {
+    width: 100%;
+    height: mvw(48);
   }
 }

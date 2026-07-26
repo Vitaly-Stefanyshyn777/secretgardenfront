@@ -1,10 +1,10 @@
 "use client";
-import { BoxIcons } from "@/components/Icons/Icons";
 import { useScrollLock } from "@/components/hooks/useScrollLock";
 import ProductCard from "@/components/sections/ProductsSection/ProductCard/ProductCard";
 import ModalCloseButton from "@/components/ui/ModalCloseButton";
 import SliderNav from "@/components/ui/SliderNav/SliderNavActions";
 import { normalizeImageUrl } from "@/lib/imageUtils";
+import Image from "next/image";
 import { useAuthStore } from "@/store/auth";
 import { useCartStore } from "@/store/cart";
 import { useFavoriteStore } from "@/store/favorites";
@@ -237,46 +237,77 @@ export default function FavoritesModal() {
 
   if (!isOpen || !isMounted) return null;
 
+  const emptyFavoritesContent = (
+    <div className={s.emptyCart}>
+      <div className={s.emptyCartIcon}>
+        <Image
+          src="/images/preference.svg"
+          alt=""
+          width={350}
+          height={350}
+          priority
+        />
+      </div>
+      <div className={s.emptyCartTextCol}>
+        <p className={s.emptyCartTitle}>Відсутні обрані товари</p>
+        <p className={s.emptyCartSubtitle}>
+          Тут будуть позиції, які вам сподобались
+        </p>
+      </div>
+    </div>
+  );
+
+  const emptyFavoritesDesktop = (
+    <>
+      {emptyFavoritesContent}
+      <button
+        type="button"
+        className={s.emptyCartButton}
+        onClick={() => {
+          close();
+          window.location.href = "/products";
+        }}
+      >
+        До каталогу
+      </button>
+    </>
+  );
+
   const content =
     FORCE_FAVORITES_SKELETON || isMobile === null ? (
       <FavoritesModalSkeleton />
     ) : (
       <div className={s.backdrop} onClick={close}>
-        <div className={s.modal} onClick={(e) => e.stopPropagation()}>
-          <div className={s.topbarListBlock}>
+        <div
+          className={`${s.modal} ${
+            items.length === 0 ? s.modalEmpty : s.modalFilled
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            className={`${s.topbarListBlock} ${
+              items.length === 0 ? s.topbarListBlockEmpty : ""
+            }`}
+          >
             <div className={s.topbar}>
               <span className={s.topbarTitle}>
                 {isMobile ? "Обрані товари" : "Обране"}
               </span>
-              <div className={s.headerActions}>
-                <ModalCloseButton onClose={close} className={s.close} />
-              </div>
+              {!isMobile && (
+                <div className={s.headerActions}>
+                  <ModalCloseButton onClose={close} className={s.close} />
+                </div>
+              )}
             </div>
 
             {isMobile ? (
-              <div className={s.mobileSliderWrap}>
+              <div
+                className={`${s.mobileSliderWrap} ${
+                  items.length === 0 ? s.mobileSliderWrapEmpty : ""
+                }`}
+              >
                 {items.length === 0 ? (
-                  <div className={s.emptyState}>
-                    <div className={s.emptyIconWrap}>
-                      <BoxIcons />
-                    </div>
-                    <div className={s.emptyTextCol}>
-                      <p className={s.emptyTitle}>Відсутні обрані товари</p>
-                      <p className={s.emptySubtitle}>
-                        Тут будуть позиції, які вам сподобались
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      className={s.emptyButton}
-                      onClick={() => {
-                        close();
-                        window.location.href = "/products";
-                      }}
-                    >
-                      До каталогу
-                    </button>
-                  </div>
+                  emptyFavoritesContent
                 ) : (
                   <div className={s.mobileSlideGrid}>
                     {items.map((it) => {
@@ -316,7 +347,11 @@ export default function FavoritesModal() {
                             discount={it.discount}
                             isNew={it.isNew}
                             isHit={it.isHit}
-                            stockStatus={undefined}
+                            stockStatus={
+                              it.stockQuantity != null && it.stockQuantity <= 0
+                                ? "outofstock"
+                                : undefined
+                            }
                             useRedGreenIconOnMobile={true}
                             removeFromFavoritesOnAddToCart={true}
                             productType={it.productType}
@@ -333,7 +368,7 @@ export default function FavoritesModal() {
             ) : (
               <div className={s.desktopSliderWrap}>
                 {items.length === 0 ? (
-                  <div className={s.empty}>Список порожній</div>
+                  emptyFavoritesDesktop
                 ) : (
                   <Swiper
                     modules={[Navigation, Pagination, A11y]}
@@ -385,7 +420,11 @@ export default function FavoritesModal() {
                               discount={it.discount}
                               isNew={it.isNew}
                               isHit={it.isHit}
-                              stockStatus={undefined}
+                              stockStatus={
+                              it.stockQuantity != null && it.stockQuantity <= 0
+                                ? "outofstock"
+                                : undefined
+                            }
                               useRedGreenIconOnMobile={true}
                               removeFromFavoritesOnAddToCart={true}
                               productType={it.productType}
@@ -401,6 +440,19 @@ export default function FavoritesModal() {
               </div>
             )}
           </div>
+
+          {items.length === 0 && isMobile && (
+            <button
+              type="button"
+              className={s.emptyCartButton}
+              onClick={() => {
+                close();
+                window.location.href = "/products";
+              }}
+            >
+              До каталогу
+            </button>
+          )}
 
           {items.length > 0 && !isMobile && (
             <div className={s.actionsRow}>

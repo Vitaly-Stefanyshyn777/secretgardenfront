@@ -85,16 +85,15 @@
 @media (max-width: 1000px) {
   .section {
     background: #121212;
-    padding: mvw(40) mvw(16) mvw(48);
+    padding: mvw(15) mvw(16) mvw(15);
   }
 
   .container {
-    gap: mvw(24);
+    gap: mvw(12);
   }
 
   .sectionTitle {
-    font-size: mvw(28);
-    font-family: var(--font3);
+    font-size: mvw(24);
     line-height: 120%;
   }
 
@@ -105,35 +104,35 @@
 
   .faqCard {
     background: #37412e;
-    border-radius: mvw(12);
-    padding: mvw(20);
+    border-radius: mvw(8);
+    padding: mvw(12);
     box-shadow: none;
   }
 
   .faqCardInner {
-    gap: mvw(12);
+    gap: mvw(8);
   }
 
   .faqTitle {
     font-family: var(--font-family);
-    font-weight: 600;
-    font-size: mvw(18);
-    line-height: 140%;
+    font-weight: 400;
+    font-size: mvw(16);
+    line-height: 120%;
     color: var(--bіliy);
   }
 
   .faqTextWrap {
-    gap: mvw(12);
+    gap: mvw(0);
   }
 
   .faqTextSplit {
-    gap: mvw(16);
+    gap: mvw(12);
   }
 
   .faqText {
     font-family: var(--font-family);
-    font-weight: 400;
-    font-size: mvw(14);
+    font-weight: 500;
+    font-size: mvw(11);
     line-height: 150%;
     color: #d1d1d1;
   }

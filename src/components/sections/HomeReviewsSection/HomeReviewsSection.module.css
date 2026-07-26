@@ -118,7 +118,7 @@
 @media (max-width: 1000px) {
   .section {
     background: #121212;
-    padding: mvw(40) mvw(16) mvw(48);
+    padding: mvw(15) mvw(16) mvw(48);
     overflow-x: hidden;
     width: 100%;
     max-width: 100%;
@@ -126,7 +126,7 @@
   }
 
   .container {
-    gap: mvw(24);
+    gap: mvw(12);
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -141,10 +141,11 @@
   }
 
   .sectionTitle {
-    font-size: mvw(28);
     font-family: var(--font3);
-    text-align: center;
-    width: 100%;
+    font-weight: 400;
+    font-size: mvw(24);
+    line-height: 120%;
+    color: var(--bіliy);
   }
 
   .reviewsNav {
@@ -175,8 +176,12 @@
     border-radius: mvw(12);
     padding: mvw(20);
     background: rgba(255, 255, 255, 0.03);
-    gap: mvw(16);
+    gap: mvw(8);
     max-width: none;
+
+    border: mvw(1) solid var(--bіliy);
+    border-radius: mvw(12);
+    padding: mvw(16) mvw(12);
   }
 
   .reviewHeader {
@@ -187,13 +192,13 @@
   .reviewName {
     font-family: var(--font-family);
     font-weight: 700;
-    font-size: mvw(16);
-    line-height: 140%;
+    font-size: mvw(11);
+    line-height: 120%;
     color: var(--bіliy);
   }
 
   .reviewStars {
-    font-size: mvw(14);
+    font-size: mvw(16);
     letter-spacing: mvw(2);
     color: #f0d026;
     flex-shrink: 0;
@@ -201,9 +206,9 @@
 
   .reviewText {
     font-family: var(--font-family);
-    font-weight: 400;
-    font-size: mvw(14);
-    line-height: 150%;
+    font-weight: 500;
+    font-size: mvw(11);
+    line-height: 120%;
     color: var(--bіliy);
   }
 }

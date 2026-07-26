@@ -238,7 +238,7 @@
     font-weight: 400;
     font-size: mvw(14);
     line-height: 140%;
-    color: var(--black);
+
     text-align: left;
     white-space: nowrap;
   }
@@ -255,5 +255,72 @@
     border-radius: mvw(8);
     min-width: mvw(14);
     margin-left: 0;
+  }
+
+  .logoutModalOverlay {
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    padding: 0;
+  }
+
+  .logoutModal {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+    border: mvw(1) solid var(--zoloto);
+    border-bottom: none;
+    border-radius: mvw(40) mvw(40) 0 0;
+    background: #121212;
+    box-shadow: none;
+    gap: mvw(21);
+    padding: mvw(40) mvw(16) mvw(130) mvw(16);
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .logoutTitle {
+    font-family: var(--font3);
+    font-weight: 400;
+    font-size: mvw(24);
+    line-height: 120%;
+    text-align: center;
+    color: var(--bіliy);
+  }
+
+  .logoutButtons {
+    flex-direction: column;
+    gap: mvw(21);
+    width: 100%;
+  }
+
+  .logoutConfirm {
+    width: 100%;
+    height: auto;
+    min-height: mvw(48);
+    padding: mvw(8) mvw(12);
+    border-radius: mvw(4);
+    background: var(--chervoniy);
+    font-family: var(--third-family);
+    font-weight: 500;
+    font-size: mvw(18);
+    line-height: 156%;
+    color: var(--bіliy);
+  }
+
+  .logoutCancel {
+    width: 100%;
+    height: auto;
+    min-height: mvw(48);
+    padding: mvw(12) mvw(16);
+    border-radius: mvw(4);
+    border: 1px solid var(--bіliy);
+    background: transparent;
+    font-family: var(--third-family);
+    font-weight: 500;
+    font-size: mvw(18);
+    line-height: 156%;
+    color: var(--bіliy);
   }
 }
