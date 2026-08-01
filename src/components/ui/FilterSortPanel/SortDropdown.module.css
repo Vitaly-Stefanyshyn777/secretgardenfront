@@ -284,18 +284,35 @@
 
   .sortDropdown {
     position: absolute;
-    min-width: mvw(180);
-    padding: mvw(12);
-    gap: mvw(15);
-    border-radius: mvw(12);
-    left: mvw(-80);
-    top: mvw(30);
-    border: mvw(2) solid var(--grey);
+    right: 0;
+    left: auto;
+    top: calc(100% + mvw(8));
+    min-width: mvw(200);
+    width: max-content;
+    padding: mvw(12) mvw(16);
+    gap: mvw(12);
+    border-radius: mvw(8);
+    border: 1px solid rgba(244, 244, 244, 0.35);
+    background: #2a2a2a;
+    box-shadow: 0 mvw(8) mvw(24) rgba(0, 0, 0, 0.35);
   }
 
   .itemsPerPageDropdownItem,
   .sortDropdownItem {
-    padding: mvw(0);
+    padding: 0;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    background: none;
     font-size: mvw(14);
+    line-height: 140%;
+    white-space: nowrap;
+  }
+
+  .sortDropdownItemActive {
+    color: var(--zoloto);
   }
 }

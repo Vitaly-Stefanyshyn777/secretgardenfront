@@ -115,8 +115,8 @@ export interface ProductInfoProps {
   originalPrice: number;
   shouldShowOldPrice: boolean;
   onRegisterOpen: () => void;
-  expandedSections: Record<string, boolean>;
-  onToggleSection: (section: string) => void;
+  expandedSections?: Record<string, boolean>;
+  onToggleSection?: (section: string) => void;
 }
 
 export interface RelatedProduct {

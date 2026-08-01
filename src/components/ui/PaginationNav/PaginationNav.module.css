@@ -96,27 +96,8 @@
   background: transparent;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1000px) {
   .navContainer {
-    gap: 16px;
-    background: #fff;
-    border-radius: 50px;
-    padding: 8px 16px;
-    width: max-content;
-    margin: 0 auto;
-  }
-
-  .leftBtn,
-  .rightBtn {
-    background: #fff;
-    width: mvw(50);
-    height: mvw(50);
-    border-radius: mvw(62);
-  }
-
-  .pageNumber {
-    width: auto;
-    height: auto;
-    font-size: 14px;
+    display: none;
   }
 }

@@ -130,6 +130,20 @@
   border: 1px solid var(--zoloto);
   border-radius: 16px;
   background: rgba(255, 254, 252, 0.02);
+  max-height: 420px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 244, 244, 0.25) transparent;
+}
+
+.cardProducts::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cardProducts::-webkit-scrollbar-thumb {
+  background: rgba(244, 244, 244, 0.25);
+  border-radius: 999px;
 }
 
 .cardInfo {
@@ -453,13 +467,16 @@
   .cardProducts {
     flex-direction: row;
     overflow-x: auto;
+    overflow-y: hidden;
     gap: mvw(12);
     padding: mvw(12);
     border-radius: mvw(8);
     border: 1px solid rgba(244, 244, 244, 0.15);
     background: rgba(0, 0, 0, 0.2);
+    max-height: none;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .cardProducts::-webkit-scrollbar {
@@ -469,6 +486,7 @@
   .productItem {
     flex-shrink: 0;
     min-width: mvw(240);
+    width: auto;
     gap: mvw(12);
   }
 
@@ -667,4 +685,54 @@
   flex: 1;
   height: 48px;
   border-radius: 8px;
+}
+
+@media (max-width: 1000px) {
+  .skeletonImage {
+    width: mvw(80);
+    height: mvw(80);
+    border-radius: mvw(8);
+    flex-shrink: 0;
+  }
+
+  .skeletonTitle {
+    width: mvw(140);
+    height: mvw(16);
+    border-radius: mvw(4);
+  }
+
+  .skeletonQty {
+    width: mvw(40);
+    height: mvw(14);
+    border-radius: mvw(4);
+  }
+
+  .skeletonPrice {
+    width: mvw(80);
+    height: mvw(18);
+    border-radius: mvw(4);
+  }
+
+  .skeletonLabel {
+    width: mvw(90);
+    height: mvw(14);
+    border-radius: mvw(4);
+  }
+
+  .skeletonValue {
+    width: mvw(110);
+    height: mvw(14);
+    border-radius: mvw(4);
+  }
+
+  .skeletonStatus {
+    width: mvw(140);
+    height: mvw(32);
+    border-radius: mvw(16);
+  }
+
+  .skeletonButton {
+    height: mvw(44);
+    border-radius: mvw(8);
+  }
 }

@@ -66,9 +66,10 @@ body {
   margin: 0 auto;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1000px) {
   body {
-    font-size: 14px;
+    font-size: mvw(14);
+    padding-bottom: calc(mvw(77) + env(safe-area-inset-bottom, 0px));
   }
 }
 

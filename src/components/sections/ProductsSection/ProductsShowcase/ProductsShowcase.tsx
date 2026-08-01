@@ -373,7 +373,7 @@ const ProductsShowcase: React.FC = () => {
             <Swiper
               ref={swiperRef}
               modules={[Navigation, Pagination]}
-              spaceBetween={isMobile ? 16 : 16}
+              spaceBetween={isMobile ? 13 : 16}
               slidesPerView={isMobile ? "auto" : 6}
               slidesPerGroup={1}
               loop={!isMobile}

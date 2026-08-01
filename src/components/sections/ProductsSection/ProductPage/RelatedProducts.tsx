@@ -55,13 +55,10 @@ const RelatedProducts = memo(function RelatedProducts({
         image: normalizeImageUrl(img),
         category: p.categories?.[0]?.name || p.label || "",
         stockStatus: p.stockStatus || "instock",
-        wcProduct:
-          ratingAvg != null || ratingCnt > 0
-            ? {
-                average_rating: String(ratingAvg ?? 0),
-                rating_count: Number(ratingCnt) || 0,
-              }
-            : undefined,
+        wcProduct: {
+          average_rating: String(ratingAvg ?? 0),
+          rating_count: Number(ratingCnt) || 0,
+        },
       };
     });
   }, [relatedCategoryProducts, currentProductSlug]);
@@ -119,7 +116,7 @@ const RelatedProducts = memo(function RelatedProducts({
             modules={[A11y]}
             slidesPerView="auto"
             slidesPerGroup={1}
-            spaceBetween={16}
+            spaceBetween={13}
             className={styles.relatedSwiper}
           >
             {mappedRelated.map((item) => (

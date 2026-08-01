@@ -545,8 +545,8 @@
   }
 
   .productCardShowcaseDark {
-    background: #121212;
-    border: 1px solid rgba(244, 244, 244, 0.55);
+    background: #222;
+    border: 1px solid var(--bіliy);
     border-radius: mvw(12);
     padding: mvw(8);
     min-height: auto;
@@ -598,10 +598,10 @@
 
   .productCardShowcaseDark .currentPrice {
     color: var(--bіliy);
-    font-family: var(--font-family);
-    font-weight: 500;
-    font-size: mvw(14);
-    line-height: 140%;
+    font-family: var(--font3);
+    font-weight: 400;
+    font-size: mvw(16);
+    line-height: 120%;
   }
 
   .productCardShowcaseDark .currentPriceValue {

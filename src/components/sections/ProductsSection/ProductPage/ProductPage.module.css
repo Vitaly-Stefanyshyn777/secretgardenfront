@@ -1231,6 +1231,18 @@
   padding-bottom: 10px;
 }
 
+.reviewsSkeletonSlider {
+  display: none;
+}
+
+.skeletonLeaveReviewBtn {
+  display: none;
+}
+
+.reviewsSkeletonMobile {
+  display: none;
+}
+
 .skeletonTab {
   width: 100px;
   height: 30px;
@@ -1352,6 +1364,78 @@
 
 .skeletonRelatedTitleShort {
   width: 22%;
+}
+
+/* Related products card skeleton */
+.relatedSkeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.relatedSkeletonCard {
+  display: flex;
+  flex-direction: column;
+  border: 1.33px solid rgba(244, 244, 244, 0.55);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #222;
+  box-sizing: border-box;
+}
+
+.relatedSkeletonImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.relatedSkeletonImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.relatedSkeletonFavorite {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+}
+
+.relatedSkeletonContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+.relatedSkeletonRating {
+  width: 70%;
+  height: 14px;
+  border-radius: 6px;
+}
+
+.relatedSkeletonName {
+  width: 100%;
+  height: 16px;
+  border-radius: 6px;
+}
+
+.relatedSkeletonPrice {
+  width: 45%;
+  height: 18px;
+  border-radius: 6px;
+}
+
+.relatedSkeletonCart {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  margin-top: 2px;
 }
 
 /* Additional skeleton styles for remaining elements */
@@ -2292,6 +2376,13 @@
 
 
 @media (max-width: 1000px) {
+  .skeletonRelatedTitleShort {
+    width: mvw(200);
+    height: mvw(28);
+    margin: 0 auto;
+    border-radius: mvw(6);
+  }
+
   .skeletonPositionRelative {
     position: relative;
   }
@@ -2593,7 +2684,7 @@
 
   .currentPrice {
     font-family: var(--font3);
-    font-size: mvw(36);
+    font-size: mvw(24);
     line-height: 120%;
     color: var(--bіliy);
   }
@@ -2610,44 +2701,67 @@
   }
 
   .actionButtons {
-    flex-direction: row;
-    align-items: center;
-    gap: mvw(8);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: mvw(12);
     width: 100%;
   }
 
   .quantitySection {
     flex-shrink: 0;
+    width: auto;
+    height: auto;
   }
 
   .quantityControls {
-    gap: mvw(6);
-    border: 1px solid rgba(244, 244, 244, 0.35);
-    border-radius: mvw(8);
-    padding: mvw(4);
-  }
-
-  .quantityControls button {
-    width: mvw(32);
-    height: mvw(32);
-    border-radius: mvw(6);
+    gap: mvw(8);
+    border: none;
+    border-radius: 0;
+    padding: 0;
     background: transparent;
   }
 
+  .quantityControls button {
+    width: mvw(52);
+    height: mvw(44);
+    border-radius: mvw(4);
+    background: transparent;
+    color: var(--bіliy);
+  }
+
+  .quantityControls button:hover {
+    background: transparent;
+    color: var(--zoloto);
+  }
+
+  .quantityControls button:first-of-type svg {
+    width: mvw(24);
+    height: mvw(2);
+  }
+
+  .quantityControls button:last-of-type svg {
+    width: mvw(24);
+    height: mvw(24);
+  }
+
   .quantityControls input {
-    width: mvw(40);
-    height: mvw(32);
-    min-width: mvw(32);
-    min-height: mvw(32);
-    max-height: mvw(32);
-    font-size: mvw(14);
-    border: none;
-    padding: 0;
+    width: mvw(99);
+    height: mvw(28);
+    min-width: mvw(28);
+    min-height: mvw(28);
+    max-height: mvw(28);
+    font-family: var(--third-family);
+    font-size: mvw(16);
+    font-weight: 400;
+    line-height: 150%;
+    border: 1px solid var(--bіliy);
+    border-radius: mvw(4);
+    padding: mvw(2) mvw(6);
   }
 
   .addToCartBtnWrapper {
     display: flex;
-    flex: 1;
+    width: 100%;
     gap: mvw(8);
     min-width: 0;
   }
@@ -2656,34 +2770,36 @@
     flex: 1;
     min-width: 0;
     width: auto;
-    padding: mvw(12) mvw(16);
-    border-radius: mvw(8);
-    background: #e2c69f;
-    font-family: var(--font-family);
-    font-size: mvw(12);
+    min-height: mvw(44);
+    padding: mvw(8) mvw(12);
+    border-radius: mvw(4);
+    background: #d9ba88;
+    font-family: var(--third-family);
+    font-size: mvw(18);
     font-weight: 500;
-    line-height: 140%;
+    line-height: 156%;
     color: var(--chorniy);
     gap: mvw(8);
   }
 
   .addToCartBtnIcon svg {
-    width: mvw(16);
-    height: mvw(16);
+    width: mvw(28);
+    height: mvw(24);
   }
 
   .favoriteBtn {
-    width: mvw(48);
-    height: mvw(48);
+    width: mvw(56);
+    height: mvw(44);
     flex-shrink: 0;
-    border-radius: mvw(8);
-    border: 1px solid rgba(244, 244, 244, 0.35);
+    border-radius: mvw(4);
+    border: 1px solid var(--zoloto);
     background: transparent;
   }
 
   .favoriteBtn svg {
-    width: mvw(22);
-    height: mvw(22);
+    width: mvw(24);
+    height: mvw(24);
+    color: var(--zoloto);
   }
 
   .characteristicsToggleBtn {
@@ -2691,18 +2807,20 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: mvw(48);
-    padding: mvw(12) mvw(16);
-    border: 1px solid rgba(244, 244, 244, 0.45);
-    border-radius: mvw(8);
+    min-height: mvw(44);
+    padding: mvw(8) mvw(12);
+    border: 1px solid var(--bіliy);
+    border-radius: mvw(4);
     background: transparent;
-    font-family: var(--font-family);
+    font-family: var(--third-family);
     font-weight: 500;
-    font-size: mvw(14);
-    line-height: 140%;
+    font-size: mvw(16);
+    line-height: 150%;
     color: var(--bіliy);
     cursor: pointer;
     text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
   }
 
   .mobileExpandableContent {
@@ -2751,13 +2869,58 @@
     gap: mvw(16);
   }
 
+  .productReviews .skeletonTabs,
+  .productReviews .reviewsList {
+    display: none;
+  }
+
+  .reviewsSkeletonMobile {
+    display: flex;
+    flex-direction: column;
+    gap: mvw(16);
+    width: 100%;
+  }
+
+  .reviewsSkeletonSlider {
+    display: flex;
+    gap: mvw(13);
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .reviewsSkeletonSlider .skeletonReviewCard {
+    flex-shrink: 0;
+    width: mvw(299);
+    min-height: mvw(131);
+    padding: mvw(16) mvw(12);
+    border-radius: mvw(8);
+    border: 1px solid rgba(244, 244, 244, 0.35);
+    box-sizing: border-box;
+  }
+
+  .skeletonLeaveReviewBtn {
+    display: block;
+    width: 100%;
+    height: mvw(44);
+    border-radius: mvw(4);
+  }
+
   .reviewsSectionTitle {
     margin: 0;
-    font-family: var(--font3);
-    font-size: mvw(24);
+    font-family: var(--font-family);
+    font-size: mvw(20);
     line-height: 120%;
     color: var(--bіliy);
-    font-weight: 400;
+    font-weight: 500;
+  }
+
+  .reviewsSectionTitle {
+    margin: 0;
+    font-family: var(--font-family);
+    font-size: mvw(20);
+    line-height: 120%;
+    color: var(--bіliy);
+    font-weight: 500;
   }
 
   .reviewsEmptyMobile {
@@ -2788,31 +2951,89 @@
 
   .reviewSlide {
     display: block;
-    width: calc(100vw - mvw(80));
+    width: mvw(299);
     max-width: none;
+    flex-shrink: 0;
     box-sizing: border-box;
+    height: auto;
   }
 
   .reviewCard {
-    border: 1px solid rgba(244, 244, 244, 0.35);
-    border-radius: mvw(12);
-    padding: mvw(16);
-    background: rgba(255, 255, 255, 0.03);
-    gap: mvw(12);
+    border: 1px solid var(--bіliy);
+    border-radius: mvw(8);
+    padding: mvw(16) mvw(12);
+    background: #222;
+    gap: mvw(8);
+    height: 100%;
+    min-height: mvw(131);
+    box-sizing: border-box;
+  }
+
+  .productReviewsMobile .reviewHeader {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: mvw(16);
+    margin-bottom: 0;
   }
 
   .reviewAuthor {
     font-family: var(--font-family);
-    font-size: mvw(14);
+    font-size: mvw(11);
     font-weight: 700;
+    line-height: 120%;
     max-width: none;
+    color: var(--bіliy);
+  }
+
+  .productReviewsMobile .reviewStars {
+    gap: mvw(4);
+    flex-shrink: 0;
+  }
+
+  .productReviewsMobile .starIcon {
+    width: mvw(12);
+    height: mvw(12);
   }
 
   .reviewText {
     font-family: var(--font-family);
-    font-size: mvw(13);
-    line-height: 150%;
-    color: #d1d1d1;
+    font-size: mvw(11);
+    font-weight: 500;
+    line-height: 120%;
+    color: var(--bіliy);
+  }
+
+  .reviewMoreCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: mvw(8);
+    width: 100%;
+    min-height: mvw(131);
+    padding: mvw(16) mvw(12);
+    border: 1px solid var(--bіliy);
+    border-radius: mvw(8);
+    background: #222;
+    box-sizing: border-box;
+    color: var(--bіliy);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .reviewMoreDots {
+    font-family: var(--font-family);
+    font-size: mvw(24);
+    line-height: 1;
+    letter-spacing: mvw(2);
+  }
+
+  .reviewMoreText {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(11);
+    line-height: 120%;
   }
 
   .leaveReviewBtn,
@@ -2821,17 +3042,19 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: mvw(48);
-    padding: mvw(12) mvw(16);
-    border: 1px solid rgba(244, 244, 244, 0.45);
-    border-radius: mvw(8);
+    min-height: mvw(44);
+    padding: mvw(8) mvw(12);
+    border: 1px solid var(--bіliy);
+    border-radius: mvw(4);
     background: transparent;
-    font-family: var(--font-family);
+    font-family: var(--third-family);
     font-weight: 500;
-    font-size: mvw(14);
-    line-height: 140%;
+    font-size: mvw(16);
+    line-height: 150%;
     color: var(--bіliy);
     cursor: pointer;
+    text-decoration: none;
+    box-sizing: border-box;
   }
 
   .leaveReviewHeader {
@@ -2970,7 +3193,7 @@
   }
 
   .relatedProducts {
-    gap: mvw(16);
+    gap: mvw(16); /* 4.26667vw */
     width: 100%;
     overflow: hidden;
   }
@@ -2995,6 +3218,75 @@
     display: none;
   }
 
+  .relatedSkeletonGrid {
+    display: flex;
+    flex-direction: row;
+    gap: mvw(13);
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .relatedSkeletonGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .relatedSkeletonCard {
+    flex-shrink: 0;
+    width: mvw(164);
+    border-radius: mvw(12);
+    border: 1px solid rgba(244, 244, 244, 0.55);
+    background: #222;
+    padding: mvw(8);
+  }
+
+  .relatedSkeletonImageWrap {
+    aspect-ratio: auto;
+    height: mvw(139);
+    border-radius: mvw(8);
+    overflow: hidden;
+  }
+
+  .relatedSkeletonImage {
+    border-radius: mvw(8);
+  }
+
+  .relatedSkeletonFavorite {
+    top: mvw(8);
+    right: mvw(8);
+    width: mvw(28);
+    height: mvw(28);
+  }
+
+  .relatedSkeletonContent {
+    gap: mvw(8);
+    padding: mvw(8) 0 0;
+  }
+
+  .relatedSkeletonRating {
+    height: mvw(12);
+    border-radius: mvw(4);
+  }
+
+  .relatedSkeletonName {
+    height: mvw(14);
+    border-radius: mvw(4);
+  }
+
+  .relatedSkeletonPrice {
+    width: mvw(64);
+    height: mvw(16);
+    border-radius: mvw(4);
+  }
+
+  .relatedSkeletonCart {
+    height: mvw(32);
+    border-radius: mvw(4);
+  }
+
   .relatedSliderWrap {
     display: block;
     width: 100%;
@@ -3009,9 +3301,10 @@
 
   .relatedSlide {
     display: block;
-    width: mvw(172);
+    width: mvw(164);
     flex-shrink: 0;
     height: auto;
+    box-sizing: border-box;
   }
 
   .outOfStockOverlay {

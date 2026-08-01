@@ -28,18 +28,18 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  padding: 0.78125vw;
-  font-size: 0.72917vw;
+  font-family: var(--font-family);
+  font-size: 14px;
   font-weight: 400;
   line-height: 130%;
   transition: all 0.2s;
   color: var(--bіliy);
-  /* min-height: 56px; */
+  min-height: 52px;
   box-sizing: border-box;
 }
 
 .selectButtonWhite {
-  /* background: var(--white); */
+  background: transparent;
 }
 
 .selectButtonFilled {
@@ -185,8 +185,8 @@
   }
 
   .selectButton {
-    padding: mvw(22) mvw(48) mvw(8) mvw(16);
-    border: mvw(1) solid var(--bіliy);
+    padding: mvw(14) mvw(16);
+    border: 1px solid var(--bіliy);
     border-radius: mvw(4);
     font-size: mvw(14);
     line-height: 140%;
@@ -195,13 +195,36 @@
     box-sizing: border-box;
   }
 
+  .selectButtonDisabled {
+    border-color: rgba(244, 244, 244, 0.25);
+    color: rgba(244, 244, 244, 0.45);
+    opacity: 1;
+  }
+
+  .selectButtonDisabled:hover {
+    border-color: rgba(244, 244, 244, 0.25);
+  }
+
   .selectText {
     font-size: mvw(14);
-    gap: mvw(10);
+    gap: mvw(8);
+    min-width: 0;
+  }
+
+  .selectText svg {
+    width: mvw(18);
+    height: mvw(18);
+    flex-shrink: 0;
   }
 
   .icon {
-    margin-left: mvw(12);
+    margin-left: mvw(8);
+    flex-shrink: 0;
+  }
+
+  .icon svg {
+    width: mvw(12);
+    height: mvw(8);
   }
 
   .dropdown {

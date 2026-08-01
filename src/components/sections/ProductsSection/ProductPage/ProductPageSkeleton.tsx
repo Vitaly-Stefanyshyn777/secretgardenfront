@@ -28,38 +28,69 @@ const ProductPageSkeleton: React.FC = () => {
             </div>
           </div>
 
-          <div className={styles.productReviews}>
-            <div className={styles.skeletonTabs}>
-              <div
-                className={`${styles.skeleton} ${styles.skeletonTab} ${styles.skeletonTabShort}`}
-              />
-              <div
-                className={`${styles.skeleton} ${styles.skeletonTab} ${styles.skeletonTabLong}`}
-              />
-            </div>
+          <div className={styles.productReviewsWrap}>
+            <div className={styles.productReviews}>
+              <div className={styles.skeletonTabs}>
+                <div
+                  className={`${styles.skeleton} ${styles.skeletonTab} ${styles.skeletonTabShort}`}
+                />
+                <div
+                  className={`${styles.skeleton} ${styles.skeletonTab} ${styles.skeletonTabLong}`}
+                />
+              </div>
 
-            <div className={styles.reviewsList}>
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className={`${styles.skeletonReviewCard}`}>
-                  <div className={styles.reviewHeader}>
+              <div className={styles.reviewsList}>
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className={styles.skeletonReviewCard}>
+                    <div className={styles.reviewHeader}>
+                      <div
+                        className={`${styles.skeleton} ${styles.skeletonReviewAuthor}`}
+                      />
+                      <div
+                        className={`${styles.skeleton} ${styles.skeletonReviewStars}`}
+                      />
+                    </div>
                     <div
-                      className={`${styles.skeleton} ${styles.skeletonReviewAuthor}`}
+                      className={`${styles.skeleton} ${styles.skeletonDescriptionLine}`}
                     />
                     <div
-                      className={`${styles.skeleton} ${styles.skeletonReviewStars}`}
+                      className={`${styles.skeleton} ${styles.skeletonDescriptionLine} ${styles.skeletonLineWide}`}
+                    />
+                    <div
+                      className={`${styles.skeleton} ${styles.skeletonDescriptionLine} ${styles.skeletonLineNarrow}`}
                     />
                   </div>
-                  <div
-                    className={`${styles.skeleton} ${styles.skeletonDescriptionLine}`}
-                  />
-                  <div
-                    className={`${styles.skeleton} ${styles.skeletonDescriptionLine} ${styles.skeletonLineWide}`}
-                  />
-                  <div
-                    className={`${styles.skeleton} ${styles.skeletonDescriptionLine} ${styles.skeletonLineNarrow}`}
-                  />
+                ))}
+              </div>
+
+              <div className={styles.reviewsSkeletonMobile}>
+                <div
+                  className={`${styles.skeleton} ${styles.skeletonRelatedTitle} ${styles.skeletonSectionTitleSmall}`}
+                />
+                <div className={styles.reviewsSkeletonSlider}>
+                  {[...Array(2)].map((_, i) => (
+                    <div key={i} className={styles.skeletonReviewCard}>
+                      <div className={styles.reviewHeader}>
+                        <div
+                          className={`${styles.skeleton} ${styles.skeletonReviewAuthor}`}
+                        />
+                        <div
+                          className={`${styles.skeleton} ${styles.skeletonReviewStars}`}
+                        />
+                      </div>
+                      <div
+                        className={`${styles.skeleton} ${styles.skeletonDescriptionLine}`}
+                      />
+                      <div
+                        className={`${styles.skeleton} ${styles.skeletonDescriptionLine} ${styles.skeletonLineWide}`}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+                <div
+                  className={`${styles.skeleton} ${styles.skeletonLeaveReviewBtn}`}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -130,20 +161,35 @@ const ProductPageSkeleton: React.FC = () => {
 
       <div className={styles.relatedProducts}>
         <div className={styles.relatedProductsHeader}>
-          <div className={`${styles.skeleton} ${styles.skeletonRelatedTitle} ${styles.skeletonRelatedTitleShort}`} />
+          <div
+            className={`${styles.skeleton} ${styles.skeletonRelatedTitle} ${styles.skeletonRelatedTitleShort}`}
+          />
         </div>
-        <div className={styles.relatedGrid}>
+        <div className={styles.relatedSkeletonGrid}>
           {[...Array(6)].map((_, i) => (
-            <div key={i} className={styles.productLeftColumn}>
-              <div
-                className={`${styles.skeleton} ${styles.skeletonCardImage} ${styles.skeletonMarginBottom12}`}
-              />
-              <div
-                className={`${styles.skeleton} ${styles.skeletonRelatedProductName} ${styles.skeletonMarginBottom8}`}
-              />
-              <div
-                className={`${styles.skeleton} ${styles.skeletonRelatedProductPrice}`}
-              />
+            <div key={i} className={styles.relatedSkeletonCard}>
+              <div className={styles.relatedSkeletonImageWrap}>
+                <div
+                  className={`${styles.skeleton} ${styles.relatedSkeletonImage}`}
+                />
+                <div
+                  className={`${styles.skeleton} ${styles.relatedSkeletonFavorite}`}
+                />
+              </div>
+              <div className={styles.relatedSkeletonContent}>
+                <div
+                  className={`${styles.skeleton} ${styles.relatedSkeletonRating}`}
+                />
+                <div
+                  className={`${styles.skeleton} ${styles.relatedSkeletonName}`}
+                />
+                <div
+                  className={`${styles.skeleton} ${styles.relatedSkeletonPrice}`}
+                />
+                <div
+                  className={`${styles.skeleton} ${styles.relatedSkeletonCart}`}
+                />
+              </div>
             </div>
           ))}
         </div>

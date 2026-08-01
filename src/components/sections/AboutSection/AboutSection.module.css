@@ -41,7 +41,48 @@
 }
 
 .blockSupport {
-  flex-direction: row-reverse;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 80px;
+  justify-content: space-between;
+}
+
+.blockSupport .mediaBlock {
+  width: 549px;
+}
+
+.blockSupport .image {
+  width: 549px;
+  height: 257px;
+  border-radius: 8px;
+  box-shadow:
+    0 4px 4px -1px rgba(0, 0, 0, 0.1),
+    0 4px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.blockSupport .contentBlock {
+  max-width: 801px;
+  gap: 24px;
+}
+
+.blockSupport .title {
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 120%;
+  color: #d9ba88;
+}
+
+.blockSupport .textGroup {
+  gap: 16px;
+}
+
+.blockSupport .text {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 120%;
+  color: #f4f4f4;
 }
 
 .mediaBlock {
@@ -147,28 +188,34 @@
 }
 
 .supportButton {
-  border: 1.33px solid var(--zoloto);
-  border-radius: 5px;
-  padding: 10px 18px;
-  width: fit-content;
-  min-height: 52px;
+  border: 1px solid #d9ba88;
+  border-radius: 4px;
+  padding: 8px 12px;
+  width: 265px;
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 8px;
   background: transparent;
-  color: var(--zoloto);
-  font-family: var(--second-family);
+  color: #d9ba88;
+  font-family: var(--third-family);
   font-weight: 500;
-  font-size: 21px;
-  line-height: 120%;
+  font-size: 18px;
+  line-height: 156%;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .supportButton:hover {
   color: var(--chorniy);
-  border: 1px solid #d49e50;
-  background: #d49e50;
+  border-color: #d9ba88;
+  background: #d9ba88;
+}
+
+.supportButtonExtra {
+  display: none;
 }
 
 @media (max-width: 1000px) {
@@ -189,6 +236,34 @@
 
   .blockSupport {
     flex-direction: column;
+    gap: mvw(20);
+  }
+
+  .blockSupport .mediaBlock {
+    width: 100%;
+    order: 1;
+  }
+
+  .blockSupport .contentBlock {
+    max-width: none;
+    gap: mvw(8);
+    order: 2;
+  }
+
+  .blockSupport .image {
+    width: 100%;
+    height: mvw(150);
+    border-radius: mvw(8);
+    box-shadow: none;
+  }
+
+  .blockSupport .title {
+    font-size: mvw(24);
+    text-align: center;
+  }
+
+  .blockSupport .text {
+    font-size: mvw(13);
   }
 
   .blockPolicy {
@@ -289,30 +364,22 @@
 
   .supportButton {
     width: 100%;
-    min-height: mvw(48);
-
-    border: none;
+    min-height: mvw(36);
+    border: 1px solid #d9ba88;
     justify-content: center;
-    background: var(--zoloto);
+    background: transparent;
     font-family: var(--third-family);
     font-weight: 500;
     font-size: mvw(14);
     line-height: 143%;
-    color: var(--chorniy);
-
+    color: #d9ba88;
     border-radius: mvw(4);
     padding: mvw(8) mvw(12);
-
-    min-height: mvw(36);
   }
 
   .supportButton:hover {
-    background: #d4b88a;
+    background: #d9ba88;
     color: var(--chorniy);
-    border: none;
-  }
-
-  .supportButtonExtra {
-    display: none;
+    border-color: #d9ba88;
   }
 }

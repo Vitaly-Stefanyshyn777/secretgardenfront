@@ -146,10 +146,10 @@ const AboutSection = () => {
           </div>
           <div className={s.mediaBlock}>
             <Image
-              src="/images/Rectangle-16.png"
+              src="/images/about-support.jpg"
               alt="Підтримка та вдячність"
-              width={541}
-              height={318}
+              width={549}
+              height={257}
               className={s.image}
             />
           </div>

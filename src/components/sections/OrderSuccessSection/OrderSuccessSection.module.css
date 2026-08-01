@@ -316,6 +316,7 @@
     width: 100%;
     max-width: 100%;
     padding: mvw(32) mvw(16) mvw(16);
+    border: none;
     gap: mvw(32);
     border-radius: mvw(20);
     box-sizing: border-box;

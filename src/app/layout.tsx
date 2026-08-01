@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header/Header";
 import Footer from "@/components/layout/Footer/Footer";
 import Breadcrumbs from "@/components/layout/Breadcrumbs/Breadcrumbs";
+import MobileBottomNav from "@/components/layout/MobileBottomNav/MobileBottomNav";
 import { Suspense } from "react";
 import { Golos_Text } from "next/font/google";
 import { Inter_Tight } from "next/font/google";
@@ -93,6 +94,7 @@ export default function RootLayout({
               </Suspense>
               <main>{children}</main>
               <Footer />
+              <MobileBottomNav />
             </ThemeSettingsProvider>
           </AuthProvider>
         </QueryProvider>

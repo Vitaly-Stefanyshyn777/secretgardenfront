@@ -2,36 +2,33 @@
 .notFoundContainer {
   position: relative;
   min-height: 100vh;
-  background-image: url("/images/Rectangle-16.png");
+  width: 100%;
+  background-image: url("/images/404-desktop-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 100%;
-
-  height: auto;
-  display: flex;
   padding: 90px 60px;
+  box-sizing: border-box;
+}
 
-  align-content: space-between;
-  flex-direction: column;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.notFoundOverlay {
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: rgba(217, 217, 217, 0.01);
+  backdrop-filter: blur(9.35px);
+  -webkit-backdrop-filter: blur(9.35px);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Основний контент */
 .notFoundContent {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  position: relative;
   z-index: 2;
-
   width: 100%;
   padding: 0 20px;
   display: flex;
@@ -39,6 +36,7 @@
   align-items: center;
   justify-content: center;
   gap: 40px;
+  text-align: center;
 }
 
 .errorBlock {
@@ -51,28 +49,25 @@
 
 /* Великий номер 404 */
 .errorNumber {
-  font-family: var(--second-family);
+  font-family: var(--font3);
   font-weight: 400;
-  font-size: 360px;
-  line-height: 80%;
-  letter-spacing: -0.03em;
-  color: var(--white);
+  font-size: 172px;
+  line-height: 120%;
+  letter-spacing: 0;
+  color: var(--bіliy);
+  margin: 0;
 }
 
-/* Блок з текстом і кнопкою */
-
-/* Заголовок помилки */
 .errorTitle {
-  font-family: var(--second-family);
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 125%;
-  letter-spacing: -0.03em;
+  font-family: var(--font3);
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 120%;
   text-align: center;
-  color: #fcfcfc;
+  color: #fff;
+  margin: 0;
 }
 
-/* Блок з текстом помилки */
 .errorTextBlock {
   display: flex;
   flex-direction: column;
@@ -80,101 +75,120 @@
   align-items: center;
 }
 
-/* Опис помилки */
 .errorDescription {
   font-family: var(--font-family);
   font-weight: 500;
   font-size: 16px;
-  line-height: 140%;
-  letter-spacing: -0.01em;
+  line-height: 120%;
   text-align: center;
-  color: #fcfcfc;
-
-  max-width: 400px;
+  color: #fff;
+  max-width: 480px;
   margin: 0;
 }
 
-/* Кнопка повернення на головну */
 .homeButton {
-  display: inline-block;
-  border-radius: 5px;
-
-  padding: 18px 12px;
-  width: 150px;
-
-  background: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 8px 12px;
+  min-width: 164px;
+  min-height: 36px;
+  background: var(--zoloto);
   font-family: var(--third-family);
-  font-weight: 800;
-  font-size: 16px;
-  line-height: 100%;
-  color: #3b2d47;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--chorniy);
   text-decoration: none;
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .homeButton:hover {
-  background: var(--zoloto);
-  color: var(--black);
+  background: #e2c69f;
+  color: var(--chorniy);
 }
 
-/* Мобільні стилі */
 @media (max-width: 1000px) {
   .notFoundContainer {
-    max-width: 100%;
-    border-radius: mvw(16);
-    margin: mvw(80) auto mvw(80) auto;
-    /* background-image: url("/Frame13213181244.png"); */
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    max-width: none;
+    background-image: url("/images/404-bg.jpg");
+    background-color: #222;
+  }
+
+  .notFoundOverlay {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(217, 217, 217, 0.01);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    pointer-events: none;
+    z-index: 1;
   }
 
   .notFoundContent {
-    padding: 0 16px;
-    gap: mvw(20);
+    padding: 0 mvw(16);
+    gap: mvw(24);
   }
 
   .errorNumber {
-    font-size: mvw(120);
-    margin-bottom: mvw(0);
+    font-family: var(--font3);
+    font-size: mvw(128);
+    line-height: 120%;
+    letter-spacing: 0;
+    margin: 0;
   }
 
   .errorBlock {
-    border-radius: mvw(16);
-    padding: mvw(0);
-    gap: mvw(20);
+    gap: mvw(24);
+    padding: 0;
+    border-radius: 0;
   }
 
   .errorTextBlock {
-    gap: mvw(10);
+    gap: mvw(12);
   }
 
   .errorTitle {
-    font-size: mvw(18);
-    line-height: 125%;
-    letter-spacing: -0.01em;
-    color: #fcfcfc;
+    font-family: var(--font3);
+    font-weight: 400;
+    font-size: mvw(24);
+    line-height: 120%;
+    letter-spacing: 0;
+    color: var(--bіliy);
   }
 
   .errorDescription {
-    font-size: mvw(14);
-    line-height: 140%;
-    letter-spacing: -0.02em;
-    color: #fcfcfc;
-    margin: 0;
-    max-width: mvw(340);
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(11);
+    line-height: 120%;
+    letter-spacing: 0;
+    color: var(--bіliy);
+    max-width: mvw(300);
   }
 
   .homeButton {
-    border-radius: mvw(16);
-    padding: mvw(21) mvw(60);
-    width: mvw(177);
-    height: mvw(56);
-
+    border-radius: mvw(4);
+    padding: mvw(8) mvw(12);
+    width: mvw(159);
+    min-width: mvw(159);
+    min-height: mvw(36);
+    height: auto;
+    background: var(--zoloto);
     font-family: var(--third-family);
-    font-weight: 700;
-    font-size: mvw(14);
-    line-height: 100%;
-    color: var(--black);
+    font-weight: 500;
+    font-size: mvw(16);
+    line-height: mvw(24);
+    color: var(--chorniy);
   }
 }

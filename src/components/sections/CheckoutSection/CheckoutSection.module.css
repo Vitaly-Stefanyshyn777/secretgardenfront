@@ -382,9 +382,11 @@
 }
 
 .primary:disabled {
-  color: #9ca3af;
+  color: rgba(244, 244, 244, 0.45);
+  border-color: rgba(244, 244, 244, 0.25);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 1;
+  background: transparent;
 }
 
 .nameColorBlock {
@@ -487,12 +489,15 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
+  min-width: 0;
 }
 
 .deliveryGrid {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
 }
 .addressFields {
   display: flex;
@@ -515,17 +520,20 @@
 .deliveryRow {
   display: flex;
   gap: 16px;
-  align-items: flex-start;
-  width: 924px;
+  align-items: stretch;
+  width: 100%;
 }
 
 .deliveryRow .inputWrap {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
 }
 
 .deliveryRow .inputWrapBranch {
-  width: 457px;
-  flex: none;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
   position: relative;
   display: flex;
 }
@@ -536,15 +544,21 @@
 }
 
 .deliveryRow .primary {
-  /* flex: 1; */
-  width: 461px;
-  align-self: flex-start;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 14px 15px 14px 24px;
   height: auto;
+  min-height: 52px;
   font-weight: 400;
   font-size: 14px;
   line-height: 135%;
   border: 1px solid var(--bіliy);
+  box-sizing: border-box;
 }
 .paymentBlock {
   display: flex;
@@ -1339,7 +1353,8 @@
   }
 
   .deliveryGrid {
-    gap: mvw(16);
+    gap: mvw(12);
+    width: 100%;
   }
 
   .checkbox {
@@ -1350,12 +1365,15 @@
 
   .deliveryRow {
     flex-direction: column;
-    gap: mvw(16);
+    gap: mvw(12);
     width: 100%;
+    align-items: stretch;
   }
+
   .addressFields {
     gap: mvw(8);
   }
+
   .addressFields .inputWrap,
   .inputWrapHouse,
   .inputWrapBuilding,
@@ -1364,21 +1382,27 @@
     width: auto;
   }
 
+  .deliveryRow .inputWrap,
   .deliveryRow .inputWrapBranch {
     width: 100%;
+    flex: none;
+    min-width: 0;
     display: flex;
   }
 
   .deliveryRow .inputWrapBranch .inputWithIcons {
     flex: 1;
-    width: auto;
+    width: 100%;
   }
 
   .deliveryRow .primary {
     width: 100%;
-    /* height: mvw(52); */
+    flex: none;
+    min-height: mvw(52);
+    padding: mvw(14) mvw(16);
     font-size: mvw(14);
     font-weight: 400;
+    border-radius: mvw(4);
   }
   .deliveryRowAddress {
     flex-direction: column;

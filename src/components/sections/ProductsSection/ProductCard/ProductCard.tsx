@@ -388,11 +388,7 @@ const ProductCard = ({
       </div>
 
       <div className={styles.cardContent}>
-        {((showcaseDark && ratingCount > 0) ||
-          (!showcaseDark &&
-            Number.isFinite(ratingValue) &&
-            ratingCount >= 0 &&
-            wcProduct)) && (
+        {wcProduct && (
           <div className={styles.ratingRow}>
             <div className={styles.stars}>
               {Array.from({ length: 5 }).map((_, i) => {

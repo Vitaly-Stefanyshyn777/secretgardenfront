@@ -1,5 +1,6 @@
 "use client";
 import React, { memo } from "react";
+import Link from "next/link";
 import Badge from "@/components/ui/Badge/Badge";
 import { formatPrice } from "@/lib/priceUtils";
 import ProductVariations from "./ProductVariations";
@@ -28,8 +29,6 @@ const ProductInfo = memo(function ProductInfo({
   originalPrice,
   shouldShowOldPrice,
   onRegisterOpen,
-  expandedSections,
-  onToggleSection,
 }: ProductInfoProps) {
   return (
     <div className={styles.productInfo}>
@@ -175,21 +174,17 @@ const ProductInfo = memo(function ProductInfo({
         {/* Характеристика та особливості + Опис */}
         <div className={styles.expandableSections}>
           {isMobile && (
-            <button
-              type="button"
+            <Link
+              href={`/products/${product.slug}/characteristics`}
               className={styles.characteristicsToggleBtn}
-              onClick={() => onToggleSection("characteristics")}
-              aria-expanded={expandedSections.characteristics}
             >
               Характеристика та особливості
-            </button>
+            </Link>
           )}
 
           <div
             className={`${styles.mobileExpandableContent} ${
-              isMobile && !expandedSections.characteristics
-                ? styles.mobileExpandableContentHidden
-                : ""
+              isMobile ? styles.mobileExpandableContentHidden : ""
             }`}
           >
           {(product.characteristics?.length ?? 0) > 0 && (() => {

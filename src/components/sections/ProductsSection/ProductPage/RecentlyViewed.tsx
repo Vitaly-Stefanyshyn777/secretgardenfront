@@ -48,12 +48,10 @@ const RecentlyViewed = memo(function RecentlyViewed({
       image={item.image}
       category={item.category}
       wcProduct={
-        (item.ratingAverage != null || (item.ratingCount ?? 0) > 0
-          ? {
-              average_rating: String(item.ratingAverage ?? 0),
-              rating_count: Number(item.ratingCount) || 0,
-            }
-          : undefined) as any
+        {
+          average_rating: String(item.ratingAverage ?? 0),
+          rating_count: Number(item.ratingCount) || 0,
+        } as any
       }
       isFluid
       showcaseDark={isMobile}
@@ -94,7 +92,7 @@ const RecentlyViewed = memo(function RecentlyViewed({
             modules={[A11y]}
             slidesPerView="auto"
             slidesPerGroup={1}
-            spaceBetween={16}
+            spaceBetween={13}
             className={styles.relatedSwiper}
           >
             {items.map((item) => (

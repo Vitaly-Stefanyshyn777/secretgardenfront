@@ -662,15 +662,16 @@ export default function MapPickerModal({
               }}
             />
           </div>
-
-          <button
-            className={s.locationClose}
-            onClick={onClose}
-            aria-label="Закрити"
-          >
-            <CloseButtonIcon />
-          </button>
         </div>
+
+        <button
+          className={s.locationClose}
+          onClick={onClose}
+          aria-label="Закрити"
+        >
+          <CloseButtonIcon />
+        </button>
+
         <div className={s.sidePanel}>
           <div className={s.panelTitle}>
             {selectedCityState || selectedCity

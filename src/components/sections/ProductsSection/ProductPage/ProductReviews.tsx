@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y } from "swiper/modules";
 import { useProductReviewsQuery } from "@/components/hooks/useProductsQuery";
@@ -181,64 +182,59 @@ export default function ProductReviews({
   );
 
   if (isMobile) {
+    const previewReviews = reviewsList.slice(0, 2);
+    const hasMoreReviews = reviewsList.length > 2;
+
     return (
       <div className={`${styles.productReviews} ${styles.productReviewsMobile}`}>
-        {activeTab === "reviews" ? (
-          <>
-            <h2 className={styles.reviewsSectionTitle}>Відгуки</h2>
-            <div className={styles.reviewsSliderWrap}>
-              {isLoading ? (
-                <p className={styles.reviewsLoading}>Завантаження відгуків...</p>
-              ) : reviewsList.length === 0 ? (
-                <p className={styles.reviewsEmptyMobile}>
-                  Поки немає відгуків. Залиште перший!
-                </p>
-              ) : (
-                <Swiper
-                  modules={[A11y]}
-                  slidesPerView="auto"
-                  slidesPerGroup={1}
-                  spaceBetween={16}
-                  className={styles.reviewsSwiper}
-                >
-                  {reviewsList.map((r) => (
-                    <SwiperSlide key={r.id} className={styles.reviewSlide}>
-                      <ReviewCard
-                        authorName={r.authorName}
-                        rating={r.rating}
-                        title={r.title}
-                        text={r.text}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              )}
-            </div>
-            <button
-              type="button"
-              className={styles.leaveReviewBtn}
-              onClick={() => setActiveTab("leave")}
+        <h2 className={styles.reviewsSectionTitle}>Відгуки</h2>
+        <div className={styles.reviewsSliderWrap}>
+          {isLoading ? (
+            <p className={styles.reviewsLoading}>Завантаження відгуків...</p>
+          ) : reviewsList.length === 0 ? (
+            <p className={styles.reviewsEmptyMobile}>
+              Поки немає відгуків. Залиште перший!
+            </p>
+          ) : (
+            <Swiper
+              modules={[A11y]}
+              slidesPerView="auto"
+              slidesPerGroup={1}
+              spaceBetween={13}
+              className={styles.reviewsSwiper}
             >
-              Залишити відгук
-            </button>
-          </>
-        ) : (
-          <>
-            <div className={styles.leaveReviewHeader}>
-              <button
-                type="button"
-                className={styles.leaveReviewBackArrow}
-                onClick={() => setActiveTab("reviews")}
-                aria-label="Назад до відгуків"
-              >
-                ←
-              </button>
-              <h2 className={styles.leaveReviewHeaderTitle}>Залишити відгук</h2>
-              <span className={styles.leaveReviewHeaderSpacer} aria-hidden="true" />
-            </div>
-            {leaveReviewForm}
-          </>
-        )}
+              {previewReviews.map((r) => (
+                <SwiperSlide key={r.id} className={styles.reviewSlide}>
+                  <ReviewCard
+                    authorName={r.authorName}
+                    rating={r.rating}
+                    title={r.title}
+                    text={r.text}
+                  />
+                </SwiperSlide>
+              ))}
+              {hasMoreReviews && (
+                <SwiperSlide className={styles.reviewSlide}>
+                  <Link
+                    href={`/products/${productSlug}/reviews`}
+                    className={styles.reviewMoreCard}
+                  >
+                    <span className={styles.reviewMoreDots}>···</span>
+                    <span className={styles.reviewMoreText}>
+                      Переглянути ще
+                    </span>
+                  </Link>
+                </SwiperSlide>
+              )}
+            </Swiper>
+          )}
+        </div>
+        <Link
+          href={`/products/${productSlug}/reviews/new`}
+          className={styles.leaveReviewBtn}
+        >
+          Залишити відгук
+        </Link>
       </div>
     );
   }

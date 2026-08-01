@@ -109,16 +109,16 @@
     min-height: mvw(40);
     padding: mvw(8) mvw(12);
     border-radius: mvw(4);
-    background: #e2c69f !important;
+    background: #d9ba88 !important;
     justify-content: center;
   }
 
   .showcaseRoot:hover {
-    background: #d4b88a !important;
+    background: #c9a978 !important;
   }
 
   .showcaseRoot.active {
-    background: #e2c69f !important;
+    background: #d9ba88 !important;
   }
 
   .showcaseRoot.active .cartIconText {

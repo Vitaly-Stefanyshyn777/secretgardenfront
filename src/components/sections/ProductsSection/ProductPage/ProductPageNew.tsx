@@ -58,16 +58,6 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
   }, [categoryProducts, fallbackProducts, product?.slug]);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-
-  // Стан для розгорнутих секцій в ProductInfo
-  const [expandedSections, setExpandedSections] = useState<
-    Record<string, boolean>
-  >({
-    delivery: false,
-    payment: false,
-    return: false,
-    characteristics: false,
-  });
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
   // Хук для галереї зображень
@@ -300,13 +290,6 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           originalPrice={originalPrice}
           shouldShowOldPrice={shouldShowOldPrice}
           onRegisterOpen={handleRegisterOpen}
-          expandedSections={expandedSections}
-          onToggleSection={(section) => {
-            setExpandedSections((prev) => ({
-              ...prev,
-              [section]: !prev[section],
-            }));
-          }}
         />
       </div>
 
