@@ -3,157 +3,192 @@
 import Image from "next/image";
 import Link from "next/link";
 import { InstagramIcon, TelegramIcon } from "@/components/Icons/Icons";
+import type {
+  ContentAboutBlock,
+  ContentContacts,
+} from "@/lib/contentApi";
 import s from "./AboutSection.module.css";
 
-const AboutSection = () => {
+type Props = {
+  blocks: ContentAboutBlock[];
+  contacts?: ContentContacts | null;
+};
+
+function paragraphs(body: string) {
+  return body
+    .split(/\n\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
+function resolveCtaUrl(
+  block: ContentAboutBlock,
+  contacts?: ContentContacts | null,
+) {
+  if (block.ctaUrl) return block.ctaUrl;
+  const label = (block.ctaLabel || "").toLowerCase();
+  if (label.includes("сертиф")) {
+    return contacts?.certificateUrl || undefined;
+  }
+  if (label.includes("збір") || label.includes("підтрим")) {
+    return contacts?.donationUrl || undefined;
+  }
+  return contacts?.donationUrl || contacts?.certificateUrl || undefined;
+}
+
+function isSupportBlock(block: ContentAboutBlock) {
+  const title = block.title.toLowerCase();
+  const label = (block.ctaLabel || "").toLowerCase();
+  return (
+    title.includes("підтрим") ||
+    label.includes("збір") ||
+    label.includes("підтрим")
+  );
+}
+
+function CtaLink({
+  href,
+  className,
+  children,
+}: {
+  href?: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (href) {
+    return (
+      <Link
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <button type="button" className={className}>
+      {children}
+    </button>
+  );
+}
+
+const AboutSection = ({ blocks, contacts }: Props) => {
   return (
     <section className={s.section}>
       <div className={s.container}>
-        <div className={`${s.block} ${s.blockPolicy}`}>
-          <div className={s.mediaBlock}>
-            <Image
-              src="/images/Rectangle-12.png"
-              alt="Наша політика"
-              width={541}
-              height={318}
-              className={s.image}
-            />
-          </div>
-          <div className={s.contentBlock}>
-            <h2 className={s.title}>Наша політика</h2>
-            <div className={s.textGroup}>
-              <p className={s.text}>
-                Secret Garden — це простір, створений на принципах
-                натуральності, прозорості та відповідального підходу. Ми
-                працюємо виключно з продуктами, що мають зрозуміле походження та
-                відповідають чинним вимогам законодавства.
-              </p>
-              <p className={s.text}>
-                У нашому магазині не представлені продукти, що містять THC, а
-                також сполуки, отримані синтетичним шляхом. Ми свідомо обираємо
-                натуральні формати та інгредієнти без сумнівних домішок.
-              </p>
-              <p className={s.text}>
-                Ми розвиваємось як окремий, самостійний проєкт із власною
-                філософією та підходом. Ми робимо акцент на легальних,
-                перевірених продуктах і дотримуємося чіткої позиції щодо безпеки
-                та відповідального використання.
-              </p>
-            </div>
-          </div>
-          <button type="button" className={s.actionButton}>
-            Переглянути сертифікати
-          </button>
-        </div>
+        {blocks.map((block, index) => {
+          const texts = paragraphs(block.body);
+          const links = Array.isArray(block.links) ? block.links : [];
+          const imageLeft = block.imageLeft ?? index % 2 === 0;
+          const ctaHref = resolveCtaUrl(block, contacts);
+          const support = isSupportBlock(block);
+          // як у fallback «Наша політика»: фото зліва, кнопка під фото
+          const policyLayout = Boolean(
+            imageLeft && block.ctaLabel && !support,
+          );
 
-        <div className={s.block}>
-          <div className={s.contentBlock}>
-            <h2 className={s.title}>Ціль</h2>
-            <div className={s.textGroup}>
-              <p className={s.text}>
-                Наша мета — підтримати людей, які шукають м’яке заспокоєння,
-                зниження напруги та фізичний комфорт, а також тих, хто надає
-                перевагу натуральним способам розслаблення.
-              </p>
-              <p className={s.text}>
-                Ми не обіцяємо миттєвих ефектів і не формуємо завищених
-                очікувань. Натомість ми пропонуємо продукти та середовище, які
-                можуть стати частиною особистих ритуалів відновлення, відпочинку
-                й турботи про себе.
-              </p>
+          const media = block.imageUrl ? (
+            <div className={s.mediaBlock}>
+              <Image
+                src={block.imageUrl}
+                alt={block.title}
+                width={support ? 549 : 541}
+                height={support ? 257 : 318}
+                className={s.image}
+                unoptimized={block.imageUrl.startsWith("http")}
+              />
             </div>
-          </div>
-          <div className={s.mediaBlock}>
-            <Image
-              src="/images/Rectangle-13.png"
-              alt="Ціль"
-              width={541}
-              height={318}
-              className={s.image}
-            />
-          </div>
-        </div>
+          ) : null;
 
-        <div className={s.block}>
-          <div className={s.mediaBlock}>
-            <Image
-              src="/images/Rectangle-15.png"
-              alt="Інші послуги"
-              width={541}
-              height={318}
-              className={s.image}
-            />
-          </div>
-          <div className={s.contentBlock}>
-            <h2 className={s.title}>Інші послуги</h2>
-            <div className={s.textGroup}>
-              <p className={s.text}>
-                Secret Garden — це не лише магазин, а й живий простір. У нашому
-                закладі ви можете:
-              </p>
-              <p className={s.text}>
-                Випити каву в спокійній атмосфері
-                <br />
-                Скористатися можливістю покурити легально
-                <br />
-                Відвідати чайні церемонії, які проходять за попереднім записом.
-              </p>
-              <p className={s.text}>Записатися на церемонію ви можете нижче:</p>
-            </div>
-            <div className={s.socialButtons}>
-              <Link
-                href="https://www.instagram.com/secret_garden_dnipro"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={s.socialButton}
-              >
-                <InstagramIcon />
-                <span>Instagram</span>
-              </Link>
-              <Link
-                href="https://t.me/Secret_Garden_shop420"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={s.socialButton}
-              >
-                <TelegramIcon />
-                <span>Telegram</span>
-              </Link>
-            </div>
-          </div>
-        </div>
+          const underImageCta =
+            policyLayout && block.ctaLabel ? (
+              <CtaLink href={ctaHref} className={s.actionButton}>
+                {block.ctaLabel}
+              </CtaLink>
+            ) : null;
 
-        <div className={`${s.block} ${s.blockSupport}`}>
-          <div className={s.contentBlock}>
-            <h2 className={s.title}>Підтримка та вдячність</h2>
-            <div className={s.textGroup}>
-              <p className={s.text}>
-                Ми працюємо в Україні й усвідомлюємо відповідальність перед
-                нашою спільнотою. Для військовослужбовців діє знижка 10% — її
-                можна отримати у фізичному закладі у вигляді промокоду.
-              </p>
-              <p className={s.text}>
-                Окрім цього, ми регулярно долучаємось до зборів на дрони для
-                наших захисників. Це наш спосіб виразити нашу вдячність за
-                можливість прокидатися кожного дня.
-              </p>
+          const supportCta =
+            support && block.ctaLabel ? (
+              <CtaLink href={ctaHref} className={s.supportButton}>
+                <span className={s.supportButtonExtra}>+</span>
+                <span>{block.ctaLabel}</span>
+                <span className={s.supportButtonExtra}>+</span>
+              </CtaLink>
+            ) : null;
+
+          const content = (
+            <div className={s.contentBlock}>
+              <h2 className={s.title}>{block.title}</h2>
+              <div className={s.textGroup}>
+                {texts.map((text, i) => (
+                  <p key={i} className={s.text}>
+                    {text.split("\n").map((line, li) => (
+                      <span key={li}>
+                        {li > 0 ? <br /> : null}
+                        {line}
+                      </span>
+                    ))}
+                  </p>
+                ))}
+              </div>
+
+              {links.length > 0 ? (
+                <div className={s.socialButtons}>
+                  {links.map((link) => (
+                    <Link
+                      key={`${link.label}-${link.url}`}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={s.socialButton}
+                    >
+                      {link.kind === "instagram" ||
+                      link.label.toLowerCase().includes("instagram") ? (
+                        <InstagramIcon />
+                      ) : null}
+                      {link.kind === "telegram" ||
+                      link.label.toLowerCase().includes("telegram") ? (
+                        <TelegramIcon />
+                      ) : null}
+                      <span>{link.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+
+              {supportCta}
             </div>
-            <button type="button" className={s.supportButton}>
-              <span className={s.supportButtonExtra}>+</span>
-              <span>Підтримати збір</span>
-              <span className={s.supportButtonExtra}>+</span>
-            </button>
-          </div>
-          <div className={s.mediaBlock}>
-            <Image
-              src="/images/about-support.jpg"
-              alt="Підтримка та вдячність"
-              width={549}
-              height={257}
-              className={s.image}
-            />
-          </div>
-        </div>
+          );
+
+          return (
+            <div
+              key={block.id}
+              className={`${s.block} ${policyLayout ? s.blockPolicy : ""} ${
+                support ? s.blockSupport : ""
+              }`}
+            >
+              {policyLayout ? (
+                <>
+                  {media}
+                  {content}
+                  {underImageCta}
+                </>
+              ) : imageLeft ? (
+                <>
+                  {media}
+                  {content}
+                </>
+              ) : (
+                <>
+                  {content}
+                  {media}
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
     </section>
   );

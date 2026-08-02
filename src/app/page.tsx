@@ -6,6 +6,8 @@ import HomeReviewsSection from "@/components/sections/HomeReviewsSection/HomeRev
 
 import PageLoader from "@/components/PageLoader";
 import ProductsShowcase from "@/components/sections/ProductsSection/ProductsShowcase/ProductsShowcase";
+import { fetchBanners } from "@/lib/contentApi";
+import type { HeroSlideItem } from "@/config/heroSlides";
 
 type YoastRobots = {
   index?: string;
@@ -126,11 +128,21 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function Home() {
+export default async function Home() {
+  const banners = await fetchBanners();
+  const slides: HeroSlideItem[] = banners.map((b) => ({
+    id: b.id,
+    image: b.imageUrl,
+    mobileImage: b.mobileImageUrl || undefined,
+    title: b.title || "",
+    titleSub: b.titleSub || undefined,
+    description: b.description || "",
+  }));
+
   return (
     <>
       <PageLoader />
-      <HeroSection />
+      <HeroSection slides={slides} />
       <AdvantagesSection />
       <ProductsShowcase />
       <HomeFaqSection />

@@ -19,8 +19,9 @@ const getSlideImage = (slide: HeroSlideItem, isMobile: boolean) => {
   return slide.image;
 };
 
-const HeroSection = () => {
-  const slides: HeroSlideItem[] = HERO_SLIDES;
+const HeroSection = ({ slides: slidesProp }: { slides?: HeroSlideItem[] }) => {
+  const slides: HeroSlideItem[] =
+    slidesProp && slidesProp.length > 0 ? slidesProp : HERO_SLIDES;
   const [activeIndex, setActiveIndex] = useState(0);
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
   const [isManualPagination, setIsManualPagination] = useState(false);

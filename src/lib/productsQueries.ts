@@ -47,6 +47,7 @@ export const productQuery = (slugOrId: string) => ({
       name: string;
       slug: string;
       price: string;
+      salePrice?: string | number | null;
       currency: string;
       shortDescription?: string;
       description?: string;
@@ -82,14 +83,27 @@ export const productQuery = (slugOrId: string) => ({
         ? [data.mainImageUrl]
         : [placeholderImage];
 
+    const regularPrice = String(data.price ?? "");
+    const salePriceRaw = data.salePrice;
+    const salePrice =
+      salePriceRaw !== undefined &&
+      salePriceRaw !== null &&
+      String(salePriceRaw).trim() !== ""
+        ? String(salePriceRaw)
+        : "";
+    const onSale =
+      !!salePrice &&
+      Number(salePrice) > 0 &&
+      Number(salePrice) < Number(regularPrice);
+
     const product: Product = {
       id: data.id,
       name: data.name,
       slug: data.slug,
-      price: data.price,
-      regularPrice: data.price,
-      salePrice: data.price,
-      onSale: false,
+      price: onSale ? salePrice : regularPrice,
+      regularPrice,
+      salePrice: onSale ? salePrice : regularPrice,
+      onSale,
       description: data.description || "",
       shortDescription: data.shortDescription || "",
       sku: "",
@@ -127,7 +141,7 @@ export const productQuery = (slugOrId: string) => ({
       weight: undefined,
       dimensions: undefined,
       color: undefined,
-      originalPrice: undefined,
+      originalPrice: onSale ? regularPrice : undefined,
     };
 
     return product;

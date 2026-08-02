@@ -99,6 +99,9 @@
 }
 
 .actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1.33px solid var(--zoloto);
   border-radius: 5px;
   padding: 10px 18px;
@@ -111,6 +114,8 @@
   color: var(--zoloto);
   background: transparent;
   cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
   transition: all 0.2s ease;
 }
 
@@ -204,6 +209,7 @@
   font-size: 18px;
   line-height: 156%;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
 }
