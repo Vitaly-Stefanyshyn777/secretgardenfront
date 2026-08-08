@@ -2278,6 +2278,8 @@ export interface CreateOrderPayload {
   termsAccepted: boolean;
   discountAmount?: number;
   deliveryCost?: number;
+  /** wayforpay | cod | bacs | ... */
+  paymentMethod?: string;
   items?: Array<{ productId: string; quantity: number }>;
 }
 

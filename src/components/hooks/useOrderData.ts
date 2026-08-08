@@ -75,6 +75,7 @@ export function useOrderData() {
       termsAccepted: formData.acceptTerms ?? false,
       discountAmount: Math.round(discountAmount) || 0,
       deliveryCost: Math.round(deliveryCost) || 0,
+      paymentMethod: formData.paymentMethod || undefined,
     };
 
     if (hasDifferentRecipient) {
