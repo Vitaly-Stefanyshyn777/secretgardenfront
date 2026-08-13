@@ -327,7 +327,7 @@ const ProductsShowcase: React.FC = () => {
     }
   };
 
-  const sectionTitle = isMobile ? "Популярні товари" : "Товари для спорту";
+  const sectionTitle = "Популярні товари";
 
   if (isError) {
     return (
