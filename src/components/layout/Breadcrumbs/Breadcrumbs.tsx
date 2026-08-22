@@ -2,6 +2,7 @@
 
 import { useProductQuery } from "@/components/hooks/useProductsQuery";
 import { useCourseQuery } from "@/lib/coursesQueries";
+import { useTranslation, type TranslationPath } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useLayoutEffect, useRef, useState } from "react";
@@ -14,6 +15,7 @@ interface BreadcrumbItem {
 }
 
 const Breadcrumbs: React.FC = () => {
+  const { t } = useTranslation();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -36,20 +38,48 @@ const Breadcrumbs: React.FC = () => {
 
   // Обробка кліку на breadcrumb item
   const handleBreadcrumbClick = (item: BreadcrumbItem, e: React.MouseEvent) => {
-    // Якщо це "Інвентар" і ми на сторінці products - скидаємо фільтри та перенаправляємо на /products без параметрів
-    if (item.label === "Інвентар" && pathname.startsWith("/products")) {
+    if (item.href === "/products" && pathname.startsWith("/products")) {
       e.preventDefault();
-      // Перенаправляємо на /products без параметрів (показуємо всі дефолтні категорії)
       router.push("/products");
     }
-    // Для інших випадків використовуємо стандартну навігацію через Link
+  };
+
+  const segmentLabels: Record<string, TranslationPath> = {
+    trainers: "breadcrumbs.findTrainer",
+    "#LearningFormats": "breadcrumbs.bfbLearning",
+    "#LearningMobileFormats": "breadcrumbs.bfbLearning",
+    "courses-landing": "breadcrumbs.instructing",
+    courses: "breadcrumbs.workshops",
+    course: "breadcrumbs.bfbBasics",
+    "our-courses": "breadcrumbs.programs",
+    inventory: "breadcrumbs.catalog",
+    products: "breadcrumbs.catalog",
+    workshops: "breadcrumbs.workshops",
+    about: "breadcrumbs.about",
+    "about-bfb": "breadcrumbs.aboutBfb",
+    oferta: "breadcrumbs.oferta",
+    "privacy-policy": "breadcrumbs.privacy",
+    contact: "breadcrumbs.contacts",
+    contacts: "breadcrumbs.contacts",
+  };
+
+  const categoryLabels: Record<string, TranslationPath> = {
+    "30": "breadcrumbs.forSport",
+    "85": "breadcrumbs.catalog",
+    "86": "breadcrumbs.boards",
+    "87": "breadcrumbs.accessories",
+    "inventory-boards": "breadcrumbs.boards",
+    "inventory-accessories": "breadcrumbs.accessories",
+    inventory: "breadcrumbs.catalog",
+    "for-sport": "breadcrumbs.forSport",
+    girya: "breadcrumbs.dumbbells",
   };
 
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
     const segments = pathname.split("/").filter(Boolean);
     const breadcrumbs: BreadcrumbItem[] = [];
 
-    breadcrumbs.push({ label: "Головна", href: "/" });
+    breadcrumbs.push({ label: t("breadcrumbs.home"), href: "/" });
 
     let currentPath = "";
 
@@ -58,35 +88,9 @@ const Breadcrumbs: React.FC = () => {
 
       let label = segment;
 
-      if (segment === "trainers") {
-        label = "Знайди тренера";
-      } else if (
-        segment === "#LearningFormats" ||
-        segment === "#LearningMobileFormats"
-      ) {
-        label = "Навчання B.F.B";
-      } else if (segment === "courses-landing") {
-        label = "Інструкторство BFB";
-      } else if (segment === "courses") {
-        label = "Воркшопи";
-      } else if (segment === "course") {
-        label = "Основи тренерства BFB";
-      } else if (segment === "our-courses") {
-        label = "Навчальні програми";
-      } else if (segment === "inventory" || segment === "products") {
-        label = "Інвентар";
-      } else if (segment === "workshops") {
-        label = "Воркшопи";
-      } else if (segment === "about") {
-        label = "Про нас";
-      } else if (segment === "about-bfb") {
-        label = "Про B.F.B";
-      } else if (segment === "oferta") {
-        label = "Договір (оферта)";
-      } else if (segment === "privacy-policy") {
-        label = "Політика конфіденційності";
-      } else if (segment === "contact" || segment === "contacts") {
-        label = "Контакти";
+      const segmentKey = segmentLabels[segment];
+      if (segmentKey) {
+        label = t(segmentKey);
       } else if (segments[0] === "products" && index === 1) {
         // Сторінка продукту: замінити slug/ID на назву товару
         // Декодуємо segment, якщо він encoded
@@ -140,42 +144,31 @@ const Breadcrumbs: React.FC = () => {
   // щоб уникнути hydration mismatch (document доступний тільки на клієнті)
   if (pathname === "/not-found") {
     breadcrumbs = [
-      { label: "Головна", href: "/" },
+      { label: t("breadcrumbs.home"), href: "/" },
       { label: "404", isActive: true },
     ];
   }
 
-  // Додаємо дочірню категорію Інвентар у /products?category=...
+  const catalogLabel = t("breadcrumbs.catalog");
+
+  // Додаємо дочірню категорію Каталог у /products?category=...
   if (pathname === "/products") {
     const categorySlug = searchParams.get("category");
     if (categorySlug) {
-      const map: Record<string, string> = {
-        "30": "Товари для спорту",
-        "85": "Інвентар",
-        "86": "Борди",
-        "87": "Аксесуари",
-        "inventory-boards": "Борди",
-        "inventory-accessories": "Аксесуари",
-        inventory: "Інвентар",
-        "for-sport": "Товари для спорту",
-        girya: "Гантелі",
-      };
-      const label = map[categorySlug];
-      if (label) {
-        // Робимо /products неактивним посиланням та додаємо активну категорію
+      const categoryKey = categoryLabels[categorySlug];
+      if (categoryKey) {
+        const label = t(categoryKey);
         if (breadcrumbs.length > 0) {
           const last = breadcrumbs[breadcrumbs.length - 1];
           last.isActive = false;
-          last.href = "/products"; // При кліку на "Інвентар" переходимо на /products без параметрів
-          last.label = "Інвентар";
+          last.href = "/products";
+          last.label = catalogLabel;
         }
         breadcrumbs.push({ label, isActive: true });
       } else {
-        // Якщо категорія не знайдена в мапі, змінюємо назву останнього елемента
         if (breadcrumbs.length > 0) {
           const last = breadcrumbs[breadcrumbs.length - 1];
-          last.label = "Інвентар";
-          // Встановлюємо href для можливості повернутися на /products
+          last.label = catalogLabel;
           if (last.href === undefined) {
             last.href = "/products";
             last.isActive = false;
@@ -183,11 +176,9 @@ const Breadcrumbs: React.FC = () => {
         }
       }
     } else {
-      // Якщо немає category параметра, залишаємо "Інвентар" як активний текст
       if (breadcrumbs.length > 0) {
         const last = breadcrumbs[breadcrumbs.length - 1];
-        last.label = "Інвентар";
-        // Не встановлюємо href, бо ми вже на /products
+        last.label = catalogLabel;
         last.href = undefined;
         last.isActive = true;
       }
@@ -306,7 +297,7 @@ const Breadcrumbs: React.FC = () => {
     <nav
       ref={navRef}
       className={`${styles.breadcrumbs} ${isHidden ? styles.hidden : ""}`}
-      aria-label="Хлібні крихти"
+      aria-label={t("breadcrumbs.aria")}
     >
       <div className={styles.breadcrumbsContainer}>
         <ol className={styles.breadcrumbList}>

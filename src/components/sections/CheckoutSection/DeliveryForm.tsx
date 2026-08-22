@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useMemo } from "react";
 import { NovaPoshtaIcon } from "@/components/Icons/Icons";
 import { FormData } from "./types";
 import s from "./CheckoutSection.module.css";
@@ -10,6 +11,7 @@ import BranchDropdownField, {
   BranchDropdownOption,
 } from "@/components/ui/FormFields/BranchDropdownField";
 import InputField from "@/components/ui/FormFields/InputField";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Warehouse {
   name: string;
@@ -46,18 +48,21 @@ export default function DeliveryForm({
   setIsMapOpen,
   errors = {},
 }: DeliveryFormProps) {
+  const { t } = useTranslation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const deliveryOptions: BranchDropdownOption[] = [
-    { value: "branch", label: "На відділення" },
-    { value: "postomat", label: "Поштомат" },
-    { value: "courier", label: "Курʼєр" },
-  ];
+  const deliveryOptions: BranchDropdownOption[] = useMemo(
+    () => [
+      { value: "branch", label: t("checkout.toBranch") },
+      { value: "postomat", label: t("checkout.postomat") },
+      { value: "courier", label: t("checkout.courier") },
+    ],
+    [t],
+  );
 
   const [cities, setCities] = React.useState<DropdownOption[]>([]);
   const [loadingCities, setLoadingCities] = React.useState(false);
 
-  // Завантаження міст з updated_data.json
   React.useEffect(() => {
     const loadCities = async () => {
       setLoadingCities(true);
@@ -65,21 +70,18 @@ export default function DeliveryForm({
         const response = await fetch("/updated_data.json");
         const data = await response.json();
 
-        // Витягуємо унікальні міста
         const uniqueCities = (data as Array<{ name?: string }>)
           .map((city) => city.name || "")
           .filter(
             (name: string, index: number, arr: string[]) =>
-              arr.indexOf(name) === index
+              arr.indexOf(name) === index,
           )
           .sort()
-          .slice(0, 100) // Обмежуємо до 100 міст для продуктивності
+          .slice(0, 100)
           .map((name: string) => ({ value: name, label: name }));
 
         setCities(uniqueCities);
-      } catch (error) {
-        // Silent error handling
-        // Fallback до статичних міст
+      } catch {
         setCities([
           { value: "Київ", label: "Київ" },
           { value: "Чернігів", label: "Чернігів" },
@@ -96,7 +98,6 @@ export default function DeliveryForm({
   const [branches, setBranches] = React.useState<DropdownOption[]>([]);
   const [loadingBranches, setLoadingBranches] = React.useState(false);
 
-  // Завантаження відділень для обраного міста
   React.useEffect(() => {
     if (!formData.city) {
       setBranches([]);
@@ -109,7 +110,6 @@ export default function DeliveryForm({
         const response = await fetch("/updated_data.json");
         const data = await response.json();
 
-        // Знаходимо місто
         const selectedCity = (
           data as Array<{
             name?: string;
@@ -122,26 +122,22 @@ export default function DeliveryForm({
           return;
         }
 
-        // Фільтруємо відділення залежно від типу доставки
         let allWarehouses: Warehouse[] = [];
 
         if (deliveryType === "branch") {
-          // Для "На відділення" показуємо відділення та пункти приймання (без поштоматів)
           allWarehouses = [
             ...(selectedCity.branches || []),
-            ...(selectedCity.warehouses || []).filter(warehouse =>
-              !warehouse.name.includes("Поштомат")
+            ...(selectedCity.warehouses || []).filter(
+              (warehouse) => !warehouse.name.includes("Поштомат"),
             ),
           ];
         } else if (deliveryType === "postomat") {
-          // Для "Поштомат" показуємо тільки поштомати з warehouses
           allWarehouses = [
-            ...(selectedCity.warehouses || []).filter(warehouse =>
-              warehouse.name.includes("Поштомат")
+            ...(selectedCity.warehouses || []).filter((warehouse) =>
+              warehouse.name.includes("Поштомат"),
             ),
           ];
         } else {
-          // Для інших типів (якщо знадобиться) показуємо все
           allWarehouses = [
             ...(selectedCity.branches || []),
             ...(selectedCity.warehouses || []),
@@ -158,11 +154,10 @@ export default function DeliveryForm({
               label: formattedName,
             };
           })
-          .slice(0, 50); // Обмежуємо до 50 для продуктивності
+          .slice(0, 50);
 
         setBranches(branchesList);
-      } catch (error) {
-        // Silent error handling
+      } catch {
         setBranches([]);
       } finally {
         setLoadingBranches(false);
@@ -172,9 +167,19 @@ export default function DeliveryForm({
     loadBranches();
   }, [formData.city, deliveryType]);
 
+  const branchPlaceholder = loadingBranches
+    ? t("checkout.loading")
+    : !formData.city
+      ? t("checkout.chooseCityFirst")
+      : branches.length === 0
+        ? t("checkout.noBranches")
+        : deliveryType === "postomat"
+          ? t("checkout.choosePostomat")
+          : t("checkout.toBranch");
+
   return (
     <div className={s.deliveryBlock}>
-      <h2 className={s.sectionTitle}>Доставка</h2>
+      <h2 className={s.sectionTitle}>{t("checkout.delivery")}</h2>
       <div className={s.deliveryGrid}>
         <div className={s.deliveryRow}>
           <div className={s.inputWrap}>
@@ -182,10 +187,9 @@ export default function DeliveryForm({
               label=""
               value={deliveryType}
               options={deliveryOptions}
-              placeholder="Обери спосіб доставки"
+              placeholder={t("checkout.chooseDelivery")}
               onChange={(value) => {
                 setDeliveryType(value);
-                // Очищуємо обране відділення при зміні типу доставки
                 setFormData({ ...formData, branch: "" });
               }}
               showLabel={false}
@@ -204,7 +208,9 @@ export default function DeliveryForm({
               label=""
               value={formData.city}
               options={cities}
-              placeholder={loadingCities ? "Завантаження міст..." : "Місто"}
+              placeholder={
+                loadingCities ? t("checkout.loadingCities") : t("checkout.city")
+              }
               onChange={(value) =>
                 setFormData({
                   ...formData,
@@ -226,7 +232,7 @@ export default function DeliveryForm({
           <div className={s.inputWrapBranch}>
             {deliveryType === "courier" ? (
               <InputField
-                label="Адреса доставки"
+                label={t("checkout.deliveryAddress")}
                 type="text"
                 value={formData.branch}
                 onChange={(e) =>
@@ -234,25 +240,15 @@ export default function DeliveryForm({
                 }
                 hasError={!!errors.branch}
                 supportingText={errors.branch || ""}
-                placeholder="Введіть повну адресу доставки"
+                placeholder={t("checkout.fullAddressPlaceholder")}
               />
             ) : (
               <DropdownField
                 label=""
                 value={formData.branch}
                 options={branches}
-                key={branches.length} // Force re-render when branches change
-                placeholder={
-                  loadingBranches
-                    ? "Завантаження..."
-                    : !formData.city
-                    ? "Спочатку оберіть місто"
-                    : branches.length === 0
-                    ? "Немає поштових відділень"
-                    : deliveryType === "postomat"
-                    ? "Оберіть поштомат"
-                    : "На відділення"
-                }
+                key={branches.length}
+                placeholder={branchPlaceholder}
                 onChange={(value) => setFormData({ ...formData, branch: value })}
                 showLabel={false}
                 hasError={!!errors.branch}
@@ -270,7 +266,7 @@ export default function DeliveryForm({
             <div className={s.addressFields}>
               <div className={`${s.inputWrap} ${s.inputWrapHouse}`}>
                 <InputField
-                  label="Будинок"
+                  label={t("checkout.building")}
                   type="text"
                   value={formData.house}
                   onChange={(e) =>
@@ -282,7 +278,7 @@ export default function DeliveryForm({
               </div>
               <div className={`${s.inputWrap} ${s.inputWrapBuilding}`}>
                 <InputField
-                  label="Корпус"
+                  label={t("checkout.buildingBlock")}
                   type="text"
                   value={formData.building}
                   onChange={(e) =>
@@ -294,7 +290,7 @@ export default function DeliveryForm({
               </div>
               <div className={`${s.inputWrap} ${s.inputWrapApartment}`}>
                 <InputField
-                  label="Квартира"
+                  label={t("checkout.apartment")}
                   type="text"
                   value={formData.apartment}
                   onChange={(e) =>
@@ -312,7 +308,7 @@ export default function DeliveryForm({
               onClick={() => setIsMapOpen(true)}
               disabled={!formData.city}
             >
-              Обрати на мапі
+              {t("checkout.chooseOnMap")}
             </button>
           )}
         </div>

@@ -554,6 +554,16 @@
     gap: 0;
   }
 
+  .productCardCompact {
+    width: 100%;
+    min-height: mvw(278);
+    box-sizing: border-box;
+  }
+
+  .productCardCompact .cardImage {
+    height: mvw(155);
+  }
+
   .productCardShowcaseDark .favoriteBtn {
     display: flex;
     top: mvw(8);

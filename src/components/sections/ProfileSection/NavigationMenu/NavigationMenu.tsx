@@ -7,8 +7,11 @@ import { navigationItems } from "./data";
 import NavigationLink from "./NavigationLink";
 import LogoutButton from "./LogoutButton";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "@/hooks/useTranslation";
+import type { NavigationItem } from "./types";
 
 const NavigationMenu: React.FC = () => {
+  const { t } = useTranslation();
   const pathname = usePathname();
   const logout = useAuthStore((s) => s.logout);
   const queryClient = useQueryClient();
@@ -17,6 +20,11 @@ const NavigationMenu: React.FC = () => {
     <nav className={styles.navigationMenu}>
       <ul className={styles.menuList}>
         {navigationItems.map((item, index) => {
+          const { labelKey, ...rest } = item;
+          const resolvedItem: NavigationItem = {
+            ...rest,
+            label: t(labelKey),
+          };
           const isActive = pathname === item.href;
 
           // Перевіряємо, чи це не останній елемент у масиві
@@ -26,7 +34,7 @@ const NavigationMenu: React.FC = () => {
             <React.Fragment key={item.id}>
               {item.id === "logout" ? (
                 <LogoutButton
-                  item={item}
+                  item={resolvedItem}
                   isActive={isActive}
                   onLogout={async () => {
                     try {
@@ -37,7 +45,7 @@ const NavigationMenu: React.FC = () => {
                   }}
                 />
               ) : (
-                <NavigationLink item={item} isActive={isActive} />
+                <NavigationLink item={resolvedItem} isActive={isActive} />
               )}
 
               {/* Рендеримо лінію між кожним блоком */}

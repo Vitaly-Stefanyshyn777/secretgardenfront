@@ -4,23 +4,20 @@ import {
   CheckoutErrors,
 } from "@/components/sections/CheckoutSection/types";
 import { CartItem } from "@/store/cart";
+import { translate } from "@/i18n";
+import { getCurrentLocale } from "@/store/language";
 
 export function useCheckoutValidation() {
-  // Функція для парсингу помилок WooCommerce API
   const parseWcValidationErrors = (errorData: any): CheckoutErrors => {
     const wcErrors: CheckoutErrors = {};
 
-    // Перевіряємо структуру відповіді WooCommerce
     if (errorData?.data?.params) {
       const params = errorData.data.params;
 
-      // Маппінг помилок WooCommerce на поля форми
       if (params.billing) {
-        // Парсимо помилки billing - вони можуть бути рядком або об'єктом
         if (typeof params.billing === "string") {
           wcErrors.email = params.billing;
         } else if (typeof params.billing === "object") {
-          // Якщо це об'єкт з детальними помилками
           if (params.billing.email) {
             wcErrors.email = params.billing.email;
           }
@@ -36,9 +33,7 @@ export function useCheckoutValidation() {
         }
       }
 
-      // Інші можливі помилки
       if (params.shipping) {
-        // Помилки доставки
         if (typeof params.shipping === "object") {
           if (params.shipping.city) {
             wcErrors.city = params.shipping.city;
@@ -51,7 +46,6 @@ export function useCheckoutValidation() {
       }
     }
 
-    // Перевіряємо також data.details якщо params немає
     if (errorData?.data?.details && !errorData?.data?.params) {
       const details = errorData.data.details;
 
@@ -74,80 +68,88 @@ export function useCheckoutValidation() {
     return wcErrors;
   };
 
-  // Функція для валідації форми
   const validateForm = (
     formData: FormData,
     hasDifferentRecipient: boolean,
-    deliveryType: string
+    deliveryType: string,
   ): CheckoutErrors => {
+    const locale = getCurrentLocale();
+    const t = (
+      key: Parameters<typeof translate>[1],
+      params?: Record<string, string | number>,
+    ) => translate(locale, key, params);
     const newErrors: CheckoutErrors = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = "Обов'язкове поле";
+      newErrors.firstName = t("common.requiredField");
     }
     if (!formData.lastName.trim()) {
-      newErrors.lastName = "Обов'язкове поле";
+      newErrors.lastName = t("common.requiredField");
     }
     if (!formData.phone.trim()) {
-      newErrors.phone = "Обов'язкове поле";
+      newErrors.phone = t("common.requiredField");
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = "Обов'язкове поле";
+      newErrors.email = t("common.requiredField");
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Невірний email";
+      newErrors.email = t("checkout.invalidEmail");
     }
 
     if (hasDifferentRecipient) {
       if (!formData.recipientFirstName.trim()) {
-        newErrors.recipientFirstName = "Обов'язкове поле";
+        newErrors.recipientFirstName = t("common.requiredField");
       }
       if (!formData.recipientLastName.trim()) {
-        newErrors.recipientLastName = "Обов'язкове поле";
+        newErrors.recipientLastName = t("common.requiredField");
       }
       if (!formData.recipientPhone.trim()) {
-        newErrors.recipientPhone = "Обов'язкове поле";
+        newErrors.recipientPhone = t("common.requiredField");
       }
     }
 
     if (!deliveryType) {
-      newErrors.deliveryType = "Обов'язкове поле";
+      newErrors.deliveryType = t("common.requiredField");
     }
     if (!formData.city.trim()) {
-      newErrors.city = "Обов'язкове поле";
+      newErrors.city = t("common.requiredField");
     }
     if (deliveryType === "courier") {
       if (!formData.house.trim()) {
-        newErrors.house = "Обов'язкове поле";
+        newErrors.house = t("common.requiredField");
       }
       if (!formData.branch.trim()) {
-        newErrors.branch = "Обов'язкове поле";
+        newErrors.branch = t("common.requiredField");
       }
     } else {
       if (!formData.branch.trim()) {
-        newErrors.branch = "Обов'язкове поле";
+        newErrors.branch = t("common.requiredField");
       }
     }
 
-    // Валідація чекбоксу з умовами
     if (!formData.acceptTerms) {
-      newErrors.acceptTerms = "Необхідно прийняти умови оферти";
+      newErrors.acceptTerms = t("checkout.acceptOfferRequired");
     }
 
     return newErrors;
   };
 
-  // Функція для валідації кошика та загальної суми
   const validateCartAndTotal = (
     items: CartItem[],
-    safeTotal: number
+    safeTotal: number,
   ): string | null => {
+    const locale = getCurrentLocale();
+    const t = (
+      key: Parameters<typeof translate>[1],
+      params?: Record<string, string | number>,
+    ) => translate(locale, key, params);
+
     if (items.length === 0) {
-      return "Ваш кошик порожній. Додайте товари перед оформленням замовлення.";
+      return t("checkout.cartEmptyCheckout");
     }
 
     if (safeTotal <= 0) {
-      return "Сума замовлення не може бути нульовою. Перевірте кошик.";
+      return t("checkout.zeroTotalCheck");
     }
 
     const outOfStockItems = items.filter((item) => {
@@ -161,7 +163,7 @@ export function useCheckoutValidation() {
 
     if (outOfStockItems.length > 0) {
       const itemNames = outOfStockItems.map((item) => item.name).join(", ");
-      return `На жаль, наступні товари відсутні в наявності: ${itemNames}. Будь ласка, видаліть їх з кошика.`;
+      return `${t("checkout.itemsUnavailable")} ${itemNames}. ${t("checkout.removeFromCart")}`;
     }
 
     const insufficientStockItems = items.filter((item) => {
@@ -174,11 +176,14 @@ export function useCheckoutValidation() {
     });
 
     if (insufficientStockItems.length > 0) {
-      const messages = insufficientStockItems.map(
-        (item) =>
-          `${item.name}: запрошено ${item.quantity} шт., доступно ${item.stockQuantity} шт.`
+      const messages = insufficientStockItems.map((item) =>
+        t("checkout.stockDetail", {
+          name: item.name,
+          qty: item.quantity,
+          stock: item.stockQuantity ?? 0,
+        }),
       );
-      return `Недостатньо товарів в наявності:\n${messages.join("\n")}`;
+      return `${t("checkout.insufficientStock")}\n${messages.join("\n")}`;
     }
 
     return null;

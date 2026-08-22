@@ -6,6 +6,7 @@ import { A11y } from "swiper/modules";
 import ProductCard from "@/components/sections/ProductsSection/ProductCard/ProductCard";
 import SliderNav from "@/components/ui/SliderNav/SliderNavActions";
 import { useRecentlyViewed } from "@/components/hooks/useRecentlyViewed";
+import { useTranslation } from "@/hooks/useTranslation";
 import styles from "./ProductPage.module.css";
 import "swiper/css";
 
@@ -18,6 +19,7 @@ const RecentlyViewed = memo(function RecentlyViewed({
   currentProductSlug,
   isMobile = false,
 }: RecentlyViewedProps) {
+  const { t } = useTranslation();
   const { items, isLoading } = useRecentlyViewed(currentProductSlug);
   const baseItemsPerView = isMobile ? 2 : 6;
   const [slideIdx, setSlideIdx] = useState(0);
@@ -55,6 +57,7 @@ const RecentlyViewed = memo(function RecentlyViewed({
       }
       isFluid
       showcaseDark={isMobile}
+      compact={isMobile}
     />
   );
 
@@ -65,7 +68,7 @@ const RecentlyViewed = memo(function RecentlyViewed({
       }`}
     >
       <div className={styles.relatedProductsHeader}>
-        <h2>Переглянуті</h2>
+        <h2>{t("product.recentlyViewed")}</h2>
       </div>
 
       {isLoading ? (
@@ -83,8 +86,8 @@ const RecentlyViewed = memo(function RecentlyViewed({
           ))}
         </div>
       ) : items.length === 0 ? (
-        <p className={styles.reviewsEmpty} style={{ padding: "24px 0" }}>
-          Перегляньте інші товари — вони з’являться тут.
+        <p className={styles.relatedEmptyHint}>
+          {t("product.recentlyViewedEmpty")}
         </p>
       ) : isMobile ? (
         <div className={styles.relatedSliderWrap}>

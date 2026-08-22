@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import PrivacyPolicySection from "@/components/sections/PrivacyPolicySection/PrivacyPolicySection";
 
 export const metadata: Metadata = {
-  title: "Політика конфіденційності - BFB",
-  description: "Політика конфіденційності BFB. Як ми збираємо, використовуємо та захищаємо вашу персональну інформацію.",
+  title: "Політика конфіденційності — Secret Garden",
+  description:
+    "Політика конфіденційності інтернет-магазину Secret Garden. Як ми збираємо, використовуємо та захищаємо вашу персональну інформацію.",
   robots: {
     index: false,
     follow: true,

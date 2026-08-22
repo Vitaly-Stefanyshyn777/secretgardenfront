@@ -8,9 +8,11 @@ import { useAuthStore } from "@/store/auth";
 import PasswordField from "@/components/ui/FormFields/PasswordField";
 import { PasswordsIcon } from "@/components/Icons/Icons";
 import SubmitButton from "@/components/ui/SubmitButton/SubmitButton";
+import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "react-toastify";
 
 const ChangePassword: React.FC = () => {
+  const { t } = useTranslation();
   const token = useAuthStore((s) => s.token);
   const isHydrated = useAuthStore((s) => s.isHydrated);
   const [isMobile, setIsMobile] = useState(false);
@@ -52,7 +54,7 @@ const ChangePassword: React.FC = () => {
     if (!isHydrated) return;
 
     if (!token) {
-      toast.error("Потрібна авторизація для зміни пароля");
+      toast.error(t("profile.authRequired"));
       return;
     }
 
@@ -61,15 +63,15 @@ const ChangePassword: React.FC = () => {
       !values.newPassword ||
       !values.confirmPassword
     ) {
-      toast.error("Заповніть усі поля форми");
+      toast.error(t("profile.fillAllFields"));
       return;
     }
     if (values.newPassword !== values.confirmPassword) {
-      toast.error("Нові паролі не співпадають");
+      toast.error(t("profile.passwordsMismatch"));
       return;
     }
     if (values.newPassword.length < 8) {
-      toast.error("Новий пароль має містити щонайменше 8 символів");
+      toast.error(t("profile.passwordMinLength"));
       return;
     }
 
@@ -88,7 +90,7 @@ const ChangePassword: React.FC = () => {
       });
 
       if (!res.ok) {
-        let message = "Не вдалося змінити пароль. Спробуйте ще раз.";
+        let message = t("profile.passwordChangeFailed");
         try {
           const data = (await res.json()) as { message?: string; error?: string };
           if (data.message) message = data.message;
@@ -100,10 +102,10 @@ const ChangePassword: React.FC = () => {
         return;
       }
 
-      toast.success("Пароль успішно змінено");
+      toast.success(t("profile.passwordChanged"));
       reset();
     } catch {
-      toast.error("Не вдалося змінити пароль. Спробуйте ще раз.");
+      toast.error(t("profile.passwordChangeFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -112,7 +114,7 @@ const ChangePassword: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Зміна пароля</h1>
+        <h1 className={styles.title}>{t("profile.passwordTitle")}</h1>
       </div>
 
       <SectionDivider />
@@ -121,9 +123,9 @@ const ChangePassword: React.FC = () => {
         <div className={styles.inputGroup}>
           <PasswordField
             icon={<PasswordsIcon />}
-            label="Поточний пароль"
+            label={t("profile.currentPassword")}
             hasError={false}
-            supportingText="Введіть поточний пароль"
+            supportingText={t("profile.currentPasswordPlaceholder")}
             // inputStyle={{ backgroundColor: isMobile ? '#fff' : '#f9f9f9', borderColor: isMobile ? '#fff' : '#f9f9f9' }}
             eyeBtnClassName={isMobile ? styles.eyeBtnMobile : ""}
             {...register("currentPassword", { required: true })}
@@ -134,9 +136,9 @@ const ChangePassword: React.FC = () => {
         <div className={styles.inputGroup}>
           <PasswordField
             icon={<PasswordsIcon />}
-            label="Введіть новий пароль"
+            label={t("profile.newPasswordPlaceholder")}
             hasError={false}
-            supportingText="Новий пароль має містити щонайменше 8 символів та відрізнятися від поточного"
+            supportingText={t("profile.newPasswordHint")}
             // inputStyle={{
             //   backgroundColor: isMobile ? "#fff" : "#f9f9f9",
             //   borderColor: isMobile ? "#fff" : "#f9f9f9",
@@ -150,9 +152,9 @@ const ChangePassword: React.FC = () => {
         <div className={styles.inputGroup}>
           <PasswordField
             icon={<PasswordsIcon />}
-            label="Підтвердіть новий пароль"
+            label={t("profile.confirmPassword")}
             hasError={false}
-            supportingText="Повторіть новий пароль без помилок"
+            supportingText={t("profile.confirmPasswordPlaceholder")}
             // inputStyle={{
             //   backgroundColor: isMobile ? "#fff" : "#f9f9f9",
             //   borderColor: isMobile ? "#fff" : "#f9f9f9",
@@ -168,7 +170,7 @@ const ChangePassword: React.FC = () => {
           isSubmitting={submitting}
           isFormFilled={isFormFilled}
         >
-          Змінити пароль
+          {t("profile.changePassword")}
         </SubmitButton>
       </form>
     </div>

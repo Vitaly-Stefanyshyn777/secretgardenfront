@@ -13,6 +13,7 @@ import { Inter } from "next/font/google";
 import { Roboto } from "next/font/google";
 import QueryProvider from "@/components/providers/QueryProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
+import LanguageProvider from "@/components/providers/LanguageProvider";
 import { ThemeSettingsProvider } from "@/components/providers/ThemeSettingsProvider";
 import AnchorHandler from "@/components/layout/AnchorHandler/AnchorHandler";
 import { ToastContainer } from "react-toastify";
@@ -73,7 +74,8 @@ export default function RootLayout({
     >
       <body>
         <QueryProvider>
-          <AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
             <ThemeSettingsProvider>
               <AnchorHandler />
               <ToastContainer
@@ -97,6 +99,7 @@ export default function RootLayout({
               <MobileBottomNav />
             </ThemeSettingsProvider>
           </AuthProvider>
+          </LanguageProvider>
         </QueryProvider>
       </body>
     </html>

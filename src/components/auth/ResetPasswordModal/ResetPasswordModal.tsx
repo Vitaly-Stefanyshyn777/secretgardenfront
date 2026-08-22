@@ -15,6 +15,7 @@ import ResetPasswordNewPasswordForm, {
   type ResetPasswordNewPasswordFormValues,
 } from "./ResetPasswordNewPasswordForm";
 import ResetPasswordSuccessModal from "./ResetPasswordSuccessModal";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./ResetPasswordModal.module.css";
 
 type ResetPasswordStep = "email" | "code" | "newPassword" | "success";
@@ -48,6 +49,7 @@ function ResetPasswordModal({
   const emailForm = useForm<ResetPasswordEmailFormValues>();
   const codeForm = useForm<ResetPasswordCodeFormValues>();
   const newPasswordForm = useForm<ResetPasswordNewPasswordFormValues>();
+  const { t } = useTranslation();
 
   const handleEmailSubmit = async (data: ResetPasswordEmailFormValues) => {
     try {
@@ -59,7 +61,7 @@ function ResetPasswordModal({
     } catch (error) {
       console.error("Error sending reset password email:", error);
       emailForm.setError("email", {
-        message: "Помилка при відправці листа. Спробуйте ще раз.",
+        message: t("auth.sendEmailError"),
       });
     }
   };
@@ -77,7 +79,7 @@ function ResetPasswordModal({
     } catch (error) {
       console.error("Error validating reset code:", error);
       codeForm.setError("code", {
-        message: "Невірний код підтвердження",
+        message: t("auth.invalidCode"),
       });
     }
   };
@@ -97,7 +99,7 @@ function ResetPasswordModal({
     } catch (error) {
       console.error("Error setting new password:", error);
       newPasswordForm.setError("password", {
-        message: "Помилка при зміні паролю. Спробуйте ще раз.",
+        message: t("auth.resetPasswordError"),
       });
     }
   };

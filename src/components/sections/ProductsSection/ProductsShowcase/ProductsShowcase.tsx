@@ -12,6 +12,7 @@ import ProductsShowcaseSkeleton from "./ProductsShowcaseSkeleton";
 import s from "./ProductsShowcase.module.css";
 import { fetchWcCategories } from "@/lib/bfbApi";
 import { normalizeImageUrl } from "@/lib/imageUtils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -111,6 +112,7 @@ const renderShowcaseProductCard = (
 );
 
 const ProductsShowcase: React.FC = () => {
+  const { t } = useTranslation();
   const [inventoryCategories, setInventoryCategories] = useState<
     Array<{ id: number; name: string; slug: string; image?: { src?: string } }>
   >([]);
@@ -327,7 +329,7 @@ const ProductsShowcase: React.FC = () => {
     }
   };
 
-  const sectionTitle = "Популярні товари";
+  const sectionTitle = t("home.popularProducts");
 
   if (isError) {
     return (
@@ -340,7 +342,7 @@ const ProductsShowcase: React.FC = () => {
               </Link>
             </div>
           </div>
-          <div className={s.error}>Не вдалося завантажити курси</div>
+          <div className={s.error}>{t("home.loadError")}</div>
         </div>
       </section>
     );
@@ -419,7 +421,7 @@ const ProductsShowcase: React.FC = () => {
 
         <div className={s.footer}>
           <Link href="/products" className={s.allCoursesBtn}>
-            До усіх товарів
+            {t("home.allProducts")}
           </Link>
         </div>
       </div>

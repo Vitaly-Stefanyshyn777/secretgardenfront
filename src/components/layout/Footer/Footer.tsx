@@ -4,6 +4,7 @@ import LoginModal from "@/components/auth/LoginModal/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal/RegisterModal";
 import ResetPasswordModal from "@/components/auth/ResetPasswordModal/ResetPasswordModal";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -16,6 +17,7 @@ import {
 import s from "./Footer.module.css";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const isLoginModalOpen = useAuthStore((s) => s.isLoginModalOpen);
@@ -37,25 +39,25 @@ const Footer = () => {
               <div className={s.logoIconLarge}>
                 <LogoHeader />
               </div>
-              <p className={s.copyrightText}>Ⓒ2025 - Всі права захищені</p>
+              <p className={s.copyrightText}>{t("footer.copyright")}</p>
             </div>
-
-            <nav className={s.quickLinks}>
-              <Link href="/products" className={s.quickLink}>
-                Магазин
-              </Link>
-              <Link href="/about" className={s.quickLink}>
-                Про нас
-              </Link>
-              <Link href="/contacts" className={s.quickLink}>
-                Контакти
-              </Link>
-            </nav>
           </div>
         </div>
 
         <div className={s.footerRight}>
-          <h3 className={s.findTitle}>Де нас шукати ?</h3>
+          <nav className={s.quickLinks}>
+            <Link href="/products" className={s.quickLink}>
+              {t("nav.shop")}
+            </Link>
+            <Link href="/about" className={s.quickLink}>
+              {t("nav.about")}
+            </Link>
+            <Link href="/contacts" className={s.quickLink}>
+              {t("nav.contacts")}
+            </Link>
+          </nav>
+          <div className={s.footerContacts}>
+          <h3 className={s.findTitle}>{t("footer.findUs")}</h3>
           <div className={s.findList}>
             <a
               href="https://www.instagram.com/secret_garden_dnipro"
@@ -90,8 +92,9 @@ const Footer = () => {
               <span className={s.findIcon}>
                 <LocationIcon />
               </span>
-              <span>Україна, Дніпро, просп. Дмитра Яворницького, 57</span>
+              <span>{t("footer.address")}</span>
             </div>
+          </div>
           </div>
         </div>
       </div>

@@ -167,10 +167,29 @@
   color: var(--bіliy);
 }
 
+.footerRight {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-top: 20px;
+  align-items: flex-end;
+}
+
+.footerContacts {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  width: 100%;
+}
+
 .quickLinks {
   display: flex;
   flex-direction: column;
   gap: 11px;
+  align-items: flex-end;
+  text-align: right;
 }
 
 .quickLink {
@@ -189,15 +208,6 @@
 
 .quickLink:hover {
   text-decoration: underline;
-}
-
-.footerRight {
-  width: 100%;
-  max-width: 640px;
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-  padding-top: 20px;
 }
 
 .findTitle {
@@ -533,6 +543,8 @@
     background-color: #121212;
     background-size: cover;
     background-position: center top;
+    background-repeat: no-repeat;
+    min-height: mvw(520);
     overflow-x: hidden;
   }
 
@@ -588,6 +600,9 @@
     grid-area: nav;
     gap: mvw(26);
     align-self: start;
+    justify-self: end;
+    align-items: flex-end;
+    text-align: right;
     padding-top: mvw(34);
   }
 
@@ -609,6 +624,10 @@
   }
 
   .footerRight {
+    display: contents;
+  }
+
+  .footerContacts {
     grid-area: contacts;
     max-width: none;
     gap: mvw(12);

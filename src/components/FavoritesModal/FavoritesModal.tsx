@@ -18,6 +18,7 @@ import { A11y, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import s from "./FavoritesModal.module.css";
 import FavoritesModalSkeleton from "./FavoritesModalSkeleton";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const FORCE_FAVORITES_SKELETON = false;
 
@@ -50,6 +51,7 @@ function extractProductSlug(slug?: string): string | null {
 }
 
 export default function FavoritesModal() {
+  const { t } = useTranslation();
   const isOpen = useFavoriteStore((st) => st.isOpen);
   const close = useFavoriteStore((st) => st.close);
   const remove = useFavoriteStore((st) => st.remove);
@@ -249,10 +251,8 @@ export default function FavoritesModal() {
         />
       </div>
       <div className={s.emptyCartTextCol}>
-        <p className={s.emptyCartTitle}>Відсутні обрані товари</p>
-        <p className={s.emptyCartSubtitle}>
-          Тут будуть позиції, які вам сподобались
-        </p>
+        <p className={s.emptyCartTitle}>{t("favorites.emptyTitle")}</p>
+        <p className={s.emptyCartSubtitle}>{t("favorites.emptySubtitle")}</p>
       </div>
     </div>
   );
@@ -268,7 +268,7 @@ export default function FavoritesModal() {
           window.location.href = "/products";
         }}
       >
-        До каталогу
+        {t("common.toCatalog")}
       </button>
     </>
   );
@@ -291,7 +291,7 @@ export default function FavoritesModal() {
           >
             <div className={s.topbar}>
               <span className={s.topbarTitle}>
-                {isMobile ? "Обрані товари" : "Обране"}
+                {isMobile ? t("favorites.title") : t("favorites.titleShort")}
               </span>
               {!isMobile && (
                 <div className={s.headerActions}>
@@ -450,7 +450,7 @@ export default function FavoritesModal() {
                 window.location.href = "/products";
               }}
             >
-              До каталогу
+              {t("common.toCatalog")}
             </button>
           )}
 
@@ -508,7 +508,7 @@ export default function FavoritesModal() {
                     }
                   }}
                 >
-                  Додати усе в кошик
+                  {t("favorites.addAll")}
                 </button>
 
                 <button
@@ -517,7 +517,7 @@ export default function FavoritesModal() {
                     clear();
                   }}
                 >
-                  Видалити все
+                  {t("favorites.removeAll")}
                 </button>
               </div>
               <div className={s.navWrap}>

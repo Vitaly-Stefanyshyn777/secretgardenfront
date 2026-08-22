@@ -1,4 +1,5 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
+import { getLocaleFromStorage } from "@/i18n";
 
 const api = axios.create({
   baseURL: "",
@@ -37,6 +38,11 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+  }
+
+  if (config.headers) {
+    const locale = getLocaleFromStorage();
+    config.headers["Accept-Language"] = locale === "en" ? "en" : "uk";
   }
 
   return config;

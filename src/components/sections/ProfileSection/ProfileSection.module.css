@@ -75,7 +75,7 @@
 
   .mainContent {
     padding: mvw(0);
-    background: var(--bg-color);
+    background: #222222;
     max-width: 100%;
     border-radius: mvw(16);
     overflow: visible;

@@ -1,4 +1,9 @@
 import api from "./api";
+import {
+  getLocaleHeaders,
+  localizeCategoryRecord,
+  localizeProductRecord,
+} from "./localizedContent";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
@@ -31,6 +36,7 @@ export interface CatalogCategory {
 export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
   const res = await fetch(`${NODE_API_BASE_URL}/catalog/categories`, {
     cache: "no-store",
+    headers: getLocaleHeaders(),
   });
   if (!res.ok) {
     if (res.status === 404) {
@@ -38,7 +44,8 @@ export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
     }
     throw new Error(`Failed to fetch catalog categories: ${res.status}`);
   }
-  return (await res.json()) as CatalogCategory[];
+  const data = (await res.json()) as CatalogCategory[];
+  return data.map((category) => localizeCategoryRecord(category));
 }
 
 export type FaqCategory = {
@@ -1815,15 +1822,38 @@ export async function fetchProductCategoriesFromWp(
   }
 }
 
+function mapCatalogProductListItem(item: Record<string, unknown>) {
+  const localized = localizeProductRecord(item);
+  const name = String(localized.name ?? "");
+  const label = localized.label ? String(localized.label) : "";
+
+  return {
+    id: item.id,
+    name,
+    price: item.price,
+    regularPrice: item.price,
+    salePrice: undefined,
+    onSale: false,
+    image: item.mainImageUrl || "",
+    images: item.mainImageUrl
+      ? [{ id: 1, src: item.mainImageUrl, name, alt: name }]
+      : [],
+    categories: label ? [{ id: label, name: label, slug: label }] : [],
+    stockStatus: item.inStock ? "instock" : "outofstock",
+    dateCreated: undefined,
+    slug: item.slug,
+    ratingAverage: item.ratingAverage,
+    ratingCount: item.ratingCount ?? 0,
+  };
+}
+
 export async function fetchFilteredProducts(
-  filters: ProductFilters = {}
+  filters: ProductFilters = {},
 ): Promise<unknown[]> {
   try {
     const params = new URLSearchParams();
+    const localeHeaders = getLocaleHeaders();
 
-    // Нова логіка: використовуємо Node REST API /catalog/products
-    // categorySlug: очікуємо slug категорії/підкатегорії (НЕ числовий ID).
-    // Можемо передати одразу кілька підкатегорій — тоді зробимо кілька запитів і замержимо.
     const rawCats = filters.category
       ? Array.isArray(filters.category)
         ? filters.category
@@ -1839,7 +1869,6 @@ export async function fetchFilteredProducts(
       params.append("search", String(filters.search));
     }
 
-    // Динамічні фільтри категорії (manufacturer, type, material тощо)
     if (filters.categoryFilters && Object.keys(filters.categoryFilters).length > 0) {
       for (const [key, values] of Object.entries(filters.categoryFilters)) {
         if (Array.isArray(values) && values.length > 0) {
@@ -1854,7 +1883,6 @@ export async function fetchFilteredProducts(
 
     if (filters.per_page) {
       params.append("limit", String(filters.per_page));
-      // Щоб бекенд не сварився на limit без page, явно ставимо page=1, якщо його ще немає
       if (!filters.page) {
         params.append("page", "1");
       }
@@ -1863,7 +1891,6 @@ export async function fetchFilteredProducts(
     const queryString = params.toString();
     const baseUrl = `${NODE_API_BASE_URL}/catalog/products`;
 
-    // Якщо вибрано декілька підкатегорій — робимо кілька запитів і мерджимо результати
     if (categorySlugs.length > 1) {
       const urls = categorySlugs.map((slug) => {
         const p = new URLSearchParams(queryString);
@@ -1872,121 +1899,54 @@ export async function fetchFilteredProducts(
       });
 
       const responses = await Promise.all(
-        urls.map((u) => fetch(u, { cache: "no-store" }))
+        urls.map((u) =>
+          fetch(u, { cache: "no-store", headers: localeHeaders }),
+        ),
       );
 
       const jsons = await Promise.all(
         responses.map(async (res) => {
           if (!res.ok) return null;
           try {
-            return (await res.json()) as {
-              items: Array<{
-                id: string;
-                name: string;
-                slug: string;
-                price: string;
-                currency: string;
-                shortDescription?: string;
-                mainImageUrl?: string;
-                label?: string;
-                inStock?: boolean;
-                ratingAverage?: number;
-                ratingCount?: number;
-              }>;
-            };
+            return (await res.json()) as { items: Array<Record<string, unknown>> };
           } catch {
             return null;
           }
-        })
+        }),
       );
 
-      const mergedById = new Map<string, any>();
+      const mergedById = new Map<string, Record<string, unknown>>();
       for (const data of jsons) {
         for (const item of data?.items ?? []) {
-          if (!mergedById.has(item.id)) {
-            mergedById.set(item.id, item);
+          const id = String(item.id ?? "");
+          if (id && !mergedById.has(id)) {
+            mergedById.set(id, item);
           }
         }
       }
 
-      const mergedItems = Array.from(mergedById.values());
-
-      // Мапимо у формат, з яким вже працюють фільтри/грід
-      return mergedItems.map((item) => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        regularPrice: item.price,
-        salePrice: undefined,
-        onSale: false,
-        image: item.mainImageUrl || "",
-        images: item.mainImageUrl ? [{ id: 1, src: item.mainImageUrl, name: item.name, alt: item.name }] : [],
-        categories: item.label
-          ? [{ id: item.label, name: item.label, slug: item.label }]
-          : [],
-        stockStatus: item.inStock ? "instock" : "outofstock",
-        dateCreated: undefined,
-        slug: item.slug,
-        ratingAverage: item.ratingAverage,
-        ratingCount: item.ratingCount ?? 0,
-      }));
+      return Array.from(mergedById.values()).map(mapCatalogProductListItem);
     }
 
-    // Одна категорія (або жодної) — один запит
     if (categorySlugs.length === 1) {
       params.set("categorySlug", categorySlugs[0]);
     }
 
     const url = `${baseUrl}${params.toString() ? `?${params.toString()}` : ""}`;
-
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, {
+      cache: "no-store",
+      headers: localeHeaders,
+    });
     if (!res.ok) {
-      // Якщо бекенд ще не реалізував ендпоїнт або немає товарів – повертаємо порожній список,
-      // щоб фронт не падав і не спамив помилками.
       return [];
     }
 
     const data = (await res.json()) as {
-      items: Array<{
-        id: string;
-        name: string;
-        slug: string;
-        price: string;
-        currency: string;
-        shortDescription?: string;
-        mainImageUrl?: string;
-        label?: string;
-        inStock?: boolean;
-        ratingAverage?: number;
-        ratingCount?: number;
-      }>;
-      page: number;
-      limit: number;
-      total: number;
-      pages: number;
+      items: Array<Record<string, unknown>>;
     };
 
-    // Мапимо у формат, з яким вже працюють фільтри/грід
-    return data.items.map((item) => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      regularPrice: item.price,
-      salePrice: undefined,
-      onSale: false,
-      image: item.mainImageUrl || "",
-      images: item.mainImageUrl ? [{ id: 1, src: item.mainImageUrl, name: item.name, alt: item.name }] : [],
-      categories: item.label
-        ? [{ id: item.label, name: item.label, slug: item.label }]
-        : [],
-      stockStatus: item.inStock ? "instock" : "outofstock",
-      dateCreated: undefined,
-      slug: item.slug,
-      ratingAverage: item.ratingAverage,
-      ratingCount: item.ratingCount ?? 0,
-    }));
+    return data.items.map(mapCatalogProductListItem);
   } catch (error) {
-    // На будь-яку помилку віддаємо порожній масив, щоб не ламати каталог
     console.error("fetchFilteredProducts error", error);
     return [];
   }
@@ -2280,6 +2240,8 @@ export interface CreateOrderPayload {
   deliveryCost?: number;
   /** wayforpay | cod | bacs | ... */
   paymentMethod?: string;
+  /** Код знижки з адмінки */
+  promoCode?: string;
   items?: Array<{ productId: string; quantity: number }>;
 }
 
@@ -2370,6 +2332,34 @@ export const createOrder = async (
 ): Promise<OrderResponse> => {
   const res = await api.post("/api/orders", payload);
   return res.data as OrderResponse;
+};
+
+export type PromoCodeValidation = {
+  code: string;
+  discountPercent: number;
+};
+
+export const validatePromoCode = async (
+  code: string,
+): Promise<PromoCodeValidation> => {
+  const res = await fetch(`${NODE_API_BASE_URL}/promo-codes/validate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+    cache: "no-store",
+  });
+  const data = (await res.json().catch(() => ({}))) as {
+    code?: string;
+    discountPercent?: number;
+    message?: string | string[];
+  };
+  if (!res.ok) {
+    throw { response: { data: { message: data.message || "Промокод недійсний" } } };
+  }
+  return {
+    code: String(data.code || code),
+    discountPercent: Number(data.discountPercent || 0),
+  };
 };
 
 export const getOrders = async (): Promise<OrderResponse[]> => {

@@ -374,17 +374,28 @@
 
 @media (max-width: 1000px) {
   .backdrop {
-    padding: mvw(33) mvw(16) mvw(23) mvw(16);
+    align-items: center;
+    justify-content: center;
+    padding: max(mvw(16), env(safe-area-inset-top, 0px)) mvw(16)
+      max(mvw(16), env(safe-area-inset-bottom, 0px));
     backdrop-filter: blur(mvw(10));
     background: rgba(14, 14, 14, 0.2);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 100dvh;
+    box-sizing: border-box;
   }
 
   .modal {
     width: 100%;
     max-width: 100%;
-    max-height: 90vh;
+    max-height: calc(
+      100dvh - max(mvw(16), env(safe-area-inset-top, 0px)) -
+        max(mvw(16), env(safe-area-inset-bottom, 0px))
+    );
     height: auto;
     min-height: auto;
+    margin: auto;
     border-radius: mvw(16);
     padding: mvw(24) mvw(16) mvw(24) mvw(16);
     gap: mvw(34);
@@ -392,7 +403,7 @@
     position: relative;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    animation: slideUp 0.3s ease;
+    flex-shrink: 0;
   }
 
   .headerBlock {
@@ -421,8 +432,8 @@
   }
 
   .close {
-    top: mvw(-6);
-    right: mvw(7);
+    top: mvw(12);
+    right: mvw(12);
     width: mvw(45);
     height: mvw(45);
     border-radius: mvw(10);

@@ -1,4 +1,7 @@
-import { CloseButtonIcon, EmailIcon } from "@/components/Icons/Icons";
+"use client";
+
+import { CloseButtonIcon } from "@/components/Icons/Icons";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./ResetPasswordModal.module.css";
 
 interface ResetPasswordConfirmProps {
@@ -11,45 +14,35 @@ interface ResetPasswordConfirmProps {
 export default function ResetPasswordConfirm({
   email,
   onBackToEmail,
-  onResendEmail,
   onClose,
 }: ResetPasswordConfirmProps) {
+  const { t } = useTranslation();
+
   return (
     <>
-      {/* Кнопка закриття */}
       <button className={s.close} onClick={onClose}>
         <CloseButtonIcon />
       </button>
 
-      {/* Заголовок */}
       <div className={s.headerBlock}>
         <div className={s.header}>
-          <h2 className={s.headerTitle}>Лист для відновлення надіслано</h2>
+          <h2 className={s.headerTitle}>{t("auth.resetEmailSent")}</h2>
         </div>
       </div>
 
-      {/* Контент */}
       <div className={s.confirmContent}>
-        {/* <div className={s.emailIcon}>
-          <EmailIcon />
-        </div> */}
-
         <div className={s.confirmText}>
           <p className={s.confirmDescription}>
-            Ми щойно надіслали посилання для відновлення пароля на вашу
-            електронну пошту. Перевірте вхідні та не забудьте перевірити папку
-            зі спамом. Не отримали лист на{" "}
-            <span className={s.emailHighlight}>{email}</span>?
+            {t("auth.resetEmailSentDescription", { email })}
           </p>
         </div>
 
         <div className={s.confirmActions}>
           <button className={s.loginButton} onClick={onBackToEmail}>
-            Увійти
+            {t("auth.login")}
           </button>
         </div>
       </div>
     </>
   );
 }
-

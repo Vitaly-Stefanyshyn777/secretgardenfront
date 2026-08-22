@@ -14,6 +14,7 @@ import {
   getPriceSellRegistry,
   normalizePriceParams,
 } from "@/lib/priceUtils";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./CartModal.module.css";
 
 interface CartItemsListProps {
@@ -25,6 +26,7 @@ interface CartItemRowProps {
 }
 
 function CartItemRow({ item }: CartItemRowProps) {
+  const { t } = useTranslation();
   const increment = useCartStore((st) => st.increment);
   const decrement = useCartStore((st) => st.decrement);
   const removeItem = useCartStore((st) => st.removeItem);
@@ -116,16 +118,18 @@ function CartItemRow({ item }: CartItemRowProps) {
 
             {(extractedColor || extractedSize) && (
               <div className={s.color}>
-                {extractedColor && `Колір: ${extractedColor}`}
+                {extractedColor && `${t("cart.color")} ${extractedColor}`}
                 {extractedColor && extractedSize && ", "}
-                {extractedSize && `Розмір: ${extractedSize}`}
+                {extractedSize && `${t("cart.size")} ${extractedSize}`}
               </div>
             )}
 
             <div className={s.availability}>
               {item.stockQuantity != null && item.stockQuantity <= 0
-                ? "Немає в наявності"
-                : `В наявності - ${item.stockQuantity ?? item.quantity}`}
+                ? t("cart.outOfStock")
+                : t("cart.inStock", {
+                    quantity: item.stockQuantity ?? item.quantity,
+                  })}
             </div>
           </div>
 
@@ -148,7 +152,7 @@ function CartItemRow({ item }: CartItemRowProps) {
                   <span className={s.currentPriceValue}>
                     {(finalPrice * item.quantity).toLocaleString()}
                   </span>{" "}
-                  <span className={s.priceCurrency}>грн</span>
+                  <span className={s.priceCurrency}>{t("common.currency")}</span>
                 </span>
                 {shouldDisplayOldPrice && originalPrice > finalPrice && (
                   <span className={s.oldPrice}>

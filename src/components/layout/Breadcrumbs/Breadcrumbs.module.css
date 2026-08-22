@@ -45,7 +45,7 @@
 
 .breadcrumbText {
   font-family: var(--font-family);
-  font-weight: 400;
+  font-weight: 500;
   font-size: 14px;
   line-height: 140%;
   color: var(--zoloto);
@@ -112,7 +112,7 @@
   }
 
   .breadcrumbLink {
-    font-size: mvw(10);
+    font-size: mvw(12);
     line-height: 140%;
     font-family: var(--font-family);
     font-weight: 500;
@@ -121,6 +121,8 @@
   .breadcrumbText {
     font-size: mvw(12);
     line-height: 140%;
+    font-family: var(--font-family);
+    font-weight: 500;
   }
 
   .separator {

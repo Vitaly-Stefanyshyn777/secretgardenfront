@@ -140,7 +140,9 @@
   font-size: 40px;
   line-height: 120%;
   text-align: center;
-  width: 547px;
+  width: 100%;
+  max-width: 547px;
+  margin: 0;
   color: var(--bіliy);
 }
 
@@ -148,6 +150,9 @@
   display: flex;
   flex-direction: row;
   gap: 30px;
+  width: 100%;
+  max-width: 408px;
+  justify-content: center;
 }
 
 .logoutConfirm {
@@ -287,12 +292,18 @@
     line-height: 120%;
     text-align: center;
     color: var(--bіliy);
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 mvw(8);
+    box-sizing: border-box;
   }
 
   .logoutButtons {
     flex-direction: column;
     gap: mvw(21);
     width: 100%;
+    max-width: 100%;
   }
 
   .logoutConfirm {

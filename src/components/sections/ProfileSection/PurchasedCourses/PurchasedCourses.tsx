@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/language";
 import styles from "./PurchasedCourses.module.css";
 
 interface PurchasedCoursesProps {
@@ -8,47 +11,39 @@ interface PurchasedCoursesProps {
 }
 
 const PurchasedCourses: React.FC<PurchasedCoursesProps> = ({
-  title = "Придбані курси",
+  title,
 }) => {
-  const [language, setLanguage] = useState<"uk" | "en">("uk");
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem("preferredLanguage");
-    if (stored === "uk" || stored === "en") {
-      setLanguage(stored);
-    }
-  }, []);
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const locale = useLanguageStore((s) => s.locale);
+  const setLocale = useLanguageStore((s) => s.setLocale);
 
   const handleLanguageChange = (lang: "uk" | "en") => {
-    setLanguage(lang);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("preferredLanguage", lang);
-    }
+    setLocale(lang);
+    queryClient.invalidateQueries();
   };
 
   return (
     <div className={styles.purchasedCourses}>
-      <h2 className={styles.title}>{title}</h2>
-      {/* <div className={styles.divider}></div> */}
+      <h2 className={styles.title}>{title ?? t("profile.changeLanguage")}</h2>
       <div className={styles.langActions}>
         <button
           type="button"
           className={`${styles.langButton} ${
-            language === "uk" ? styles.langButtonActive : ""
+            locale === "uk" ? styles.langButtonActive : ""
           }`}
           onClick={() => handleLanguageChange("uk")}
         >
-          Українська
+          {t("profile.ukrainian")}
         </button>
         <button
           type="button"
           className={`${styles.langButton} ${
-            language === "en" ? styles.langButtonActive : ""
+            locale === "en" ? styles.langButtonActive : ""
           }`}
           onClick={() => handleLanguageChange("en")}
         >
-          English
+          {t("profile.english")}
         </button>
       </div>
     </div>

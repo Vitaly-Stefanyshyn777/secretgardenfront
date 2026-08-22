@@ -1,5 +1,6 @@
 .section {
   padding: 100px 0;
+  background: #222222;
 }
 
 .container {
@@ -97,7 +98,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--zoloto);
+  border: 1px solid #d9ba88;
+  background: #222222;
 
   font-family: var(--font-family);
   font-weight: 500;
@@ -109,13 +111,13 @@
   font-family: var(--third-family);
   font-size: 14px;
   line-height: 100%;
-  color: var(--zoloto);
+  color: #d9ba88;
 }
 
 .allCoursesBtn:hover {
   color: var(--chorniy);
-  border: 1px solid #d49e50;
-  background: #d49e50;
+  border: 1px solid #d9ba88;
+  background: #d9ba88;
 }
 
 .loading,
@@ -207,9 +209,9 @@
     height: mvw(48);
     border-radius: mvw(4);
     padding: 0;
-    background: var(--chorniy);
-    border: 1px solid var(--bіliy);
-    color: var(--bіliy);
+    background: #222222;
+    border: 1px solid #d9ba88;
+    color: #d9ba88;
     font-family: var(--third-family);
     font-weight: 700;
     font-size: mvw(14);
@@ -217,9 +219,9 @@
   }
 
   .sectionMobile .allCoursesBtn:hover {
-    background: var(--chorniy);
-    border-color: var(--bіliy);
-    color: var(--bіliy);
+    background: #222222;
+    border-color: #d9ba88;
+    color: #d9ba88;
   }
 
   .headerLeft {

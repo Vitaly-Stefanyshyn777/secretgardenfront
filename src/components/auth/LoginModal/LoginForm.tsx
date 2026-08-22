@@ -1,3 +1,5 @@
+"use client";
+
 import {
   UseFormRegister,
   FieldErrors,
@@ -6,6 +8,7 @@ import {
 import { EmailTwoIcon, PasswordsIcon } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
 import PasswordField from "@/components/ui/FormFields/PasswordField";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./LoginModal.module.css";
 
 export interface LoginFormValues {
@@ -32,21 +35,22 @@ export default function LoginForm({
   onSubmit,
   isSubmitting,
   isPending,
-  isError,
   onSwitchToRegister,
   onForgotPassword,
 }: LoginFormProps) {
+  const { t } = useTranslation();
+
   return (
     <form className={s.form} onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className={s.inputGroup}>
         <InputField
           icon={<EmailTwoIcon />}
-          label="Ваш email або username"
+          label={t("auth.emailOrUsername")}
           type="text"
           hasError={!!errors.username}
           supportingText={
             (errors.username?.message as string) ||
-            "Заповніть email або username"
+            t("auth.emailOrUsernameRequired")
           }
           labelClassName={s.loginInputLabel}
           inputBlockClassName={s.loginInputBlock}
@@ -55,10 +59,10 @@ export default function LoginForm({
 
         <PasswordField
           icon={<PasswordsIcon />}
-          label="Пароль"
+          label={t("auth.password")}
           hasError={!!errors.password}
           supportingText={
-            (errors.password?.message as string) || "Введіть пароль"
+            (errors.password?.message as string) || t("auth.passwordRequired")
           }
           labelClassName={s.loginPasswordLabel}
           eyeBtnClassName={s.loginPasswordEyeBtn}
@@ -75,7 +79,7 @@ export default function LoginForm({
             disabled={isSubmitting || isPending}
             onClick={onSwitchToRegister}
           >
-            {isPending ? "Вхід..." : "Я не маю акаунт"}
+            {isPending ? t("auth.loggingIn") : t("auth.noAccount")}
           </button>
 
           <button
@@ -83,12 +87,11 @@ export default function LoginForm({
             type="submit"
             disabled={isSubmitting || isPending}
           >
-            {isPending ? "Вхід..." : "Увійти"}
+            {isPending ? t("auth.loggingIn") : t("auth.login")}
           </button>
         </div>
 
         <div className={s.bottomLinksBlock}>
-          {/* Посилання на скидання пароля */}
           {onForgotPassword && (
             <div className={s.forgotPasswordBlock}>
               <button
@@ -96,16 +99,16 @@ export default function LoginForm({
                 className={s.forgotPasswordButton}
                 onClick={onForgotPassword}
               >
-                Забули пароль?
+                {t("auth.forgotPassword")}
               </button>
             </div>
           )}
         </div>
 
         <p className={s.privacyText}>
-          Натискаючи на кнопку, ви погоджуєтесь з{" "}
+          {t("common.privacyAgree")}{" "}
           <a href="/privacy-policy" className={s.privacyLink}>
-            Політикою конфіденційності
+            {t("common.privacyPolicy")}
           </a>
         </p>
       </div>

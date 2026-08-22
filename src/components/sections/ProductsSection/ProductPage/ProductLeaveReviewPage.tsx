@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { createProductReview } from "@/lib/bfbApi";
+import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/hooks/useTranslation";
 import ProductSubpageShell from "./ProductSubpageShell";
 import styles from "./ProductSubpage.module.css";
 
@@ -17,19 +19,28 @@ export default function ProductLeaveReviewPage({
 }: {
   productSlug: string;
 }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const user = useAuthStore((s) => s.user);
   const backHref = `/products/${productSlug}`;
   const [rating, setRating] = useState(0);
+  const [authorName, setAuthorName] = useState(
+    user?.displayName || user?.nicename || "",
+  );
   const [text, setText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating < 1) {
-      setError("Оберіть оцінку");
+      setError(t("product.selectRating"));
+      return;
+    }
+    const trimmedName = authorName.trim();
+    if (!trimmedName) {
+      setError(t("product.enterName"));
       return;
     }
     setError(null);
@@ -38,8 +49,8 @@ export default function ProductLeaveReviewPage({
       await createProductReview(productSlug, {
         rating,
         text: text.trim() || undefined,
+        authorName: trimmedName,
       });
-      setSuccess(true);
       setText("");
       setRating(0);
       queryClient.invalidateQueries({
@@ -50,24 +61,30 @@ export default function ProductLeaveReviewPage({
         router.push(`/products/${productSlug}/reviews`);
       }, 800);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Помилка відправки");
+      setError(err instanceof Error ? err.message : t("product.submitError"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <ProductSubpageShell title="Залишити відгук" backHref={backHref}>
+    <ProductSubpageShell title={t("product.leaveReview")} backHref={backHref}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        {success && (
-          <p className={styles.formSuccess}>
-            Дякуємо! Ваш відгук опубліковано.
-          </p>
-        )}
         {error && <p className={styles.formError}>{error}</p>}
 
         <div className={styles.formField}>
-          <p className={styles.formLabel}>Ваша оцінка</p>
+          <p className={styles.formLabel}>{t("product.yourName")}</p>
+          <input
+            type="text"
+            className={styles.textInput}
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            placeholder={t("product.yourNamePlaceholder")}
+          />
+        </div>
+
+        <div className={styles.formField}>
+          <p className={styles.formLabel}>{t("product.yourRating")}</p>
           <div className={styles.formStars}>
             {[1, 2, 3, 4, 5].map((v) => (
               <button
@@ -75,7 +92,7 @@ export default function ProductLeaveReviewPage({
                 type="button"
                 className={styles.starButton}
                 onClick={() => setRating(v)}
-                aria-label={`${v} зірок`}
+                aria-label={t("product.starsAria", { count: v })}
               >
                 <svg viewBox="0 0 34 33">
                   {v <= rating ? (
@@ -97,13 +114,13 @@ export default function ProductLeaveReviewPage({
         </div>
 
         <div className={styles.formField}>
-          <p className={styles.formLabelSm}>Коментар</p>
+          <p className={styles.formLabelSm}>{t("product.comment")}</p>
           <textarea
             className={styles.textarea}
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={5}
-            placeholder=""
+            placeholder={t("product.commentPlaceholder")}
           />
         </div>
 
@@ -112,7 +129,7 @@ export default function ProductLeaveReviewPage({
           className={styles.submitBtn}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Відправка..." : "Надіслати"}
+          {isSubmitting ? t("common.submitting") : t("common.submit")}
         </button>
       </form>
     </ProductSubpageShell>

@@ -11,10 +11,12 @@ import {
   getPriceSellRegistry,
   normalizePriceParams,
 } from "@/lib/priceUtils";
+import { useTranslation } from "@/hooks/useTranslation";
 import CartHeader from "./CartHeader";
 import CartSummary from "./CartSummary";
 
 export default function CartModal() {
+  const { t } = useTranslation();
   const isOpen = useCartStore((st) => st.isOpen);
   const close = useCartStore((st) => st.close);
   const itemsMap = useCartStore((st) => st.items);
@@ -64,6 +66,11 @@ export default function CartModal() {
   const discount = useMemo(() => {
     return Math.max(0, totalWithoutDiscount - total);
   }, [total, totalWithoutDiscount]);
+
+  const promoPercent = useCartStore((st) => st.promoPercent);
+  const promoDiscount = Math.round((total * (promoPercent || 0)) / 100);
+  const payable = Math.max(0, total - promoDiscount);
+  const totalDiscount = discount + promoDiscount;
 
   const FREE_SHIPPING_LIMIT = 1999;
   const remainingToFree = Math.max(0, FREE_SHIPPING_LIMIT - total);
@@ -133,10 +140,8 @@ export default function CartModal() {
         <BasketIcons />
       </div>
       <div className={s.emptyCartTextCol}>
-        <p className={s.emptyCartTitle}>Ваш кошик порожній</p>
-        <p className={s.emptyCartSubtitle}>
-          Сподіваємось, ви знайдете те, що вам до душі
-        </p>
+        <p className={s.emptyCartTitle}>{t("cart.emptyTitle")}</p>
+        <p className={s.emptyCartSubtitle}>{t("cart.emptySubtitle")}</p>
       </div>
     </div>
   );
@@ -159,9 +164,9 @@ export default function CartModal() {
           ) : (
             <div className={s.bodyTwoCols}>
               <CartSummary
-                total={total}
+                total={payable}
                 totalWithoutDiscount={totalWithoutDiscount}
-                discount={discount}
+                discount={totalDiscount}
                 remainingToFree={remainingToFree}
                 progressPct={progressPct}
                 onCheckout={handleCheckout}
@@ -179,7 +184,7 @@ export default function CartModal() {
             className={s.emptyCartButton}
             onClick={goToCatalog}
           >
-            До каталогу
+            {t("common.toCatalog")}
           </button>
         )}
       </div>

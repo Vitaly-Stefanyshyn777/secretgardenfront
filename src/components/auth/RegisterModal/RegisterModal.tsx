@@ -7,6 +7,7 @@ import { useRegisterResult } from "./useRegisterResult";
 import RegisterModalHeader from "./RegisterModalHeader";
 import RegisterForm from "./RegisterForm";
 import RegisterResultModal from "../RegisterResultModal/RegisterResultModal";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./RegisterModal.module.css";
 
 export interface RegisterFormValues {
@@ -33,6 +34,7 @@ export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
 
   const registerMutation = useNodeRegister();
   const { result, setSuccess, setError, clearResult } = useRegisterResult();
+  const { t } = useTranslation();
 
   useScrollLock(isOpen);
 
@@ -85,18 +87,18 @@ export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
           type={result?.type === "success" ? "success" : "error"}
           title={
             result?.type === "success"
-              ? "Реєстрація пройшла успішно"
-              : "Помилка під час реєстрації"
+              ? t("auth.registerSuccess")
+              : t("auth.registerFailed")
           }
           description={
             result?.type === "success"
-              ? "Ви успішно зареєструвались як інструктор BFB. тепер ви можете увійти в особистий кабінет і користуватись усіма доступними розділами"
-              : "Не вдалося підтвердити сертифікат. перевірте правильність введеного коду або зверніться до техпідтримки, щоб ми могли допомогти"
+              ? t("auth.registerSuccessDescription")
+              : t("auth.registerFailedDescription")
           }
           primaryText={
             result?.type === "success"
-              ? "На головну"
-              : "Зв'язатися з підтримкою"
+              ? t("common.home")
+              : t("common.contactSupport")
           }
           onPrimary={handlePrimaryAction}
           onClose={handleResultClose}

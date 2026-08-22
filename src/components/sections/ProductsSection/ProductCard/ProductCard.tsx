@@ -62,6 +62,7 @@ interface ProductCardProps {
   useRedGreenIconOnMobile?: boolean;
   removeFromFavoritesOnAddToCart?: boolean;
   showcaseDark?: boolean;
+  compact?: boolean;
 }
 
 const ProductCard = ({
@@ -91,6 +92,7 @@ const ProductCard = ({
   useRedGreenIconOnMobile = false,
   removeFromFavoritesOnAddToCart = false,
   showcaseDark = false,
+  compact = false,
 }: ProductCardProps) => {
   const favorite = useFavoriteStore(selectIsFavorite(id));
 
@@ -326,6 +328,8 @@ const ProductCard = ({
       className={`${styles.productCard} ${
         isFluid ? styles.productCardFluid : ""
       } ${showcaseDark ? styles.productCardShowcaseDark : ""} ${
+        compact ? styles.productCardCompact : ""
+      } ${
         isOutOfStock ? styles.productCardOutOfStock : ""
       }`}
       data-category={hasNoCertification ? "78" : undefined}

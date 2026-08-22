@@ -1,3 +1,5 @@
+"use client";
+
 import {
   UseFormRegister,
   FieldErrors,
@@ -5,6 +7,7 @@ import {
 } from "react-hook-form";
 import { EmailIcon, CloseButtonIcon } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./ResetPasswordModal.module.css";
 
 export interface ResetPasswordEmailFormValues {
@@ -35,38 +38,35 @@ export default function ResetPasswordEmailForm({
   onBackToLogin,
   onClose,
 }: ResetPasswordEmailFormProps) {
+  const { t } = useTranslation();
+
   return (
     <>
-      {/* Кнопка закриття */}
       <button className={s.close} onClick={onClose}>
         <CloseButtonIcon />
       </button>
 
-      {/* Заголовок */}
       <div className={s.headerBlock}>
         <div className={s.header}>
-          <h2 className={s.headerTitle}>Скинути пароль</h2>
+          <h2 className={s.headerTitle}>{t("auth.resetPassword")}</h2>
         </div>
       </div>
 
-      {/* Форма */}
       <form className={s.form} onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className={s.inputGroup}>
           <InputField
             icon={<EmailIcon />}
-            label="Ваша пошта"
+            label={t("auth.email")}
             type="email"
             hasError={!!errors.email}
-            supportingText={
-              (errors.email?.message as string) || "Supporting text"
-            }
+            supportingText={(errors.email?.message as string) || ""}
             labelClassName={s.inputLabel}
             inputBlockClassName={s.inputBlock}
             {...register("email", {
-              required: "Введіть email",
+              required: t("auth.enterEmail"),
               pattern: {
                 value: /^\S+@\S+$/i,
-                message: "Введіть коректний email",
+                message: t("auth.enterValidEmail"),
               },
             })}
           />
@@ -74,7 +74,7 @@ export default function ResetPasswordEmailForm({
 
         <div className={s.actionsBlock}>
           <button className={s.submit} type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Надсилання..." : "Надіслати"}
+            {isSubmitting ? t("auth.sendingEmail") : t("auth.send")}
           </button>
 
           <button
@@ -82,7 +82,8 @@ export default function ResetPasswordEmailForm({
             className={s.backButton}
             onClick={onBackToLogin}
           >
-            Повернутися до <span className={s.authLink}>Авторизації</span>
+            {t("auth.backToAuth")}{" "}
+            <span className={s.authLink}>{t("auth.authorization")}</span>
           </button>
         </div>
       </form>

@@ -1,8 +1,10 @@
 "use client";
+
 import React, { useMemo, useRef } from "react";
 import { FormData } from "./types";
 import { useWcPaymentGatewaysQuery } from "@/components/hooks/useWpQueries";
 import { useCartStore } from "@/store/cart";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./CheckoutSection.module.css";
 
 interface PaymentFormProps {
@@ -14,6 +16,7 @@ export default function PaymentForm({
   formData,
   setFormData,
 }: PaymentFormProps) {
+  const { t } = useTranslation();
   const { data: paymentGateways = [], isLoading } = useWcPaymentGatewaysQuery();
 
   const itemsMap = useCartStore((st) => st.items);
@@ -43,23 +46,30 @@ export default function PaymentForm({
     });
   }, [items]);
 
-  const paymentMethodMap: Record<string, string> = {
-    cod: "Накладений платіж",
-    wayforpay: "Онлайн-оплата WayForPay",
-    bacs: "Оплата при отриманні",
-  };
+  const paymentMethodMap: Record<string, string> = useMemo(
+    () => ({
+      cod: t("checkout.cod"),
+      wayforpay: t("checkout.wayforpay"),
+      bacs: t("checkout.payOnReceive"),
+    }),
+    [t],
+  );
 
   type Gateway = { id: string; title: string; enabled?: boolean };
 
-  const defaultGateways: Gateway[] = [
-    { id: "cod", title: "Накладений платіж", enabled: true },
-    { id: "wayforpay", title: "Онлайн-оплата WayForPay", enabled: true },
-    { id: "bacs", title: "Оплата при отриманні", enabled: true },
-  ];
+  const defaultGateways: Gateway[] = useMemo(
+    () => [
+      { id: "cod", title: t("checkout.cod"), enabled: true },
+      { id: "wayforpay", title: t("checkout.wayforpay"), enabled: true },
+      { id: "bacs", title: t("checkout.payOnReceive"), enabled: true },
+    ],
+    [t],
+  );
 
   const activePaymentGateways = useMemo(() => {
     const allGateways =
-      (paymentGateways as Gateway[])?.filter((g) => g.enabled !== false)?.length > 0
+      (paymentGateways as Gateway[])?.filter((g) => g.enabled !== false)
+        ?.length > 0
         ? (paymentGateways as Gateway[]).filter((g) => g.enabled !== false)
         : defaultGateways;
 
@@ -67,7 +77,7 @@ export default function PaymentForm({
       return allGateways.filter((g) => g.id === "wayforpay");
     }
     return allGateways;
-  }, [paymentGateways, hasCourses]);
+  }, [paymentGateways, hasCourses, defaultGateways]);
 
   React.useEffect(() => {
     if (hasCourses) {
@@ -86,9 +96,9 @@ export default function PaymentForm({
 
   return (
     <div className={s.paymentBlock}>
-      <h2 className={s.sectionTitle}>Оплата</h2>
+      <h2 className={s.sectionTitle}>{t("checkout.payment")}</h2>
       {isLoading ? (
-        <div>Завантаження платіжних методів...</div>
+        <div>{t("checkout.loadingPaymentMethods")}</div>
       ) : (
         <div className={s.radioRow}>
           {activePaymentGateways.map((gateway) => {

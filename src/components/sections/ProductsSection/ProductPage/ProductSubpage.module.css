@@ -274,6 +274,25 @@
   box-sizing: border-box;
 }
 
+.textInput {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--bіliy);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bіliy);
+  font-family: var(--font-family);
+  font-size: 13px;
+  line-height: 140%;
+  box-sizing: border-box;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: var(--zoloto);
+}
+
 .textarea:focus {
   outline: none;
   border-color: var(--zoloto);

@@ -9,6 +9,8 @@ import {
 } from "@/components/sections/CheckoutSection/types";
 import { useOrderData } from "./useOrderData";
 import { useWayForPay } from "./useWayForPay";
+import { translate } from "@/i18n";
+import { getCurrentLocale } from "@/store/language";
 
 interface UseOrderSubmissionProps {
   formData: FormData;
@@ -19,6 +21,7 @@ interface UseOrderSubmissionProps {
   subtotal: number;
   discountAmount: number;
   deliveryCost: number;
+  promoCode?: string | null;
   setErrors: (errors: CheckoutErrors) => void;
   parseWcValidationErrors: (errorData: unknown) => CheckoutErrors;
 }
@@ -32,6 +35,7 @@ export function useOrderSubmission({
   subtotal,
   discountAmount,
   deliveryCost,
+  promoCode,
   setErrors,
   parseWcValidationErrors,
 }: UseOrderSubmissionProps) {
@@ -47,6 +51,10 @@ export function useOrderSubmission({
       return;
     }
 
+    const locale = getCurrentLocale();
+    const t = (key: Parameters<typeof translate>[1], params?: Record<string, string | number>) =>
+      translate(locale, key, params);
+
     try {
       isSubmittingRef.current = true;
       setIsPending(true);
@@ -60,11 +68,11 @@ export function useOrderSubmission({
         subtotal,
         discountAmount,
         deliveryCost,
+        promoCode,
       });
 
       const result = await createOrder(payload);
 
-      // Очищаємо кошик після успішного створення (бекенд теж очищає)
       await cartStore.clear();
 
       const orderId = result?.id;
@@ -82,17 +90,19 @@ export function useOrderSubmission({
           deliveryType,
           orderId,
           orderStatus: result?.status,
-        })
+        }),
       );
 
       window.location.href = `/order-success?orderId=${orderId}`;
     } catch (error) {
-      let errorMessage = "Помилка створення замовлення. Спробуйте ще раз.";
+      let errorMessage = t("checkout.orderCreateError");
       let showAlert = true;
 
       if (error && typeof error === "object" && "response" in error) {
         const axiosError = error as {
-          response?: { data?: { message?: string; params?: unknown; data?: unknown } };
+          response?: {
+            data?: { message?: string; params?: unknown; data?: unknown };
+          };
         };
         const responseData = axiosError.response?.data;
 
@@ -108,7 +118,7 @@ export function useOrderSubmission({
           }
         }
       } else if (error instanceof Error) {
-        errorMessage = `Помилка: ${error.message}`;
+        errorMessage = t("checkout.orderError", { message: error.message });
       }
 
       if (showAlert) {

@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { useMemo } from "react";
 import {
   CardsIcons,
   LeafIcons,
   TruckIcons,
 } from "@/components/Icons/Icons";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./AdvantagesSection.module.css";
 
 type AdvantageItem = {
@@ -16,41 +18,45 @@ type AdvantageItem = {
   iconPath?: string;
 };
 
-const ADVANTAGES: AdvantageItem[] = [
-  {
-    id: "natural",
-    title: "Натуральність",
-    description:
-      "Наша продукція це чиста органіка, з мінімальним хімічним втручанням",
-    icon: LeafIcons,
-  },
-  {
-    id: "delivery",
-    title: "Доставка",
-    description: "Ми відправляємо ваші замовлення як по Україні так і на таксі",
-    icon: TruckIcons,
-  },
-  {
-    id: "location",
-    title: "Локація",
-    description: "В центрі Дніпра, де ви можете насолодитися атмосферою",
-    icon: CardsIcons,
-  },
-  {
-    id: "communication",
-    title: "Комунікабельність",
-    description: "Наші дружні робітники завжди раді з вами поспілкуватися",
-    iconPath: "/icons/Group-7.svg",
-  },
-];
-
 const AdvantagesSection = () => {
+  const { t } = useTranslation();
+
+  const advantages = useMemo<AdvantageItem[]>(
+    () => [
+      {
+        id: "natural",
+        title: t("home.advantageNaturalTitle"),
+        description: t("home.advantageNaturalDesc"),
+        icon: LeafIcons,
+      },
+      {
+        id: "delivery",
+        title: t("home.advantageDeliveryTitle"),
+        description: t("home.advantageDeliveryDesc"),
+        icon: TruckIcons,
+      },
+      {
+        id: "location",
+        title: t("home.advantageLocationTitle"),
+        description: t("home.advantageLocationDesc"),
+        icon: CardsIcons,
+      },
+      {
+        id: "communication",
+        title: t("home.advantageCommunicationTitle"),
+        description: t("home.advantageCommunicationDesc"),
+        iconPath: "/icons/Group-7.svg",
+      },
+    ],
+    [t],
+  );
+
   return (
     <section className={s.section}>
       <div className={s.container}>
-        <h2 className={s.title}>Наші переваги</h2>
+        <h2 className={s.title}>{t("home.ourAdvantages")}</h2>
         <div className={s.cards}>
-          {ADVANTAGES.map((item) => {
+          {advantages.map((item) => {
             const Icon = item.icon;
             return (
               <div key={item.id} className={s.card}>

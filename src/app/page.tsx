@@ -7,7 +7,7 @@ import HomeReviewsSection from "@/components/sections/HomeReviewsSection/HomeRev
 import PageLoader from "@/components/PageLoader";
 import ProductsShowcase from "@/components/sections/ProductsSection/ProductsShowcase/ProductsShowcase";
 import { fetchBanners } from "@/lib/contentApi";
-import type { HeroSlideItem } from "@/config/heroSlides";
+import { HERO_SLIDES, type HeroSlideItem } from "@/config/heroSlides";
 
 type YoastRobots = {
   index?: string;
@@ -130,14 +130,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const banners = await fetchBanners();
-  const slides: HeroSlideItem[] = banners.map((b) => ({
-    id: b.id,
-    image: b.imageUrl,
-    mobileImage: b.mobileImageUrl || undefined,
-    title: b.title || "",
-    titleSub: b.titleSub || undefined,
-    description: b.description || "",
-  }));
+  const slides: HeroSlideItem[] =
+    banners.length > 0
+      ? banners.map((b, i) => {
+          const fallback = HERO_SLIDES[i % HERO_SLIDES.length];
+          return {
+            id: b.id,
+            image: b.imageUrl,
+            mobileImage: b.mobileImageUrl || undefined,
+            title: b.title || fallback.title,
+            titleSub: b.titleSub || undefined,
+            description: b.description || fallback.description,
+          };
+        })
+      : HERO_SLIDES;
 
   return (
     <>

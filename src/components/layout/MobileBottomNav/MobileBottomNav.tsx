@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { useCartStore } from "@/store/cart";
 import { useFavoriteStore } from "@/store/favorites";
+import { useTranslation } from "@/hooks/useTranslation";
 import styles from "./MobileBottomNav.module.css";
 
 const HomeIcon = () => (
@@ -86,12 +87,15 @@ const ProfileIcon = () => (
 );
 
 export default function MobileBottomNav() {
+  const { t } = useTranslation();
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const openLoginModal = useAuthStore((s) => s.openLoginModal);
   const toggleCart = useCartStore((s) => s.toggle);
   const toggleFav = useFavoriteStore((s) => s.toggle);
+  const isCartOpen = useCartStore((s) => s.isOpen);
+  const isFavOpen = useFavoriteStore((s) => s.isOpen);
   const cartCount = useCartStore((s) =>
     Object.values(s.items).reduce((sum, item) => sum + item.quantity, 0),
   );
@@ -121,7 +125,7 @@ export default function MobileBottomNav() {
   };
 
   return (
-    <nav className={styles.nav} aria-label="Мобільна навігація">
+    <nav className={styles.nav} aria-label={t("nav.mobileNav")}>
       <Link
         href="/"
         className={`${styles.item} ${isHome ? styles.itemActive : ""}`}
@@ -129,7 +133,7 @@ export default function MobileBottomNav() {
         <span className={styles.icon}>
           <HomeIcon />
         </span>
-        <span className={styles.label}>Головна</span>
+        <span className={styles.label}>{t("nav.home")}</span>
       </Link>
 
       <Link
@@ -139,14 +143,14 @@ export default function MobileBottomNav() {
         <span className={styles.icon}>
           <CatalogIcon />
         </span>
-        <span className={styles.label}>Каталог</span>
+        <span className={styles.label}>{t("nav.catalog")}</span>
       </Link>
 
       <button
         type="button"
-        className={styles.item}
+        className={`${styles.item} ${isFavOpen ? styles.itemActive : ""}`}
         onClick={toggleFav}
-        aria-label="Обране"
+        aria-label={t("nav.favorites")}
       >
         <span className={styles.icon}>
           <HeartIcon />
@@ -154,32 +158,32 @@ export default function MobileBottomNav() {
             <span className={styles.badge}>{favoriteCount}</span>
           )}
         </span>
-        <span className={styles.label}>Обране</span>
+        <span className={styles.label}>{t("nav.favorites")}</span>
       </button>
 
       <button
         type="button"
-        className={styles.item}
+        className={`${styles.item} ${isCartOpen ? styles.itemActive : ""}`}
         onClick={toggleCart}
-        aria-label="Кошик"
+        aria-label={t("nav.cart")}
       >
         <span className={styles.icon}>
           <CartIcon />
           {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
         </span>
-        <span className={styles.label}>Кошик</span>
+        <span className={styles.label}>{t("nav.cart")}</span>
       </button>
 
       <button
         type="button"
         className={`${styles.item} ${isProfile ? styles.itemActive : ""}`}
         onClick={handleProfile}
-        aria-label="Профіль"
+        aria-label={t("nav.profile")}
       >
         <span className={styles.icon}>
           <ProfileIcon />
         </span>
-        <span className={styles.label}>Профіль</span>
+        <span className={styles.label}>{t("nav.profile")}</span>
       </button>
     </nav>
   );

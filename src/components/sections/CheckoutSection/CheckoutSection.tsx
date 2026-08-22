@@ -75,6 +75,10 @@ export default function CheckoutSection() {
   }, [items, safeTotal]);
 
   const deliveryCost = 0;
+  const promoCode = useCartStore((st) => st.promoCode);
+  const promoPercent = useCartStore((st) => st.promoPercent);
+  const promoDiscount = Math.round((safeTotal * (promoPercent || 0)) / 100);
+  const payableTotal = Math.max(0, safeTotal - promoDiscount);
 
   // Хуки для управління станом
   const checkoutState = useCheckoutState();
@@ -91,10 +95,11 @@ export default function CheckoutSection() {
     hasDifferentRecipient: checkoutState.hasDifferentRecipient,
     deliveryType: checkoutState.deliveryType,
     items,
-    safeTotal,
+    safeTotal: payableTotal,
     subtotal,
     discountAmount,
     deliveryCost,
+    promoCode,
     setErrors: checkoutState.setErrors,
     parseWcValidationErrors,
   });
@@ -145,7 +150,7 @@ export default function CheckoutSection() {
             {isSummarySkeleton ? (
             <OrderSummarySkeleton />
             ) : (
-              <OrderSummary total={safeTotal} />
+              <OrderSummary total={payableTotal} />
             )}
           </div>
         </div>

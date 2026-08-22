@@ -351,7 +351,9 @@
   .purchasedCourses {
     gap: mvw(24);
     max-height: none;
-    background: transparent;
+    background: #222222;
+    border-radius: mvw(12);
+    padding: mvw(16);
   }
 
   .title {

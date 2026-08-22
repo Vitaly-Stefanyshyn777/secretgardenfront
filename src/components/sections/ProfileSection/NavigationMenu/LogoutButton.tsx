@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./NavigationMenu.module.css";
+import { useTranslation } from "@/hooks/useTranslation";
 import type { NavigationItem } from "./types";
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export default function LogoutButton({ item, isActive, onLogout }: Props) {
+  const { t } = useTranslation();
   const { icon } = item;
   const isIconString = typeof icon === "string";
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,23 +47,21 @@ export default function LogoutButton({ item, isActive, onLogout }: Props) {
       {isModalOpen && (
         <div className={styles.logoutModalOverlay}>
           <div className={styles.logoutModal}>
-            <p className={styles.logoutTitle}>
-              Вийти з особистого кабінету?
-            </p>
+            <p className={styles.logoutTitle}>{t("profile.logoutTitle")}</p>
             <div className={styles.logoutButtons}>
               <button
                 type="button"
                 className={styles.logoutConfirm}
                 onClick={handleConfirmLogout}
               >
-                Так, вийти
+                {t("profile.logoutConfirm")}
               </button>
               <button
                 type="button"
                 className={styles.logoutCancel}
                 onClick={() => setIsModalOpen(false)}
               >
-                Скасувати
+                {t("common.cancel")}
               </button>
             </div>
           </div>

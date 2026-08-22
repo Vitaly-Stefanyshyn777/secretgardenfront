@@ -205,6 +205,10 @@ interface CartState {
   setUserId: (userId: string | null) => void;
   syncFromApi: () => Promise<void>;
   clear: () => Promise<void>;
+  promoCode: string | null;
+  promoPercent: number;
+  setPromo: (code: string, percent: number) => void;
+  clearPromo: () => void;
 }
 
 const parsePrice = (priceStr: string | undefined | null): number | undefined => {
@@ -285,6 +289,8 @@ export const useCartStore = create<CartState>()(
       isOpen: false,
       isLoading: false,
       pendingCartSync: false,
+      promoCode: null,
+      promoPercent: 0,
       open: () => set({ isOpen: true }),
       close: () => {
         const state = get();
@@ -684,7 +690,7 @@ export const useCartStore = create<CartState>()(
         const state = get();
         const { token } = useAuthStore.getState();
 
-        set({ items: {} });
+        set({ items: {}, promoCode: null, promoPercent: 0 });
 
         if (state.currentUserId && token) {
           set((s) => ({ ...s, pendingCartSync: true }));
@@ -693,12 +699,21 @@ export const useCartStore = create<CartState>()(
           saveUserCart(state.currentUserId, {});
         }
       },
+      setPromo: (code: string, percent: number) => {
+        set({
+          promoCode: code.trim().toUpperCase(),
+          promoPercent: Math.max(0, percent),
+        });
+      },
+      clearPromo: () => set({ promoCode: null, promoPercent: 0 }),
     }),
     {
       name: "bfb-cart",
       partialize: (s: CartState) => ({
         items: s.items,
         currentUserId: s.currentUserId,
+        promoCode: s.promoCode,
+        promoPercent: s.promoPercent,
       }),
     }
   )

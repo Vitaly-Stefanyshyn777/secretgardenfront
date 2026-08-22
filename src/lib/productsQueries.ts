@@ -1,6 +1,11 @@
 import { fetchFilteredProducts, fetchProductReviews } from "./bfbApi";
 import { getAllProducts, getProductsByCategory, mapProductToUi } from "./products";
 import type { Product } from "./products";
+import {
+  getLocaleHeaders,
+  getLocalizedName,
+  localizeProductRecord,
+} from "./localizedContent";
 
 export const productReviewsQuery = (productSlug: string) => ({
   queryKey: ["product", productSlug, "reviews"] as const,
@@ -33,7 +38,7 @@ export const productQuery = (slugOrId: string) => ({
       `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${encodeURIComponent(
         slugOrId,
       )}`,
-      { cache: "no-store" },
+      { cache: "no-store", headers: getLocaleHeaders() },
     );
 
     if (!res.ok) {
@@ -41,8 +46,8 @@ export const productQuery = (slugOrId: string) => ({
     }
 
     const raw = await res.json();
-    // Підтримка обгорнутої відповіді { data: {...} } або прямої відповіді
-    const data = (raw?.data ?? raw) as {
+    const data = localizeProductRecord((raw?.data ?? raw) as Record<string, unknown>);
+    const typed = data as {
       id: string;
       name: string;
       slug: string;
@@ -76,15 +81,15 @@ export const productQuery = (slugOrId: string) => ({
       }>;
     };
 
-    const placeholderImage = data.mainImageUrl || "/placeholder.svg";
-    const imageUrls = data.imageUrls && data.imageUrls.length > 0
-      ? data.imageUrls
-      : data.mainImageUrl
-        ? [data.mainImageUrl]
+    const placeholderImage = typed.mainImageUrl || "/placeholder.svg";
+    const imageUrls = typed.imageUrls && typed.imageUrls.length > 0
+      ? typed.imageUrls
+      : typed.mainImageUrl
+        ? [typed.mainImageUrl]
         : [placeholderImage];
 
-    const regularPrice = String(data.price ?? "");
-    const salePriceRaw = data.salePrice;
+    const regularPrice = String(typed.price ?? "");
+    const salePriceRaw = typed.salePrice;
     const salePrice =
       salePriceRaw !== undefined &&
       salePriceRaw !== null &&
@@ -97,37 +102,37 @@ export const productQuery = (slugOrId: string) => ({
       Number(salePrice) < Number(regularPrice);
 
     const product: Product = {
-      id: data.id,
-      name: data.name,
-      slug: data.slug,
+      id: typed.id,
+      name: typed.name,
+      slug: typed.slug,
       price: onSale ? salePrice : regularPrice,
       regularPrice,
       salePrice: onSale ? salePrice : regularPrice,
       onSale,
-      description: data.description || "",
-      shortDescription: data.shortDescription || "",
+      description: typed.description || "",
+      shortDescription: typed.shortDescription || "",
       sku: "",
-      stockStatus: data.inStock ? "instock" : "outofstock",
-      stockQuantity: data.stockQuantity ?? null,
+      stockStatus: typed.inStock ? "instock" : "outofstock",
+      stockQuantity: typed.stockQuantity ?? null,
       image: imageUrls[0] || placeholderImage,
       images: imageUrls.map((src, idx) => ({
         id: idx + 1,
         src,
-        name: data.name,
-        alt: data.name,
+        name: typed.name,
+        alt: typed.name,
       })),
-      characteristics: data.characteristics
-        ? [...data.characteristics].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+      characteristics: typed.characteristics
+        ? [...typed.characteristics].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
         : undefined,
       descriptionBlocks: (() => {
-        const blocks = data.descriptionBlocks ?? data.description_blocks;
+        const blocks = typed.descriptionBlocks ?? typed.description_blocks;
         if (!Array.isArray(blocks) || blocks.length === 0) return undefined;
         return [...blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
       })(),
       categories:
-        data.categories?.map((c, idx) => ({
+        typed.categories?.map((c, idx) => ({
           id: idx,
-          name: c.name,
+          name: getLocalizedName(c),
           slug: c.slug,
         })) ?? [],
       brands: [],
@@ -135,9 +140,9 @@ export const productQuery = (slugOrId: string) => ({
       metaData: [],
       isNew: false,
       dateCreated: "",
-      averageRating: String(data.ratingAverage ?? 0),
-      ratingCount: data.ratingCount ?? 0,
-      permalink: `/products/${data.slug}`,
+      averageRating: String(typed.ratingAverage ?? 0),
+      ratingCount: typed.ratingCount ?? 0,
+      permalink: `/products/${typed.slug}`,
       weight: undefined,
       dimensions: undefined,
       color: undefined,

@@ -1,53 +1,53 @@
 import {
-  HouseIcon,
-  User2Icon,
-  DumbbellsIcon,
-  BagIcon,
-  DocumentIcon,
-  BagMoneyIcon,
   LockIcon2,
-  EntranceIcon,
-  QuestionBorderIcon,
   Icon1,
   Icon2,
   Icon3,
   Icon4,
 } from "@/components/Icons/Icons";
+import type { TranslationPath } from "@/hooks/useTranslation";
 import type { NavigationItem } from "./types";
 
-export const navigationItems: NavigationItem[] = [
+export type NavigationItemConfig = Omit<NavigationItem, "label"> & {
+  labelKey: TranslationPath;
+};
+
+export const navigationItems: NavigationItemConfig[] = [
   {
     id: "trainer-profile",
-    label: "Ваш кабінет",
+    labelKey: "profile.cabinet",
     href: "/profile/trainer-profile",
     icon: Icon1,
     badge: 0,
   },
   {
     id: "courses",
-    label: "Мова",
+    labelKey: "profile.language",
     href: "/profile/courses",
     icon: Icon2,
   },
   {
     id: "orders",
-    label: "Ваші замовлення",
+    labelKey: "profile.orders",
     href: "/profile/orders",
-
     icon: Icon3,
   },
   {
     id: "personal-data",
-    label: "Зв'язатися з нами",
+    labelKey: "profile.contactUs",
     href: "/profile/personal-data",
     icon: Icon4,
   },
   {
     id: "change-password",
-    label: "Змінити пароль",
+    labelKey: "profile.changePassword",
     href: "/profile/change-password",
     icon: LockIcon2,
   },
-
-  { id: "logout", label: "Вийти", href: "/logout", icon: "/icons/icon-9.svg" },
+  {
+    id: "logout",
+    labelKey: "profile.logout",
+    href: "/logout",
+    icon: "/icons/icon-9.svg",
+  },
 ];

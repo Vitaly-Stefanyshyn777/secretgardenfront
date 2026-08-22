@@ -12,6 +12,7 @@ import "swiper/css";
 import s from "./CartModal.module.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Функція для отримання бренду товару
 const getProductBrand = (product: any): string | null => {
@@ -56,6 +57,7 @@ const getProductBrand = (product: any): string | null => {
 };
 
 export default function CartRecommendations() {
+  const { t } = useTranslation();
   const { data: products, isLoading } = useProductsQuery();
   const items = useCartStore((st) => st.items);
   const addItem = useCartStore((st) => st.addItem);
@@ -164,7 +166,7 @@ export default function CartRecommendations() {
   return (
     <div className={s.recommendations}>
       <div className={s.recoHeader}>
-        <div className={s.recoTitle}>Рекомендовані товари</div>
+        <div className={s.recoTitle}>{t("cart.recommended")}</div>
         {isMobile === false && productsList.length > 1 && (
           <SliderNav
             activeIndex={recoPage}
@@ -262,9 +264,11 @@ export default function CartRecommendations() {
                       <button
                         className={`${s.smallPrimary} ${s.smallDelete}`}
                         onClick={() => removeItem(String(p.id))}
-                        aria-label="Видалити товар з кошика"
+                        aria-label={t("cart.removeItem")}
                       >
-                        <span className={s.smallPrimaryLabel}>Видалити</span>
+                        <span className={s.smallPrimaryLabel}>
+                          {t("cart.remove")}
+                        </span>
                         <CloseButtonIcon />
                       </button>
                     ) : (
@@ -321,9 +325,11 @@ export default function CartRecommendations() {
                             return;
                           }
                         }}
-                        aria-label="Додати товар у кошик"
+                        aria-label={t("cart.addItem")}
                       >
-                        <span className={s.smallPrimaryLabel}>Додати</span>
+                        <span className={s.smallPrimaryLabel}>
+                          {t("cart.add")}
+                        </span>
                         <PlusIcon />
                       </button>
                     )}

@@ -6,7 +6,8 @@ import { useScrollLock } from "../../hooks/useScrollLock";
 import LoginModalHeader from "./LoginModalHeader";
 import LoginForm, { type LoginFormValues } from "./LoginForm";
 import s from "./LoginModal.module.css";
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ export default function LoginModal({
   } = useForm<LoginFormValues>();
 
   const loginMutation = useNodeLogin();
+  const { t } = useTranslation();
   useScrollLock(isOpen);
 
   const handleSwitchToRegister = () => {
@@ -56,11 +58,11 @@ export default function LoginModal({
       // Встановлюємо помилки валідації для обох полів
       setError("username", {
         type: "manual",
-        message: "Невірний логін або пароль",
+        message: t("auth.invalidCredentials"),
       });
       setError("password", {
         type: "manual",
-        message: "Невірний логін або пароль",
+        message: t("auth.invalidCredentials"),
       });
     }
   };

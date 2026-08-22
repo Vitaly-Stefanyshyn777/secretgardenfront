@@ -1,6 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { PasswordsIcon } from "@/components/Icons/Icons";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./LoginModal.module.css";
 
 interface PasswordInputProps {
@@ -8,6 +11,7 @@ interface PasswordInputProps {
 }
 
 export default function PasswordInput({ register }: PasswordInputProps) {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -23,7 +27,7 @@ export default function PasswordInput({ register }: PasswordInputProps) {
         <div className={s.inputBlock}>
           <input
             className={s.input}
-            placeholder="Пароль"
+            placeholder={t("auth.password")}
             type={showPassword ? "text" : "password"}
             {...register("password", { required: true })}
           />

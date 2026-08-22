@@ -620,6 +620,18 @@
   font-size: 14px;
 }
 
+.reviewTextInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(244, 244, 244, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--bіliy);
+  font-family: var(--font-family);
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
 .starButton {
   background: none;
   border: none;
@@ -3172,7 +3184,7 @@
 
   .productReviewsMobile .reviewSuccess,
   .productReviewsMobile .reviewError {
-    font-size: mvw(13);
+    font-size: mvw(17);
     line-height: 140%;
   }
 
@@ -3305,6 +3317,17 @@
     flex-shrink: 0;
     height: auto;
     box-sizing: border-box;
+  }
+
+  .relatedEmptyHint {
+    margin: 0;
+    padding: mvw(4) 0;
+    font-family: var(--font-family);
+    font-size: mvw(16);
+    line-height: 150%;
+    color: rgba(244, 244, 244, 0.65);
+    text-align: center;
+    width: 100%;
   }
 
   .outOfStockOverlay {

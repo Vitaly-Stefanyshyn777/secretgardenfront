@@ -6,7 +6,9 @@ import { A11y } from "swiper/modules";
 import { useProductReviewsQuery } from "@/components/hooks/useProductsQuery";
 import { createProductReview } from "@/lib/bfbApi";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/auth";
 import { SendIcon } from "@/components/Icons/Icons";
+import { useTranslation } from "@/hooks/useTranslation";
 import styles from "./ProductPage.module.css";
 import "swiper/css";
 
@@ -73,6 +75,7 @@ export default function ProductReviews({
   productSlug,
   isMobile = false,
 }: ProductReviewsProps) {
+  const { t } = useTranslation();
   const { data, isLoading } = useProductReviewsQuery(productSlug);
   const reviewsList = (() => {
     if (Array.isArray(data)) return data;
@@ -91,12 +94,14 @@ export default function ProductReviews({
     text: string;
   }>;
   const queryClient = useQueryClient();
+  const user = useAuthStore((s) => s.user);
   const [activeTab, setActiveTab] = useState<"reviews" | "leave">("reviews");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const [form, setForm] = useState({
+    authorName: user?.displayName || user?.nicename || "",
     rating: 0,
     text: "",
   });
@@ -104,7 +109,12 @@ export default function ProductReviews({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (form.rating < 1) {
-      setError("Оберіть оцінку");
+      setError(t("product.selectRating"));
+      return;
+    }
+    const authorName = form.authorName.trim();
+    if (!authorName) {
+      setError(t("product.enterName"));
       return;
     }
     setError(null);
@@ -113,16 +123,21 @@ export default function ProductReviews({
       await createProductReview(productSlug, {
         rating: form.rating,
         text: form.text.trim() || undefined,
+        authorName,
       });
       setSuccess(true);
-      setForm({ rating: 0, text: "" });
+      setForm({
+        authorName: user?.displayName || user?.nicename || "",
+        rating: 0,
+        text: "",
+      });
       queryClient.invalidateQueries({
         queryKey: ["product", productSlug, "reviews"],
       });
       queryClient.invalidateQueries({ queryKey: ["product", productSlug] });
       setActiveTab("reviews");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Помилка відправки");
+      setError(err instanceof Error ? err.message : t("product.submitError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -136,13 +151,23 @@ export default function ProductReviews({
       onSubmit={handleSubmit}
     >
       {success && (
-        <p className={styles.reviewSuccess}>
-          Дякуємо! Ваш відгук опубліковано.
-        </p>
+        <p className={styles.reviewSuccess}>{t("product.reviewSuccess")}</p>
       )}
       {error && <p className={styles.reviewError}>{error}</p>}
       <div className={styles.formField}>
-        <label className={styles.formLabel}>Ваша оцінка</label>
+        <label className={styles.formLabel}>{t("product.yourName")}</label>
+        <input
+          type="text"
+          value={form.authorName}
+          onChange={(e) =>
+            setForm((f) => ({ ...f, authorName: e.target.value }))
+          }
+          className={styles.reviewTextInput}
+          placeholder={t("product.yourNamePlaceholder")}
+        />
+      </div>
+      <div className={styles.formField}>
+        <label className={styles.formLabel}>{t("product.yourRating")}</label>
         <div className={styles.reviewFormStars}>
           {[1, 2, 3, 4, 5].map((v) => (
             <button
@@ -157,12 +182,12 @@ export default function ProductReviews({
         </div>
       </div>
       <div className={styles.formField}>
-        <label className={styles.formLabel}>Коментар</label>
+        <label className={styles.formLabel}>{t("product.comment")}</label>
         <textarea
           value={form.text}
           onChange={(e) => setForm((f) => ({ ...f, text: e.target.value }))}
           rows={5}
-          placeholder="Напишіть ваш відгук..."
+          placeholder={t("product.commentPlaceholder")}
           className={styles.reviewTextarea}
         />
       </div>
@@ -171,7 +196,7 @@ export default function ProductReviews({
         disabled={isSubmitting}
         className={styles.submitReviewBtn}
       >
-        {isSubmitting ? "Відправка..." : "Надіслати"}
+        {isSubmitting ? t("common.submitting") : t("common.submit")}
         {!isMobile && (
           <span className={styles.submitReviewBtnIcon}>
             <SendIcon />
@@ -187,13 +212,13 @@ export default function ProductReviews({
 
     return (
       <div className={`${styles.productReviews} ${styles.productReviewsMobile}`}>
-        <h2 className={styles.reviewsSectionTitle}>Відгуки</h2>
+        <h2 className={styles.reviewsSectionTitle}>{t("product.reviews")}</h2>
         <div className={styles.reviewsSliderWrap}>
           {isLoading ? (
-            <p className={styles.reviewsLoading}>Завантаження відгуків...</p>
+            <p className={styles.reviewsLoading}>{t("product.reviewsLoading")}</p>
           ) : reviewsList.length === 0 ? (
             <p className={styles.reviewsEmptyMobile}>
-              Поки немає відгуків. Залиште перший!
+              {t("product.reviewsEmpty")}
             </p>
           ) : (
             <Swiper
@@ -221,7 +246,7 @@ export default function ProductReviews({
                   >
                     <span className={styles.reviewMoreDots}>···</span>
                     <span className={styles.reviewMoreText}>
-                      Переглянути ще
+                      {t("product.reviewMore")}
                     </span>
                   </Link>
                 </SwiperSlide>
@@ -233,7 +258,7 @@ export default function ProductReviews({
           href={`/products/${productSlug}/reviews/new`}
           className={styles.leaveReviewBtn}
         >
-          Залишити відгук
+          {t("product.leaveReview")}
         </Link>
       </div>
     );
@@ -247,25 +272,23 @@ export default function ProductReviews({
           className={`${styles.reviewsTab} ${activeTab === "reviews" ? styles.reviewsTabActive : ""}`}
           onClick={() => setActiveTab("reviews")}
         >
-          Відгуки
+          {t("product.reviews")}
         </button>
         <button
           type="button"
           className={`${styles.reviewsTab} ${activeTab === "leave" ? styles.reviewsTabActive : ""}`}
           onClick={() => setActiveTab("leave")}
         >
-          Залишити відгук
+          {t("product.leaveReview")}
         </button>
       </div>
 
       {activeTab === "reviews" && (
         <div className={styles.reviewsList}>
           {isLoading ? (
-            <p className={styles.reviewsLoading}>Завантаження відгуків...</p>
+            <p className={styles.reviewsLoading}>{t("product.reviewsLoading")}</p>
           ) : reviewsList.length === 0 ? (
-            <p className={styles.reviewsEmpty}>
-              Поки немає відгуків. Залиште перший!
-            </p>
+            <p className={styles.reviewsEmpty}>{t("product.reviewsEmpty")}</p>
           ) : (
             reviewsList.map((r) => (
               <ReviewCard

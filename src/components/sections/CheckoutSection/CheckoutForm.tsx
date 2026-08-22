@@ -1,10 +1,12 @@
 "use client";
+
 import React from "react";
 import PersonalDataForm from "./PersonalDataForm";
 import DeliveryForm from "./DeliveryForm";
 import PaymentForm from "./PaymentForm";
 import CommentForm from "./CommentForm";
 import { FormData, CheckoutErrors } from "./types";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./CheckoutSection.module.css";
 
 interface CheckoutFormProps {
@@ -34,6 +36,8 @@ export default function CheckoutForm({
   onSubmit,
   isSubmitting,
 }: CheckoutFormProps) {
+  const { t } = useTranslation();
+
   const checkboxAgreements = (
     <div className={s.checkboxContainer}>
       <div className={s.checkboxBlock}>
@@ -45,7 +49,9 @@ export default function CheckoutForm({
               setFormData({ mailSend: e.target.checked });
             }}
           />
-          <span className={s.checkboxText}>Підписатись на e-mail розсилку</span>
+          <span className={s.checkboxText}>
+            {t("checkout.subscribeNewsletter")}
+          </span>
         </label>
       </div>
       <div className={s.checkboxBlock}>
@@ -62,10 +68,7 @@ export default function CheckoutForm({
               }
             }}
           />
-          <span className={s.checkboxText}>
-            Приймаю умови оферти, політики конфіденційності та заяви про обробку
-            персональних даних
-          </span>
+          <span className={s.checkboxText}>{t("checkout.acceptTerms")}</span>
         </label>
       </div>
     </div>
@@ -78,7 +81,6 @@ export default function CheckoutForm({
         hasDifferentRecipient={hasDifferentRecipient}
         setFormData={(data) => {
           setFormData(data);
-          // Очищаємо помилки при зміні полів
           if (
             data.firstName !== undefined &&
             data.firstName !== formData.firstName
@@ -122,7 +124,6 @@ export default function CheckoutForm({
         }}
         setFormData={(data) => {
           setFormData(data);
-          // Очищаємо помилки при зміні полів доставки
           if (data.city !== undefined && data.city !== formData.city)
             clearFieldError("city");
           if (data.branch !== undefined && data.branch !== formData.branch)
@@ -154,7 +155,9 @@ export default function CheckoutForm({
           onClick={onSubmit}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Обробка замовлення..." : "Підтвердити замовлення"}
+          {isSubmitting
+            ? t("checkout.processing")
+            : t("checkout.confirmOrder")}
         </button>
         {checkboxAgreements}
       </div>

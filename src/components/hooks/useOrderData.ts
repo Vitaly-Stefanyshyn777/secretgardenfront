@@ -17,6 +17,7 @@ interface CreateOrderDataProps {
   discountAmount: number;
   /** Вартість доставки в грн (0 = за тарифами НП) */
   deliveryCost: number;
+  promoCode?: string | null;
 }
 
 function mapDeliveryTypeToMethod(deliveryType: string): string {
@@ -44,6 +45,7 @@ export function useOrderData() {
     subtotal,
     discountAmount,
     deliveryCost,
+    promoCode,
   }: CreateOrderDataProps): CreateOrderPayload => {
     const itemsPayload = items
       .filter((it) => it.quantity > 0)
@@ -76,6 +78,7 @@ export function useOrderData() {
       discountAmount: Math.round(discountAmount) || 0,
       deliveryCost: Math.round(deliveryCost) || 0,
       paymentMethod: formData.paymentMethod || undefined,
+      promoCode: promoCode?.trim() || undefined,
     };
 
     if (hasDifferentRecipient) {

@@ -1,87 +1,50 @@
+import type { TranslationPath } from "@/i18n";
+
 export interface NavigationItem {
   href: string;
   label: string;
   description?: string;
 }
 
-// Функція для отримання правильного якоря для LearningFormats залежно від пристрою
-export const getLearningFormatsAnchor = (): string => {
-  if (typeof window === "undefined") return "/#LearningFormats"; // SSR fallback
+export interface NavigationConfigItem {
+  href: string;
+  labelKey: TranslationPath;
+  description?: string;
+}
 
+export const getLearningFormatsAnchor = (): string => {
+  if (typeof window === "undefined") return "/#LearningFormats";
   const isMobile = window.matchMedia("(max-width: 768px)").matches;
   return isMobile ? "/#LearningMobileFormats" : "/#LearningFormats";
 };
 
-export const mainNavigation: NavigationItem[] = [
-  {
-    href: "/",
-    label: "Головна",
-  },
-  {
-    href: "/products",
-    label: "Магазин",
-  },
-
-  {
-    href: "/about",
-    label: "Про нас",
-  },
-  {
-    href: "/contacts",
-    label: "Контакти",
-  },
+export const mainNavigationConfig: NavigationConfigItem[] = [
+  { href: "/", labelKey: "nav.home" },
+  { href: "/products", labelKey: "nav.shop" },
+  { href: "/about", labelKey: "nav.about" },
+  { href: "/contacts", labelKey: "nav.contacts" },
 ];
 
-export const additionalNavigation: NavigationItem[] = [
-  {
-    href: "/courses",
-    label: "Воркшопи",
-  },
-  {
-    href: "/courses",
-    label: "Навчальні програми",
-  },
-  {
-    href: "/contacts",
-    label: "Контакти",
-  },
+export const additionalNavigationConfig: NavigationConfigItem[] = [
+  { href: "/courses", labelKey: "nav.workshops" },
+  { href: "/courses", labelKey: "nav.programs" },
+  { href: "/contacts", labelKey: "nav.contacts" },
 ];
 
-export const burgerMenuNavigation = {
+export const burgerMenuNavigationConfig = {
   main: [
-    {
-      href: "/",
-      label: "Головна",
-    },
-    {
-      href: "/about-bfb",
-      label: "Про BFB",
-    },
+    { href: "/", labelKey: "nav.home" as TranslationPath },
+    { href: "/about-bfb", labelKey: "nav.aboutBfb" as TranslationPath },
     {
       href: "/courses-landing",
-      label: "Інструкторство B.F.B",
+      labelKey: "nav.instructing" as TranslationPath,
     },
-    {
-      href: "/trainers",
-      label: "Каталог тренерів",
-    },
-    {
-      href: "/products",
-      label: "Каталог товарів",
-    },
+    { href: "/trainers", labelKey: "nav.trainersCatalog" as TranslationPath },
+    { href: "/products", labelKey: "nav.productsCatalog" as TranslationPath },
   ],
   additional: [
-    {
-      href: "/courses",
-      label: "Воркшопи",
-    },
-    {
-      href: "/our-courses",
-      label: "Навчальні програми",
-    },
-    {
-      href: "/contacts",
-      label: "Контакти",
-    },
+    { href: "/courses", labelKey: "nav.workshops" as TranslationPath },
+    { href: "/our-courses", labelKey: "nav.programs" as TranslationPath },
+    { href: "/contacts", labelKey: "nav.contacts" as TranslationPath },
   ],
 };

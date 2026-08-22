@@ -1,6 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { PasswordsIcon } from "@/components/Icons/Icons";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./RegisterModal.module.css";
 
 export interface RegisterFormValues {
@@ -9,7 +12,7 @@ export interface RegisterFormValues {
   first_name: string;
   last_name: string;
   phone: string;
-  certificate: string; // Обов'язкове поле
+  certificate: string;
 }
 
 interface RegisterPasswordInputProps {
@@ -19,6 +22,7 @@ interface RegisterPasswordInputProps {
 export default function RegisterPasswordInput({
   register,
 }: RegisterPasswordInputProps) {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword((v) => !v);
@@ -32,7 +36,7 @@ export default function RegisterPasswordInput({
         <div className={s.inputBlock}>
           <input
             className={s.input}
-            placeholder="Пароль"
+            placeholder={t("auth.password")}
             type={showPassword ? "text" : "password"}
             {...register("password", { minLength: 6 })}
           />

@@ -5,6 +5,7 @@ import { A11y } from "swiper/modules";
 import ProductCard from "@/components/sections/ProductsSection/ProductCard/ProductCard";
 import SliderNav from "@/components/ui/SliderNav/SliderNavActions";
 import { normalizeImageUrl } from "@/lib/imageUtils";
+import { useTranslation } from "@/hooks/useTranslation";
 import type { RelatedProductsProps, RelatedProduct } from "./types";
 import styles from "./ProductPage.module.css";
 import "swiper/css";
@@ -14,6 +15,7 @@ const RelatedProducts = memo(function RelatedProducts({
   currentProductSlug,
   isMobile = false,
 }: RelatedProductsProps) {
+  const { t } = useTranslation();
   const baseItemsPerView = isMobile ? 2 : 6;
   const [slideIdx, setSlideIdx] = useState(0);
   const itemsPerView = baseItemsPerView;
@@ -98,6 +100,7 @@ const RelatedProducts = memo(function RelatedProducts({
       wcProduct={(item as any).wcProduct}
       isFluid
       showcaseDark={isMobile}
+      compact={isMobile}
     />
   );
 
@@ -108,7 +111,7 @@ const RelatedProducts = memo(function RelatedProducts({
       }`}
     >
       <div className={styles.relatedProductsHeader}>
-        <h2>Вам може сподобатись</h2>
+        <h2>{t("product.related")}</h2>
       </div>
       {isMobile ? (
         <div className={styles.relatedSliderWrap}>

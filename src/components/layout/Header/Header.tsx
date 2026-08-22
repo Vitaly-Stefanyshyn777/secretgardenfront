@@ -23,7 +23,8 @@ import { useCartStore } from "@/store/cart";
 import { useFavoriteStore } from "@/store/favorites";
 import CartModal from "../../CartModal/CartModal";
 import FavoritesModal from "../../FavoritesModal/FavoritesModal";
-import { mainNavigation, burgerMenuNavigation } from "@/lib/navigation";
+import { useMainNavigation, useBurgerMenuNavigation } from "@/hooks/useNavigation";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useThemeSettings } from "@/components/providers/ThemeSettingsProvider";
 import { getContactData } from "@/lib/themeSettingsUtils";
 
@@ -97,6 +98,9 @@ export default function Header() {
     () => getContactData(themeSettings),
     [themeSettings],
   );
+  const { t } = useTranslation();
+  const mainNavigation = useMainNavigation();
+  const burgerMenuNavigation = useBurgerMenuNavigation();
 
   const handleUserIconClick = () => {
     if (isLoggedIn) {
@@ -263,10 +267,10 @@ export default function Header() {
               <input
                 type="search"
                 className={s.mobileSearchInput}
-                placeholder="Пошук..."
+                placeholder={t("nav.searchPlaceholder")}
                 value={mobileSearch}
                 onChange={(e) => setMobileSearch(e.target.value)}
-                aria-label="Пошук товарів"
+                aria-label={t("nav.searchAria")}
               />
             </form>
           </>
@@ -365,7 +369,7 @@ export default function Header() {
               <div className={s.phone}>
                 <NumberHeader />
                 <div className={s.contacts}>
-                  <p className={s.contactText}>Ми на зв&apos;язку:</p>
+                  <p className={s.contactText}>{t("nav.contactUs")}</p>
                   <div className={s.phoneWrapper}>
                     <a href="tel:+380954372575" className={s.phoneLink}>
                       +380 95 437 25 75
@@ -379,7 +383,7 @@ export default function Header() {
                   <button
                     className={`${s.iconBtn} ${isFavOpen ? s.active : ""}`}
                     onClick={toggleFav}
-                    title="Обране"
+                    title={t("nav.favoritesTitle")}
                   >
                     <Image
                       src="/icons/prefix-Icon.svg"
@@ -395,7 +399,7 @@ export default function Header() {
                   <button
                     className={`${s.iconBtn} ${isCartOpen ? s.active : ""}`}
                     onClick={toggleCart}
-                    title="Кошик"
+                    title={t("nav.cartTitle")}
                   >
                     <Image
                       src="/icons/Prefix-Icon-2.svg"
@@ -412,12 +416,12 @@ export default function Header() {
                     <button
                       className={`${s.iconBtn} ${s.userBtn}`}
                       onClick={handleUserIconClick}
-                      title="Особистий кабінет"
+                      title={t("nav.accountTitle")}
                       suppressHydrationWarning
                     >
                       <Image
                         src="/icons/prefix-2.svg"
-                        alt="Профіль"
+                        alt={t("nav.profileAlt")}
                         width={20}
                         height={20}
                         className={s.iconImage}
@@ -427,10 +431,10 @@ export default function Header() {
                     <button
                       className={s.loginBtn}
                       onClick={openLoginModal}
-                      title="Увійти"
+                      title={t("nav.loginTitle")}
                       suppressHydrationWarning
                     >
-                      Вхід
+                      {t("nav.login")}
                     </button>
                   )}
                 </div>
@@ -441,7 +445,7 @@ export default function Header() {
                       className={s.register}
                       onClick={() => setIsRegisterOpen(true)}
                     >
-                      Реєстрація
+                      {t("nav.register")}
                     </button>
                   )}
                 </div>
@@ -479,14 +483,14 @@ export default function Header() {
           <div className={s.menuContainer} onClick={(e) => e.stopPropagation()}>
             <div className={s.menuContent}>
               <div className={s.menuHeader}>
-                <h5 className={s.menuTitle}>Меню</h5>
+                <h5 className={s.menuTitle}>{t("nav.menu")}</h5>
                 <button className={s.menuClose} onClick={toggleMenu}>
                   <CloseButtonIcon />
                 </button>
               </div>
 
               <div className={s.menuSection}>
-                <p className={s.sectionTitle}>B.F.B Напрямок:</p>
+                <p className={s.sectionTitle}>{t("nav.bfbDirection")}</p>
 
                 <div className={s.menuItemBlock}>
                   {burgerMenuNavigation.main.map((item) => (
@@ -503,7 +507,7 @@ export default function Header() {
               </div>
 
               <div className={s.menuSection}>
-                <p className={s.sectionTitle}>Додатково</p>
+                <p className={s.sectionTitle}>{t("nav.additional")}</p>
                 <div className={s.menuItemBlock}>
                   {burgerMenuNavigation.additional.map((item) => (
                     <Link
@@ -523,13 +527,13 @@ export default function Header() {
               <div className={s.contactGrid}>
                 <div className={s.contactRow}>
                   <div className={s.contactItem}>
-                    <h5 className={s.contactLabel}>Телефон</h5>
+                    <h5 className={s.contactLabel}>{t("nav.phone")}</h5>
                     <p className={s.contactValue}>
                       {contactData.phone || "+380 95 437 25 75"}
                     </p>
                   </div>
                   <div className={s.contactItem}>
-                    <h5 className={s.contactLabel}>Час роботи у вихідні:</h5>
+                    <h5 className={s.contactLabel}>{t("nav.weekendHours")}</h5>
                     <p className={s.contactValue}>
                       {contactData.weekends || "10:00 - 20:00"}
                     </p>
@@ -538,13 +542,13 @@ export default function Header() {
 
                 <div className={s.contactRow}>
                   <div className={s.contactItem}>
-                    <h5 className={s.contactLabel}>Email</h5>
+                    <h5 className={s.contactLabel}>{t("nav.email")}</h5>
                     <p className={s.contactValue}>
                       {contactData.email || "bfb.board.ukraine@gmail.com"}
                     </p>
                   </div>
                   <div className={s.contactItem}>
-                    <h5 className={s.contactLabel}>Час роботи у будні:</h5>
+                    <h5 className={s.contactLabel}>{t("nav.weekdayHours")}</h5>
                     <p className={s.contactValue}>
                       {contactData.weekdays || "10:00 - 20:00"}
                     </p>
@@ -553,9 +557,9 @@ export default function Header() {
               </div>
 
               <div className={s.addressSection}>
-                <h5 className={s.contactLabel}>Адреса головного залу:</h5>
+                <h5 className={s.contactLabel}>{t("nav.mainHallAddress")}</h5>
                 <p className={s.contactValue}>
-                  {contactData.address || "м. Київ, Хрещатик, будинок 23/A"}
+                  {contactData.address || t("nav.defaultAddress")}
                 </p>
               </div>
 

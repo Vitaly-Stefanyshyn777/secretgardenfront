@@ -1,3 +1,5 @@
+"use client";
+
 import {
   UseFormRegister,
   FieldErrors,
@@ -5,6 +7,7 @@ import {
 } from "react-hook-form";
 import { CloseButtonIcon, EmailIcon } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
+import { useTranslation } from "@/hooks/useTranslation";
 import s from "./ResetPasswordModal.module.css";
 
 export interface ResetPasswordCodeFormValues {
@@ -39,54 +42,50 @@ export default function ResetPasswordCodeForm({
   onResendEmail,
   onClose,
 }: ResetPasswordCodeFormProps) {
+  const { t } = useTranslation();
+
   return (
     <>
-      {/* Кнопка закриття */}
       <button className={s.close} onClick={onClose}>
         <CloseButtonIcon />
       </button>
 
-      {/* Заголовок */}
       <div className={s.headerBlock}>
         <div className={s.header}>
-          <h2 className={s.headerTitle}>Введіть код підтвердження</h2>
+          <h2 className={s.headerTitle}>{t("auth.enterCode")}</h2>
         </div>
       </div>
 
-      {/* Контент */}
       <div className={s.confirmContent}>
         <div className={s.confirmText}>
           <p className={s.confirmDescription}>
-            Ми надіслали код підтвердження на вашу електронну пошту{" "}
-            <span className={s.emailHighlight}>{email}</span>.
-            Введіть код для продовження скидання паролю.
+            {t("auth.codeSentToEmail", { email })}
           </p>
         </div>
       </div>
 
-      {/* Форма */}
       <form className={s.form} onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className={s.inputGroup}>
           <InputField
             icon={<EmailIcon />}
-            label="Код підтвердження"
+            label={t("auth.confirmationCode")}
             type="text"
-            placeholder="Введіть код"
+            placeholder={t("auth.enterCodePlaceholder")}
             hasError={!!errors.code}
             supportingText={
-              (errors.code?.message as string) || "Код з 4-6 символів"
+              (errors.code?.message as string) || t("auth.codeLength")
             }
             labelClassName={s.inputLabel}
             inputBlockClassName={s.inputBlock}
             {...register("code", {
-              required: "Введіть код підтвердження",
+              required: t("auth.enterConfirmationCode"),
               minLength: {
                 value: 4,
-                message: "Код має містити мінімум 4 символи",
+                message: t("auth.codeMinLength"),
               },
               maxLength: {
                 value: 6,
-                message: "Код має містити максимум 6 символів",
+                message: t("auth.codeMaxLength"),
               },
             })}
           />
@@ -94,7 +93,7 @@ export default function ResetPasswordCodeForm({
 
         <div className={s.actionsBlock}>
           <button className={s.submit} type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Перевірка..." : "Підтвердити"}
+            {isSubmitting ? t("auth.checking") : t("auth.confirm")}
           </button>
 
           <button
@@ -102,7 +101,7 @@ export default function ResetPasswordCodeForm({
             className={s.backButton}
             onClick={onBackToEmail}
           >
-            Змінити email
+            {t("auth.changeEmail")}
           </button>
 
           <button
@@ -110,7 +109,7 @@ export default function ResetPasswordCodeForm({
             className={s.resendButton}
             onClick={onResendEmail}
           >
-            Надіслати код повторно
+            {t("auth.resendCode")}
           </button>
         </div>
       </form>
