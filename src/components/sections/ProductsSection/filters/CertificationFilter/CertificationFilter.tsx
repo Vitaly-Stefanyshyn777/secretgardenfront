@@ -5,6 +5,7 @@ import styles from "./CertificationFilter.module.css";
 import { MinuswIcon, PlusIcon } from "@/components/Icons/Icons";
 import { useCatalogCategoriesQuery } from "@/components/hooks/useCatalogQueries";
 import type { CatalogCategory } from "@/lib/bfbApi";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface CertificationFilterProps {
   // Вибрані підкатегорії (slug). Може бути декілька.
@@ -66,6 +67,7 @@ export const CertificationFilter = ({
   variant = "default",
   onCategorySelect,
 }: CertificationFilterProps) => {
+  const { t } = useTranslation();
   const isCatalogDropdown = variant === "catalogDropdown";
   const router = useRouter();
   const pathname = usePathname();
@@ -113,7 +115,7 @@ export const CertificationFilter = ({
     () =>
       (categories || []).filter(
         (cat) =>
-          cat.name !== "Всі товари" &&
+          cat.name !== "Всі товари" && cat.name !== "All products" &&
           cat.slug !== "all-products" &&
           cat.slug !== "all",
       ),
@@ -184,7 +186,7 @@ export const CertificationFilter = ({
       } ${isCatalogDropdown ? styles.catalogDropdownSection : ""}`}
     >
       {/* <div className={styles.sectionTitleContainer} onClick={toggleSection}>
-        <h3 className={styles.sectionTitle}>Категорії</h3>
+        <h3 className={styles.sectionTitle}>{t("catalog.categoriesLine1")}</h3>
         {isExpanded ? <MinuswIcon /> : <PlusIcon />}
       </div> */}
       <div
@@ -320,7 +322,7 @@ export const CertificationFilter = ({
                 pushCategoryToUrl(null);
               }}
             >
-              Всі товари
+              {t("catalog.allProducts")}
             </button>
           </>
         ) : activeRoot &&
@@ -348,7 +350,7 @@ export const CertificationFilter = ({
                 pushCategoryToUrl(null);
               }}
             >
-              Всі товари
+              {t("catalog.allProducts")}
             </button>
           </>
         ) : rootCategories.length > 0 ? (
@@ -359,7 +361,7 @@ export const CertificationFilter = ({
                 className={`${styles.categoryBlockBtn} ${styles.categoryBlockBtnActive}`}
                 disabled
               >
-                {activeRoot?.name ?? "Категорії"}
+                {activeRoot?.name ?? t("catalog.categoriesLine1")}
               </button>
 
               {activeCategorySlug && !hideAllCategoriesButton && (

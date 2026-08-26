@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 import styles from "./FilterModal.module.css";
 import { RangeInput } from "@/components/ui/RangeInput/RangeInput";
 import { CertificationFilter } from "@/components/sections/ProductsSection/filters/CertificationFilter/CertificationFilter";
 import { useScrollLock } from "@/components/hooks/useScrollLock";
-import { useEffect } from "react";
 import { CloseButtonIcon } from "@/components/Icons/Icons";
 import { ApplyFilterButton } from "@/components/ui/Buttons/ApplyFilterButton";
 import { ResetFilterButton } from "@/components/ui/Buttons/ResetFilterButton";
@@ -53,6 +53,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
   onApply,
   variant = "default",
 }) => {
+  const { t } = useTranslation();
   const isCatalog = variant === "catalog";
   useScrollLock(isOpen);
 
@@ -89,7 +90,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
           onClick={(e) => e.stopPropagation()}
         >
           <div className={styles.headerCatalog}>
-            <h2 className={styles.titleCatalog}>Категорії та фільтри</h2>
+            <h2 className={styles.titleCatalog}>{t("catalog.categoriesAndFilters")}</h2>
             <button
               type="button"
               className={styles.closeButtonCatalog}

@@ -10,6 +10,31 @@ export interface SortableItem {
   onSale?: boolean;
   featured?: boolean;
   total_sales?: number;
+  ratingAverage?: number | null;
+  ratingCount?: number | null;
+}
+
+function toNumber(value: number | string | null | undefined): number {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  if (typeof value === "string") {
+    const parsed = parseFloat(value.replace(/\s/g, "").replace(",", "."));
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+  return 0;
+}
+
+function getEffectivePrice(item: SortableItem): number {
+  const sale = toNumber(item.salePrice);
+  if (sale > 0) return sale;
+  return toNumber(item.price);
+}
+
+function getPopularScore(item: SortableItem): number {
+  const sales = toNumber(item.total_sales);
+  if (sales > 0) return sales * 1000;
+  const rating = toNumber(item.ratingAverage);
+  const count = toNumber(item.ratingCount);
+  return rating * Math.max(count, 1);
 }
 
 export function sortItems<T extends SortableItem>(
@@ -18,27 +43,17 @@ export function sortItems<T extends SortableItem>(
 ): T[] {
   const sorted = [...items];
 
-  if (process.env.NODE_ENV !== "production") {
-  }
-
   switch (sortType) {
     case "popular":
-      // Популярні - сортуємо за загальною кількістю продажів (total_sales) або featured
       return sorted.sort((a, b) => {
-        // Спочатку перевіряємо total_sales (для товарів)
-        const salesA = a.total_sales || 0;
-        const salesB = b.total_sales || 0;
-        if (salesA !== salesB) {
-          return salesB - salesA; // Більше продажів = вище в списку
-        }
-        // Якщо total_sales однакові або відсутні, сортуємо за featured
+        const scoreDiff = getPopularScore(b) - getPopularScore(a);
+        if (scoreDiff !== 0) return scoreDiff;
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
-        return 0;
+        return getEffectivePrice(a) - getEffectivePrice(b);
       });
 
     case "new":
-      // Новинки - за датою створення (новіші спочатку)
       return sorted.sort((a, b) => {
         const dateA = new Date(a.dateCreated || a.date_created || 0).getTime();
         const dateB = new Date(b.dateCreated || b.date_created || 0).getTime();
@@ -46,32 +61,13 @@ export function sortItems<T extends SortableItem>(
       });
 
     case "sale":
-      // Акційні товари - тільки ті що в sale
       return sorted.filter((item) => item.onSale);
 
     case "price_desc":
-      // Ціна за зменшенням
-      return sorted.sort((a, b) => {
-        const getPrice = (item: SortableItem) => {
-          const price = item.salePrice || item.price || 0;
-          return typeof price === 'string' ? parseFloat(price) || 0 : price;
-        };
-        const priceA = getPrice(a);
-        const priceB = getPrice(b);
-        return priceB - priceA;
-      });
+      return sorted.sort((a, b) => getEffectivePrice(b) - getEffectivePrice(a));
 
     case "price_asc":
-      // Ціна за зростанням
-      return sorted.sort((a, b) => {
-        const getPrice = (item: SortableItem) => {
-          const price = item.salePrice || item.price || 0;
-          return typeof price === 'string' ? parseFloat(price) || 0 : price;
-        };
-        const priceA = getPrice(a);
-        const priceB = getPrice(b);
-        return priceA - priceB;
-      });
+      return sorted.sort((a, b) => getEffectivePrice(a) - getEffectivePrice(b));
 
     default:
       return sorted;

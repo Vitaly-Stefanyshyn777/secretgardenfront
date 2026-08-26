@@ -12,6 +12,7 @@ import {
   BasketMobileVioletGreenIcon,
 } from "@/components/Icons/Icons";
 import s from "./CartButton.module.css";
+import { useTranslation } from "@/hooks/useTranslation";
 
 function normalizeCartKey(id: string): string {
   const match = id.match(/(?:course|product)-(\d+)/i);
@@ -59,6 +60,7 @@ export default function CartButton({
   metaData,
   showcaseCart = false,
 }: Props) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
@@ -175,14 +177,16 @@ export default function CartButton({
       }`}
       onClick={handleClick}
       aria-pressed={inCart}
-      aria-label={inCart ? "Видалити з кошика" : "Додати в кошик"}
+      aria-label={inCart ? t("product.removeFromCart") : t("product.addToCart")}
     >
       <div
         className={`${s.cartIconWrapper} ${
           showcaseCart ? s.showcaseWrapper : ""
         }`}
       >
-        <span className={s.cartIconText}>{inCart ? "У кошику" : "Додати в кошик"}</span>
+        <span className={s.cartIconText}>
+          {inCart ? t("product.inCart") : t("product.addToCart")}
+        </span>
         {inCart ? (
           <span className={s.checkIcon} aria-hidden="true">
             <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

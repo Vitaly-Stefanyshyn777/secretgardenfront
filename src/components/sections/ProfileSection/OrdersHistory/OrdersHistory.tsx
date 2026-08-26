@@ -2,6 +2,8 @@
 import PaginationNav from "@/components/ui/PaginationNav/PaginationNav";
 import { normalizeImageUrl } from "@/lib/imageUtils";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -42,6 +44,7 @@ type ViewOrder = {
 };
 
 const OrdersHistory: React.FC = () => {
+  const { t, locale } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [activeFilter, setActiveFilter] = useState<string>("ALL");
   const ordersPerPage = 4;
@@ -75,32 +78,35 @@ const OrdersHistory: React.FC = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case "NEW":
-        return "Прийнято";
+        return t("profile.statusAccepted");
       case "IN_TRANSIT":
-        return "В дорозі";
+        return t("profile.statusInTransit");
       case "DELIVERED":
-        return "Доставлено";
+        return t("profile.statusDelivered");
       case "COMPLETED":
-        return "Завершено";
+        return t("profile.statusCompleted");
       case "CANCELLED":
-        return "Скасовано";
+        return t("profile.statusCancelled");
       default:
-        return status || "Очікується";
+        return status || t("profile.statusPending");
     }
   };
 
   const getDeliveryMethodLabel = (method: string) => {
     switch (method) {
       case "nova_poshta":
-        return "Нова пошта";
+        return t("profile.deliveryNovaPoshta");
       case "ukr_poshta":
-        return "Укрпошта";
+        return t("profile.deliveryUkrPoshta");
       case "pickup":
-        return "Самовивіз";
+        return t("profile.deliveryPickup");
       case "taxi":
-        return "Таксі";
+        return t("profile.deliveryTaxi");
+      case "courier":
+      case "uklon":
+        return t("profile.deliveryCourier");
       default:
-        return method || "Кур'єр";
+        return method || t("profile.deliveryCourier");
     }
   };
 
@@ -112,7 +118,7 @@ const OrdersHistory: React.FC = () => {
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       return `${day}.${month}.${year}`;
-    } catch (e) {
+    } catch {
       return dateStr;
     }
   };
@@ -135,7 +141,7 @@ const OrdersHistory: React.FC = () => {
         items: o.items || [],
       } as ViewOrder;
     });
-  }, [ordersData]);
+  }, [ordersData, locale, t]);
 
   const filteredOrders = useMemo(() => {
     if (activeFilter === "ALL") return allOrders;
@@ -180,7 +186,7 @@ const OrdersHistory: React.FC = () => {
   };
 
   const formatPrice = (amount: number) => {
-    return `${amount.toLocaleString("uk-UA")} ₴`;
+    return `${amount.toLocaleString(locale === "en" ? "en-US" : "uk-UA")} ₴`;
   };
 
   const handleViewProduct = (slug?: string) => {
@@ -190,16 +196,16 @@ const OrdersHistory: React.FC = () => {
   };
 
   const filters = [
-    { label: "Всі", value: "ALL" },
-    { label: "Доставлено", value: "DELIVERED" },
-    { label: "В дорозі", value: "IN_TRANSIT" },
-    { label: "Прийнято", value: "NEW" },
+    { label: t("profile.filterAll"), value: "ALL" },
+    { label: t("profile.filterDelivered"), value: "DELIVERED" },
+    { label: t("profile.filterInTransit"), value: "IN_TRANSIT" },
+    { label: t("profile.filterAccepted"), value: "NEW" },
   ];
 
   return (
     <div className={styles.ordersContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Ваші замовлення</h1>
+        <h1 className={styles.title}>{t("profile.ordersTitle")}</h1>
       </div>
 
       <div className={styles.tabs}>
@@ -224,9 +230,9 @@ const OrdersHistory: React.FC = () => {
       ) : filteredOrders.length === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyContent}>
-            <div className={styles.emptySubtitle}>У вас ще немає замовлень</div>
+            <div className={styles.emptySubtitle}>{t("profile.emptyOrders")}</div>
             <div className={styles.emptyDescription}>
-              Тут з’явиться історія ваших покупок
+              {t("profile.emptyOrdersHint")}
             </div>
           </div>
           <BoxIcons />
@@ -262,7 +268,7 @@ const OrdersHistory: React.FC = () => {
                             src={normalizeImageUrl(
                               item.product.mainImageUrl || "/placeholder.png",
                             )}
-                            alt={item.product.name}
+                            alt={localizeDynamicText(item.product.name, locale)}
                             width={80}
                             height={80}
                           />
@@ -270,10 +276,10 @@ const OrdersHistory: React.FC = () => {
                         <div className={styles.productInfo}>
                           <div className={styles.productNameGroup}>
                             <h4 className={styles.productName}>
-                              {item.product.name}
+                              {localizeDynamicText(item.product.name, locale)}
                             </h4>
                             <span className={styles.productQty}>
-                              {item.quantity} шт.
+                              {item.quantity} {t("profile.pcs")}
                             </span>
                           </div>
                           <span className={styles.productPrice}>
@@ -284,25 +290,30 @@ const OrdersHistory: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* Інфо */}
                   <div className={styles.cardInfo}>
                     <div className={styles.infoContent}>
                       <div className={styles.infoRows}>
-                        <div className={`${styles.infoRow} ${styles.infoRowDesktop}`}>
-                          <span className={styles.infoLabel}>Дата</span>
+                        <div
+                          className={`${styles.infoRow} ${styles.infoRowDesktop}`}
+                        >
+                          <span className={styles.infoLabel}>
+                            {t("profile.date")}
+                          </span>
                           <span className={styles.infoValue}>
                             {order.orderDate}
                           </span>
                         </div>
                         <div className={styles.infoRow}>
-                          <span className={styles.infoLabel}>Сума</span>
+                          <span className={styles.infoLabel}>
+                            {t("profile.sum")}
+                          </span>
                           <span className={styles.infoValue}>
                             {formatPrice(order.totalPrice)}
                           </span>
                         </div>
                         <div className={styles.infoRow}>
                           <span className={styles.infoLabel}>
-                            Спосіб доставки
+                            {t("profile.deliveryMethod")}
                           </span>
                           <span className={styles.infoValue}>
                             {order.deliveryMethodLabel}
@@ -310,8 +321,12 @@ const OrdersHistory: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className={`${styles.statusSection} ${styles.statusSectionDesktop}`}>
-                        <span className={styles.statusLabel}>Статус:</span>
+                      <div
+                        className={`${styles.statusSection} ${styles.statusSectionDesktop}`}
+                      >
+                        <span className={styles.statusLabel}>
+                          {t("profile.status")}
+                        </span>
                         <div
                           className={`${styles.statusBadge} ${getStatusClass(order.status)}`}
                         >
@@ -322,10 +337,10 @@ const OrdersHistory: React.FC = () => {
 
                     <div className={styles.cardActions}>
                       <button className={styles.repeatBtn}>
-                        Повторити замовлення
+                        {t("profile.repeatOrder")}
                       </button>
                       <button className={styles.reviewBtn}>
-                        Додати відгук
+                        {t("profile.addReview")}
                       </button>
                     </div>
                   </div>

@@ -8,6 +8,8 @@ import ProductActions from "./ProductActions";
 import styles from "./ProductPage.module.css";
 import type { Product } from "@/lib/products";
 import type { ProductInfoProps } from "./types";
+import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 
 const ProductInfo = memo(function ProductInfo({
   product,
@@ -30,6 +32,12 @@ const ProductInfo = memo(function ProductInfo({
   shouldShowOldPrice,
   onRegisterOpen,
 }: ProductInfoProps) {
+  const { t, locale } = useTranslation();
+  const productName = localizeDynamicText(product.name, locale);
+  const shortDescription = localizeDynamicText(
+    product.shortDescription || "",
+    locale,
+  );
   return (
     <div className={styles.productInfo}>
       <div className={styles.productInfoBlock}>
@@ -38,7 +46,7 @@ const ProductInfo = memo(function ProductInfo({
             {product.categories?.[0]?.name || "Без категорії"}
           </div> */}
           <div className={styles.titleWithBadges}>
-            <h1 className={styles.productTitle}>{product.name}</h1>
+            <h1 className={styles.productTitle}>{productName}</h1>
             <div className={styles.productBadges}>
               {isActuallyHit && <Badge variant="hit" />}
             </div>
@@ -47,7 +55,7 @@ const ProductInfo = memo(function ProductInfo({
           <div className={styles.stockRatingBlock}>
             {product.stockStatus === "instock" && (
               <p className={styles.stockInfo}>
-                В наявності - {product.stockQuantity ?? 1}
+                {t("cart.inStock", { quantity: product.stockQuantity ?? 1 })}
               </p>
             )}
             {(Number(product.averageRating) > 0 ||
@@ -98,22 +106,27 @@ const ProductInfo = memo(function ProductInfo({
               <span className={styles.ratingText}>
                 {product.ratingCount ?? 0}{" "}
                 {((n: number) => {
+                  if (locale === "en") {
+                    return n === 1
+                      ? t("product.reviewOne")
+                      : t("product.reviewMany");
+                  }
                   const mod10 = n % 10;
                   const mod100 = n % 100;
-                  if (mod10 === 1 && mod100 !== 11) return "відгук";
+                  if (mod10 === 1 && mod100 !== 11) return t("product.reviewOne");
                   if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
-                    return "відгуки";
-                  return "відгуків";
+                    return t("product.reviewFew");
+                  return t("product.reviewMany");
                 })(product.ratingCount ?? 0)}
               </span>
             </div>
             )}
           </div>
-          {product.shortDescription?.trim() && (
+          {(shortDescription || product.shortDescription)?.trim() && (
             <p className={styles.productText}>
               <span
                 dangerouslySetInnerHTML={{
-                  __html: product.shortDescription.trim(),
+                  __html: (shortDescription || product.shortDescription || "").trim(),
                 }}
               />
             </p>
@@ -171,14 +184,14 @@ const ProductInfo = memo(function ProductInfo({
           />
         </div>
 
-        {/* Характеристика та особливості + Опис */}
+        {/* {t("profile.characteristicsTitle")} + Опис */}
         <div className={styles.expandableSections}>
           {isMobile && (
             <Link
               href={`/products/${product.slug}/characteristics`}
               className={styles.characteristicsToggleBtn}
             >
-              Характеристика та особливості
+              {t("profile.characteristicsTitle")}
             </Link>
           )}
 
@@ -190,15 +203,23 @@ const ProductInfo = memo(function ProductInfo({
           {(product.characteristics?.length ?? 0) > 0 && (() => {
             const chars = product.characteristics!;
             const startIdx = chars.findIndex(
-              (ch) => ch.name === "Кількість капсул в упаковці"
+              (ch) =>
+                ch.name === "Кількість капсул в упаковці" ||
+                ch.name === "Quantity of capsules in package",
             );
             const endIdx = chars.findIndex(
-              (ch) => ch.name === "Важливі застереження"
+              (ch) =>
+                ch.name === "Важливі застереження" ||
+                ch.name === "Important precautions",
             );
             const renderRow = (ch: { name: string; value: string }, idx: number) => (
               <div key={idx} className={styles.characteristicRow}>
-                <span className={styles.characteristicName}>{ch.name}</span>
-                <span className={styles.characteristicValue}>{ch.value}</span>
+                <span className={styles.characteristicName}>
+                  {localizeDynamicText(ch.name, locale)}
+                </span>
+                <span className={styles.characteristicValue}>
+                  {localizeDynamicText(ch.value, locale)}
+                </span>
               </div>
             );
             const hasRange =
@@ -212,7 +233,7 @@ const ProductInfo = memo(function ProductInfo({
             return (
               <div className={styles.characteristicsBlock}>
                 <h3 className={styles.characteristicsBlockTitle}>
-                  Характеристика та особливості
+                  {t("profile.characteristicsTitle")}
                 </h3>
                 <div className={styles.characteristicsTable}>
                   {hasRange ? (
@@ -233,7 +254,7 @@ const ProductInfo = memo(function ProductInfo({
 
           {/* Опис - статичний блок */}
           <div className={styles.descriptionBlock}>
-            <h3 className={styles.descriptionBlockTitle}>Опис</h3>
+            <h3 className={styles.descriptionBlockTitle}>{t("profile.descriptionTitle")}</h3>
             <div className={styles.descriptionContent}>
               {(product.descriptionBlocks?.length ?? 0) > 0 ? (
                 product
@@ -245,7 +266,7 @@ const ProductInfo = memo(function ProductInfo({
                         <p
                           key={idx}
                           className={styles.descriptionParagraph}
-                          dangerouslySetInnerHTML={{ __html: block.content }}
+                          dangerouslySetInnerHTML={{ __html: localizeDynamicText(block.content, locale) }}
                         />
                       );
                     }
@@ -254,7 +275,7 @@ const ProductInfo = memo(function ProductInfo({
                         <ul key={idx} className={styles.descriptionList}>
                           {block.items.map((item, i) => (
                             <li key={i} className={styles.descriptionListItem}>
-                              {item}
+                              {localizeDynamicText(item, locale)}
                             </li>
                           ))}
                         </ul>
@@ -271,7 +292,7 @@ const ProductInfo = memo(function ProductInfo({
                         <Tag
                           key={idx}
                           className={styles.descriptionHeading}
-                          dangerouslySetInnerHTML={{ __html: block.content }}
+                          dangerouslySetInnerHTML={{ __html: localizeDynamicText(block.content, locale) }}
                         />
                       );
                     }
@@ -280,14 +301,16 @@ const ProductInfo = memo(function ProductInfo({
               ) : product?.description?.trim() || product?.shortDescription?.trim() ? (
                 <div
                   dangerouslySetInnerHTML={{
-                    __html:
-                      product.description?.trim() ||
-                      product.shortDescription?.trim() ||
-                      "",
-                  }}
+                __html: localizeDynamicText(
+                  product.description?.trim() ||
+                    product.shortDescription?.trim() ||
+                    "",
+                  locale,
+                ),
+              }}
                 />
               ) : (
-                <p>Опис товару відсутній</p>
+                <p>{locale === "en" ? "Product description is missing" : "Опис товару відсутній"}</p>
               )}
             </div>
           </div>

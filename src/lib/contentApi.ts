@@ -1,4 +1,4 @@
-import { DEFAULT_ABOUT_BLOCKS } from "@/config/aboutBlocks";
+import { getDefaultAboutBlocks } from "@/config/aboutBlocks";
 import type { Locale } from "@/i18n";
 import { getLocaleHeaders } from "@/lib/localizedContent";
 
@@ -87,18 +87,41 @@ export async function fetchBanners(locale?: Locale): Promise<ContentBanner[]> {
   }
 }
 
-export async function fetchAboutBlocks(): Promise<ContentAboutBlock[]> {
+export async function fetchAboutBlocks(locale?: Locale): Promise<ContentAboutBlock[]> {
+  const lang = locale ?? "uk";
+  const fallback = getDefaultAboutBlocks(lang);
   try {
     const res = await fetch(`${BASE}/content/about`, {
       cache: "no-store",
+      headers: getLocaleHeaders(lang),
     });
-    if (!res.ok) return DEFAULT_ABOUT_BLOCKS;
+    if (!res.ok) return fallback;
     const data = (await res.json()) as ContentAboutBlock[];
-    return Array.isArray(data) && data.length > 0
-      ? data
-      : DEFAULT_ABOUT_BLOCKS;
+    if (!Array.isArray(data) || data.length === 0) return fallback;
+
+    // Якщо EN і в адмінці ще немає повного перекладу — підставляємо EN fallback по order
+    if (lang === "en") {
+      return data.map((block) => {
+        const stillUk = /[а-яіїєґА-ЯІЇЄҐ]/.test(
+          `${block.title || ""}${block.body || ""}${block.ctaLabel || ""}`,
+        );
+        if (!stillUk) return block;
+        const fb =
+          fallback.find((f) => f.order === block.order) ||
+          fallback.find((f) => f.id === block.id);
+        if (!fb) return block;
+        return {
+          ...block,
+          title: fb.title,
+          body: fb.body,
+          ctaLabel: fb.ctaLabel ?? block.ctaLabel,
+        };
+      });
+    }
+
+    return data;
   } catch {
-    return DEFAULT_ABOUT_BLOCKS;
+    return fallback;
   }
 }
 
@@ -145,9 +168,12 @@ const DEFAULT_FAQ_ITEMS: ContentFaqItem[] = [
   },
 ];
 
-export async function fetchFaqItems(): Promise<ContentFaqItem[]> {
+export async function fetchFaqItems(locale?: Locale): Promise<ContentFaqItem[]> {
   try {
-    const res = await fetch(`${BASE}/content/faq`, { cache: "no-store" });
+    const res = await fetch(`${BASE}/content/faq`, {
+      cache: "no-store",
+      headers: getLocaleHeaders(locale),
+    });
     if (!res.ok) return DEFAULT_FAQ_ITEMS;
     const data = (await res.json()) as ContentFaqItem[];
     return Array.isArray(data) && data.length > 0 ? data : DEFAULT_FAQ_ITEMS;
@@ -156,10 +182,11 @@ export async function fetchFaqItems(): Promise<ContentFaqItem[]> {
   }
 }
 
-export async function fetchContacts(): Promise<ContentContacts | null> {
+export async function fetchContacts(locale?: Locale): Promise<ContentContacts | null> {
   try {
     const res = await fetch(`${BASE}/content/contacts`, {
       cache: "no-store",
+      headers: getLocaleHeaders(locale),
     });
     if (!res.ok) return null;
     return res.json();

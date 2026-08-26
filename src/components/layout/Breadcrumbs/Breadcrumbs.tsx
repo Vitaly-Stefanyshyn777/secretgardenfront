@@ -3,6 +3,7 @@
 import { useProductQuery } from "@/components/hooks/useProductsQuery";
 import { useCourseQuery } from "@/lib/coursesQueries";
 import { useTranslation, type TranslationPath } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useLayoutEffect, useRef, useState } from "react";
@@ -15,7 +16,7 @@ interface BreadcrumbItem {
 }
 
 const Breadcrumbs: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -103,10 +104,10 @@ const Breadcrumbs: React.FC = () => {
 
         // Використовуємо назву продукту, якщо вона доступна
         if (productData?.name) {
-          label = productData.name;
+          label = localizeDynamicText(productData.name, locale);
         } else {
           // Якщо назва недоступна, використовуємо декодований segment
-          label = decodedSegment;
+          label = localizeDynamicText(decodedSegment, locale);
         }
       } else if (segments[0] === "courses" && index === 1) {
         // Сторінка курсу: замінити slug/ID на назву курсу
@@ -120,10 +121,10 @@ const Breadcrumbs: React.FC = () => {
 
         // Використовуємо назву курсу, якщо вона доступна
         if (courseData?.name) {
-          label = courseData.name;
+          label = localizeDynamicText(courseData.name, locale);
         } else {
           // Якщо назва недоступна, використовуємо декодований segment
-          label = decodedSegment;
+          label = localizeDynamicText(decodedSegment, locale);
         }
       }
       const isActive = index === segments.length - 1;

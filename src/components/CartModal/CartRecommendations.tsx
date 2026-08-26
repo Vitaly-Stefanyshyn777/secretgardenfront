@@ -13,6 +13,7 @@ import s from "./CartModal.module.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 
 // Функція для отримання бренду товару
 const getProductBrand = (product: any): string | null => {
@@ -57,7 +58,7 @@ const getProductBrand = (product: any): string | null => {
 };
 
 export default function CartRecommendations() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { data: products, isLoading } = useProductsQuery();
   const items = useCartStore((st) => st.items);
   const addItem = useCartStore((st) => st.addItem);
@@ -192,7 +193,7 @@ export default function CartRecommendations() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={p.image || "/placeholder.svg"}
-                  alt={p.name}
+                  alt={localizeDynamicText(p.name, locale)}
                   className={s.recoThumb}
                 />
                 <div className={s.recoContent}>
@@ -203,7 +204,7 @@ export default function CartRecommendations() {
                         <div className={s.recoBrand}>{brand}</div>
                       ) : null;
                     })()}
-                    <div className={s.recoName}>{p.name}</div>
+                    <div className={s.recoName}>{localizeDynamicText(p.name, locale)}</div>
                     {p.color && <div className={s.recoColor}>{p.color}</div>}
                   </div>
 

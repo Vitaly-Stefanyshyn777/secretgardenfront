@@ -31,6 +31,7 @@ import {
   normalizePriceParams,
 } from "@/lib/priceUtils";
 import ProductPageSkeleton from "./ProductPageSkeleton";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function ProductPage({ productSlug }: { productSlug: string }) {
   // productSlug може бути як slug так і ID для сумісності
@@ -85,6 +86,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
     sale_price: string;
   } | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const { t, locale } = useTranslation();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const favoriteKey =
     selectedVariation?.id && product?.id
@@ -632,13 +634,13 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
   const getStockStatusText = (stockStatus: string): string => {
     switch (stockStatus) {
       case "instock":
-        return "В наявності";
+        return t("profile.inStock");
       case "outofstock":
-        return "Немає в наявності";
+        return t("profile.outOfStock");
       case "onbackorder":
-        return "Під замовлення";
+        return locale === "en" ? "On backorder" : "Під замовлення";
       default:
-        return "В наявності";
+        return t("profile.inStock");
     }
   };
 
@@ -1026,7 +1028,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                           variations: product?.wcProduct?.variations,
                         });
                       }}
-                      title="Додати в улюблені"
+                      title={locale === "en" ? "Add to favorites" : "Додати в улюблені"}
                     >
                       {isFavorite ? <FavoriteBlacIcon /> : <Favorite2Icon />}
                     </button>
@@ -1084,7 +1086,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                         <BasketHeader />
                         {isAddingToCart
                           ? `Додано в кошик ${cartQuantity}`
-                          : "Додати в кошик"}
+                          : t("product.addToCart")}
                       </button>
                       <button
                         className={`${styles.favoriteBtn} ${
@@ -1118,7 +1120,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                             size: selectedSize || undefined,
                           });
                         }}
-                        title="Додати в улюблені"
+                        title={locale === "en" ? "Add to favorites" : "Додати в улюблені"}
                         disabled={isControlsDisabled}
                       >
                         {isFavorite ? <FavoriteBlacIcon /> : <Favorite2Icon />}
@@ -1148,7 +1150,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
           <div className={styles.expandableSections}>
             <div className={styles.section}>
               <div className={styles.sectionHeader}>
-                <span className={styles.sectionHeaderText}>Опис товару</span>
+                <span className={styles.sectionHeaderText}>{t("profile.descriptionTitle")}</span>
               </div>
               <div className={styles.sectionContent}>
                 {(product.description?.trim() ||
@@ -1206,7 +1208,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                 className={styles.sectionHeader}
                 onClick={() => toggleSection("characteristics")}
               >
-                <span className={styles.sectionHeaderText}>Характеристики</span>
+                <span className={styles.sectionHeaderText}>{t("profile.characteristicsTitle")}</span>
                 <span
                   className={`${styles.chevron} ${
                     expandedSections.characteristics ? "" : styles.rotated
@@ -1307,7 +1309,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
 
       {/* Overlay для товарів, яких немає в наявності */}
       {isOutOfStock && (
-        <div className={styles.outOfStockOverlay}>Немає в наявності</div>
+        <div className={styles.outOfStockOverlay}>{t("profile.outOfStock")}</div>
       )}
     </div>
   );

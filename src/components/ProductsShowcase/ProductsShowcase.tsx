@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { PlusIcon } from "../Icons/Icons";
 import styles from "./ProductsShowcase.module.css";
 import ProductsShowcaseSkeleton from "./ProductsShowcaseSkeleton";
+import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 
 interface ProductsShowcaseProps {
   title: string;
@@ -22,6 +24,7 @@ export function ProductsShowcase({
   title,
   moreHref = "#",
 }: ProductsShowcaseProps) {
+  const { locale } = useTranslation();
   type InventoryCategory = {
     id: number;
     name: string;
@@ -184,13 +187,13 @@ export function ProductsShowcase({
               )}
               <Image
                 src={cat.image?.src || "/images/inventory-placeholder.png"}
-                alt={cat.name}
+                alt={localizeDynamicText(cat.name, locale)}
                 fill
                 sizes="(max-width: 600px) 50vw, 320px"
               />
             </div>
             <div className={styles.caption}>
-              <span className={styles.name}>{cat.name}</span>
+              <span className={styles.name}>{localizeDynamicText(cat.name, locale)}</span>
               <span className={styles.price}></span>
             </div>
           </Link>

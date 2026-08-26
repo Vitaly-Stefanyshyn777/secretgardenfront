@@ -5,6 +5,7 @@ import {
   fetchFaqItems,
   type ContentFaqItem,
 } from "@/lib/contentApi";
+import { useLanguageStore } from "@/store/language";
 import s from "./HomeFaqSection.module.css";
 
 function paragraphs(body: string) {
@@ -15,11 +16,12 @@ function paragraphs(body: string) {
 }
 
 const HomeFaqSection = () => {
+  const locale = useLanguageStore((s) => s.locale);
   const [items, setItems] = useState<ContentFaqItem[]>([]);
 
   useEffect(() => {
     let cancelled = false;
-    fetchFaqItems()
+    fetchFaqItems(locale)
       .then((data) => {
         if (!cancelled) setItems(data);
       })
@@ -29,14 +31,16 @@ const HomeFaqSection = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [locale]);
 
   if (items.length === 0) return null;
 
   return (
     <section className={s.section}>
       <div className={s.container}>
-        <h2 className={s.sectionTitle}>Питання та відповіді</h2>
+        <h2 className={s.sectionTitle}>
+          {locale === "en" ? "Questions and answers" : "Питання та відповіді"}
+        </h2>
 
         <div className={s.faqGrid}>
           {items.map((item) => {

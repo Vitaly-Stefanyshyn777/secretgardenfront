@@ -11,6 +11,7 @@ import { useProductActions } from "@/components/hooks/useProductActions";
 import styles from "./ProductPage.module.css";
 import type { Product } from "@/lib/products";
 import type { ProductActionsProps } from "./types";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function ProductActions({
   product,
@@ -25,6 +26,7 @@ export default function ProductActions({
   selectedImageIndex,
   onRegisterOpen,
 }: ProductActionsProps) {
+  const { t, locale } = useTranslation();
   const {
     quantity,
     isAddingToCart,
@@ -97,8 +99,8 @@ export default function ProductActions({
                   disabled={isControlsDisabled || isAddingToCart}
                 >
                   {isAddingToCart
-                    ? `Додано в кошик ${cartQuantity}`
-                    : "Додати в кошик"}
+                    ? (locale === "en" ? `Added to cart ${cartQuantity}` : `Додано в кошик ${cartQuantity}`)
+                    : t("product.addToCart")}
                   <span className={styles.addToCartBtnIcon}>
                     <CartPrefixIcon />
                   </span>
@@ -111,7 +113,7 @@ export default function ProductActions({
                     if (isControlsDisabled) return;
                     toggleFavorite();
                   }}
-                  title="Додати в улюблені"
+                  title={locale === "en" ? "Add to favorites" : "Додати в улюблені"}
                   disabled={isControlsDisabled}
                 >
                   {isFavorite ? <FavoriteBlacIcon /> : <Favorite2Icon />}
@@ -183,8 +185,8 @@ export default function ProductActions({
               disabled={isControlsDisabled || isAddingToCart}
             >
               {isAddingToCart
-                ? `Додано в кошик ${cartQuantity}`
-                : "Додати в кошик"}
+                ? (locale === "en" ? `Added to cart ${cartQuantity}` : `Додано в кошик ${cartQuantity}`)
+                : t("product.addToCart")}
               <span className={styles.addToCartBtnIcon}>
                 <CartPrefixIcon />
               </span>
@@ -197,7 +199,7 @@ export default function ProductActions({
                 if (isControlsDisabled) return;
                 toggleFavorite();
               }}
-              title="Додати в улюблені"
+              title={locale === "en" ? "Add to favorites" : "Додати в улюблені"}
               disabled={isControlsDisabled}
             >
               {isFavorite ? <FavoriteBlacIcon /> : <Favorite2Icon />}

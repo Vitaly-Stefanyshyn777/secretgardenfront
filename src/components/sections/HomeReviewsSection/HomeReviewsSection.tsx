@@ -8,6 +8,7 @@ import type { SwiperRef } from "swiper/react";
 import SliderNav from "@/components/ui/SliderNav/SliderNavActions";
 import { useAllProductReviewsQuery } from "@/components/hooks/useAllProductReviewsQuery";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 import s from "./HomeReviewsSection.module.css";
 import "swiper/css";
 
@@ -25,7 +26,7 @@ function renderStars(rating: number) {
 }
 
 const HomeReviewsSection = () => {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { data: reviews = [], isLoading } = useAllProductReviewsQuery(50);
   const swiperRef = useRef<SwiperRef>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -114,7 +115,7 @@ const HomeReviewsSection = () => {
                         </p>
                       </div>
                       {review.productName ? (
-                        <p className={s.reviewProduct}>{review.productName}</p>
+                        <p className={s.reviewProduct}>{localizeDynamicText(review.productName, locale)}</p>
                       ) : null}
                       <p className={s.reviewText}>{text}</p>
                     </article>

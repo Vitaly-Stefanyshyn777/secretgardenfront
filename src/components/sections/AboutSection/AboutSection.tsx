@@ -26,10 +26,19 @@ function resolveCtaUrl(
   contacts?: ContentContacts | null,
 ) {
   const label = (block.ctaLabel || "").toLowerCase();
-  if (label.includes("сертиф")) {
+  if (
+    label.includes("сертиф") ||
+    label.includes("certif") ||
+    label.includes("view cert")
+  ) {
     return contacts?.certificateUrl || block.ctaUrl || undefined;
   }
-  if (label.includes("збір") || label.includes("підтрим")) {
+  if (
+    label.includes("збір") ||
+    label.includes("підтрим") ||
+    label.includes("support") ||
+    label.includes("fundrais")
+  ) {
     return contacts?.donationUrl || block.ctaUrl || undefined;
   }
   if (block.ctaUrl) return block.ctaUrl;
@@ -41,8 +50,12 @@ function isSupportBlock(block: ContentAboutBlock) {
   const label = (block.ctaLabel || "").toLowerCase();
   return (
     title.includes("підтрим") ||
+    title.includes("support") ||
+    title.includes("gratitude") ||
     label.includes("збір") ||
-    label.includes("підтрим")
+    label.includes("підтрим") ||
+    label.includes("support") ||
+    label.includes("fundrais")
   );
 }
 

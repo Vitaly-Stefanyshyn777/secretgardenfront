@@ -10,6 +10,7 @@ import {
   InstagramIcon,
 } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type Props = {
   phone: string;
@@ -29,14 +30,15 @@ export default function ContactsSection({
   instagram,
   onChange,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>Контактні дані</h3>
+      <h3 className={styles.sectionTitle}>{t("profile.contactUs")}</h3>
       <div className={styles.inputGroup}>
         <div className={styles.wrapperBlock}>
           <InputField
             icon={<NumberIcon />}
-            label="Ваш номер телефону"
+            label={t("profile.phoneNumber")}
             id="profile-contacts-phone-field"
               type="tel"
               value={phone}
@@ -44,7 +46,7 @@ export default function ContactsSection({
             />
           <InputField
             icon={<TelegramIcon />}
-            label="Нікнейм Telegram"
+            label="Telegram"
             id="profile-contacts-telegram-field"
               value={telegram}
               onChange={(e) => onChange("telegram", e.target.value)}
@@ -53,7 +55,7 @@ export default function ContactsSection({
         <div className={styles.wrapperBlock}>
           <InputField
             icon={<EmailIcon />}
-            label="Ваша пошта"
+            label={t("profile.emailLabel")}
             id="profile-contacts-email-field"
               type="email"
               value={email}
@@ -61,7 +63,7 @@ export default function ContactsSection({
             />
           <InputField
             icon={<InstagramIcon />}
-            label="Нікнейм Instagram"
+            label="Instagram"
               value={instagram}
               onChange={(e) => onChange("instagram", e.target.value)}
             />

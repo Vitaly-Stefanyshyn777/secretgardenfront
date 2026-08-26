@@ -7,6 +7,7 @@ import { CategoryFiltersCheckboxes } from "../filters/CategoryFiltersCheckboxes/
 import ButtonFilter from "@/components/ui/ButtonFilter/ButtonFilter";
 import { useMemo } from "react";
 import { type ProductFilters } from "@/components/hooks/useFilteredProducts";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FilterState {
   priceMin: number;
@@ -54,6 +55,7 @@ const ProductsFilter = ({
   loading = false,
   showFilterActions = false,
 }: ProductsFilterProps) => {
+  const { t } = useTranslation();
   const handleFilterChange = <K extends keyof FilterState>(
     key: K,
     value: FilterState[K],
@@ -91,8 +93,8 @@ const ProductsFilter = ({
   return (
     <div className={styles.filterContainer}>
       <h2 className={styles.filterSectionTitle}>
-        Категорії <br />
-        та фільтри
+        {t("catalog.categoriesLine1")} <br />
+        {t("catalog.categoriesLine2")}
       </h2>
       <div className={styles.filterSidebar}>
         <RangeInput

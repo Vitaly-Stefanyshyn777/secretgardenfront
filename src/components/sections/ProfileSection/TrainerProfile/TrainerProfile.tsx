@@ -12,6 +12,7 @@ import {
   TelegramIcon,
 } from "@/components/Icons/Icons";
 import TrainerProfileSkeleton from "./TrainerProfileSkeleton";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type ApiUser = {
   firstname?: string;
@@ -23,6 +24,7 @@ type ApiUser = {
 };
 
 const TrainerProfile: React.FC = () => {
+  const { t, locale } = useTranslation();
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -168,7 +170,7 @@ const TrainerProfile: React.FC = () => {
   return (
     <div className={styles.trainerProfile}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Особисті дані</h2>
+        <h2 className={styles.title}>{t("profile.personalDataTitle")}</h2>
       </div>
 
       <div className={styles.form}>
@@ -176,7 +178,7 @@ const TrainerProfile: React.FC = () => {
           <div className={styles.inputGroup}>
             <InputField
               icon={<UserIcon />}
-              label="Ім'я"
+              label={t("profile.firstName")}
               type="text"
               id="trainer-first-name"
               value={form.first_name}
@@ -184,7 +186,7 @@ const TrainerProfile: React.FC = () => {
             />
             <InputField
               icon={<UserIcon />}
-              label="Прізвище"
+              label={t("profile.lastName")}
               type="text"
               id="trainer-last-name"
               value={form.last_name}
@@ -195,7 +197,7 @@ const TrainerProfile: React.FC = () => {
           <div className={styles.inputGroup}>
             <InputField
               icon={<NumberIcon />}
-              label="Номер телефону"
+              label={t("profile.phoneNumber")}
               type="tel"
               id="trainer-phone"
               value={form.phone}
@@ -203,7 +205,7 @@ const TrainerProfile: React.FC = () => {
             />
             <InputField
               icon={<EmailTwoIcon />}
-              label="Email"
+              label={t("profile.emailLabel")}
               type="email"
               id="trainer-email"
               value={form.email}
@@ -214,7 +216,7 @@ const TrainerProfile: React.FC = () => {
           <div className={styles.inputGroup}>
             <InputField
               icon={<InstagramIcon />}
-              label="Нікнейм Instagram"
+              label={locale === "en" ? "Instagram username" : "Нікнейм Instagram"}
               type="text"
               id="trainer-instagram"
               value={form.instagram}
@@ -222,7 +224,7 @@ const TrainerProfile: React.FC = () => {
             />
             <InputField
               icon={<TelegramIcon />}
-              label="Нікнейм Telegram"
+              label={locale === "en" ? "Telegram username" : "Нікнейм Telegram"}
               type="text"
               id="trainer-telegram"
               value={form.telegram}

@@ -10,6 +10,8 @@ import BadgeContainer from "@/components/ui/Badge/BadgeContainer";
 import SubscriptionBadge from "@/components/ui/SubscriptionBadge/SubscriptionBadge";
 import { useAuthStore } from "@/store/auth";
 import { useFavoriteStore, selectIsFavorite } from "@/store/favorites";
+import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 import { normalizeImageUrl } from "@/lib/imageUtils";
 import {
   calculatePrice,
@@ -94,14 +96,16 @@ const ProductCard = ({
   showcaseDark = false,
   compact = false,
 }: ProductCardProps) => {
+  const { t, locale } = useTranslation();
+  const displayName = localizeDynamicText(name, locale);
   const favorite = useFavoriteStore(selectIsFavorite(id));
 
   const effectiveProductType = productType ?? wcProduct?.type;
   const effectiveVariations = variations ?? wcProduct?.variations;
 
   const variantInfo = [
-    color ? `Колір: ${color}` : null,
-    size ? `Розмір: ${size}` : null,
+    color ? `${t("cart.color")} ${color}` : null,
+    size ? `${t("cart.size")} ${size}` : null,
   ]
     .filter(Boolean)
     .join(", ");
@@ -289,13 +293,16 @@ const ProductCard = ({
   const filledStars = Math.round(Math.max(0, Math.min(5, ratingValue || 0)));
 
   const getReviewsLabel = (count: number) => {
+    if (locale === "en") {
+      return count === 1 ? t("product.reviewOne") : t("product.reviewMany");
+    }
     const n = Math.abs(count);
     const mod10 = n % 10;
     const mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11) return "відгук";
+    if (mod10 === 1 && mod100 !== 11) return t("product.reviewOne");
     if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
-      return "відгуки";
-    return "відгуків";
+      return t("product.reviewFew");
+    return t("product.reviewMany");
   };
 
   const getHref = () => {
@@ -358,7 +365,7 @@ const ProductCard = ({
         <FavoriteButton
           id={id}
           slug={slug}
-          name={name}
+          name={displayName}
           price={price || 0}
           originalPrice={normalizedPrices.regularPrice || originalPrice}
           image={imageUrl}
@@ -430,7 +437,7 @@ const ProductCard = ({
         ) : null}
 
         <div className={styles.namePricingBlock}>
-          <h3 className={styles.productName}>{name || "Товар без назви"}</h3>
+          <h3 className={styles.productName}>{displayName || (locale === "en" ? "Untitled product" : "Товар без назви")}</h3>
 
           <div className={styles.pricing}>
             {isPriceLoading ? (
@@ -502,7 +509,7 @@ const ProductCard = ({
           ) : (
             <CartButton
               id={id}
-              name={name}
+              name={displayName}
               slug={slug}
               productType={effectiveProductType}
               variations={effectiveVariations}

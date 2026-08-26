@@ -4,20 +4,17 @@ import { useSearchParams } from "next/navigation";
 import styles from "./ProductsCatalog.module.css";
 import ProductsFilter from "../ProductsFilter/ProductsFilter";
 import { useProducts } from "@/components/hooks/useProducts";
-import FilterSortPanel, {
-  type SortType,
-} from "@/components/ui/FilterSortPanel/FilterSortPanel";
+import FilterSortPanel from "@/components/ui/FilterSortPanel/FilterSortPanel";
 import ProductsCatalogContainer from "../ProductsCatalogContainer/ProductsCatalogContainer";
-// Видалено useProductsQuery імпорт
 import {
   useFilteredProducts,
   type ProductFilters,
 } from "@/components/hooks/useFilteredProducts";
-// import { ProductsNewShowcase } from "@/components/ProductsShowcase/ProductsNewShowcase";
-
-import { mapSortTypeToWcParams } from "@/lib/sortMapping";
 import { useCatalogCategoriesQuery } from "@/components/hooks/useCatalogQueries";
 import type { CatalogCategory } from "@/lib/bfbApi";
+import { useCatalogStore } from "@/store/catalog";
+import { sortItems } from "@/lib/sortUtils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type FilterProduct = {
   id?: string | number;
@@ -30,18 +27,23 @@ type FilterProduct = {
   categories?: Array<{ id: number; name: string; slug: string }>;
   stockStatus?: string;
   dateCreated?: string;
+  ratingAverage?: number;
+  ratingCount?: number;
 };
 
+const CATALOG_FETCH_LIMIT = 200;
+
 const ProductsCatalog = () => {
+  const { t } = useTranslation();
   const { filters, updateFilters, resetFilters } = useProducts();
-  // Видалено useProductsQuery, використовуємо тільки useFilteredProducts
+  const sortBy = useCatalogStore((s) => s.sortBy);
+  const setSortBy = useCatalogStore((s) => s.setSortBy);
+  const searchTerm = useCatalogStore((s) => s.searchTerm);
+  const setSearchTerm = useCatalogStore((s) => s.setSearchTerm);
 
   const [appliedWcFilters, setAppliedWcFilters] =
     useState<Partial<ProductFilters> | null>({});
-  const [catalogTitle, setCatalogTitle] = useState<string>("Всі товари");
-  const [sortBy, setSortBy] = useState<SortType>("popular");
-  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [catalogTitle, setCatalogTitle] = useState<string>("");
   const appliedCategoryRef = useRef<string | undefined>(
     typeof appliedWcFilters?.category === "string"
       ? appliedWcFilters.category
@@ -71,73 +73,73 @@ const ProductsCatalog = () => {
     return null;
   };
 
-  // Слухаємо зміну ?category=<slug|id> у URL і застосовуємо фільтр
   const searchParams = useSearchParams();
   useEffect(() => {
+    const allProductsTitle = t("catalog.allProducts");
     const q = searchParams.get("category");
     if (!q) {
-      setCatalogTitle("Всі товари");
+      setCatalogTitle(allProductsTitle);
       resetFilters();
       setAppliedWcFilters({});
       return;
     }
 
-    // Нова логіка: q — це slug категорії/підкатегорії
     if (q !== appliedCategoryRef.current) {
       setAppliedWcFilters({ category: q });
       resetFilters();
     }
 
     const found = findBySlug(catalogCategories, q);
-    setCatalogTitle(found?.name ?? "Всі товари");
-  }, [searchParams, catalogCategories]);
-  // Формуємо фільтри з сортуванням та пагінацією
-  const wcFiltersWithSort = useMemo(() => {
-    const sortParams = mapSortTypeToWcParams(sortBy);
+    setCatalogTitle(found?.name ?? allProductsTitle);
+  }, [searchParams, catalogCategories, t]);
+
+  // Тягнемо повний набір під фільтри — сортування на клієнті (Zustand)
+  const catalogFilters = useMemo(() => {
     return {
       ...(appliedWcFilters ?? {}),
-      orderby: sortParams.orderby,
-      order: sortParams.order,
-      per_page: itemsPerPage,
-      ...(sortParams.on_sale !== undefined && { on_sale: sortParams.on_sale }),
+      per_page: CATALOG_FETCH_LIMIT,
       ...(searchTerm.trim() && { search: searchTerm.trim() }),
     };
-  }, [appliedWcFilters, sortBy, itemsPerPage, searchTerm]);
+  }, [appliedWcFilters, searchTerm]);
 
-  const {
-    data: wcFilteredProducts = [],
-    isLoading,
-    isError,
-  } = useFilteredProducts(wcFiltersWithSort);
+  const { data: wcFilteredProducts = [], isLoading } =
+    useFilteredProducts(catalogFilters);
 
-  type FilterProduct = {
-    id?: string | number;
-    name?: string;
-    price?: string | number;
-    regularPrice?: string | number;
-    salePrice?: string | number;
-    onSale?: boolean;
-    image?: string;
-    categories?: Array<{ id: number; name: string; slug: string }>;
-    stockStatus?: string;
-    dateCreated?: string;
-  };
-  const wcFilteredProductsForFilter = (
-    wcFilteredProducts as FilterProduct[]
-  ).map((p) => ({
-    id: String(p.id ?? ""),
-    name: p.name ?? "",
-    price: String(p.price ?? "0"),
-    regularPrice: String(p.regularPrice ?? ""),
-    salePrice: String(p.salePrice ?? ""),
-    onSale: Boolean(p.onSale),
-    image: p.image ?? "",
-    categories: p.categories ?? [],
-    stockStatus: String(p.stockStatus ?? ""),
-    dateCreated: p.dateCreated,
-  }));
+  const sortedProducts = useMemo(() => {
+    return sortItems(
+      wcFilteredProducts as Array<{
+        id: string | number;
+        name?: string;
+        price?: number | string;
+        regularPrice?: number | string;
+        salePrice?: number | string;
+        dateCreated?: string;
+        onSale?: boolean;
+        image?: string;
+        categories?: Array<{ id: number; name: string; slug: string }>;
+        stockStatus?: string;
+        ratingAverage?: number;
+        ratingCount?: number;
+      }>,
+      sortBy,
+    );
+  }, [wcFilteredProducts, sortBy]);
 
-  // Функція для побудови WC фільтрів з локальних фільтрів
+  const wcFilteredProductsForFilter = (sortedProducts as FilterProduct[]).map(
+    (p) => ({
+      id: String(p.id ?? ""),
+      name: p.name ?? "",
+      price: String(p.price ?? "0"),
+      regularPrice: String(p.regularPrice ?? ""),
+      salePrice: String(p.salePrice ?? ""),
+      onSale: Boolean(p.onSale),
+      image: p.image ?? "",
+      categories: p.categories ?? [],
+      stockStatus: String(p.stockStatus ?? ""),
+      dateCreated: p.dateCreated,
+    }),
+  );
+
   const buildWcFilters = (
     localFilters: typeof filters,
   ): Partial<ProductFilters> => {
@@ -157,7 +159,6 @@ const ProductsCatalog = () => {
     return params;
   };
 
-  // Функція для скидання фільтрів зі збереженням категорії
   const handleReset = () => {
     resetFilters();
 
@@ -181,23 +182,18 @@ const ProductsCatalog = () => {
     }));
   };
 
-  // Кнопки «Застосувати» / «Скинути» показуємо, коли відкриті підкатегорії-фільтри
-  // (категорія з children, напр. CBD масло) або обрана підкатегорія
   const categorySlug = searchParams.get("category");
   const currentCategory = categorySlug
     ? findBySlug(catalogCategories, categorySlug)
     : null;
-  const showFilterActions =
-    !!(
-      currentCategory &&
-      (currentCategory.children?.length || currentCategory.parentId)
-    );
+  const showFilterActions = !!(
+    currentCategory &&
+    (currentCategory.children?.length || currentCategory.parentId)
+  );
 
   return (
     <div className={styles.productsCatalog}>
       <div className={styles.catalogContentBlock}>
-        {/* <ProductsNewShowcase /> */}
-
         <div className={styles.catalogContentContainer}>
           <div className={styles.catalogContent}>
             <ProductsFilter
@@ -221,8 +217,6 @@ const ProductsCatalog = () => {
                   onApply={handleSortPanelApply}
                   sortBy={sortBy}
                   onSortChange={setSortBy}
-                  itemsPerPage={itemsPerPage}
-                  onItemsPerPageChange={setItemsPerPage}
                   hideItemsPerPage
                   searchTerm={searchTerm}
                   onSearchChange={setSearchTerm}
@@ -234,7 +228,7 @@ const ProductsCatalog = () => {
                   subtitle: "Наші товари",
                   title: catalogTitle,
                 }}
-                filteredProducts={wcFilteredProducts}
+                filteredProducts={sortedProducts}
                 selectedCertificationFilter={
                   typeof appliedWcFilters?.category === "string"
                     ? appliedWcFilters.category
@@ -242,9 +236,6 @@ const ProductsCatalog = () => {
                 }
                 isLoading={isLoading}
               />
-              {/* {isError && (
-              <div className={styles.error}>Не вдалося завантажити товари</div>
-            )} */}
               {isLoading && <div className={styles.loading}>Завантаження…</div>}
             </div>
           </div>

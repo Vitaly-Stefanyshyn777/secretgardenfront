@@ -1,6 +1,7 @@
 import api from "./api";
 import {
   getLocaleHeaders,
+  localizeCategoryRecord,
   localizeProductRecord,
 } from "./localizedContent";
 
@@ -44,7 +45,9 @@ export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
     throw new Error(`Failed to fetch catalog categories: ${res.status}`);
   }
   const data = (await res.json()) as CatalogCategory[];
-  return data;
+  return (Array.isArray(data) ? data : []).map((c) =>
+    localizeCategoryRecord(c as CatalogCategory & Record<string, unknown>),
+  ) as CatalogCategory[];
 }
 
 export type FaqCategory = {
@@ -1825,24 +1828,41 @@ function mapCatalogProductListItem(item: Record<string, unknown>) {
   const localized = localizeProductRecord(item);
   const name = String(localized.name ?? "");
   const label = localized.label ? String(localized.label) : "";
+  const price = Number(item.price ?? 0);
+  const saleRaw = item.salePrice;
+  const salePrice =
+    saleRaw != null && saleRaw !== "" ? Number(saleRaw) : undefined;
+  const onSale =
+    typeof salePrice === "number" &&
+    Number.isFinite(salePrice) &&
+    salePrice > 0 &&
+    salePrice < price;
+  const imageUrl =
+    (typeof item.mainImageUrl === "string" && item.mainImageUrl) ||
+    (Array.isArray(item.imageUrls) && typeof item.imageUrls[0] === "string"
+      ? item.imageUrls[0]
+      : "");
+  const createdAt =
+    item.createdAt != null ? String(item.createdAt) : undefined;
 
   return {
     id: item.id,
     name,
-    price: item.price,
-    regularPrice: item.price,
-    salePrice: undefined,
-    onSale: false,
-    image: item.mainImageUrl || "",
-    images: item.mainImageUrl
-      ? [{ id: 1, src: item.mainImageUrl, name, alt: name }]
+    price: onSale && salePrice != null ? salePrice : price,
+    regularPrice: price,
+    salePrice: onSale ? salePrice : undefined,
+    onSale,
+    image: imageUrl,
+    images: imageUrl
+      ? [{ id: 1, src: imageUrl, name, alt: name }]
       : [],
     categories: label ? [{ id: label, name: label, slug: label }] : [],
     stockStatus: item.inStock ? "instock" : "outofstock",
-    dateCreated: undefined,
+    dateCreated: createdAt,
+    date_created: createdAt,
     slug: item.slug,
-    ratingAverage: item.ratingAverage,
-    ratingCount: item.ratingCount ?? 0,
+    ratingAverage: Number(item.ratingAverage ?? 0),
+    ratingCount: Number(item.ratingCount ?? 0),
   };
 }
 

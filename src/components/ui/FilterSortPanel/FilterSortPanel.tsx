@@ -4,6 +4,8 @@ import styles from "./FilterSortPanel.module.css";
 import { FilterMobileIcon } from "@/components/Icons/Icons";
 import FilterModal from "@/components/ui/FilterModal/FilterModal";
 import SortDropdown, { type SortOption } from "./SortDropdown";
+import { useTranslation } from "@/hooks/useTranslation";
+import type { TranslationPath } from "@/i18n";
 
 interface FilterState {
   priceMin: number;
@@ -49,6 +51,17 @@ export interface FilterSortPanelProps {
   embeddedInCatalog?: boolean;
 }
 
+export const SORT_OPTION_KEYS: Array<{
+  value: SortType;
+  labelKey: TranslationPath;
+}> = [
+  { value: "popular", labelKey: "catalog.sortPopular" },
+  { value: "new", labelKey: "catalog.sortNew" },
+  { value: "price_desc", labelKey: "catalog.sortPriceDesc" },
+  { value: "price_asc", labelKey: "catalog.sortPriceAsc" },
+];
+
+/** @deprecated static UK labels — use SORT_OPTION_KEYS + t() */
 export const SORT_OPTIONS: SortOption[] = [
   { value: "popular", label: "Популярне" },
   { value: "new", label: "Нове" },
@@ -81,7 +94,12 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
   onSearchChange = () => {},
   embeddedInCatalog = false,
 }) => {
+  const { t } = useTranslation();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const sortOptions: SortOption[] = SORT_OPTION_KEYS.map((opt) => ({
+    value: opt.value,
+    label: t(opt.labelKey),
+  }));
 
   if (embeddedInCatalog) {
     return (
@@ -89,9 +107,9 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
         <div className={`${styles.sortSection} ${styles.desktopOnly}`}>
           {!hideSort && (
             <SortDropdown
-              label="Сортування"
+              label={t("catalog.sortLabel")}
               value={sortBy}
-              options={SORT_OPTIONS}
+              options={sortOptions}
               onChange={(value) => onSortChange(value as SortType)}
               variant="sort"
               iconVariant="catalog"
@@ -101,7 +119,7 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Пошук..."
+              placeholder={t("catalog.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -120,7 +138,7 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
             onClick={() => setIsFilterModalOpen(true)}
           >
             <span className={styles.catalogCategoriesLabel}>
-              Категорії та фільтри
+              {t("catalog.categoriesAndFilters")}
             </span>
             <svg
               className={styles.catalogCategoriesChevron}
@@ -136,9 +154,9 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
             </svg>
           </button>
           <SortDropdown
-            label="Сортування"
+            label={t("catalog.sortLabel")}
             value={sortBy}
-            options={SORT_OPTIONS}
+            options={sortOptions}
             onChange={(value) => onSortChange(value as SortType)}
             className={styles.catalogSortIconBtn}
             iconVariant="catalog"
@@ -173,9 +191,9 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
             <div className={styles.sortSection}>
               {!hideSort && (
                 <SortDropdown
-                  label="Сортування"
+                  label={t("catalog.sortLabel")}
                   value={sortBy}
-                  options={SORT_OPTIONS}
+                  options={sortOptions}
                   onChange={(value) => onSortChange(value as SortType)}
                   variant="sort"
                   iconVariant="catalog"
@@ -185,7 +203,7 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
                 <input
                   type="text"
                   className={styles.searchInput}
-                  placeholder="Пошук..."
+                  placeholder={t("catalog.searchPlaceholder")}
                   value={searchTerm}
                   onChange={(e) => onSearchChange(e.target.value)}
                 />
@@ -208,9 +226,9 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
             </button>
             <div className={styles.sortSection}>
               <SortDropdown
-                label="Сортування"
+                label={t("catalog.sortLabel")}
                 value={sortBy}
-                options={SORT_OPTIONS}
+                options={sortOptions}
                 onChange={(value) => {
                   onSortChange(value as SortType);
                 }}

@@ -15,6 +15,7 @@ import {
   normalizePriceParams,
 } from "@/lib/priceUtils";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 import s from "./CartModal.module.css";
 
 interface CartItemsListProps {
@@ -26,7 +27,7 @@ interface CartItemRowProps {
 }
 
 function CartItemRow({ item }: CartItemRowProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const increment = useCartStore((st) => st.increment);
   const decrement = useCartStore((st) => st.decrement);
   const removeItem = useCartStore((st) => st.removeItem);
@@ -95,7 +96,7 @@ function CartItemRow({ item }: CartItemRowProps) {
       <div className={s.itemMain}>
         <Image
           src={finalImageUrl}
-          alt={item.name}
+          alt={localizeDynamicText(item.name, locale)}
           className={s.thumb}
           width={144}
           height={115}
@@ -107,7 +108,7 @@ function CartItemRow({ item }: CartItemRowProps) {
         <div className={s.contentCol}>
           <div className={s.nameColorBlock}>
             <div className={s.titleBlock}>
-              <div className={s.name}>{item.name}</div>
+              <div className={s.name}>{localizeDynamicText(item.name, locale)}</div>
               <button
                 className={s.removeBtn}
                 onClick={() => removeItem(item.id)}

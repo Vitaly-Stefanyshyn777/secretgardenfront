@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useCartStore } from "@/store/cart";
 import s from "./OrderSuccessSection.module.css";
 import type { OrderResponse } from "@/lib/bfbApi";
+import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 
 interface OrderProductsProps {
   orderNumber: string;
@@ -21,6 +23,7 @@ export default function OrderProducts({
   orderNumber,
   order,
 }: OrderProductsProps) {
+  const { locale } = useTranslation();
   const items = useCartStore((st) => st.items);
   const cartItems = Object.values(items);
   const [productImages, setProductImages] = useState<Record<string, string>>(
@@ -123,7 +126,7 @@ export default function OrderProducts({
               {product.image && (
                 <Image
                   src={product.image}
-                  alt={product.name}
+                  alt={localizeDynamicText(product.name, locale)}
                   fill
                   sizes="80px"
                 />

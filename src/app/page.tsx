@@ -8,6 +8,7 @@ import PageLoader from "@/components/PageLoader";
 import ProductsShowcase from "@/components/sections/ProductsSection/ProductsShowcase/ProductsShowcase";
 import { fetchBanners } from "@/lib/contentApi";
 import { HERO_SLIDES, type HeroSlideItem } from "@/config/heroSlides";
+import { localizeDynamicText } from "@/lib/localizedContent";
 import { cookies } from "next/headers";
 import type { Locale } from "@/i18n";
 
@@ -142,20 +143,27 @@ async function getServerLocale(): Promise<Locale> {
 export default async function Home() {
   const locale = await getServerLocale();
   const banners = await fetchBanners(locale);
+  const fallbackSlides: HeroSlideItem[] = HERO_SLIDES.map((slide) => ({
+    ...slide,
+    title: localizeDynamicText(slide.title, locale),
+    description: localizeDynamicText(slide.description, locale),
+  }));
   const slides: HeroSlideItem[] =
     banners.length > 0
       ? banners.map((b, i) => {
-          const imageFallback = HERO_SLIDES[i % HERO_SLIDES.length];
+          const imageFallback = fallbackSlides[i % fallbackSlides.length];
           return {
             id: b.id,
             image: b.imageUrl || imageFallback.image,
             mobileImage: b.mobileImageUrl || imageFallback.mobileImage,
-            title: b.title ?? "",
-            titleSub: b.titleSub || undefined,
-            description: b.description ?? "",
+            title: localizeDynamicText(b.title ?? "", locale),
+            titleSub: b.titleSub
+              ? localizeDynamicText(b.titleSub, locale)
+              : undefined,
+            description: localizeDynamicText(b.description ?? "", locale),
           };
         })
-      : HERO_SLIDES;
+      : fallbackSlides;
 
   return (
     <>

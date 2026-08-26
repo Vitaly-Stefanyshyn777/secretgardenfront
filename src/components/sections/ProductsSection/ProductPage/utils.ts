@@ -80,16 +80,20 @@ export function getFaqCategoryId(product: Product): number | undefined {
 /**
  * Повертає текст статусу наявності товару
  */
-export function getStockStatusText(stockStatus: StockStatus | string): string {
+export function getStockStatusText(
+  stockStatus: StockStatus | string,
+  locale: "uk" | "en" = "uk",
+): string {
+  const en = locale === "en";
   switch (stockStatus) {
     case "instock":
-      return "В наявності";
+      return en ? "In stock" : "В наявності";
     case "outofstock":
-      return "Немає в наявності";
+      return en ? "Out of stock" : "Немає в наявності";
     case "onbackorder":
-      return "Під замовлення";
+      return en ? "On backorder" : "Під замовлення";
     default:
-      return "В наявності";
+      return en ? "In stock" : "В наявності";
   }
 }
 

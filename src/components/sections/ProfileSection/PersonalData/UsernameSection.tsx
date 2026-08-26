@@ -4,6 +4,7 @@ import React from "react";
 import styles from "./PersonalData.module.css";
 import { UserIcon } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type Props = {
   firstName: string;
@@ -16,18 +17,18 @@ export default function UsernameSection({
   lastName,
   onChange,
 }: Props) {
-  // Об'єднуємо ім'я та прізвище для відображення в одному полі
+  const { t } = useTranslation();
   const fullName = [firstName, lastName].filter(Boolean).join(" ");
   
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>Ім&#39;я користувача</h3>
+      <h3 className={styles.sectionTitle}>{t("profile.fullNameLabel")}</h3>
 
       <div className={styles.inputGroup}>
         <div className={`${styles.wrapperBlock} ${styles.wrapperBlockSingle}`}>
           <InputField
             icon={<UserIcon />}
-            label="Ваше ім'я та прізвище"
+            label={t("profile.fullNameLabel")}
             id="profile-username-name-field"
             type="text"
             value={fullName}
