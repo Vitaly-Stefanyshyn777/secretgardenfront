@@ -240,7 +240,7 @@ const TrainerProfile: React.FC = () => {
             onClick={handleSave}
             disabled={isSaving || isLoading}
           >
-            Зберегти дані
+            {t("profile.saveData")}
           </button>
           <button
             type="button"
@@ -248,7 +248,7 @@ const TrainerProfile: React.FC = () => {
             onClick={handleReset}
             disabled={isSaving || isLoading}
           >
-            Стерти всю інформацію
+            {t("profile.clearAllInfo")}
           </button>
         </div>
       </div>

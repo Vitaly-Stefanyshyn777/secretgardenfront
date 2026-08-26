@@ -16,6 +16,7 @@ import {
   CloseButtonIcon,
 } from "@/components/Icons/Icons";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localizeDynamicText } from "@/lib/localizedContent";
 import { validatePromoCode } from "@/lib/bfbApi";
 import InputField from "@/components/ui/FormFields/InputField";
 import s from "./CheckoutSection.module.css";
@@ -29,7 +30,7 @@ interface OrderSummaryProps {
 }
 
 export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const itemsMap = useCartStore((st) => st.items);
   const items = Object.values(itemsMap);
   const increment = useCartStore((st) => st.increment);
@@ -204,7 +205,7 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
               {it.image && (
                 <Image
                   src={it.image}
-                  alt={it.name}
+                  alt={localizeDynamicText(it.name, locale)}
                   className={s.thumb}
                   width={144}
                   height={115}
@@ -214,7 +215,9 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
               <div className={s.contentCol}>
                 <div className={s.nameColorBlock}>
                   <div className={s.titleBlock}>
-                    <div className={s.name}>{it.name}</div>
+                    <div className={s.name}>
+                      {localizeDynamicText(it.name, locale)}
+                    </div>
                     <button
                       className={s.removeBtn}
                       onClick={() => removeItem(it.id)}

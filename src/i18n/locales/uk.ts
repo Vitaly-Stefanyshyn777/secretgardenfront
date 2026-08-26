@@ -178,6 +178,8 @@ const uk = {
     outOfStock: "Немає в наявності",
     characteristicsTitle: "Характеристика та особливості",
     descriptionTitle: "Опис",
+    saveData: "Зберегти дані",
+    clearAllInfo: "Стерти всю інформацію",
   },
   product: {
     related: "Вам може сподобатись",

@@ -180,6 +180,8 @@ const en: Messages = {
     outOfStock: "Out of stock",
     characteristicsTitle: "Characteristics and features",
     descriptionTitle: "Description",
+    saveData: "Save data",
+    clearAllInfo: "Clear all information",
   },
   product: {
     related: "You may also like",

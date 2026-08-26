@@ -13,6 +13,7 @@ import {
   DumpUploadIcon,
   LocationIcon,
 } from "@/components/Icons/Icons";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type Props = {
   isOpen: boolean;
@@ -59,6 +60,7 @@ export default function TrainingLocationModal({
   onSave,
   initialLocation = null,
 }: Props) {
+  const { t } = useTranslation();
   const token = useAuthStore((s) => s.token);
   const isHydrated = useAuthStore((s) => s.isHydrated);
 
@@ -590,7 +592,7 @@ export default function TrainingLocationModal({
               });
             }}
           >
-            Зберегти дані
+            {t("profile.saveData")}
           </button>
         </div>
       </div>
