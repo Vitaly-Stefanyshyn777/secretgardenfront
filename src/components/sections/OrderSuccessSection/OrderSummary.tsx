@@ -34,7 +34,7 @@ export default function OrderSummary({
           <span className={s.costValue}>
             {deliveryCost > 0
               ? `${deliveryCost.toLocaleString()} ₴`
-              : 'За тарифами «Нової Пошти»'}
+              : "—"}
           </span>
         </div>
         <div className={s.costRow}>

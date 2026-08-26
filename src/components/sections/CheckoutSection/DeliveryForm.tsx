@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { NovaPoshtaIcon } from "@/components/Icons/Icons";
 import { FormData } from "./types";
 import s from "./CheckoutSection.module.css";
 import DropdownField, {
@@ -12,6 +11,10 @@ import BranchDropdownField, {
 } from "@/components/ui/FormFields/BranchDropdownField";
 import InputField from "@/components/ui/FormFields/InputField";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useCourierDeliveryAvailable } from "@/components/hooks/useCourierDeliveryAvailable";
+import { COURIER_HOURS_LABEL } from "@/lib/courierDeliveryHours";
+
+const DNIPRO_CITY = "Дніпро";
 
 interface Warehouse {
   name: string;
@@ -49,16 +52,35 @@ export default function DeliveryForm({
   errors = {},
 }: DeliveryFormProps) {
   const { t } = useTranslation();
+  const courierAvailable = useCourierDeliveryAvailable();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const isCourier = deliveryType === "courier";
 
   const deliveryOptions: BranchDropdownOption[] = useMemo(
     () => [
       { value: "branch", label: t("checkout.toBranch") },
       { value: "postomat", label: t("checkout.postomat") },
-      { value: "courier", label: t("checkout.courier") },
+      {
+        value: "courier",
+        label: t("checkout.courier"),
+        disabled: !courierAvailable,
+      },
     ],
-    [t],
+    [t, courierAvailable],
   );
+
+  React.useEffect(() => {
+    if (deliveryType === "courier" && !courierAvailable) {
+      setDeliveryType("");
+    }
+  }, [courierAvailable, deliveryType, setDeliveryType]);
+
+  React.useEffect(() => {
+    if (isCourier && formData.city !== DNIPRO_CITY) {
+      setFormData({ ...formData, city: DNIPRO_CITY });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync city only when courier selected
+  }, [isCourier]);
 
   const [cities, setCities] = React.useState<DropdownOption[]>([]);
   const [loadingCities, setLoadingCities] = React.useState(false);
@@ -86,6 +108,7 @@ export default function DeliveryForm({
           { value: "Київ", label: "Київ" },
           { value: "Чернігів", label: "Чернігів" },
           { value: "Львів", label: "Львів" },
+          { value: DNIPRO_CITY, label: DNIPRO_CITY },
         ]);
       } finally {
         setLoadingCities(false);
@@ -99,7 +122,7 @@ export default function DeliveryForm({
   const [loadingBranches, setLoadingBranches] = React.useState(false);
 
   React.useEffect(() => {
-    if (!formData.city) {
+    if (!formData.city || isCourier) {
       setBranches([]);
       return;
     }
@@ -165,7 +188,7 @@ export default function DeliveryForm({
     };
 
     loadBranches();
-  }, [formData.city, deliveryType]);
+  }, [formData.city, deliveryType, isCourier]);
 
   const branchPlaceholder = loadingBranches
     ? t("checkout.loading")
@@ -181,6 +204,11 @@ export default function DeliveryForm({
     <div className={s.deliveryBlock}>
       <h2 className={s.sectionTitle}>{t("checkout.delivery")}</h2>
       <div className={s.deliveryGrid}>
+        {!courierAvailable && (
+          <p className={s.courierHoursHint}>
+            {t("checkout.courierHoursHint", { hours: COURIER_HOURS_LABEL })}
+          </p>
+        )}
         <div className={s.deliveryRow}>
           <div className={s.inputWrap}>
             <BranchDropdownField
@@ -190,10 +218,13 @@ export default function DeliveryForm({
               placeholder={t("checkout.chooseDelivery")}
               onChange={(value) => {
                 setDeliveryType(value);
-                setFormData({ ...formData, branch: "" });
+                setFormData({
+                  ...formData,
+                  branch: "",
+                  city: value === "courier" ? DNIPRO_CITY : formData.city,
+                });
               }}
               showLabel={false}
-              icon={<NovaPoshtaIcon />}
               hasError={!!errors.deliveryType}
               supportingText={errors.deliveryType || ""}
               isOpen={openDropdown === "delivery"}
@@ -203,34 +234,40 @@ export default function DeliveryForm({
               backgroundColor="white"
             />
           </div>
-          <div className={s.inputWrap}>
-            <DropdownField
-              label=""
-              value={formData.city}
-              options={cities}
-              placeholder={
-                loadingCities ? t("checkout.loadingCities") : t("checkout.city")
-              }
-              onChange={(value) =>
-                setFormData({
-                  ...formData,
-                  city: value,
-                  branch: "",
-                })
-              }
-              showLabel={false}
-              hasError={!!errors.city}
-              supportingText={errors.city || ""}
-              isOpen={openDropdown === "city"}
-              onOpenChange={(isOpen) => setOpenDropdown(isOpen ? "city" : null)}
-              backgroundColor="white"
-            />
-          </div>
+          {!isCourier && (
+            <div className={s.inputWrap}>
+              <DropdownField
+                label=""
+                value={formData.city}
+                options={cities}
+                placeholder={
+                  loadingCities
+                    ? t("checkout.loadingCities")
+                    : t("checkout.city")
+                }
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    city: value,
+                    branch: "",
+                  })
+                }
+                showLabel={false}
+                hasError={!!errors.city}
+                supportingText={errors.city || ""}
+                isOpen={openDropdown === "city"}
+                onOpenChange={(isOpen) =>
+                  setOpenDropdown(isOpen ? "city" : null)
+                }
+                backgroundColor="white"
+              />
+            </div>
+          )}
         </div>
 
         <div className={s.deliveryRow}>
           <div className={s.inputWrapBranch}>
-            {deliveryType === "courier" ? (
+            {isCourier ? (
               <InputField
                 label={t("checkout.deliveryAddress")}
                 type="text"
@@ -249,7 +286,9 @@ export default function DeliveryForm({
                 options={branches}
                 key={branches.length}
                 placeholder={branchPlaceholder}
-                onChange={(value) => setFormData({ ...formData, branch: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, branch: value })
+                }
                 showLabel={false}
                 hasError={!!errors.branch}
                 supportingText={errors.branch || ""}
@@ -262,7 +301,7 @@ export default function DeliveryForm({
               />
             )}
           </div>
-          {deliveryType === "courier" && (
+          {isCourier && (
             <div className={s.addressFields}>
               <div className={`${s.inputWrap} ${s.inputWrapHouse}`}>
                 <InputField
@@ -302,7 +341,7 @@ export default function DeliveryForm({
               </div>
             </div>
           )}
-          {deliveryType !== "courier" && (
+          {!isCourier && (
             <button
               className={s.primary}
               onClick={() => setIsMapOpen(true)}

@@ -22,7 +22,8 @@ const FALLBACK: ContentContacts = {
     "https://t.me/secret_garden_manager",
   ],
   telegramLabels: ["secret_Garden_shop420", "secret_garden_manager"],
-  mapSrc: "https://www.google.com/maps?q=48.4647,35.0462&z=17&output=embed",
+  mapSrc:
+    "https://www.google.com/maps?q=48.463662,35.046347&z=17&output=embed",
   venuePhotoUrl: "/фото.png",
 };
 

@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/auth";
+import { translate } from "@/i18n";
+import { getCurrentLocale } from "@/store/language";
 
 export default function AuthProvider({
   children,
@@ -26,26 +29,23 @@ export default function AuthProvider({
           return;
         }
         if (token) {
-          const response = await fetch("/api/set-user-cookie", {
+          await fetch("/api/set-user-cookie", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token }),
           });
 
-          // Синхронізуємо токен у localStorage для клієнтських запитів axios
           try {
             localStorage.setItem("bfb_token", token);
-            // лишаємо сумісність зі старими ключами
             localStorage.setItem("bfb_token_old", token);
           } catch {}
         }
-      } catch (error) {
+      } catch {
         // Silent error handling
       }
     })();
   }, [token]);
 
-  // Перевірка валідності токену після гідратації
   useEffect(() => {
     if (!isHydrated) return;
 
@@ -53,12 +53,10 @@ export default function AuthProvider({
       if (token) {
         const isValid = await checkTokenValidity();
         if (!isValid) {
-          // Токен невалідний - очищаємо авторизацію та відкриваємо модалку логіну
           clear();
+          const locale = getCurrentLocale();
+          toast.info(translate(locale, "checkout.sessionExpired"));
           openLoginModal();
-
-          // Якщо користувач на сторінці профілю, middleware покаже 404 при наступному запиті
-          // Тут просто очищаємо авторизацію, редирект не потрібен
         }
       }
     })();

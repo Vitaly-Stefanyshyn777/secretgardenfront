@@ -98,7 +98,6 @@ export default function ProductReviews({
   const [activeTab, setActiveTab] = useState<"reviews" | "leave">("reviews");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const [form, setForm] = useState({
     authorName: user?.displayName || user?.nicename || "",
@@ -125,7 +124,6 @@ export default function ProductReviews({
         text: form.text.trim() || undefined,
         authorName,
       });
-      setSuccess(true);
       setForm({
         authorName: user?.displayName || user?.nicename || "",
         rating: 0,
@@ -150,9 +148,6 @@ export default function ProductReviews({
       }`}
       onSubmit={handleSubmit}
     >
-      {success && (
-        <p className={styles.reviewSuccess}>{t("product.reviewSuccess")}</p>
-      )}
       {error && <p className={styles.reviewError}>{error}</p>}
       <div className={styles.formField}>
         <label className={styles.formLabel}>{t("product.yourName")}</label>

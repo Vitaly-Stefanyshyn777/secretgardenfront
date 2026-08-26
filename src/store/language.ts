@@ -3,6 +3,19 @@ import { persist } from "zustand/middleware";
 import type { Locale } from "@/i18n";
 import { defaultLocale } from "@/i18n";
 
+const LOCALE_COOKIE = "NEXT_LOCALE";
+
+function setLocaleCookie(locale: Locale) {
+  if (typeof document === "undefined") return;
+  document.cookie = `${LOCALE_COOKIE}=${locale};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
+}
+
+export function getLocaleFromCookie(): Locale | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp(`(?:^|; )${LOCALE_COOKIE}=([^;]*)`));
+  return match?.[1] === "en" ? "en" : match?.[1] === "uk" ? "uk" : null;
+}
+
 interface LanguageState {
   locale: Locale;
   isHydrated: boolean;
@@ -20,6 +33,7 @@ export const useLanguageStore = create<LanguageState>()(
         if (typeof window !== "undefined") {
           window.localStorage.setItem("preferredLanguage", locale);
           document.documentElement.lang = locale;
+          setLocaleCookie(locale);
         }
       },
       setHydrated: (value) => set({ isHydrated: value }),
@@ -32,6 +46,7 @@ export const useLanguageStore = create<LanguageState>()(
         if (typeof window !== "undefined" && state?.locale) {
           document.documentElement.lang = state.locale;
           window.localStorage.setItem("preferredLanguage", state.locale);
+          setLocaleCookie(state.locale);
         }
       },
     },

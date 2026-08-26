@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { toast } from "react-toastify";
 import { createOrder } from "@/lib/bfbApi";
 import { useCartStore, type CartItem } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
@@ -26,6 +27,15 @@ interface UseOrderSubmissionProps {
   parseWcValidationErrors: (errorData: unknown) => CheckoutErrors;
 }
 
+function getClientToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return (
+    localStorage.getItem("bfb_token") ||
+    localStorage.getItem("bfb_token_old") ||
+    null
+  );
+}
+
 export function useOrderSubmission({
   formData,
   hasDifferentRecipient,
@@ -41,10 +51,17 @@ export function useOrderSubmission({
 }: UseOrderSubmissionProps) {
   const cartStore = useCartStore();
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const openLoginModal = useAuthStore((s) => s.openLoginModal);
+  const clearAuth = useAuthStore((s) => s.clear);
   const { createOrderPayload } = useOrderData();
   const { handleWayForPayPayment } = useWayForPay({ safeTotal, setErrors });
   const isSubmittingRef = React.useRef(false);
   const [isPending, setIsPending] = React.useState(false);
+
+  const ensureAuthenticated = (message: string) => {
+    toast.info(message);
+    openLoginModal();
+  };
 
   const submitOrder = async () => {
     if (isSubmittingRef.current || isPending) {
@@ -52,8 +69,16 @@ export function useOrderSubmission({
     }
 
     const locale = getCurrentLocale();
-    const t = (key: Parameters<typeof translate>[1], params?: Record<string, string | number>) =>
-      translate(locale, key, params);
+    const t = (
+      key: Parameters<typeof translate>[1],
+      params?: Record<string, string | number>,
+    ) => translate(locale, key, params);
+
+    const token = getClientToken();
+    if (!isLoggedIn || !token) {
+      ensureAuthenticated(t("checkout.loginRequired"));
+      return;
+    }
 
     try {
       isSubmittingRef.current = true;
@@ -101,20 +126,30 @@ export function useOrderSubmission({
       if (error && typeof error === "object" && "response" in error) {
         const axiosError = error as {
           response?: {
+            status?: number;
             data?: { message?: string; params?: unknown; data?: unknown };
           };
         };
+        const status = axiosError.response?.status;
         const responseData = axiosError.response?.data;
 
-        if (responseData?.message) {
-          errorMessage = responseData.message;
-        }
+        if (status === 401) {
+          clearAuth();
+          ensureAuthenticated(t("checkout.sessionExpired"));
+          showAlert = false;
+        } else {
+          if (responseData?.message) {
+            errorMessage = Array.isArray(responseData.message)
+              ? responseData.message.join(", ")
+              : responseData.message;
+          }
 
-        if (responseData && (responseData.params || responseData.data)) {
-          const fieldErrors = parseWcValidationErrors(responseData);
-          if (Object.keys(fieldErrors).length > 0) {
-            setErrors(fieldErrors);
-            showAlert = false;
+          if (responseData && (responseData.params || responseData.data)) {
+            const fieldErrors = parseWcValidationErrors(responseData);
+            if (Object.keys(fieldErrors).length > 0) {
+              setErrors(fieldErrors);
+              showAlert = false;
+            }
           }
         }
       } else if (error instanceof Error) {
@@ -122,7 +157,7 @@ export function useOrderSubmission({
       }
 
       if (showAlert) {
-        alert(errorMessage);
+        toast.error(errorMessage);
       }
     } finally {
       isSubmittingRef.current = false;

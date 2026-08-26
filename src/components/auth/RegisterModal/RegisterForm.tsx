@@ -20,6 +20,7 @@ import s from "./RegisterModal.module.css";
 export interface RegisterFormValues {
   first_name: string;
   last_name: string;
+  middle_name: string;
   phone: string;
   email: string;
   password: string;
@@ -35,6 +36,7 @@ interface RegisterFormProps {
   isPending: boolean;
   isError: boolean;
   getValues: UseFormGetValues<RegisterFormValues>;
+  onSwitchToLogin?: () => void;
 }
 
 export default function RegisterForm({
@@ -46,6 +48,7 @@ export default function RegisterForm({
   isPending,
   isError,
   getValues,
+  onSwitchToLogin,
 }: RegisterFormProps) {
   const { t } = useTranslation();
 
@@ -59,8 +62,13 @@ export default function RegisterForm({
             type="text"
             id="register-form-first-name-field"
             hasError={!!errors.first_name}
-            supportingText={t("auth.firstNameRequired")}
-            {...register("first_name", { required: true })}
+            supportingText={
+              (errors.first_name?.message as string) ||
+              t("auth.firstNameRequired")
+            }
+            {...register("first_name", {
+              required: t("auth.firstNameRequired"),
+            })}
           />
         </div>
 
@@ -71,8 +79,32 @@ export default function RegisterForm({
             type="text"
             id="register-form-last-name-field"
             hasError={!!errors.last_name}
-            supportingText={t("auth.lastNameRequired")}
-            {...register("last_name", { required: true })}
+            supportingText={
+              (errors.last_name?.message as string) ||
+              t("auth.lastNameRequired")
+            }
+            {...register("last_name", {
+              required: t("auth.lastNameRequired"),
+            })}
+          />
+        </div>
+      </div>
+
+      <div className={s.row}>
+        <div className={s.rowSingle}>
+          <InputField
+            icon={<UserIcon />}
+            label={t("auth.patronymic")}
+            type="text"
+            id="register-form-middle-name-field"
+            hasError={!!errors.middle_name}
+            supportingText={
+              (errors.middle_name?.message as string) ||
+              t("auth.patronymicRequired")
+            }
+            {...register("middle_name", {
+              required: t("auth.patronymicRequired"),
+            })}
           />
         </div>
       </div>
@@ -106,8 +138,10 @@ export default function RegisterForm({
             id="register-form-phone-field"
             onlyDigits
             hasError={!!errors.phone}
-            supportingText={t("auth.phoneRequired")}
-            {...register("phone", { required: true })}
+            supportingText={
+              (errors.phone?.message as string) || t("auth.phoneRequired")
+            }
+            {...register("phone", { required: t("auth.phoneRequired") })}
           />
         </div>
       </div>
@@ -121,7 +155,7 @@ export default function RegisterForm({
               (errors.password?.message as string) || t("auth.passwordMin6")
             }
             {...register("password", {
-              required: true,
+              required: t("auth.passwordRequired"),
               minLength: {
                 value: 6,
                 message: t("auth.passwordMin6"),
@@ -154,10 +188,11 @@ export default function RegisterForm({
         <div className={s.submitBlock}>
           <button
             className={s.submit}
-            type="submit"
+            type="button"
             disabled={isSubmitting || isPending}
+            onClick={onSwitchToLogin}
           >
-            {isPending ? t("auth.sending") : t("auth.haveAccount")}
+            {t("auth.haveAccount")}
           </button>
           <button
             className={s.submitTwo}

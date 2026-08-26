@@ -10,6 +10,7 @@ export function useCheckoutState() {
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
+    middleName: "",
     phone: "",
     email: "",
     recipientFirstName: "",

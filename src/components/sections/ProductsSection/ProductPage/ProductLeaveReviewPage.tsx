@@ -57,9 +57,7 @@ export default function ProductLeaveReviewPage({
         queryKey: ["product", productSlug, "reviews"],
       });
       queryClient.invalidateQueries({ queryKey: ["product", productSlug] });
-      setTimeout(() => {
-        router.push(`/products/${productSlug}/reviews`);
-      }, 800);
+      router.replace(`/products/${productSlug}/reviews`);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("product.submitError"));
     } finally {
@@ -114,7 +112,7 @@ export default function ProductLeaveReviewPage({
         </div>
 
         <div className={styles.formField}>
-          <p className={styles.formLabelSm}>{t("product.comment")}</p>
+          <p className={styles.formLabel}>{t("product.comment")}</p>
           <textarea
             className={styles.textarea}
             value={text}

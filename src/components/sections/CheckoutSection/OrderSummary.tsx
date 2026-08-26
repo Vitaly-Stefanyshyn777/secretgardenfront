@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import Image from "next/image";
 import { useCartStore } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
@@ -16,6 +16,8 @@ import {
   CloseButtonIcon,
 } from "@/components/Icons/Icons";
 import { useTranslation } from "@/hooks/useTranslation";
+import { validatePromoCode } from "@/lib/bfbApi";
+import InputField from "@/components/ui/FormFields/InputField";
 import s from "./CheckoutSection.module.css";
 
 interface OrderSummaryProps {
@@ -33,6 +35,13 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
   const increment = useCartStore((st) => st.increment);
   const decrement = useCartStore((st) => st.decrement);
   const removeItem = useCartStore((st) => st.removeItem);
+  const promoCode = useCartStore((st) => st.promoCode);
+  const promoPercent = useCartStore((st) => st.promoPercent);
+  const setPromo = useCartStore((st) => st.setPromo);
+  const clearPromo = useCartStore((st) => st.clearPromo);
+  const [promoInput, setPromoInput] = useState(promoCode ?? "");
+  const [promoError, setPromoError] = useState("");
+  const [promoBusy, setPromoBusy] = useState(false);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const token = useAuthStore((state) => state.token);
   const effectiveIsLoggedIn =
@@ -41,6 +50,10 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
     (typeof window !== "undefined" &&
       (!!localStorage.getItem("bfb_token") ||
         !!localStorage.getItem("bfb_token_old")));
+
+  useEffect(() => {
+    setPromoInput(promoCode ?? "");
+  }, [promoCode]);
 
   useEffect(() => {
     const checkAndUpdateAllPrices = async () => {
@@ -94,6 +107,38 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
     return Math.max(0, totalWithoutDiscount - safeTotal);
   }, [safeTotal, totalWithoutDiscount]);
 
+  const handleApplyPromo = async () => {
+    const code = promoInput.trim();
+    if (!code) {
+      setPromoError(t("cart.promoPlaceholder"));
+      return;
+    }
+    if (!effectiveIsLoggedIn) {
+      setPromoError(t("checkout.loginRequired"));
+      return;
+    }
+    setPromoBusy(true);
+    setPromoError("");
+    try {
+      const data = await validatePromoCode(code);
+      setPromo(data.code, data.discountPercent);
+      setPromoInput(data.code);
+    } catch (e) {
+      clearPromo();
+      const err = e as {
+        response?: { data?: { message?: string | string[] } };
+      };
+      const raw = err.response?.data?.message;
+      setPromoError(
+        Array.isArray(raw)
+          ? raw.join(", ")
+          : raw || t("cart.promoInvalid"),
+      );
+    } finally {
+      setPromoBusy(false);
+    }
+  };
+
   return (
     <div className={s.summaryCard}>
       <div className={s.summaryHeader}>
@@ -102,6 +147,54 @@ export default function OrderSummary({ total, updateItem }: OrderSummaryProps) {
           <p className={s.summaryTotalAmount}>{safeTotal.toLocaleString()}</p>
           <span className={s.summaryCurrency}>₴</span>
         </span>
+      </div>
+      <div className={s.promoBlock}>
+        <div className={s.promoRow}>
+          <InputField
+            id="checkout-promo-code"
+            label={t("cart.promoLabel")}
+            value={promoInput}
+            onChange={(e) => {
+              setPromoInput(e.target.value);
+              setPromoError("");
+            }}
+            wrapperClassName={s.promoWrapper}
+            inputClassName={s.promoInput}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                void handleApplyPromo();
+              }
+            }}
+          />
+          <button
+            type="button"
+            className={s.promoApply}
+            onClick={() => void handleApplyPromo()}
+            disabled={promoBusy}
+          >
+            {promoBusy ? t("cart.promoChecking") : t("cart.promoApply")}
+          </button>
+        </div>
+        {promoCode ? (
+          <p className={s.promoOk}>
+            {t("cart.promoApplied", { code: promoCode })}
+            {promoPercent ? ` (−${promoPercent}%)` : ""}
+            {" · "}
+            <button
+              type="button"
+              className={s.promoClear}
+              onClick={() => {
+                clearPromo();
+                setPromoInput("");
+                setPromoError("");
+              }}
+            >
+              {t("cart.promoCancel")}
+            </button>
+          </p>
+        ) : null}
+        {promoError ? <p className={s.promoErr}>{promoError}</p> : null}
       </div>
       <div className={s.summaryDivider}></div>
       <div className={s.summaryList}>

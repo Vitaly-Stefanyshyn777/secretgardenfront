@@ -5,14 +5,15 @@ import {
   FieldErrors,
   UseFormHandleSubmit,
 } from "react-hook-form";
-import { EmailTwoIcon, PasswordsIcon } from "@/components/Icons/Icons";
+import { EmailTwoIcon, NumberIcon, PasswordsIcon } from "@/components/Icons/Icons";
 import InputField from "@/components/ui/FormFields/InputField";
 import PasswordField from "@/components/ui/FormFields/PasswordField";
 import { useTranslation } from "@/hooks/useTranslation";
 import s from "./LoginModal.module.css";
 
 export interface LoginFormValues {
-  username: string;
+  email: string;
+  phone: string;
   password: string;
 }
 
@@ -45,16 +46,29 @@ export default function LoginForm({
       <div className={s.inputGroup}>
         <InputField
           icon={<EmailTwoIcon />}
-          label={t("auth.emailOrUsername")}
-          type="text"
-          hasError={!!errors.username}
+          label={t("auth.email")}
+          type="email"
+          hasError={!!errors.email}
           supportingText={
-            (errors.username?.message as string) ||
-            t("auth.emailOrUsernameRequired")
+            (errors.email?.message as string) || t("auth.emailOrPhoneRequired")
           }
           labelClassName={s.loginInputLabel}
           inputBlockClassName={s.loginInputBlock}
-          {...register("username", { required: true })}
+          {...register("email")}
+        />
+
+        <InputField
+          icon={<NumberIcon />}
+          label={t("auth.phone")}
+          type="tel"
+          onlyDigits
+          hasError={!!errors.phone}
+          supportingText={
+            (errors.phone?.message as string) || t("auth.emailOrPhoneRequired")
+          }
+          labelClassName={s.loginInputLabel}
+          inputBlockClassName={s.loginInputBlock}
+          {...register("phone")}
         />
 
         <PasswordField
@@ -67,7 +81,9 @@ export default function LoginForm({
           labelClassName={s.loginPasswordLabel}
           eyeBtnClassName={s.loginPasswordEyeBtn}
           inputBlockClassName={s.loginPasswordBlock}
-          {...register("password", { required: true })}
+          {...register("password", {
+            required: t("auth.passwordRequired"),
+          })}
         />
       </div>
 

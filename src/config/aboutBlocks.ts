@@ -14,7 +14,7 @@ export const DEFAULT_ABOUT_BLOCKS: ContentAboutBlock[] = [
     imageUrl: "/images/Rectangle-12.png",
     imageLeft: true,
     ctaLabel: "Переглянути сертифікати",
-    ctaUrl: null,
+    ctaUrl: "/certificates.pdf",
     links: [],
   },
   {
@@ -68,7 +68,8 @@ export const DEFAULT_ABOUT_BLOCKS: ContentAboutBlock[] = [
     imageUrl: "/images/about-support.jpg",
     imageLeft: false,
     ctaLabel: "Підтримати збір",
-    ctaUrl: null,
+    // https://send.monobank.ua/jar/8w8VemE1nR
+    ctaUrl: "https://send.monobank.ua/jar/8w8VemE1nR",
     links: [],
   },
 ];

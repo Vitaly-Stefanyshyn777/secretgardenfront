@@ -14,6 +14,7 @@ interface PersonalDataFormProps {
   errors?: {
     firstName?: string;
     lastName?: string;
+    middleName?: string;
     phone?: string;
     email?: string;
     billing?: string;
@@ -55,6 +56,16 @@ export default function PersonalDataForm({
           }
           hasError={!!errors.lastName}
           supportingText={errors.lastName || ""}
+        />
+        <InputField
+          label={t("checkout.yourPatronymic")}
+          id="checkout-form-middlename-field"
+          value={formData.middleName}
+          onChange={(e) =>
+            setFormData({ ...formData, middleName: e.target.value })
+          }
+          hasError={!!errors.middleName}
+          supportingText={errors.middleName || ""}
         />
         <InputField
           label={t("checkout.yourPhone")}

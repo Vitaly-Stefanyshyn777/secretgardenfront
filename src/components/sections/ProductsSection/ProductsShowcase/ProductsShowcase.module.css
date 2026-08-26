@@ -1,6 +1,6 @@
 .section {
   padding: 100px 0;
-  background: #222222;
+  background-color: #222222;
 }
 
 .container {
@@ -135,7 +135,7 @@
 
 @media (max-width: 1000px) {
   .sectionMobile {
-    background: #222;
+    background-color: #222222;
     padding: mvw(15) 0;
     width: 100%;
     max-width: 100%;

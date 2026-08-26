@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/language";
 import styles from "./PurchasedCourses.module.css";
@@ -14,13 +13,11 @@ const PurchasedCourses: React.FC<PurchasedCoursesProps> = ({
   title,
 }) => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const locale = useLanguageStore((s) => s.locale);
   const setLocale = useLanguageStore((s) => s.setLocale);
 
   const handleLanguageChange = (lang: "uk" | "en") => {
     setLocale(lang);
-    queryClient.invalidateQueries();
   };
 
   return (

@@ -458,13 +458,12 @@
   }
 
   .modalEmpty {
-    gap: 0;
-    padding: mvw(72) mvw(16) mvw(32);
+    gap: mvw(24);
+    padding: mvw(72) mvw(16) mvw(24);
   }
 
   .topbarListBlock {
     gap: mvw(24);
-    flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
@@ -534,7 +533,7 @@
     align-items: center;
     overflow: hidden;
     padding-top: mvw(24);
-    padding-bottom: calc(mvw(77) + env(safe-area-inset-bottom));
+    flex: 1;
   }
 
   .mobileSlideGrid {
@@ -559,12 +558,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: mvw(40);
+    gap: mvw(24);
     width: 100%;
     flex: 0 0 auto;
     min-height: 0;
-    padding: 0;
-    padding-bottom: calc(mvw(77) + env(safe-area-inset-bottom));
     text-align: center;
   }
 
@@ -618,7 +615,7 @@
     display: block;
     width: 100%;
     flex-shrink: 0;
-    margin-top: auto;
+    margin-top: 0;
     border: none;
     border-radius: mvw(4);
     padding: mvw(8) mvw(12);

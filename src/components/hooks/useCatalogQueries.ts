@@ -5,23 +5,27 @@ import {
   type CatalogCategory,
   type ProductFilters,
 } from "@/lib/bfbApi";
+import { useLanguageStore } from "@/store/language";
 
-export const useCatalogCategoriesQuery = () =>
-  useQuery<CatalogCategory[]>({
-    queryKey: ["catalogCategories"],
+export const useCatalogCategoriesQuery = () => {
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery<CatalogCategory[]>({
+    queryKey: ["catalogCategories", locale],
     queryFn: fetchCatalogCategories,
     staleTime: 10 * 60 * 1000,
     gcTime: 20 * 60 * 1000,
   });
+};
 
 export const useCatalogProductsQuery = (filters: {
   categorySlug?: string;
   search?: string;
   page?: number;
   limit?: number;
-}) =>
-  useQuery({
-    queryKey: ["catalogProducts", filters],
+}) => {
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery({
+    queryKey: ["catalogProducts", locale, filters],
     queryFn: () =>
       fetchFilteredProducts({
         category: filters.categorySlug,
@@ -32,4 +36,5 @@ export const useCatalogProductsQuery = (filters: {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
+};
 

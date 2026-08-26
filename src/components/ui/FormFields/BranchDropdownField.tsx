@@ -5,6 +5,7 @@ import { Check4Icon } from "@/components/Icons/Icons";
 export interface BranchDropdownOption {
   value: string;
   label: string;
+  disabled?: boolean;
 }
 
 interface BranchDropdownFieldProps {
@@ -14,7 +15,7 @@ interface BranchDropdownFieldProps {
   placeholder?: string;
   onChange: (value: string) => void;
   showLabel?: boolean;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   hasError?: boolean;
   supportingText?: string;
   isOpen?: boolean;
@@ -29,7 +30,7 @@ const BranchDropdownField: React.FC<BranchDropdownFieldProps> = ({
   placeholder,
   onChange,
   showLabel = true,
-  icon,
+  icon = null,
   hasError = false,
   supportingText = "",
   isOpen: controlledIsOpen,
@@ -109,8 +110,12 @@ const BranchDropdownField: React.FC<BranchDropdownFieldProps> = ({
               <button
                 key={option.value}
                 type="button"
-                className={styles.dropdownItem}
+                className={`${styles.dropdownItem} ${
+                  option.disabled ? styles.dropdownItemDisabled : ""
+                }`}
+                disabled={option.disabled}
                 onClick={() => {
+                  if (option.disabled) return;
                   onChange(option.value);
                   if (onOpenChange) {
                     onOpenChange(false);
@@ -119,7 +124,7 @@ const BranchDropdownField: React.FC<BranchDropdownFieldProps> = ({
                   }
                 }}
               >
-                <span className={styles.itemIcon}>{icon}</span>
+                {icon ? <span className={styles.itemIcon}>{icon}</span> : null}
                 {option.label}
               </button>
             ))}

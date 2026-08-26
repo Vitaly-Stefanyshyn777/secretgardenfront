@@ -135,6 +135,15 @@
   /* border: 1px solid var(--zoloto); */
 }
 
+.dropdownItemDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dropdownItemDisabled:hover {
+  background: transparent;
+}
+
 .itemIcon {
   display: flex;
   align-items: center;

@@ -6,7 +6,8 @@ export interface AuthTokens {
 }
 
 export interface LoginPayload {
-  email: string;
+  email?: string;
+  phone?: string;
   password: string;
 }
 
@@ -15,6 +16,7 @@ export interface SignupPayload {
   password: string;
   firstname?: string;
   lastname?: string;
+  middlename?: string;
   phone?: string;
 }
 
@@ -33,15 +35,22 @@ async function handleResponse<T>(res: Response): Promise<T> {
 }
 
 export async function loginNode(payload: LoginPayload): Promise<AuthTokens> {
+  const body: Record<string, string> = {
+    password: payload.password,
+  };
+  if (payload.email?.trim()) {
+    body.email = payload.email.trim().toLowerCase();
+  }
+  if (payload.phone?.trim()) {
+    body.phone = payload.phone.trim();
+  }
+
   const res = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      email: payload.email,
-      password: payload.password,
-    }),
+    body: JSON.stringify(body),
   });
 
   return handleResponse<AuthTokens>(res);
@@ -59,6 +68,7 @@ export async function signupNode(payload: SignupPayload): Promise<AuthTokens> {
       phone: payload.phone,
       firstname: payload.firstname,
       lastname: payload.lastname,
+      middlename: payload.middlename,
     }),
   });
 
@@ -79,3 +89,36 @@ export async function refreshNode(
   return handleResponse<AuthTokens>(res);
 }
 
+export async function requestPasswordReset(email: string): Promise<void> {
+  const res = await fetch(`${BASE_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  await handleResponse<{ ok: boolean }>(res);
+}
+
+export async function validatePasswordResetCode(
+  email: string,
+  code: string,
+): Promise<void> {
+  const res = await fetch(`${BASE_URL}/auth/validate-code`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, code }),
+  });
+  await handleResponse<{ ok: boolean }>(res);
+}
+
+export async function setPasswordWithResetCode(
+  email: string,
+  code: string,
+  password: string,
+): Promise<void> {
+  const res = await fetch(`${BASE_URL}/auth/set-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, code, password }),
+  });
+  await handleResponse<{ ok: boolean }>(res);
+}

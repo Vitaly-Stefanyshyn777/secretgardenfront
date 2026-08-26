@@ -7,7 +7,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import s from "./LoginModal.module.css";
 
 interface PasswordInputProps {
-  register: UseFormRegister<{ username: string; password: string }>;
+  register: UseFormRegister<{ email: string; phone: string; password: string }>;
 }
 
 export default function PasswordInput({ register }: PasswordInputProps) {

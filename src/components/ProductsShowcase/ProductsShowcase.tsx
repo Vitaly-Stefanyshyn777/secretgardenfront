@@ -130,7 +130,7 @@ export function ProductsShowcase({
     const map: Record<string, string> = {
       "inventory-boards": "Борди",
       "inventory-accessories": "Аксесуари",
-      "30": "Товари для спорту",
+      "30": "Популярні товари",
     };
     if (!categoryParam) return title;
     return map[categoryParam] || title;

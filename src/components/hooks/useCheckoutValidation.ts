@@ -6,6 +6,7 @@ import {
 import { CartItem } from "@/store/cart";
 import { translate } from "@/i18n";
 import { getCurrentLocale } from "@/store/language";
+import { isCourierDeliveryAvailable } from "@/lib/courierDeliveryHours";
 
 export function useCheckoutValidation() {
   const parseWcValidationErrors = (errorData: any): CheckoutErrors => {
@@ -86,6 +87,9 @@ export function useCheckoutValidation() {
     if (!formData.lastName.trim()) {
       newErrors.lastName = t("common.requiredField");
     }
+    if (!formData.middleName.trim()) {
+      newErrors.middleName = t("common.requiredField");
+    }
     if (!formData.phone.trim()) {
       newErrors.phone = t("common.requiredField");
     }
@@ -110,8 +114,10 @@ export function useCheckoutValidation() {
 
     if (!deliveryType) {
       newErrors.deliveryType = t("common.requiredField");
+    } else if (deliveryType === "courier" && !isCourierDeliveryAvailable()) {
+      newErrors.deliveryType = t("checkout.courierUnavailable");
     }
-    if (!formData.city.trim()) {
+    if (deliveryType !== "courier" && !formData.city.trim()) {
       newErrors.city = t("common.requiredField");
     }
     if (deliveryType === "courier") {

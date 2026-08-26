@@ -180,7 +180,7 @@ const OrdersHistory: React.FC = () => {
   };
 
   const formatPrice = (amount: number) => {
-    return `${amount.toLocaleString("uk-UA")} грн`;
+    return `${amount.toLocaleString("uk-UA")} ₴`;
   };
 
   const handleViewProduct = (slug?: string) => {

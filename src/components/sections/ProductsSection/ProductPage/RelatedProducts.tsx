@@ -1,7 +1,9 @@
 "use client";
-import React, { useState, useMemo, memo } from "react";
+import React, { useState, useMemo, memo, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { A11y } from "swiper/modules";
+import { A11y, FreeMode } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import type { SwiperRef } from "swiper/react";
 import ProductCard from "@/components/sections/ProductsSection/ProductCard/ProductCard";
 import SliderNav from "@/components/ui/SliderNav/SliderNavActions";
 import { normalizeImageUrl } from "@/lib/imageUtils";
@@ -9,6 +11,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import type { RelatedProductsProps, RelatedProduct } from "./types";
 import styles from "./ProductPage.module.css";
 import "swiper/css";
+import "swiper/css/free-mode";
 
 const RelatedProducts = memo(function RelatedProducts({
   relatedCategoryProducts,
@@ -18,6 +21,7 @@ const RelatedProducts = memo(function RelatedProducts({
   const { t } = useTranslation();
   const baseItemsPerView = isMobile ? 2 : 6;
   const [slideIdx, setSlideIdx] = useState(0);
+  const swiperRef = useRef<SwiperRef>(null);
   const itemsPerView = baseItemsPerView;
 
   const mappedRelated: RelatedProduct[] = useMemo(() => {
@@ -74,12 +78,19 @@ const RelatedProducts = memo(function RelatedProducts({
     );
   }, [mappedRelated.length, itemsPerView]);
 
+  const mobileDots = Math.max(1, mappedRelated.length - 1);
+
   const start = slideIdx;
   const visible = mappedRelated.slice(start, start + itemsPerView);
 
   const onPrev = () =>
     setSlideIdx((idx) => (idx - 1 + totalSlides) % totalSlides);
   const onNext = () => setSlideIdx((idx) => (idx + 1) % totalSlides);
+
+  const handleMobilePrev = () => swiperRef.current?.swiper.slidePrev();
+  const handleMobileNext = () => swiperRef.current?.swiper.slideNext();
+  const handleMobileDot = (i: number) =>
+    swiperRef.current?.swiper.slideTo(i);
 
   const renderCard = (item: RelatedProduct) => (
     <ProductCard
@@ -114,21 +125,40 @@ const RelatedProducts = memo(function RelatedProducts({
         <h2>{t("product.related")}</h2>
       </div>
       {isMobile ? (
-        <div className={styles.relatedSliderWrap}>
-          <Swiper
-            modules={[A11y]}
-            slidesPerView="auto"
-            slidesPerGroup={1}
-            spaceBetween={13}
-            className={styles.relatedSwiper}
-          >
-            {mappedRelated.map((item) => (
-              <SwiperSlide key={item.id} className={styles.relatedSlide}>
-                {renderCard(item)}
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <>
+          <div className={styles.relatedSliderWrap}>
+            <Swiper
+              ref={swiperRef}
+              modules={[A11y, FreeMode]}
+              slidesPerView="auto"
+              slidesPerGroup={1}
+              spaceBetween={13}
+              freeMode={{ enabled: true, momentum: true }}
+              resistanceRatio={0.65}
+              watchOverflow
+              className={styles.relatedSwiper}
+              onSlideChange={(swiper: SwiperType) =>
+                setSlideIdx(swiper.activeIndex)
+              }
+            >
+              {mappedRelated.map((item) => (
+                <SwiperSlide key={item.id} className={styles.relatedSlide}>
+                  {renderCard(item)}
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+          {mappedRelated.length > 2 && (
+            <SliderNav
+              activeIndex={Math.min(slideIdx, mobileDots - 1)}
+              dots={mobileDots}
+              onPrev={handleMobilePrev}
+              onNext={handleMobileNext}
+              onDotClick={handleMobileDot}
+              containerClassName={styles.relatedMobileNav}
+            />
+          )}
+        </>
       ) : (
         <>
           <div className={styles.relatedGrid}>

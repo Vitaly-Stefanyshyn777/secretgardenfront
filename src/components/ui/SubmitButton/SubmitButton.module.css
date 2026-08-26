@@ -44,8 +44,8 @@
     padding: mvw(16) mvw(24);
     border-radius: mvw(8);
     font-size: mvw(16);
-    background: var(--violet);
-    color: var(--white);
+    background: #d49e50;
+    color: var(--black);
     font-weight: 600;
     margin-top: 0;
   }

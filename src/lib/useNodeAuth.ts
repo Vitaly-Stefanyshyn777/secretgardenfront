@@ -40,10 +40,10 @@ export const useNodeLogin = () => {
       saveRefreshToken(tokens.refreshToken);
       saveTokenToStorage(tokens.accessToken);
 
-      const email = variables.email;
+      const email = variables.email || variables.phone || "";
       let user: { id?: string; email?: string; displayName?: string } = {
         id: email,
-        email,
+        email: variables.email,
         displayName: email,
       };
 

@@ -25,14 +25,14 @@ function resolveCtaUrl(
   block: ContentAboutBlock,
   contacts?: ContentContacts | null,
 ) {
-  if (block.ctaUrl) return block.ctaUrl;
   const label = (block.ctaLabel || "").toLowerCase();
   if (label.includes("сертиф")) {
-    return contacts?.certificateUrl || undefined;
+    return contacts?.certificateUrl || block.ctaUrl || undefined;
   }
   if (label.includes("збір") || label.includes("підтрим")) {
-    return contacts?.donationUrl || undefined;
+    return contacts?.donationUrl || block.ctaUrl || undefined;
   }
+  if (block.ctaUrl) return block.ctaUrl;
   return contacts?.donationUrl || contacts?.certificateUrl || undefined;
 }
 
@@ -112,9 +112,7 @@ const AboutSection = ({ blocks, contacts }: Props) => {
           const supportCta =
             support && block.ctaLabel ? (
               <CtaLink href={ctaHref} className={s.supportButton}>
-                <span className={s.supportButtonExtra}>+</span>
-                <span>{block.ctaLabel}</span>
-                <span className={s.supportButtonExtra}>+</span>
+                {block.ctaLabel}
               </CtaLink>
             ) : null;
 

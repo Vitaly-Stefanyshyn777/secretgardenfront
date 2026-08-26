@@ -16,8 +16,8 @@
 }
 
 .newBadge {
-  background: var(--white);
-  color: var(--violet);
+  background: rgba(213, 28, 28, 0.35);
+  color: var(--white);
   border-radius: 10px;
   font-size: 12px;
   font-weight: 600;
@@ -66,19 +66,16 @@
 
 @media (max-width: 1000px) {
   .newBadge {
-    background: var(--white);
-    color: var(--violet);
-
+    background: rgba(213, 28, 28, 0.35);
+    color: var(--white);
     font-size: 12px;
     font-weight: 600;
     width: mvw(55);
     height: mvw(22);
-
     font-family: var(--font-family);
     font-weight: 500;
     font-size: mvw(10);
     line-height: 100%;
-    color: var(--violet);
     border-radius: mvw(6);
   }
   .discountBadge {

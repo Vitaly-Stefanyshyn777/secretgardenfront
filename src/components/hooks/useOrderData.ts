@@ -21,7 +21,10 @@ interface CreateOrderDataProps {
 }
 
 function mapDeliveryTypeToMethod(deliveryType: string): string {
-  if (deliveryType === "branch" || deliveryType === "postomat" || deliveryType === "courier") {
+  if (deliveryType === "courier") {
+    return "courier";
+  }
+  if (deliveryType === "branch" || deliveryType === "postomat") {
     return "nova_poshta";
   }
   return "nova_poshta";
@@ -66,6 +69,7 @@ export function useOrderData() {
     const payload: CreateOrderPayload = {
       firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
+      middleName: formData.middleName.trim() || undefined,
       phone: formData.phone.trim(),
       email: formData.email.trim(),
       deliveryToAnother: hasDifferentRecipient,

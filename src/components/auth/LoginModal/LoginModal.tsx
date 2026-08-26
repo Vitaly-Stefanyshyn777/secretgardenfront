@@ -6,8 +6,9 @@ import { useScrollLock } from "../../hooks/useScrollLock";
 import LoginModalHeader from "./LoginModalHeader";
 import LoginForm, { type LoginFormValues } from "./LoginForm";
 import s from "./LoginModal.module.css";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
+import type { LoginPayload } from "@/lib/nodeAuth";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -28,11 +29,21 @@ export default function LoginModal({
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<LoginFormValues>();
+    reset,
+  } = useForm<LoginFormValues>({
+    mode: "onTouched",
+  });
 
   const loginMutation = useNodeLogin();
   const { t } = useTranslation();
   useScrollLock(isOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      reset();
+      loginMutation.reset();
+    }
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSwitchToRegister = () => {
     onClose(); // 1. Закриваємо модалку логіну через пропс
@@ -47,16 +58,32 @@ export default function LoginModal({
   if (!isOpen) return null;
 
   const submit = async (values: LoginFormValues) => {
-    try {
-      // Виклик нового бекенду (Node) для логіну
-      await loginMutation.mutateAsync({
-        email: values.username,
-        password: values.password,
+    const email = values.email?.trim() || "";
+    const phone = values.phone?.trim() || "";
+
+    if (!email && !phone) {
+      setError("email", {
+        type: "manual",
+        message: t("auth.emailOrPhoneRequired"),
       });
+      setError("phone", {
+        type: "manual",
+        message: t("auth.emailOrPhoneRequired"),
+      });
+      return;
+    }
+
+    try {
+      const payload: LoginPayload = {
+        password: values.password,
+        ...(email ? { email } : {}),
+        ...(phone ? { phone } : {}),
+      };
+      await loginMutation.mutateAsync(payload);
       onClose();
-    } catch (error) {
-      // Встановлюємо помилки валідації для обох полів
-      setError("username", {
+    } catch {
+      const field = email ? "email" : "phone";
+      setError(field, {
         type: "manual",
         message: t("auth.invalidCredentials"),
       });

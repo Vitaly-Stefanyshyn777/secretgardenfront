@@ -1,6 +1,7 @@
 export interface FormData {
   firstName: string;
   lastName: string;
+  middleName: string;
   phone: string;
   email: string;
   recipientFirstName: string;
@@ -20,6 +21,7 @@ export interface FormData {
 export interface CheckoutErrors {
   firstName?: string;
   lastName?: string;
+  middleName?: string;
   phone?: string;
   email?: string;
   billing?: string;

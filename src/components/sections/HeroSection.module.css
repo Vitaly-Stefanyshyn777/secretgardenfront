@@ -499,8 +499,7 @@
     display: block;
     width: 100%;
     margin-top: mvw(52);
-    min-height: mvw(510);
-    height: mvw(510);
+    height: 100vw;
     padding: 0;
     background: var(--chorniy);
     overflow: hidden;

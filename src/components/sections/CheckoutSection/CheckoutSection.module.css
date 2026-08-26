@@ -499,6 +499,16 @@
   gap: 16px;
   width: 100%;
 }
+
+.courierHoursHint {
+  margin: 0;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 140%;
+  color: var(--zoloto);
+  opacity: 0.9;
+}
 .addressFields {
   display: flex;
   gap: 8px;
@@ -518,35 +528,34 @@
 }
 
 .deliveryRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
   align-items: stretch;
   width: 100%;
 }
 
-.deliveryRow .inputWrap {
-  flex: 1 1 0;
+.deliveryRow > * {
   min-width: 0;
-  width: auto;
+}
+
+.deliveryRow .inputWrap,
+.deliveryRow .inputWrapBranch {
+  width: 100%;
+  min-width: 0;
 }
 
 .deliveryRow .inputWrapBranch {
-  flex: 1 1 0;
-  min-width: 0;
-  width: auto;
   position: relative;
   display: flex;
+  flex-direction: column;
 }
 
-.deliveryRow .inputWrapBranch .inputWithIcons {
-  flex: 1;
-  width: auto;
+.deliveryRow .inputWrapBranch > * {
+  width: 100%;
 }
-
 .deliveryRow .primary {
-  flex: 1 1 0;
-  min-width: 0;
-  width: auto;
+  width: 100%;
   align-self: stretch;
   display: inline-flex;
   align-items: center;
@@ -560,6 +569,7 @@
   border: 1px solid var(--bіliy);
   box-sizing: border-box;
 }
+
 .paymentBlock {
   display: flex;
   flex-direction: column;
@@ -581,6 +591,31 @@
   gap: 12px;
   width: 100%;
 }
+
+.policyLink {
+  font-family: inherit;
+  font-weight: 500;
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--zoloto);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.policyLink:hover {
+  opacity: 0.85;
+}
+
+.privacyAgreeText {
+  margin: 0;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: var(--bіliy);
+  opacity: 0.7;
+}
+
 .checkboxEmail {
   font-family: var(--font-family);
   font-weight: 400;
@@ -659,6 +694,59 @@
 .summaryDivider {
   height: 1px;
   background: #eee;
+}
+.promoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.promoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.promoWrapper {
+  width: 100%;
+}
+.promoInput {
+  width: 100%;
+}
+.promoApply {
+  width: 100%;
+  border: 1px solid var(--zoloto);
+  border-radius: 4px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--zoloto);
+  font-family: var(--third-family);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+.promoApply:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.promoOk {
+  margin: 0;
+  font-size: 13px;
+  color: #6fcf97;
+}
+.promoErr {
+  margin: 0;
+  font-size: 13px;
+  color: var(--chervoniy, #d51c1c);
+}
+.promoClear {
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
 }
 .summaryList {
   display: flex;
@@ -1355,6 +1443,10 @@
   .deliveryGrid {
     gap: mvw(12);
     width: 100%;
+  }
+
+  .courierHoursHint {
+    font-size: mvw(12);
   }
 
   .checkbox {

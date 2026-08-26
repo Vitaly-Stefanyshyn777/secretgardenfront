@@ -9,6 +9,33 @@ import {
   LocationIcon,
 } from "@/components/Icons/Icons";
 
+const CONTACT_ITEMS = [
+  {
+    key: "instagram",
+    href: "https://www.instagram.com/secret_garden_dnipro",
+    label: "@secret_garden_dnipro",
+    Icon: InstagramIcon,
+  },
+  {
+    key: "telegram",
+    href: "https://t.me/Secret_Garden_shop420",
+    label: "@Secret_Garden_shop420",
+    Icon: TelegramIcon,
+  },
+  {
+    key: "email",
+    href: "mailto:secretgardendp57@gmail.com",
+    label: "secretgardendp57@gmail.com",
+    Icon: EmailIcon,
+  },
+  {
+    key: "location",
+    href: "https://maps.app.goo.gl/KSiWwNZVxFtByCw36",
+    label: "Україна, Дніпро, просп. Дмитра Яворницького, 57",
+    Icon: LocationIcon,
+  },
+] as const;
+
 const PersonalData: React.FC = () => {
   return (
     <div className={styles.personalData}>
@@ -26,43 +53,37 @@ const PersonalData: React.FC = () => {
 
       <div className={styles.contactBlocksRow}>
         <div className={styles.contactBlock}>
-          <div className={styles.contactItem}>
-            <div className={styles.iconCircle}>
-              <InstagramIcon />
-            </div>
-            <div className={styles.contactText}>@secret_garden_dnipro</div>
-          </div>
-
-          <div className={styles.contactItem}>
-            <div className={styles.iconCircle}>
-              <TelegramIcon />
-            </div>
-            <div className={styles.contactText}>@Secret_Garden_shop420</div>
-          </div>
+          {CONTACT_ITEMS.slice(0, 2).map(({ key, href, label, Icon }) => (
+            <a
+              key={key}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.contactItem}
+            >
+              <div className={styles.iconCircle}>
+                <Icon />
+              </div>
+              <div className={styles.contactText}>{label}</div>
+            </a>
+          ))}
         </div>
 
         <div className={styles.contactBlock}>
-          <div className={styles.contactItem}>
-            <div className={styles.iconCircle}>
-              <EmailIcon />
-            </div>
-            <div>
-              <div className={styles.contactText}>
-                secretgardendp57@gmail.com
+          {CONTACT_ITEMS.slice(2).map(({ key, href, label, Icon }) => (
+            <a
+              key={key}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.contactItem}
+            >
+              <div className={styles.iconCircle}>
+                <Icon />
               </div>
-            </div>
-          </div>
-
-          <div className={styles.contactItem}>
-            <div className={styles.iconCircle}>
-              <LocationIcon />
-            </div>
-            <div>
-              <div className={styles.contactText}>
-                Україна, Дніпро, просп. Дмитра Яворницького, 57
-              </div>
-            </div>
-          </div>
+              <div className={styles.contactText}>{label}</div>
+            </a>
+          ))}
         </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import styles from "./FilterSortPanel.module.css";
 import { FilterMobileIcon } from "@/components/Icons/Icons";
 import FilterModal from "@/components/ui/FilterModal/FilterModal";
 import SortDropdown, { type SortOption } from "./SortDropdown";
-import PriceOrderDropdown from "./PriceOrderDropdown";
 
 interface FilterState {
   priceMin: number;
@@ -52,10 +51,9 @@ export interface FilterSortPanelProps {
 
 export const SORT_OPTIONS: SortOption[] = [
   { value: "popular", label: "Популярне" },
-  { value: "new", label: "Новинки" },
-  { value: "sale", label: "Акційні товари" },
-  { value: "price_desc", label: "Ціна за зменшенням" },
-  { value: "price_asc", label: "Ціна за зростанням" },
+  { value: "new", label: "Нове" },
+  { value: "price_desc", label: "За зменшенням" },
+  { value: "price_asc", label: "За зростанням" },
 ];
 
 export const ITEMS_PER_PAGE_OPTIONS: SortOption[] = [
@@ -85,27 +83,19 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
 }) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  const priceOrderValue =
-    sortBy === "price_desc" || sortBy === "price_asc" ? sortBy : "price_desc";
-
   if (embeddedInCatalog) {
     return (
       <>
         <div className={`${styles.sortSection} ${styles.desktopOnly}`}>
           {!hideSort && (
-            <>
-              <SortDropdown
-                label="Сортування"
-                value={sortBy}
-                options={SORT_OPTIONS}
-                onChange={(value) => onSortChange(value as SortType)}
-                variant="sort"
-              />
-              <PriceOrderDropdown
-                value={priceOrderValue}
-                onChange={(value) => onSortChange(value)}
-              />
-            </>
+            <SortDropdown
+              label="Сортування"
+              value={sortBy}
+              options={SORT_OPTIONS}
+              onChange={(value) => onSortChange(value as SortType)}
+              variant="sort"
+              iconVariant="catalog"
+            />
           )}
           <div className={styles.searchWrapper}>
             <input
@@ -182,19 +172,14 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
             </div>
             <div className={styles.sortSection}>
               {!hideSort && (
-                <>
-                  <SortDropdown
-                    label="Сортування"
-                    value={sortBy}
-                    options={SORT_OPTIONS}
-                    onChange={(value) => onSortChange(value as SortType)}
-                    variant="sort"
-                  />
-                  <PriceOrderDropdown
-                    value={priceOrderValue}
-                    onChange={(value) => onSortChange(value)}
-                  />
-                </>
+                <SortDropdown
+                  label="Сортування"
+                  value={sortBy}
+                  options={SORT_OPTIONS}
+                  onChange={(value) => onSortChange(value as SortType)}
+                  variant="sort"
+                  iconVariant="catalog"
+                />
               )}
               <div className={styles.searchWrapper}>
                 <input
@@ -229,6 +214,7 @@ const FilterSortPanel: React.FC<FilterSortPanelProps> = ({
                 onChange={(value) => {
                   onSortChange(value as SortType);
                 }}
+                iconVariant="catalog"
               />
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchFilteredProducts } from "@/lib/bfbApi";
+import { useLanguageStore } from "@/store/language";
 
 export interface ProductFilters {
   category?: string | string[];
@@ -19,8 +20,9 @@ export interface ProductFilters {
 }
 
 export function useFilteredProducts(filters: ProductFilters = {}) {
+  const locale = useLanguageStore((s) => s.locale);
   const stableKey = JSON.stringify(filters);
-  const queryKey = ["filteredProducts", stableKey];
+  const queryKey = ["filteredProducts", locale, stableKey];
 
   // debug logs removed
 

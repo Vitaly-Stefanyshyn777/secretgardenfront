@@ -187,9 +187,10 @@ const ProductCard = ({
       : null;
 
   const formatShowcasePrice = (value: string | null | undefined) => {
-    if (!value) return showcaseDark ? "0 грн" : "0";
+    if (!value) return showcaseDark ? "0₴" : "0";
     if (!showcaseDark) return value;
-    return value.replace(/₴/g, "").trim() + " грн";
+    const cleaned = value.replace(/₴/g, "").trim();
+    return `${cleaned}₴`;
   };
 
   const showDiscount = totalDiscount > 0;

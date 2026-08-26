@@ -458,12 +458,20 @@ export default function Header() {
       <RegisterModal
         isOpen={isRegisterOpen}
         onClose={() => setIsRegisterOpen(false)}
+        onOpenLogin={() => {
+          setIsRegisterOpen(false);
+          openLoginModal();
+        }}
       />
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={closeLoginModal}
         onSubmit={handleLoginSuccess}
         onOpenRegister={openRegisterModal}
+        onOpenResetPassword={() => {
+          closeLoginModal();
+          setTimeout(() => setIsResetPasswordOpen(true), 100);
+        }}
       />
       <ResetPasswordModal
         isOpen={isResetPasswordOpen}

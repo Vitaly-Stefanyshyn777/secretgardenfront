@@ -72,6 +72,8 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .iconCircle {

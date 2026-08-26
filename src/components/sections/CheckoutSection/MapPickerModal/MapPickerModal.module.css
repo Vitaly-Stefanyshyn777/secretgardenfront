@@ -127,7 +127,7 @@
   border-radius: 6px;
   width: 45px;
   height: 45px;
-  background: #8426d7;
+  background: var(--zoloto, #d9ba88);
   color: var(--white);
   flex-shrink: 0;
   display: flex;
@@ -525,7 +525,7 @@
 .locationButton svg {
   width: 16px;
   height: 16px;
-  color: #8426d7;
+  color: var(--zoloto, #d9ba88);
 }
 
 .locationButton:disabled {

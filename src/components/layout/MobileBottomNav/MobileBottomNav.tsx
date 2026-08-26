@@ -116,6 +116,19 @@ export default function MobileBottomNav() {
     pathname.startsWith("/products") || pathname.startsWith("/catalog");
   const isProfile = pathname.startsWith("/profile");
 
+  // Лише один активний пункт: модалки мають пріоритет над маршрутом
+  const activeTab = isCartOpen
+    ? "cart"
+    : isFavOpen
+      ? "favorites"
+      : isProfile
+        ? "profile"
+        : isCatalog
+          ? "catalog"
+          : isHome
+            ? "home"
+            : null;
+
   const handleProfile = () => {
     if (isLoggedIn) {
       window.location.href = "/profile";
@@ -124,11 +137,21 @@ export default function MobileBottomNav() {
     }
   };
 
+  const openFavorites = () => {
+    if (isCartOpen) toggleCart();
+    toggleFav();
+  };
+
+  const openCart = () => {
+    if (isFavOpen) toggleFav();
+    toggleCart();
+  };
+
   return (
     <nav className={styles.nav} aria-label={t("nav.mobileNav")}>
       <Link
         href="/"
-        className={`${styles.item} ${isHome ? styles.itemActive : ""}`}
+        className={`${styles.item} ${activeTab === "home" ? styles.itemActive : ""}`}
       >
         <span className={styles.icon}>
           <HomeIcon />
@@ -138,7 +161,7 @@ export default function MobileBottomNav() {
 
       <Link
         href="/products"
-        className={`${styles.item} ${isCatalog ? styles.itemActive : ""}`}
+        className={`${styles.item} ${activeTab === "catalog" ? styles.itemActive : ""}`}
       >
         <span className={styles.icon}>
           <CatalogIcon />
@@ -148,8 +171,8 @@ export default function MobileBottomNav() {
 
       <button
         type="button"
-        className={`${styles.item} ${isFavOpen ? styles.itemActive : ""}`}
-        onClick={toggleFav}
+        className={`${styles.item} ${activeTab === "favorites" ? styles.itemActive : ""}`}
+        onClick={openFavorites}
         aria-label={t("nav.favorites")}
       >
         <span className={styles.icon}>
@@ -163,8 +186,8 @@ export default function MobileBottomNav() {
 
       <button
         type="button"
-        className={`${styles.item} ${isCartOpen ? styles.itemActive : ""}`}
-        onClick={toggleCart}
+        className={`${styles.item} ${activeTab === "cart" ? styles.itemActive : ""}`}
+        onClick={openCart}
         aria-label={t("nav.cart")}
       >
         <span className={styles.icon}>
@@ -176,7 +199,7 @@ export default function MobileBottomNav() {
 
       <button
         type="button"
-        className={`${styles.item} ${isProfile ? styles.itemActive : ""}`}
+        className={`${styles.item} ${activeTab === "profile" ? styles.itemActive : ""}`}
         onClick={handleProfile}
         aria-label={t("nav.profile")}
       >

@@ -1,7 +1,6 @@
 import api from "./api";
 import {
   getLocaleHeaders,
-  localizeCategoryRecord,
   localizeProductRecord,
 } from "./localizedContent";
 
@@ -45,7 +44,7 @@ export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
     throw new Error(`Failed to fetch catalog categories: ${res.status}`);
   }
   const data = (await res.json()) as CatalogCategory[];
-  return data.map((category) => localizeCategoryRecord(category));
+  return data;
 }
 
 export type FaqCategory = {
@@ -1961,20 +1960,11 @@ export interface ProductReview {
   title?: string;
   text: string;
   createdAt?: string;
+  productName?: string;
+  productSlug?: string;
 }
 
-export async function fetchProductReviews(
-  productSlug: string
-): Promise<ProductReview[]> {
-  const res = await fetch(
-    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(productSlug)}/reviews`,
-    { cache: "no-store" }
-  );
-  if (!res.ok) {
-    if (res.status === 404) return [];
-    throw new Error(`Failed to fetch reviews: ${res.status}`);
-  }
-  const data = await res.json();
+function parseReviewsPayload(data: unknown): ProductReview[] {
   if (Array.isArray(data)) return data as ProductReview[];
   if (data && typeof data === "object") {
     const arr = (data as Record<string, unknown>).items
@@ -1983,6 +1973,36 @@ export async function fetchProductReviews(
     if (Array.isArray(arr)) return arr as ProductReview[];
   }
   return [];
+}
+
+export async function fetchAllProductReviews(
+  limit = 50,
+): Promise<ProductReview[]> {
+  const res = await fetch(
+    `${NODE_API_BASE_URL}/catalog/reviews?limit=${limit}`,
+    { cache: "no-store", headers: getLocaleHeaders() },
+  );
+  if (!res.ok) {
+    if (res.status === 404) return [];
+    throw new Error(`Failed to fetch reviews: ${res.status}`);
+  }
+  const data = await res.json();
+  return parseReviewsPayload(data);
+}
+
+export async function fetchProductReviews(
+  productSlug: string
+): Promise<ProductReview[]> {
+  const res = await fetch(
+    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(productSlug)}/reviews`,
+    { cache: "no-store", headers: getLocaleHeaders() },
+  );
+  if (!res.ok) {
+    if (res.status === 404) return [];
+    throw new Error(`Failed to fetch reviews: ${res.status}`);
+  }
+  const data = await res.json();
+  return parseReviewsPayload(data);
 }
 
 export async function createProductReview(
@@ -2224,6 +2244,7 @@ export async function fetchTrainersWithLogging(
 export interface CreateOrderPayload {
   firstName: string;
   lastName: string;
+  middleName?: string;
   phone: string;
   email: string;
   deliveryToAnother?: boolean;
@@ -2342,9 +2363,19 @@ export type PromoCodeValidation = {
 export const validatePromoCode = async (
   code: string,
 ): Promise<PromoCodeValidation> => {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (typeof window !== "undefined") {
+    const token =
+      localStorage.getItem("bfb_token") ||
+      localStorage.getItem("bfb_token_old");
+    if (token) headers.Authorization = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${NODE_API_BASE_URL}/promo-codes/validate`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({ code }),
     cache: "no-store",
   });

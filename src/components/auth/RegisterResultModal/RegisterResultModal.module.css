@@ -14,7 +14,8 @@
 }
 
 .modal {
-  background: var(--bg-color);
+  background: #222222;
+  border: 1px solid var(--zoloto, #d9ba88);
   border-radius: 20px;
   width: 100%;
   max-width: 710px;
@@ -23,7 +24,6 @@
   display: flex;
   flex-direction: column;
   padding: 56px;
-  display: flex;
   align-items: center;
   align-content: space-between;
   gap: 28px;
@@ -33,21 +33,21 @@
   position: absolute;
   top: 30px;
   right: 30px;
-  background: #f3f3f3;
-  border: none;
+  background: #f2f2f2;
+  border: 1px solid var(--zoloto, #d9ba88);
   width: 46px;
   height: 46px;
   border-radius: 10px;
   fill: #f2f2f2;
-  color: #000;
+  color: var(--zoloto, #d9ba88);
   cursor: pointer;
   display: flex;
-
   justify-content: center;
   align-items: center;
   svg {
     width: 14px;
     height: 14px;
+    color: var(--zoloto, #d9ba88);
   }
 }
 
@@ -66,8 +66,8 @@
 }
 
 .iconSuccess {
-  background: var(--violet);
-  color: #fff;
+  background: #d9ba88;
+  color: #000;
 }
 .iconError {
   background: var(--style);
@@ -87,7 +87,7 @@
   font-weight: 600;
   font-size: 32px;
   line-height: 110%;
-  color: var(--black);
+  color: #ffffff;
 }
 
 .description {
@@ -96,13 +96,13 @@
   font-size: 16px;
   line-height: 140%;
   text-align: center;
-  color: var(--black);
+  color: #ffffff;
 }
 
 .primary {
   width: 100%;
   max-width: 598px;
-  background: var(--violet);
+  background: #d9ba88;
   border: none;
   border-radius: 18px;
   font-weight: 700;
@@ -112,12 +112,18 @@
   height: 66px;
   font-family: var(--third-family);
   line-height: 135%;
-  color: var(--white);
-  transition: all 0.2s;
+  color: #000000;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .primary:hover:not(:disabled) {
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  background: #d49e50;
+  color: #000000;
+  box-shadow: none;
+}
+
+.primary:active:not(:disabled) {
+  background: #c99245;
 }
 
 .privacyText {
@@ -125,7 +131,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 140%;
-  color: rgba(14, 14, 14, 0.4);
+  color: rgba(255, 255, 255, 0.7);
   text-align: center;
   margin: 0;
 }
@@ -135,13 +141,13 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 140%;
-  color: var(--violet);
- 
+  color: #d9ba88;
   text-decoration-skip-ink: none;
 }
 
 .privacyLink:hover {
   text-decoration: underline;
+  color: #d49e50;
 }
 
 @media (max-width: 1000px) {
@@ -175,11 +181,14 @@
     border-radius: mvw(10);
     font-size: mvw(24);
     background: #f2f2f2;
+    border: 1px solid var(--zoloto, #d9ba88);
+    color: var(--zoloto, #d9ba88);
   }
 
   .close svg {
     width: mvw(14);
     height: mvw(14);
+    color: var(--zoloto, #d9ba88);
   }
 
   .icon {
@@ -208,14 +217,11 @@
   .description {
     font-size: mvw(14);
     line-height: 140%;
-
     font-family: var(--font-family);
     font-weight: 500;
-
-    line-height: 140%;
     text-align: center;
-    color: var(--black);
-    opacity: 0.6;
+    color: #ffffff;
+    opacity: 0.85;
   }
 
   .primary {
@@ -226,8 +232,15 @@
     font-size: mvw(14);
     line-height: 135%;
     height: auto;
-    font-weight: 500;
+    font-weight: 600;
     min-height: mvw(56);
+    background: #d9ba88;
+    color: #000000;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: #d49e50;
+    color: #000000;
   }
 
   .privacyText {

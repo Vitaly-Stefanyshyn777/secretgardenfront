@@ -68,7 +68,38 @@ export default function CheckoutForm({
               }
             }}
           />
-          <span className={s.checkboxText}>{t("checkout.acceptTerms")}</span>
+          <span className={s.checkboxText}>
+            {t("checkout.acceptTermsPrefix")}{" "}
+            <a
+              href="/oferta"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={s.policyLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {t("checkout.acceptTermsOffer")}
+            </a>
+            {", "}
+            <a
+              href="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={s.policyLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {t("checkout.acceptTermsPrivacy")}
+            </a>{" "}
+            {t("checkout.acceptTermsAnd")}{" "}
+            <a
+              href="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={s.policyLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {t("checkout.acceptTermsData")}
+            </a>
+          </span>
         </label>
       </div>
     </div>
@@ -91,6 +122,11 @@ export default function CheckoutForm({
             data.lastName !== formData.lastName
           )
             clearFieldError("lastName");
+          if (
+            data.middleName !== undefined &&
+            data.middleName !== formData.middleName
+          )
+            clearFieldError("middleName");
           if (data.phone !== undefined && data.phone !== formData.phone)
             clearFieldError("phone");
           if (data.email !== undefined && data.email !== formData.email)
@@ -160,6 +196,17 @@ export default function CheckoutForm({
             : t("checkout.confirmOrder")}
         </button>
         {checkboxAgreements}
+        <p className={s.privacyAgreeText}>
+          {t("common.privacyAgree")}{" "}
+          <a
+            href="/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={s.policyLink}
+          >
+            {t("common.privacyPolicy")}
+          </a>
+        </p>
       </div>
     </div>
   );

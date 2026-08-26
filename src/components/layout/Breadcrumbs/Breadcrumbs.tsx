@@ -151,6 +151,25 @@ const Breadcrumbs: React.FC = () => {
 
   const catalogLabel = t("breadcrumbs.catalog");
 
+  const normalizeCatalogLabel = (label: string) => {
+    const normalized = label.trim().toLowerCase();
+    if (
+      normalized === "інвентар" ||
+      normalized === "инвентарь" ||
+      normalized === "inventory" ||
+      normalized === "каталог" ||
+      normalized === "catalog"
+    ) {
+      return catalogLabel;
+    }
+    return label;
+  };
+
+  breadcrumbs = breadcrumbs.map((item) => ({
+    ...item,
+    label: normalizeCatalogLabel(item.label),
+  }));
+
   // Додаємо дочірню категорію Каталог у /products?category=...
   if (pathname === "/products") {
     const categorySlug = searchParams.get("category");

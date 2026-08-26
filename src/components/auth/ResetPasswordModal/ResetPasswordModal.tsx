@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useScrollLock } from "../../hooks/useScrollLock";
-import api from "@/lib/api";
+import {
+  requestPasswordReset,
+  setPasswordWithResetCode,
+  validatePasswordResetCode,
+} from "@/lib/nodeAuth";
 import ResetPasswordEmailForm, {
   type ResetPasswordEmailFormValues,
 } from "./ResetPasswordEmailForm";
@@ -53,9 +57,7 @@ function ResetPasswordModal({
 
   const handleEmailSubmit = async (data: ResetPasswordEmailFormValues) => {
     try {
-      // Викликаємо API для відправки коду на email
-      await api.post("/api/auth/reset-password", { email: data.email });
-
+      await requestPasswordReset(data.email);
       setUserEmail(data.email);
       setStep("code");
     } catch (error) {
@@ -68,12 +70,7 @@ function ResetPasswordModal({
 
   const handleCodeSubmit = async (data: ResetPasswordCodeFormValues) => {
     try {
-      // Перевіряємо код через API
-      await api.post("/api/auth/validate-code", {
-        email: userEmail,
-        code: data.code,
-      });
-
+      await validatePasswordResetCode(userEmail, data.code);
       setResetCode(data.code);
       setStep("newPassword");
     } catch (error) {
@@ -88,13 +85,7 @@ function ResetPasswordModal({
     data: ResetPasswordNewPasswordFormValues
   ) => {
     try {
-      // Змінюємо пароль через API
-      await api.post("/api/auth/set-password", {
-        email: userEmail,
-        code: resetCode,
-        password: data.password,
-      });
-
+      await setPasswordWithResetCode(userEmail, resetCode, data.password);
       setStep("success");
     } catch (error) {
       console.error("Error setting new password:", error);
@@ -131,9 +122,7 @@ function ResetPasswordModal({
 
   const handleResendEmail = async () => {
     try {
-      // Повторно надсилаємо код на email
-      await api.post("/api/auth/reset-password", { email: userEmail });
-      // Можна додати повідомлення про успішну повторну відправку
+      await requestPasswordReset(userEmail);
     } catch (error) {
       console.error("Error resending reset code:", error);
     }

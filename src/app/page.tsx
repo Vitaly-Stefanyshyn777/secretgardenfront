@@ -8,6 +8,8 @@ import PageLoader from "@/components/PageLoader";
 import ProductsShowcase from "@/components/sections/ProductsSection/ProductsShowcase/ProductsShowcase";
 import { fetchBanners } from "@/lib/contentApi";
 import { HERO_SLIDES, type HeroSlideItem } from "@/config/heroSlides";
+import { cookies } from "next/headers";
+import type { Locale } from "@/i18n";
 
 type YoastRobots = {
   index?: string;
@@ -128,19 +130,29 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+/** Контент головної (банери) оновлюється з адмінки без ISR-кешу */
+export const dynamic = "force-dynamic";
+
+async function getServerLocale(): Promise<Locale> {
+  const cookieStore = await cookies();
+  const value = cookieStore.get("NEXT_LOCALE")?.value;
+  return value === "en" ? "en" : "uk";
+}
+
 export default async function Home() {
-  const banners = await fetchBanners();
+  const locale = await getServerLocale();
+  const banners = await fetchBanners(locale);
   const slides: HeroSlideItem[] =
     banners.length > 0
       ? banners.map((b, i) => {
-          const fallback = HERO_SLIDES[i % HERO_SLIDES.length];
+          const imageFallback = HERO_SLIDES[i % HERO_SLIDES.length];
           return {
             id: b.id,
-            image: b.imageUrl,
-            mobileImage: b.mobileImageUrl || undefined,
-            title: b.title || fallback.title,
+            image: b.imageUrl || imageFallback.image,
+            mobileImage: b.mobileImageUrl || imageFallback.mobileImage,
+            title: b.title ?? "",
             titleSub: b.titleSub || undefined,
-            description: b.description || fallback.description,
+            description: b.description ?? "",
           };
         })
       : HERO_SLIDES;

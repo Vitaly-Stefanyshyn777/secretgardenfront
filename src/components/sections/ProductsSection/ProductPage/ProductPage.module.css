@@ -104,7 +104,9 @@
 .productReviews {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.83333vw;
+  width: 100%;
+  max-width: 43.125vw;
 }
 
 .reviewsTabs {
@@ -330,10 +332,10 @@
 /* ProductReviews */
 .productReviews {
   display: flex;
-  width: 100%;
-  max-width: 540px;
   flex-direction: column;
-  gap: 16px;
+  gap: 0.83333vw;
+  width: 100%;
+  max-width: 43.125vw;
 }
 /* 
 .reviewsTab {
@@ -524,7 +526,9 @@
 .productReviews {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0.83333vw;
+  width: 100%;
+  max-width: 43.125vw;
 }
 
 /* .reviewsTab {
@@ -1496,7 +1500,6 @@
   display: none;
 }
 
-
 .subscriptionOffer {
   display: flex;
 
@@ -2386,7 +2389,6 @@
   display: none;
 }
 
-
 @media (max-width: 1000px) {
   .skeletonRelatedTitleShort {
     width: mvw(200);
@@ -2872,8 +2874,11 @@
   }
 
   .productReviews {
+    flex-direction: column;
+    gap: 0.83333vw;
+    width: 100%;
     max-width: 100%;
-    gap: mvw(16);
+    display: flex;
   }
 
   .productReviewsMobile {
@@ -3311,19 +3316,34 @@
     overflow: visible;
   }
 
+  .relatedSwiper :global(.swiper-wrapper) {
+    display: flex;
+    align-items: stretch;
+  }
+
   .relatedSlide {
-    display: block;
-    width: mvw(164);
+    width: mvw(164) !important;
+    max-width: mvw(164);
     flex-shrink: 0;
-    height: auto;
+    height: auto !important;
     box-sizing: border-box;
+  }
+
+  .relatedSlide :global(a),
+  .relatedSlide :global([class*="productCard"]) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .relatedMobileNav {
+    margin: mvw(8) auto 0;
   }
 
   .relatedEmptyHint {
     margin: 0;
     padding: mvw(4) 0;
     font-family: var(--font-family);
-    font-size: mvw(16);
+    font-size: mvw(20);
     line-height: 150%;
     color: rgba(244, 244, 244, 0.65);
     text-align: center;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNodeRegister } from "@/lib/useNodeAuth";
 import { useScrollLock } from "../../hooks/useScrollLock";
@@ -13,6 +14,7 @@ import s from "./RegisterModal.module.css";
 export interface RegisterFormValues {
   first_name: string;
   last_name: string;
+  middle_name: string;
   phone: string;
   email: string;
   password: string;
@@ -22,21 +24,37 @@ export interface RegisterFormValues {
 interface RegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenLogin?: () => void;
 }
 
-export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
+export default function RegisterModal({
+  isOpen,
+  onClose,
+  onOpenLogin,
+}: RegisterModalProps) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     getValues,
-  } = useForm<RegisterFormValues>();
+    reset,
+  } = useForm<RegisterFormValues>({
+    mode: "onTouched",
+  });
 
   const registerMutation = useNodeRegister();
   const { result, setSuccess, setError, clearResult } = useRegisterResult();
   const { t } = useTranslation();
 
   useScrollLock(isOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      reset();
+      registerMutation.reset();
+      clearResult();
+    }
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isOpen) return null;
 
@@ -47,6 +65,7 @@ export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
         password: values.password,
         firstname: values.first_name,
         lastname: values.last_name,
+        middlename: values.middle_name,
         phone: values.phone,
       });
       setSuccess();
@@ -81,6 +100,10 @@ export default function RegisterModal({ isOpen, onClose }: RegisterModalProps) {
           isPending={registerMutation.isPending}
           isError={registerMutation.isError}
           getValues={getValues}
+          onSwitchToLogin={() => {
+            onClose();
+            onOpenLogin?.();
+          }}
         />
         <RegisterResultModal
           isOpen={!!result}

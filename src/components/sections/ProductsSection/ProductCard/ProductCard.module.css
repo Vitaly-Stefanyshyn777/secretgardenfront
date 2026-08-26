@@ -129,16 +129,13 @@
 }
 
 .newBadge {
-  background: var(--white);
-  color: var(--violet);
-
+  background: rgba(213, 28, 28, 0.35);
+  color: var(--white);
   border-radius: 10px;
   font-size: 12px;
   font-weight: 600;
   z-index: 10;
   position: relative;
-
-  border-radius: 10px;
   padding: 12px;
   width: 75px;
   height: 36px;
@@ -545,7 +542,7 @@
   }
 
   .productCardShowcaseDark {
-    background: #222;
+    background: #222222;
     border: 1px solid var(--bіliy);
     border-radius: mvw(12);
     padding: mvw(8);

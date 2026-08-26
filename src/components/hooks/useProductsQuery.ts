@@ -11,48 +11,65 @@ import {
   productsByCategoryQuery,
   productCategoriesQuery,
 } from "@/lib/productsQueries";
+import { useLanguageStore } from "@/store/language";
+import type { Locale } from "@/i18n";
+
+function withLocale<T extends { queryKey: readonly unknown[] }>(
+  base: T,
+  locale: Locale,
+): T & { queryKey: readonly unknown[] } {
+  return { ...base, queryKey: [...base.queryKey, locale] };
+}
 
 export function useProductsQuery() {
-  return useQuery(productsQuery());
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery(withLocale(productsQuery(), locale));
 }
 
 export function useProductQuery(slugOrId: string) {
-  // Не виконуємо запит, якщо slug порожній або "skip"
+  const locale = useLanguageStore((s) => s.locale);
   const shouldFetch = !!slugOrId && slugOrId.trim() !== "" && slugOrId !== "skip";
-  
+
   return useQuery({
-    ...productQuery(slugOrId),
-    enabled: shouldFetch, // Не виконуємо запит, якщо slug порожній
+    ...withLocale(productQuery(slugOrId), locale),
+    enabled: shouldFetch,
   });
 }
 
 export function useProductsWithFiltersQuery(filters: Record<string, unknown>) {
-  return useQuery(productsWithFiltersQuery(filters));
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery(withLocale(productsWithFiltersQuery(filters), locale));
 }
 
 export function useNewProductsQuery() {
-  return useQuery(newProductsQuery());
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery(withLocale(newProductsQuery(), locale));
 }
 
 export function useBestSellingProductsQuery() {
-  return useQuery(bestSellingProductsQuery());
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery(withLocale(bestSellingProductsQuery(), locale));
 }
 
 export function useSaleProductsQuery() {
-  return useQuery(saleProductsQuery());
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery(withLocale(saleProductsQuery(), locale));
 }
 
 export function useProductsByCategoryQuery(categoryId: string) {
-  return useQuery(productsByCategoryQuery(categoryId));
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery(withLocale(productsByCategoryQuery(categoryId), locale));
 }
 
 export function useProductCategoriesQuery() {
-  return useQuery(productCategoriesQuery());
+  const locale = useLanguageStore((s) => s.locale);
+  return useQuery(withLocale(productCategoriesQuery(), locale));
 }
 
 export function useProductReviewsQuery(productSlug: string) {
+  const locale = useLanguageStore((s) => s.locale);
   return useQuery({
-    ...productReviewsQuery(productSlug),
+    ...withLocale(productReviewsQuery(productSlug), locale),
     enabled: !!productSlug && productSlug.trim() !== "",
   });
 }

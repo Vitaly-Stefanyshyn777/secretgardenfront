@@ -75,40 +75,44 @@
 
 .close {
   position: absolute;
-  top: 24px;
-  right: 24px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #999;
+  top: 30px;
+  right: 30px;
+  background: transparent;
+  border: 1px solid var(--zoloto, #d9ba88);
+  border-radius: 10px;
+  font-size: 0;
+  color: var(--zoloto, #d9ba88);
   cursor: pointer;
   width: 46px;
   height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  line-height: 0;
   transition: all 0.2s;
-  background-color: var(--bg-light);
-
-  border-radius: 10px;
   fill: #f2f2f2;
+  flex-shrink: 0;
+  box-shadow: none;
+}
 
-  border: 1px solid var(--chervoniy);
-  border-radius: 4px;
-  color: var(--chervoniy);
-
-  svg {
-    width: 14px;
-    height: 14px;
-    color: var(--chervoniy);
-  }
+.close svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  color: var(--zoloto, #d9ba88);
+  flex-shrink: 0;
 }
 
 .close:hover {
-  color: var(--zoloto);
-  background: rgba(217, 186, 136, 0.25);
-  box-shadow: 0 0 12px 2px rgba(217, 186, 136, 0.25);
-  backdrop-filter: blur(12px);
+  background: rgba(213, 28, 28, 0.45);
+  border-color: var(--style, #d51c1c);
+  color: var(--style, #d51c1c);
+  box-shadow: 0 0 12px 2px rgba(213, 28, 28, 0.55);
+}
+
+.close:hover svg {
+  color: var(--style, #d51c1c);
 }
 
 .form {
@@ -428,10 +432,11 @@
   .headerBlock {
     gap: mvw(8);
     flex-shrink: 0;
+    position: relative;
   }
 
   .header {
-    position: relative;
+    position: static;
     width: 100%;
   }
 
@@ -439,8 +444,10 @@
   .headerText {
     font-size: mvw(20);
     line-height: 120%;
-    padding-right: mvw(40);
+    padding-right: mvw(52);
     display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
   .subtitle {
@@ -451,17 +458,19 @@
   }
 
   .close {
-    top: mvw(12);
-    right: mvw(12);
+    top: 0;
+    right: 0;
     width: mvw(45);
     height: mvw(45);
-    border-radius: mvw(10);
-    font-size: mvw(24);
-    background: #f2f2f2;
+    border-radius: mvw(4);
+    background: transparent;
+    border: 1px solid var(--zoloto, #d9ba88);
+    color: var(--zoloto, #d9ba88);
+    box-shadow: none;
   }
 
   .close svg {
-    color: var(--black);
+    color: var(--zoloto, #d9ba88);
     width: mvw(14);
     height: mvw(14);
   }

@@ -324,13 +324,17 @@
 .formError {
   margin: 0;
   color: #ef4444;
+  font-family: var(--font-family);
   font-size: 13px;
+  line-height: 140%;
 }
 
 .formSuccess {
   margin: 0;
   color: #22c55e;
+  font-family: var(--font-family);
   font-size: 13px;
+  line-height: 140%;
 }
 
 .loading {
@@ -341,12 +345,14 @@
 @media (max-width: 1000px) {
   .page {
     padding: mvw(87) mvw(16) mvw(40);
+    min-height: 100dvh;
+    box-sizing: border-box;
   }
 
   .header {
     grid-template-columns: mvw(44) 1fr mvw(44);
     gap: mvw(8);
-    margin-bottom: mvw(24);
+    margin-bottom: mvw(28);
   }
 
   .backBtn {
@@ -360,7 +366,9 @@
   }
 
   .title {
-    font-size: mvw(13);
+    font-size: mvw(16);
+    font-weight: 600;
+    line-height: 140%;
   }
 
   .headerSpacer {
@@ -371,6 +379,7 @@
   .content {
     gap: mvw(24);
     max-width: none;
+    width: 100%;
   }
 
   .charsBox {
@@ -424,6 +433,7 @@
 
   .form {
     gap: mvw(24);
+    width: 100%;
   }
 
   .formField {
@@ -434,39 +444,61 @@
     gap: mvw(12);
   }
 
-  .formLabel {
-    font-size: mvw(16);
-  }
-
+  .formLabel,
   .formLabelSm {
-    font-size: mvw(13);
+    font-size: mvw(14);
+    font-weight: 500;
+    line-height: 140%;
   }
 
   .formStars {
-    gap: mvw(12);
+    gap: mvw(10);
   }
 
   .starButton {
-    width: mvw(32);
-    height: mvw(32);
+    width: mvw(36);
+    height: mvw(36);
   }
 
   .starButton svg {
-    width: mvw(24);
-    height: mvw(24);
+    width: mvw(28);
+    height: mvw(28);
+  }
+
+  .textInput {
+    min-height: mvw(44);
+    padding: mvw(12) mvw(14);
+    border: 1px solid rgba(244, 244, 244, 0.45);
+    border-radius: mvw(8);
+    font-size: mvw(14);
+    line-height: 150%;
+  }
+
+  .textInput::placeholder,
+  .textarea::placeholder {
+    color: rgba(244, 244, 244, 0.35);
   }
 
   .textarea {
-    min-height: mvw(112);
-    padding: mvw(8);
-    border-radius: mvw(4);
-    font-size: mvw(13);
+    min-height: mvw(140);
+    padding: mvw(14) mvw(16);
+    border: 1px solid rgba(244, 244, 244, 0.45);
+    border-radius: mvw(8);
+    font-size: mvw(14);
+    line-height: 150%;
+  }
+
+  .formError,
+  .formSuccess {
+    font-size: mvw(14);
+    line-height: 140%;
   }
 
   .submitBtn {
-    min-height: mvw(44);
-    padding: mvw(8) mvw(12);
-    border-radius: mvw(4);
-    font-size: mvw(18);
+    min-height: mvw(48);
+    padding: mvw(14) mvw(16);
+    border-radius: mvw(8);
+    font-size: mvw(16);
+    line-height: 140%;
   }
 }

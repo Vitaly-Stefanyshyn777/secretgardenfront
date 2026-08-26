@@ -1,5 +1,5 @@
 .section {
-  background: #222222;
+  background-color: #222222;
   padding: 96px 24px;
   bottom: 53px;
   position: relative;
@@ -79,6 +79,7 @@
 
 @media (max-width: 1000px) {
   .section {
+    background-color: #222222;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;

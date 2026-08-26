@@ -2,7 +2,7 @@ import type { Messages } from "./uk";
 
 const en: Messages = {
   common: {
-    currency: "UAH",
+    currency: "₴",
     close: "Close",
     loading: "Loading...",
     submit: "Submit",
@@ -67,13 +67,13 @@ const en: Messages = {
     workshops: "Workshops",
     bfbBasics: "BFB Coaching Basics",
     programs: "Training programs",
-    catalog: "Catalog",
+    catalog: "Shop",
     about: "About us",
     aboutBfb: "About B.F.B",
     oferta: "Terms (offer)",
     privacy: "Privacy policy",
     contacts: "Contacts",
-    forSport: "Sports goods",
+    forSport: "Popular products",
     boards: "Boards",
     accessories: "Accessories",
     dumbbells: "Dumbbells",
@@ -163,8 +163,9 @@ const en: Messages = {
   auth: {
     loginTitle: "Log in to your account",
     loginSubtitle: "Sign in to access your personal account",
-    emailOrUsername: "Your email or username",
-    emailOrUsernameRequired: "Enter email or username",
+    emailOrUsername: "Your email",
+    emailOrUsernameRequired: "Enter your email",
+    emailOrPhoneRequired: "Enter email or phone number",
     password: "Password",
     passwordRequired: "Enter password",
     loggingIn: "Logging in...",
@@ -179,6 +180,8 @@ const en: Messages = {
     firstNameRequired: "Please enter your first name",
     lastName: "Your last name",
     lastNameRequired: "Please enter your last name",
+    patronymic: "Patronymic",
+    patronymicRequired: "Please enter your patronymic",
     email: "Your email",
     emailInvalid: 'Email must contain "@" and a valid domain',
     emailRequired: "Enter email",
@@ -242,9 +245,10 @@ const en: Messages = {
       "Failed to verify the certificate. Check the code you entered or contact support so we can help",
   },
   checkout: {
-    personalData: "Personal details",
+    personalData: "Shipping details",
     yourFirstName: "Your first name",
     yourLastName: "Your last name",
+    yourPatronymic: "Patronymic",
     yourPhone: "Your phone number",
     yourEmail: "Your email",
     anotherRecipient: "Another person will receive the order",
@@ -255,7 +259,11 @@ const en: Messages = {
     delivery: "Delivery",
     toBranch: "To branch",
     postomat: "Parcel locker",
-    courier: "Courier",
+    courier: "Courier (Dnipro only)",
+    courierHoursHint:
+      "Courier delivery (Uklon) is only available {hours} while the store is open. Orders are dispatched immediately.",
+    courierUnavailable:
+      "Courier delivery is unavailable right now. Choose another method or try again between 12:00 and 20:40.",
     chooseDelivery: "Choose delivery method",
     loadingCities: "Loading cities...",
     city: "City",
@@ -277,6 +285,11 @@ const en: Messages = {
     orderComment: "Order comment",
     orderCommentPlaceholder: "Leave a comment for your order",
     subscribeNewsletter: "Subscribe to email newsletter",
+    acceptTermsPrefix: "I accept the terms of the",
+    acceptTermsOffer: "offer",
+    acceptTermsPrivacy: "privacy policy",
+    acceptTermsAnd: "and",
+    acceptTermsData: "personal data processing statement",
     acceptTerms:
       "I accept the terms of the offer, privacy policy, and personal data processing statement",
     processing: "Processing order...",
@@ -312,6 +325,8 @@ const en: Messages = {
     stockDetail: "{{name}}: requested {{qty}}, available {{stock}}",
     orderCreateError: "Failed to create order. Please try again.",
     orderError: "Error: {{message}}",
+    loginRequired: "Please sign in to place an order",
+    sessionExpired: "Your session has expired. Sign in again to continue",
     removeFromCart: "Please remove them from your cart.",
     zeroTotalCheck: "Order total cannot be zero. Please check your cart.",
   },
@@ -332,6 +347,9 @@ const en: Messages = {
     advantageCommunicationTitle: "Friendly service",
     advantageCommunicationDesc:
       "Our friendly team is always happy to chat with you",
+    productReviewsTitle: "Product reviews",
+    reviewNoText: "Review without text",
+    reviewStarsLabel: "{rating} stars",
   },
 };
 

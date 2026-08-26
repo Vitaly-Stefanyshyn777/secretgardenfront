@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLanguageStore } from "@/store/language";
 
 export default function LanguageProvider({
@@ -11,6 +13,9 @@ export default function LanguageProvider({
   const locale = useLanguageStore((s) => s.locale);
   const isHydrated = useLanguageStore((s) => s.isHydrated);
   const setHydrated = useLanguageStore((s) => s.setHydrated);
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const prevLocale = useRef(locale);
 
   useEffect(() => {
     if (!isHydrated) {
@@ -23,6 +28,14 @@ export default function LanguageProvider({
       document.documentElement.lang = locale;
     }
   }, [locale]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (prevLocale.current === locale) return;
+    prevLocale.current = locale;
+    queryClient.invalidateQueries();
+    router.refresh();
+  }, [locale, isHydrated, queryClient, router]);
 
   return <>{children}</>;
 }
