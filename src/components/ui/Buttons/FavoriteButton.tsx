@@ -127,9 +127,15 @@ export default function FavoriteButton({
 
   return (
     <button
-      className={`${s.root} ${className} ${
-        isFav ? `${s.active} ${activeClassName}` : ""
-      } ${useRedGreenIconOnMobile && isMobile ? s.redGreenMode : ""}`}
+      className={[
+        s.root,
+        className,
+        isFav ? s.active : "",
+        isFav ? activeClassName : "",
+        useRedGreenIconOnMobile && isMobile ? s.redGreenMode : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       onClick={handleClick}
       aria-pressed={isFav}
       aria-label={isFav ? "Видалити з обраних" : "Додати в обрані"}

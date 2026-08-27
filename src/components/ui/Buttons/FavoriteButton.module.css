@@ -16,6 +16,12 @@
   backdrop-filter: blur(4px);
   color: var(--zoloto);
   border: 1px solid var(--zoloto);
+  padding: 0;
+  background: transparent;
+}
+
+.active {
+  /* marker class for pressed/favorite state */
 }
 
 .root:hover {
@@ -51,9 +57,30 @@
     height: mvw(12);
   }
 
-  .redGreenMode svg {
+  .redGreenMode {
     width: mvw(28);
     height: mvw(28);
+    top: mvw(8);
+    right: mvw(8);
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 0;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .redGreenMode:hover {
+    background: transparent;
+    transform: scale(1.05);
+  }
+
+  .redGreenMode svg {
+    width: 100%;
+    height: 100%;
     transition: all 0.3s ease;
     transform: none;
   }

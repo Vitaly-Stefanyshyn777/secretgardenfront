@@ -222,6 +222,17 @@
     flex-shrink: 0;
   }
 
+  .reviewProduct {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(11);
+    line-height: 130%;
+    color: var(--zoloto);
+    opacity: 0.9;
+    text-align: center;
+    margin: 0;
+  }
+
   .reviewText {
     font-family: var(--font-family);
     font-weight: 500;

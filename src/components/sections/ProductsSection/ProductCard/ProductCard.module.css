@@ -563,17 +563,23 @@
 
   .productCardShowcaseDark .favoriteBtn {
     display: flex;
+    align-items: center;
+    justify-content: center;
     top: mvw(8);
     right: mvw(8);
     width: mvw(28);
     height: mvw(28);
-    border-radius: 999px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 0;
     z-index: 3;
   }
 
   .productCardShowcaseDark .favoriteBtn svg {
-    width: mvw(14);
-    height: mvw(12);
+    width: 100%;
+    height: 100%;
   }
 
   .productCardShowcaseDark .cardImage {
