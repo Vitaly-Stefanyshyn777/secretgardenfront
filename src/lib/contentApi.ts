@@ -20,6 +20,11 @@ export type ContentAboutLink = {
   kind?: string;
 };
 
+export type ContentAboutTextBlock = {
+  text: string;
+  gap?: number;
+};
+
 export type ContentAboutBlock = {
   id: string;
   title: string;
@@ -29,6 +34,9 @@ export type ContentAboutBlock = {
   ctaLabel: string | null;
   ctaUrl: string | null;
   links: ContentAboutLink[] | null;
+  textPadding?: number | null;
+  textBlocks?: ContentAboutTextBlock[] | null;
+  buttonsLeft?: boolean | null;
   order: number;
 };
 
@@ -70,7 +78,6 @@ export async function fetchPublicContent(locale?: Locale) {
     banners: ContentBanner[];
     aboutBlocks: ContentAboutBlock[];
     contacts: ContentContacts;
-    venuePhotos: Array<{ id: string; imageUrl: string; title?: string | null }>;
   }>;
 }
 
