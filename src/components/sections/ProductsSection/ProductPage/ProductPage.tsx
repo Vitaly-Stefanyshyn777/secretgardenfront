@@ -841,9 +841,11 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
 
             <div className={styles.productDescriptionBlock}>
               {/* Відображаємо секції тільки якщо продукт має варіації або відповідні атрибути */}
-              {(product.wcProduct?.type === "variable" ||
-                availableColors.length > 0 ||
-                product.images.length > 1) &&
+              {/* Тимчасово приховано — секція кольорів */}
+              {false &&
+                (product.wcProduct?.type === "variable" ||
+                  availableColors.length > 0 ||
+                  product.images.length > 1) &&
                 (availableColors.length > 0 || product.images.length > 1) && (
                   <div className={styles.colorSection}>
                     <h3>Колір:</h3>

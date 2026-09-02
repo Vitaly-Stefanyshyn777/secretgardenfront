@@ -434,7 +434,7 @@
   inset: 0;
   border-radius: 999px;
   background: var(--zoloto);
-  animation: paginationDropJoin 0.9s ease;
+  animation: paginationDropJoin 1.2s ease;
 }
 
 .progressTrack {
@@ -452,7 +452,7 @@
   width: 0%;
   background: var(--zoloto);
   border-radius: 999px;
-  animation: fillProgressHorizontal 4s linear forwards;
+  animation: fillProgressHorizontal var(--hero-autoplay-ms, 10s) linear forwards;
 }
 
 @keyframes fillProgressHorizontal {

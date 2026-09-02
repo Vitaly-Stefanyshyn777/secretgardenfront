@@ -11,6 +11,10 @@ import type { Swiper as SwiperClass } from "swiper";
 import "swiper/css";
 
 const MOBILE_BREAKPOINT = 1000;
+/** Час показу одного слайда (мс) — синхронізовано з CSS progressFill */
+const HERO_AUTOPLAY_MS = 10000;
+const HERO_SLIDE_SPEED_MS = 1200;
+const HERO_MANUAL_DOT_MS = 1500;
 
 const getSlideImage = (slide: HeroSlideItem, isMobile: boolean) => {
   if (isMobile && slide.mobileImage) {
@@ -36,7 +40,7 @@ const HeroSection = ({ slides: slidesProp }: { slides?: HeroSlideItem[] }) => {
     }
     manualAnimationTimerRef.current = window.setTimeout(() => {
       setIsManualPagination(false);
-    }, 900);
+    }, HERO_MANUAL_DOT_MS);
   };
 
   React.useEffect(() => {
@@ -59,7 +63,15 @@ const HeroSection = ({ slides: slidesProp }: { slides?: HeroSlideItem[] }) => {
   const description = activeSlide?.description ?? "";
 
   return (
-    <section className={s.hero} data-hero-section>
+    <section
+      className={s.hero}
+      data-hero-section
+      style={
+        {
+          "--hero-autoplay-ms": `${HERO_AUTOPLAY_MS}ms`,
+        } as React.CSSProperties
+      }
+    >
       {slides.length > 0 && (
         <Swiper
           modules={[A11y, Autoplay]}
@@ -83,7 +95,12 @@ const HeroSection = ({ slides: slidesProp }: { slides?: HeroSlideItem[] }) => {
           allowTouchMove={true}
           touchEventsTarget="container"
           loop
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
+          speed={HERO_SLIDE_SPEED_MS}
+          autoplay={{
+            delay: HERO_AUTOPLAY_MS,
+            disableOnInteraction: false,
+            waitForTransition: true,
+          }}
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>

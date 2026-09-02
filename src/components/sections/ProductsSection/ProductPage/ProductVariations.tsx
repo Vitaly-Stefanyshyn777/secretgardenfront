@@ -39,8 +39,8 @@ const ProductVariations = memo(function ProductVariations({
 
   return (
     <div className={styles.productDescriptionBlock}>
-      {/* Секція кольорів */}
-      {shouldShowVariations && (
+      {/* Тимчасово приховано — секція кольорів */}
+      {false && shouldShowVariations && (
         <div className={styles.colorSection}>
           <h3>Колір:</h3>
           <div className={styles.colorOptions}>

@@ -4,6 +4,11 @@ import {
   localizeCategoryRecord,
   localizeProductRecord,
 } from "./localizedContent";
+import { getAgeVerificationHeaders } from "./ageVerification";
+
+function getCatalogHeaders(): Record<string, string> {
+  return { ...getLocaleHeaders(), ...getAgeVerificationHeaders() };
+}
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
@@ -1871,7 +1876,7 @@ export async function fetchFilteredProducts(
 ): Promise<unknown[]> {
   try {
     const params = new URLSearchParams();
-    const localeHeaders = getLocaleHeaders();
+    const localeHeaders = getCatalogHeaders();
 
     const rawCats = filters.category
       ? Array.isArray(filters.category)

@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
+import { syncAgeVerificationAfterAuth } from "@/store/ageVerification";
 import {
   loginNode,
   signupNode,
@@ -63,6 +64,7 @@ export const useNodeLogin = () => {
       }
 
       setAuth(tokens.accessToken, user);
+      await syncAgeVerificationAfterAuth(tokens.accessToken);
     },
   });
 };
@@ -72,7 +74,7 @@ export const useNodeRegister = () => {
 
   return useMutation({
     mutationFn: (payload: SignupPayload) => signupNode(payload),
-    onSuccess: (tokens: AuthTokens, variables: SignupPayload) => {
+    onSuccess: async (tokens: AuthTokens, variables: SignupPayload) => {
       saveRefreshToken(tokens.refreshToken);
 
       const displayName =
@@ -85,6 +87,7 @@ export const useNodeRegister = () => {
       };
 
       setAuth(tokens.accessToken, user);
+      await syncAgeVerificationAfterAuth(tokens.accessToken);
     },
   });
 };

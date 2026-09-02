@@ -152,6 +152,11 @@ export const useAuthStore = create<AuthState>()(
           if (finalUserId) {
             await loadUserData(finalUserId);
           }
+
+          const { syncAgeVerificationAfterAuth } = await import(
+            "@/store/ageVerification"
+          );
+          await syncAgeVerificationAfterAuth(data.token);
         } catch (error) {
           throw error;
         }

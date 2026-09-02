@@ -17,6 +17,16 @@ const en: Messages = {
     requiredField: "Required field",
     errorGeneric: "Something went wrong. Please try again.",
   },
+  ageVerification: {
+    title: "Age verification",
+    description:
+      "This site contains products available only to persons aged 18 or older. Please confirm that you are at least 18.",
+    confirmYes: "I am 18 or older",
+    confirmNo: "I am under 18",
+    blockedTitle: "Access restricted",
+    blockedDescription:
+      "Unfortunately, browsing and purchasing products is only available to persons aged 18 or older.",
+  },
   nav: {
     home: "Home",
     shop: "Shop",

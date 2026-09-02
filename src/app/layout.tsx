@@ -15,6 +15,7 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
 import LanguageProvider from "@/components/providers/LanguageProvider";
 import { ThemeSettingsProvider } from "@/components/providers/ThemeSettingsProvider";
+import AgeVerificationProvider from "@/components/providers/AgeVerificationProvider";
 import AnchorHandler from "@/components/layout/AnchorHandler/AnchorHandler";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -76,6 +77,7 @@ export default function RootLayout({
         <QueryProvider>
           <LanguageProvider>
             <AuthProvider>
+            <AgeVerificationProvider>
             <ThemeSettingsProvider>
               <AnchorHandler />
               <ToastContainer
@@ -98,6 +100,7 @@ export default function RootLayout({
               <Footer />
               <MobileBottomNav />
             </ThemeSettingsProvider>
+            </AgeVerificationProvider>
           </AuthProvider>
           </LanguageProvider>
         </QueryProvider>

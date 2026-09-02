@@ -42,11 +42,6 @@
   font-size: 53px;
   line-height: 120%;
   color: var(--bіliy);
-  transition: color 0.3s ease;
-}
-
-.title:hover {
-  color: var(--black);
 }
 
 .coursesSlider {
@@ -152,10 +147,6 @@
 
   .sectionMobile .headerRight {
     display: none;
-  }
-
-  .sectionMobile .title:hover {
-    color: var(--bіliy);
   }
 
   .sectionMobile .coursesSlider {

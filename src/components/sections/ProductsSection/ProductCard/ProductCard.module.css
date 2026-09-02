@@ -129,7 +129,7 @@
 }
 
 .newBadge {
-  background: rgba(213, 28, 28, 0.35);
+  background: #d51c1c;
   color: var(--white);
   border-radius: 10px;
   font-size: 12px;

@@ -1,5 +1,6 @@
 import { fetchFilteredProducts, fetchProductReviews } from "./bfbApi";
 import { getAllProducts, getProductsByCategory, mapProductToUi } from "./products";
+import { getAgeVerificationHeaders } from "./ageVerification";
 import type { Product } from "./products";
 import {
   getLocaleHeaders,
@@ -38,7 +39,7 @@ export const productQuery = (slugOrId: string) => ({
       `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${encodeURIComponent(
         slugOrId,
       )}`,
-      { cache: "no-store", headers: getLocaleHeaders() },
+      { cache: "no-store", headers: { ...getLocaleHeaders(), ...getAgeVerificationHeaders() } },
     );
 
     if (!res.ok) {
