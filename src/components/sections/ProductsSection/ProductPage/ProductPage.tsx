@@ -841,24 +841,21 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
 
             <div className={styles.productDescriptionBlock}>
               {/* Відображаємо секції тільки якщо продукт має варіації або відповідні атрибути */}
-              {/* Тимчасово приховано — секція кольорів */}
-              {false &&
-                (product.wcProduct?.type === "variable" ||
-                  availableColors.length > 0 ||
-                  product.images.length > 1) &&
+              {/* Тимчасово приховано — секція кольорів
+              {(product.wcProduct?.type === "variable" ||
+                availableColors.length > 0 ||
+                product.images.length > 1) &&
                 (availableColors.length > 0 || product.images.length > 1) && (
                   <div className={styles.colorSection}>
                     <h3>Колір:</h3>
                     <div className={styles.colorOptions}>
                       {availableColors.length > 0
                         ? availableColors.map((color) => {
-                            // Перевіряємо, чи це URL фото (починається з http)
                             const isImageUrl =
                               typeof color === "string" &&
                               color.startsWith("http");
 
                             if (isImageUrl) {
-                              // Відображаємо як фото
                               return (
                                 <button
                                   key={`color-${color}`}
@@ -880,7 +877,6 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                                 </button>
                               );
                             } else {
-                              // Відображаємо як текст
                               return (
                                 <button
                                   key={`color-${color}`}
@@ -922,6 +918,7 @@ export default function ProductPage({ productSlug }: { productSlug: string }) {
                     </div>
                   </div>
                 )}
+              */}
 
               {(product.wcProduct?.type === "variable" || sizes.length > 0) &&
                 sizes.length > 0 && (

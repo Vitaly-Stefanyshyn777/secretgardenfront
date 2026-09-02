@@ -50,10 +50,17 @@ export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
     }
     throw new Error(`Failed to fetch catalog categories: ${res.status}`);
   }
-  const data = (await res.json()) as CatalogCategory[];
-  return (Array.isArray(data) ? data : []).map((c) =>
-    localizeCategoryRecord(c as CatalogCategory & Record<string, unknown>),
-  ) as CatalogCategory[];
+  const data = (await res.json()) as unknown;
+  const list = Array.isArray(data) ? data : [];
+  return list.map((item) => {
+    const localized = localizeCategoryRecord(
+      item as Record<string, unknown> & {
+        children?: Array<Record<string, unknown>>;
+        filters?: unknown[];
+      },
+    );
+    return localized as unknown as CatalogCategory;
+  });
 }
 
 export type FaqCategory = {
