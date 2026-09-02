@@ -218,6 +218,8 @@ const en: Messages = {
     reviewOne: "review",
     reviewFew: "reviews",
     reviewMany: "reviews",
+    badgeNew: "New",
+    badgeHit: "Hit",
   },
   auth: {
     loginTitle: "Log in to your account",

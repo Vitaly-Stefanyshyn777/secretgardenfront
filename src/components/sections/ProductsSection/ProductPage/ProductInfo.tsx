@@ -10,6 +10,7 @@ import type { Product } from "@/lib/products";
 import type { ProductInfoProps } from "./types";
 import { useTranslation } from "@/hooks/useTranslation";
 import { localizeDynamicText } from "@/lib/localizedContent";
+import { getProductHref } from "@/lib/slugUtils";
 
 const ProductInfo = memo(function ProductInfo({
   product,
@@ -188,7 +189,7 @@ const ProductInfo = memo(function ProductInfo({
         <div className={styles.expandableSections}>
           {isMobile && (
             <Link
-              href={`/products/${product.slug}/characteristics`}
+              href={`${getProductHref(product.slug, String(product.id))}/characteristics`}
               className={styles.characteristicsToggleBtn}
             >
               {t("profile.characteristicsTitle")}

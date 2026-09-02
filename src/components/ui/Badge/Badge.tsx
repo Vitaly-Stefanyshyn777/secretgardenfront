@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Badge.module.css";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export type BadgeVariant = "new" | "hit" | "discount";
 
@@ -10,9 +11,11 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ variant, text, className = "" }) => {
+  const { t } = useTranslation();
+
   const defaultText = {
-    new: "Новинка",
-    hit: "Хіт",
+    new: t("product.badgeNew"),
+    hit: t("product.badgeHit"),
     discount: "-20%",
   };
 

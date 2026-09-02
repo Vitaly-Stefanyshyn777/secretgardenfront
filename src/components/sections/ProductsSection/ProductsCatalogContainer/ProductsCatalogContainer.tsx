@@ -8,6 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { productsWithFiltersQuery } from "@/lib/productsQueries";
 
 const FORCE_PRODUCTS_SKELETON = false;
+const DESKTOP_PAGE_SIZE = 15;
+const MOBILE_PAGE_SIZE = 10;
 
 interface Props {
   block: {
@@ -40,8 +42,6 @@ const ProductsCatalogContainer = ({
       ? parentIsLoading
       : localIsLoading;
 
-  // debug logs removed
-
   // Пріоритет: передані зверху filteredProducts → інакше беремо з запиту
   const products = (
     filteredProducts && filteredProducts.length
@@ -50,7 +50,7 @@ const ProductsCatalogContainer = ({
   ) as unknown[];
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(12);
+  const [itemsPerPage, setItemsPerPage] = useState(DESKTOP_PAGE_SIZE);
 
   type ProductLike = {
     id: string | number;
@@ -69,18 +69,31 @@ const ProductsCatalogContainer = ({
 
   // Порядок уже заданий у ProductsCatalog (Zustand + sortItems)
   const orderedProducts: ProductLike[] = useMemo(() => {
-    return (filteredProducts?.length ? filteredProducts : products) as ProductLike[];
+    return (filteredProducts?.length
+      ? filteredProducts
+      : products) as ProductLike[];
   }, [filteredProducts, products]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(max-width: 1000px)");
+    const update = () =>
+      setItemsPerPage(mql.matches ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
     setCurrentPage(1);
-  }, [filteredProducts]);
+  }, [filteredProducts, itemsPerPage]);
 
   const totalPages = Math.max(
     1,
     Math.ceil(orderedProducts.length / itemsPerPage),
   );
-  const start = (currentPage - 1) * itemsPerPage;
+  const safePage = Math.min(currentPage, totalPages);
+  const start = (safePage - 1) * itemsPerPage;
   const pageData = orderedProducts.slice(start, start + itemsPerPage);
 
   const productsForGrid = pageData.map((product) => {
@@ -153,12 +166,6 @@ const ProductsCatalogContainer = ({
     };
   });
 
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    setActiveIndex(Math.max(0, currentPage - 1));
-  }, [currentPage]);
-
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
@@ -182,10 +189,10 @@ const ProductsCatalogContainer = ({
         )}
         {totalPages > 1 && (
           <SliderNav
-            activeIndex={activeIndex}
+            activeIndex={safePage - 1}
             dots={totalPages}
-            onPrev={() => handlePageChange(currentPage - 1)}
-            onNext={() => handlePageChange(currentPage + 1)}
+            onPrev={() => handlePageChange(safePage - 1)}
+            onNext={() => handlePageChange(safePage + 1)}
             onDotClick={(i) => handlePageChange(i + 1)}
           />
         )}

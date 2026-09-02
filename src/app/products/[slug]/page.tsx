@@ -1,6 +1,7 @@
 import ProductPage from "@/components/sections/ProductsSection/ProductPage/ProductPageNew";
 import type { Metadata } from "next";
 import { fetchProductSeo, yoastToMetadata } from "@/lib/seoUtils";
+import { resolveProductSlugParam } from "@/lib/slugUtils";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -16,5 +17,5 @@ export async function generateMetadata({
 
 export default async function ProductPageRoute({ params }: ProductPageProps) {
   const { slug } = await params;
-  return <ProductPage productSlug={slug} />;
+  return <ProductPage productSlug={resolveProductSlugParam(slug)} />;
 }

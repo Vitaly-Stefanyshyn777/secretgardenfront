@@ -1,6 +1,7 @@
 import { fetchFilteredProducts, fetchProductReviews } from "./bfbApi";
 import { getAllProducts, getProductsByCategory, mapProductToUi } from "./products";
 import { getAgeVerificationHeaders } from "./ageVerification";
+import { resolveProductSlugParam } from "./slugUtils";
 import type { Product } from "./products";
 import {
   getLocaleHeaders,
@@ -29,21 +30,23 @@ export const productsQuery = () => ({
 export const productQuery = (slugOrId: string) => ({
   queryKey: ["product", slugOrId] as const,
   queryFn: async () => {
+    const normalizedSlug = resolveProductSlugParam(slugOrId);
+
     // Якщо slug порожній або "skip", не виконуємо запит
-    if (!slugOrId || slugOrId.trim() === "" || slugOrId === "skip") {
+    if (!normalizedSlug || normalizedSlug === "skip") {
       throw new Error("Product slug is empty");
     }
 
     // Нова логіка: отримуємо товар через REST /catalog/products/:slug
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/catalog/products/${encodeURIComponent(
-        slugOrId,
+        normalizedSlug,
       )}`,
       { cache: "no-store", headers: { ...getLocaleHeaders(), ...getAgeVerificationHeaders() } },
     );
 
     if (!res.ok) {
-      throw new Error(`Product not found: ${slugOrId}`);
+      throw new Error(`Product not found: ${normalizedSlug}`);
     }
 
     const raw = await res.json();
@@ -143,7 +146,9 @@ export const productQuery = (slugOrId: string) => ({
       dateCreated: "",
       averageRating: String(typed.ratingAverage ?? 0),
       ratingCount: typed.ratingCount ?? 0,
-      permalink: `/products/${typed.slug}`,
+      permalink: typed.slug
+        ? `/products/${typed.slug}`
+        : `/products/${typed.id}`,
       weight: undefined,
       dimensions: undefined,
       color: undefined,

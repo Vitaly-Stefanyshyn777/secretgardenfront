@@ -216,6 +216,8 @@ const uk = {
     reviewOne: "відгук",
     reviewFew: "відгуки",
     reviewMany: "відгуків",
+    badgeNew: "Новинка",
+    badgeHit: "Хіт",
   },
   auth: {
     loginTitle: "Вхід до кабінету",

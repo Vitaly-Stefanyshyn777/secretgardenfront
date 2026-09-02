@@ -7,6 +7,7 @@ import { localizeDynamicText } from "@/lib/localizedContent";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { resolveProductSlugParam } from "@/lib/slugUtils";
 import styles from "./Breadcrumbs.module.css";
 
 interface BreadcrumbItem {
@@ -27,7 +28,9 @@ const Breadcrumbs: React.FC = () => {
 
   // Якщо ми на сторінці продукту /products/[slug] — підтягнемо назву
   const productSlugMatch = pathname.match(/^\/products\/(.+)$/);
-  const productSlug = productSlugMatch?.[1] || "";
+  const productSlug = productSlugMatch?.[1]
+    ? resolveProductSlugParam(productSlugMatch[1])
+    : "";
   // Викликаємо useProductQuery тільки якщо є slug (не порожній)
   const { data: productData } = useProductQuery(productSlug || "skip");
 

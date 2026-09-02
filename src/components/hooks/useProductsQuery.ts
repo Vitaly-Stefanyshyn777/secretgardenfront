@@ -13,6 +13,7 @@ import {
 } from "@/lib/productsQueries";
 import { useLanguageStore } from "@/store/language";
 import type { Locale } from "@/i18n";
+import { resolveProductSlugParam } from "@/lib/slugUtils";
 
 function withLocale<T extends { queryKey: readonly unknown[] }>(
   base: T,
@@ -28,7 +29,9 @@ export function useProductsQuery() {
 
 export function useProductQuery(slugOrId: string) {
   const locale = useLanguageStore((s) => s.locale);
-  const shouldFetch = !!slugOrId && slugOrId.trim() !== "" && slugOrId !== "skip";
+  const normalizedSlug = resolveProductSlugParam(slugOrId);
+  const shouldFetch =
+    !!normalizedSlug && normalizedSlug !== "skip";
 
   return useQuery({
     ...withLocale(productQuery(slugOrId), locale),
@@ -68,8 +71,9 @@ export function useProductCategoriesQuery() {
 
 export function useProductReviewsQuery(productSlug: string) {
   const locale = useLanguageStore((s) => s.locale);
+  const normalizedSlug = resolveProductSlugParam(productSlug);
   return useQuery({
-    ...withLocale(productReviewsQuery(productSlug), locale),
-    enabled: !!productSlug && productSlug.trim() !== "",
+    ...withLocale(productReviewsQuery(normalizedSlug || productSlug), locale),
+    enabled: !!normalizedSlug && normalizedSlug.trim() !== "",
   });
 }

@@ -5,6 +5,7 @@ import {
   localizeProductRecord,
 } from "./localizedContent";
 import { getAgeVerificationHeaders } from "./ageVerification";
+import { resolveProductSlugParam } from "./slugUtils";
 
 function getCatalogHeaders(): Record<string, string> {
   return { ...getLocaleHeaders(), ...getAgeVerificationHeaders() };
@@ -2018,8 +2019,9 @@ export async function fetchAllProductReviews(
 export async function fetchProductReviews(
   productSlug: string
 ): Promise<ProductReview[]> {
+  const normalizedSlug = resolveProductSlugParam(productSlug);
   const res = await fetch(
-    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(productSlug)}/reviews`,
+    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(normalizedSlug)}/reviews`,
     { cache: "no-store", headers: getLocaleHeaders() },
   );
   if (!res.ok) {
@@ -2039,8 +2041,9 @@ export async function createProductReview(
     authorName?: string;
   }
 ): Promise<{ success: boolean; review?: ProductReview }> {
+  const normalizedSlug = resolveProductSlugParam(productSlug);
   const res = await fetch(
-    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(productSlug)}/reviews`,
+    `${NODE_API_BASE_URL}/catalog/products/${encodeURIComponent(normalizedSlug)}/reviews`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
