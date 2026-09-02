@@ -194,6 +194,7 @@ const ProductsCatalogContainer = ({
             onPrev={() => handlePageChange(safePage - 1)}
             onNext={() => handlePageChange(safePage + 1)}
             onDotClick={(i) => handlePageChange(i + 1)}
+            containerClassName={styles.catalogNav}
           />
         )}
       </div>

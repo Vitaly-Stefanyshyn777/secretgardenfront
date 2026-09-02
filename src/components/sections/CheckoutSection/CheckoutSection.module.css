@@ -1516,6 +1516,51 @@
     gap: mvw(12);
   }
 
+  .privacyAgreeText {
+    margin: 0;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: mvw(12);
+    line-height: 140%;
+    color: var(--bіliy);
+    opacity: 0.7;
+    text-align: center;
+  }
+
+  .policyLink {
+    font-size: inherit;
+    color: var(--zoloto);
+    text-decoration: underline;
+    text-underline-offset: mvw(2);
+  }
+
+  .promoBlock {
+    gap: mvw(8);
+  }
+
+  .promoRow {
+    gap: mvw(8);
+  }
+
+  .promoApply {
+    width: 100%;
+    min-height: mvw(48);
+    padding: mvw(12) mvw(16);
+    border: mvw(1) solid var(--zoloto);
+    border-radius: mvw(4);
+    background: transparent;
+    color: var(--zoloto);
+    font-family: var(--third-family);
+    font-weight: 600;
+    font-size: mvw(14);
+    line-height: 140%;
+  }
+
+  .promoOk,
+  .promoErr {
+    font-size: mvw(12);
+  }
+
   .right {
     max-width: 100%;
     height: auto;

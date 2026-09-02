@@ -21,6 +21,7 @@
   flex-direction: column;
   gap: 24px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .title {
@@ -88,28 +89,50 @@
   flex-direction: column;
   gap: 24px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1000px) {
+  .backdrop {
+    padding: mvw(16);
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
+
   .modal,
   .blocked {
-    padding: mvw(24) mvw(16);
-    gap: mvw(16);
-    border-radius: mvw(12);
+    width: 100%;
+    max-width: 100%;
+    padding: mvw(28) mvw(20);
+    gap: mvw(20);
+    border-radius: mvw(16);
+    margin: auto;
+    flex-shrink: 0;
   }
 
   .title {
-    font-size: mvw(22);
+    font-size: mvw(24);
+    line-height: 120%;
   }
 
   .text {
     font-size: mvw(14);
+    line-height: 140%;
+  }
+
+  .actions {
+    gap: mvw(12);
   }
 
   .btnPrimary,
   .btnSecondary {
     font-size: mvw(14);
-    padding: mvw(12) mvw(16);
+    padding: mvw(14) mvw(16);
     border-radius: mvw(8);
+    width: 100%;
   }
 }

@@ -2536,11 +2536,11 @@
   }
 
   .mainImageNavPrev svg {
-    transform: rotate(90deg);
+    transform: rotate(-90deg);
   }
 
   .mainImageNavNextIcon svg {
-    transform: rotate(-90deg);
+    transform: rotate(90deg);
   }
 
   .productImage {

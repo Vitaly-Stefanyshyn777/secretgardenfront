@@ -51,16 +51,6 @@ const HomeReviewsSection = () => {
       <div className={s.container}>
         <div className={s.header}>
           <h2 className={s.sectionTitle}>{t("home.productReviewsTitle")}</h2>
-          {reviews.length > ASSUMED_VISIBLE_DESKTOP && (
-            <SliderNav
-              activeIndex={activeDotIndex}
-              dots={dotsCount}
-              onPrev={handlePrev}
-              onNext={handleNext}
-              onDotClick={handleDotClick}
-              containerClassName={s.reviewsNav}
-            />
-          )}
         </div>
 
         <div className={s.reviewsSliderWrap}>
@@ -125,6 +115,17 @@ const HomeReviewsSection = () => {
             </Swiper>
           )}
         </div>
+
+        {reviews.length > 1 && (
+          <SliderNav
+            activeIndex={activeDotIndex}
+            dots={dotsCount}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onDotClick={handleDotClick}
+            containerClassName={s.reviewsNav}
+          />
+        )}
       </div>
     </section>
   );
